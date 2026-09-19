@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="icon.png" width="120" alt="App Icon">
+<img src="icon.png" width="200" alt="App Icon">
 
 # Cash Ledger
 
