@@ -25,34 +25,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="@dimen/material_component_lists_header_height"
-    android:paddingStart="@dimen/material_component_lists_header_start_margin"
-    android:paddingLeft="@dimen/material_component_lists_header_start_margin"
-    android:paddingEnd="8dp"
-    android:paddingRight="8dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:background="?attr/selectableItemBackground">
 
-    <!-- Top Left: Total (formerly right_text_view) -->
-    <com.oriondev.moneywallet.ui.view.theme.ThemedTextView
-        android:id="@+id/right_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/material_component_lists_header_text_size"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/income_label_text_view"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constrainedWidth="true"
-        app:theme_textColor="textColorPrimary"
-        tools:text="$ 600.00" />
-
-    <!-- Bottom Left: Month Data (formerly left_text_view, placed where incomes were) -->
+    <!-- Top Left: Month Data (left_text_view) -->
     <com.oriondev.moneywallet.ui.view.theme.ThemedTextView
         android:id="@+id/left_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingStart="12dp"
@@ -63,14 +46,30 @@
         android:paddingBottom="4dp"
         android:background="@drawable/bg_chip_month"
         android:textSize="@dimen/material_component_lists_header_text_size"
-        app:layout_constraintTop_toBottomOf="@+id/right_text_view"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/expense_label_text_view"
+        app:layout_constraintEnd_toStartOf="@+id/income_label_text_view"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constrainedWidth="true"
         app:theme_textColor="textColorPrimary"
         tools:text="August 1 - 31" />
+
+    <!-- Bottom Left: Total Amount (right_text_view) -->
+    <com.oriondev.moneywallet.ui.view.theme.ThemedTextView
+        android:id="@+id/right_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_component_lists_header_start_margin"
+        android:layout_marginLeft="@dimen/material_component_lists_header_start_margin"
+        android:layout_marginTop="4dp"
+        android:textSize="@dimen/material_component_lists_header_text_size"
+        app:layout_constraintTop_toBottomOf="@+id/left_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/expense_label_text_view"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constrainedWidth="true"
+        app:theme_textColor="textColorPrimary"
+        tools:text="$ 600.00" />
 
     <!-- Top Right: Incomes (moved above expenses) -->
     <com.oriondev.moneywallet.ui.view.theme.ThemedTextView
@@ -92,6 +91,8 @@
         android:id="@+id/income_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="@dimen/material_component_lists_header_summary_text_size"
@@ -121,6 +122,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="@dimen/material_component_lists_header_summary_text_size"

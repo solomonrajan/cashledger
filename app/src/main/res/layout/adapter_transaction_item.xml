@@ -102,4 +102,13 @@
         app:theme_textColor="textColorSecondary"
         tools:text="February 22" />
 
+    <!-- Google Pixel Settings style divider aligning with the text -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="?attr/dividerHorizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/primary_text_view"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
