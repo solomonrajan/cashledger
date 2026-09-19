@@ -20,6 +20,17 @@
 
 <changelog>
 
+    <version versionName="2.0.1" versionDate="Sep 20, 2026">
+        <change>✨ [b]UI/UX[/b]: Updated app launcher and setup icons with a fresh new look.</change>
+        <change>📱 [b]UI/UX[/b]: Refined transaction list UI: removed arrows and added transaction time display.</change>
+        <change>📅 [b]UI/UX[/b]: Improved transaction headers with a month overview chip, correct padding, and item dividers.</change>
+        <change>🔽 [b]UI/UX[/b]: Added month collapsing feature for better transaction navigation.</change>
+        <change>🔢 [b]Feature[/b]: Implemented automatic calculator opening for quicker data entry.</change>
+        <change>🐛 [b]Fix[/b]: Fixed a NullPointerException when auto-opening the calculator.</change>
+        <change>🛠️ [b]Fix[/b]: Isolated calculator auto-open behavior to resolve test failures.</change>
+        <change>⚙️ [b]Under the Hood[/b]: Added GitHub Actions workflows for automated building and testing.</change>
+    </version>
+
     <version versionName="2.0.0" versionDate="Sep 19, 2026">
         <change>[b]New![/b] Rebranded the application to Cash Ledger.</change>
         <change>[b]New![/b] Introduced a brand new official app icon design.</change>
