@@ -1,7 +1,7 @@
 {
   "repository": {
-    "code_url": "https://github.com/herrerad85/tallybook",
-    "issue_url": "https://github.com/herrerad85/tallybook/issues"
+    "code_url": "https://github.com/solomonrajan/cashledger",
+    "issue_url": "https://github.com/solomonrajan/cashledger/issues"
   },
   "other_info": [
     {
@@ -14,13 +14,18 @@
           "link": "https://github.com/AndreAle94"
         },{
           "icon": "ic_perm_identity_black_24dp",
+          "title": "Solomon Rajan",
+          "subtitle": "Cash Ledger Fork maintainer",
+          "link": "https://github.com/solomonrajan"
+        },{
+          "icon": "ic_perm_identity_black_24dp",
           "title": "herrerad85",
-          "subtitle": "Fork maintainer",
+          "subtitle": "Tallybook Fork Maintainer",
           "link": "https://github.com/herrerad85"
         },{
           "icon": "ic_github_circle_black_24dp",
           "title_resource": "about_hint_fork",
-          "link": "https://github.com/herrerad85/tallybook"
+          "link": "https://github.com/solomonrajan/cashledger"
         }
       ]
     },{

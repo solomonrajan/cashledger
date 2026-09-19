@@ -1,6 +1,6 @@
-# Contributing to Tallybook
+# Contributing to Cash Ledger
 
-Bug reports and pull requests are welcome in the [issue tracker](https://github.com/herrerad85/tallybook/issues). Current direction and open work live in the pinned [roadmap issue](https://github.com/herrerad85/tallybook/issues/15).
+Bug reports and pull requests are welcome in the [issue tracker](https://github.com/solomonrajan/cashledger/issues). Current direction and open work live in the pinned [roadmap issue](https://github.com/solomonrajan/cashledger/issues/15).
 
 People keep years of their own financial records in this app, and it runs on phones going back to Android 7. A change that works once, on one modern phone, in portrait, has not been tested yet.
 
@@ -63,7 +63,7 @@ Lint runs in CI with `abortOnError true`, so an error fails the build. Warnings 
 - **One concern per pull request.** Unrelated cleanup makes a change harder to review and harder to revert.
 - **No new dependency for what a few lines do.** The `floss` flavor ships no proprietary services and F-Droid builds it from source, so anything added has to be free software and resolvable in that build.
 - **Comment sparingly.** Explain why at the definition, not what at every call site.
-- **License.** Tallybook is GPLv3 or later. Code adapted from another project has to be compatible with that, which GPLv2 only is not, and the pull request needs to say where it came from.
+- **License.** Cash Ledger is GPLv3 or later. Code adapted from another project has to be compatible with that, which GPLv2 only is not, and the pull request needs to say where it came from.
 
 ## The pull request
 

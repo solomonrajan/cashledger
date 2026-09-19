@@ -13231,7 +13231,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;app_name&quot; is not translated in &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;hr&quot; (Croatian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;pl&quot; (Polish), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan)"
-        errorLine1="    &lt;string name=&quot;app_name&quot;>Tallybook&lt;/string>"
+        errorLine1="    &lt;string name=&quot;app_name&quot;>Cash Ledger&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -16157,7 +16157,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;message_webdav_app_password&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;el&quot; (Greek), &quot;hr&quot; (Croatian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;fa&quot; (Persian), &quot;pl&quot; (Polish), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan), &quot;tr&quot; (Turkish), &quot;ml&quot; (Malayalam)"
-        errorLine1="    &lt;string name=&quot;message_webdav_app_password&quot;>&quot;If your server supports app passwords, such as Nextcloud, create one for Tallybook instead of using your account password.&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;message_webdav_app_password&quot;>&quot;If your server supports app passwords, such as Nextcloud, create one for Cash Ledger instead of using your account password.&quot;&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -17818,7 +17818,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;activity_launcher_first_start_title&quot; is not translated in &quot;ru&quot; (Russian), &quot;hr&quot; (Croatian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan)"
-        errorLine1="    &lt;string name=&quot;activity_launcher_first_start_title&quot;>&quot;Welcome to Tallybook&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;activity_launcher_first_start_title&quot;>&quot;Welcome to Cash Ledger&quot;&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -17829,7 +17829,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;activity_launcher_first_start_content&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;el&quot; (Greek), &quot;hr&quot; (Croatian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;fa&quot; (Persian), &quot;pl&quot; (Polish), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan), &quot;tr&quot; (Turkish), &quot;ml&quot; (Malayalam)"
-        errorLine1="    &lt;string name=&quot;activity_launcher_first_start_content&quot;>&quot;Is this your first time using Tallybook, or do you want to restore a backup?&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;activity_launcher_first_start_content&quot;>&quot;Is this your first time using Cash Ledger, or do you want to restore a backup?&quot;&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -17917,7 +17917,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;activity_intro_description_slide_1&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;el&quot; (Greek), &quot;hr&quot; (Croatian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;fa&quot; (Persian), &quot;pl&quot; (Polish), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan), &quot;tr&quot; (Turkish), &quot;ml&quot; (Malayalam)"
-        errorLine1="    &lt;string name=&quot;activity_intro_description_slide_1&quot;>&quot;Tallybook helps you track your expenses&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;activity_intro_description_slide_1&quot;>&quot;Cash Ledger helps you track your expenses&quot;&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -17939,7 +17939,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;activity_intro_description_slide_3&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;el&quot; (Greek), &quot;hr&quot; (Croatian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;fa&quot; (Persian), &quot;pl&quot; (Polish), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan), &quot;tr&quot; (Turkish), &quot;ml&quot; (Malayalam)"
-        errorLine1="    &lt;string name=&quot;activity_intro_description_slide_3&quot;>&quot;Tallybook is open source and everyone can contribute&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;activity_intro_description_slide_3&quot;>&quot;Cash Ledger is open source and everyone can contribute&quot;&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -17950,7 +17950,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;activity_intro_description_slide_4&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;el&quot; (Greek), &quot;hr&quot; (Croatian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;fa&quot; (Persian), &quot;pl&quot; (Polish), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan), &quot;tr&quot; (Turkish), &quot;ml&quot; (Malayalam)"
-        errorLine1="    &lt;string name=&quot;activity_intro_description_slide_4&quot;>&quot;Tallybook helps you create backups so you can restore your data when needed&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;activity_intro_description_slide_4&quot;>&quot;Cash Ledger helps you create backups so you can restore your data when needed&quot;&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -19094,7 +19094,7 @@
     <issue
         id="MissingTranslation"
         message="&quot;widget_message_locked&quot; is not translated in &quot;de&quot; (German), &quot;ru&quot; (Russian), &quot;pt&quot; (Portuguese), &quot;el&quot; (Greek), &quot;hr&quot; (Croatian), &quot;it&quot; (Italian), &quot;fr&quot; (French), &quot;hu&quot; (Hungarian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;fa&quot; (Persian), &quot;pl&quot; (Polish), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan), &quot;tr&quot; (Turkish), &quot;ml&quot; (Malayalam)"
-        errorLine1="    &lt;string name=&quot;widget_message_locked&quot;>&quot;Tallybook is locked&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;widget_message_locked&quot;>&quot;Cash Ledger is locked&quot;&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
@@ -19171,7 +19171,7 @@
     <issue
         id="Typos"
         message="&quot;Bem vindo&quot; is a common misspelling; did you mean &quot;Bem-vindo&quot;?"
-        errorLine1="    &lt;string name=&quot;activity_launcher_first_start_title&quot;>&quot;Bem vindo ao Tallybook&quot;&lt;/string>"
+        errorLine1="    &lt;string name=&quot;activity_launcher_first_start_title&quot;>&quot;Bem vindo ao Cash Ledger&quot;&lt;/string>"
         errorLine2="                                                        ~~~~~~~~~">
         <location
             file="src/main/res/values-pt-rBR/strings.xml"

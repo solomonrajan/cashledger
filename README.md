@@ -2,21 +2,21 @@
 
 <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" width="120" alt="">
 
-# Tallybook
+# Cash Ledger
 
 An expense and budget tracker for Android that keeps your money on your own phone.
 
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![F-Droid](https://img.shields.io/f-droid/v/io.github.herrerad85.tallybook.svg)](https://f-droid.org/packages/io.github.herrerad85.tallybook/)
-[![GitHub release](https://img.shields.io/github/v/release/herrerad85/tallybook)](https://github.com/herrerad85/tallybook/releases/latest)
+[![F-Droid](https://img.shields.io/f-droid/v/io.github.solomonrajan.cashledger.svg)](https://f-droid.org/packages/io.github.solomonrajan.cashledger/)
+[![GitHub release](https://img.shields.io/github/v/release/solomonrajan/cashledger)](https://github.com/solomonrajan/cashledger/releases/latest)
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="70">](https://f-droid.org/packages/io.github.herrerad85.tallybook/)
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="70">](https://f-droid.org/packages/io.github.solomonrajan.cashledger/)
 
 </div>
 
-Tallybook tracks what you spend and what you have, across as many wallets as you keep. It runs with no network connection and asks for no account. [PRIVACY.md](PRIVACY.md) lists every way data leaves the app.
+Cash Ledger tracks what you spend and what you have, across as many wallets as you keep. It runs with no network connection and asks for no account. [PRIVACY.md](PRIVACY.md) lists every way data leaves the app.
 
-The F-Droid build is reproducible and carries the developer signature, so the app from F-Droid and the APK attached to each [release](https://github.com/herrerad85/tallybook/releases) are interchangeable.
+The F-Droid build is reproducible and carries the developer signature, so the app from F-Droid and the APK attached to each [release](https://github.com/solomonrajan/cashledger/releases) are interchangeable.
 
 <div align="center">
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/02_transactions.png" width="24%">
@@ -41,7 +41,7 @@ The F-Droid build is reproducible and carries the developer signature, so the ap
 
 ## Coming from MoneyWallet
 
-Tallybook is a maintained fork of [MoneyWallet](https://github.com/AndreAle94/moneywallet), which last had a release in 2021. It is a separate app with its own application id, so it installs beside the original and does not replace it or carry its data across on its own. [MIGRATION.md](MIGRATION.md) has the path that was tested.
+Cash Ledger is a maintained fork of [MoneyWallet](https://github.com/AndreAle94/moneywallet), which last had a release in 2021. It is a separate app with its own application id, so it installs beside the original and does not replace it or carry its data across on its own. [MIGRATION.md](MIGRATION.md) has the path that was tested.
 
 ## Docs
 
@@ -51,7 +51,7 @@ Tallybook is a maintained fork of [MoneyWallet](https://github.com/AndreAle94/mo
 - [Privacy](PRIVACY.md)
 - [Third party notices](THIRD_PARTY_NOTICES.md)
 
-Every release note is on the [releases page](https://github.com/herrerad85/tallybook/releases).
+Every release note is on the [releases page](https://github.com/solomonrajan/cashledger/releases).
 
 ## Build from source
 
@@ -65,14 +65,14 @@ Requirements: a recent Android SDK and JDK 17 or newer. Release builds use JDK 2
 
 ## Contributing
 
-Bug reports and pull requests are welcome in the [issue tracker](https://github.com/herrerad85/tallybook/issues). Current direction and open work live in the pinned [roadmap issue](https://github.com/herrerad85/tallybook/issues/15).
+Bug reports and pull requests are welcome in the [issue tracker](https://github.com/solomonrajan/cashledger/issues). Current direction and open work live in the pinned [roadmap issue](https://github.com/solomonrajan/cashledger/issues/15).
 
 [CONTRIBUTING.md](CONTRIBUTING.md) has the bar a pull request is held to, including an AI written one, and the steps for translating.
 
 ## Credits and license
 
-Tallybook is free software under the GNU General Public License v3.0 or later, the same license as the project it came from. See [LICENSE.md](LICENSE.md).
+Cash Ledger is free software under the GNU General Public License v3.0 or later, the same license as the project it came from. See [LICENSE.md](LICENSE.md).
 
-MoneyWallet was written by AndreAle94 and its contributors, and this fork exists to keep that work usable. Tallybook is independent and is not endorsed by or affiliated with the original author.
+MoneyWallet was written by AndreAle94 and its contributors, and this fork exists to keep that work usable. Cash Ledger is independent and is not endorsed by or affiliated with the original author.
 
 The app icon and the intro illustrations are original artwork for this fork, released under the GPLv3. The category picker icons place glyphs from Phosphor Icons (MIT), Tabler Icons (MIT), Lucide (ISC) and Bootstrap Icons (MIT) on original GPLv3 disc backgrounds, and a few are original artwork. The interface also uses Material Design Icons, licensed under Apache-2.0. Full license texts are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
