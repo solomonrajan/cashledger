@@ -279,24 +279,24 @@ public class MainActivityTest {
             scenario.onActivity(activity -> {
                 awaitWallets(activity);
                 Toolbar toolbar = section(activity).requireView().findViewById(R.id.primary_toolbar);
-                awaitSubtitle(toolbar, "Cash");
+                awaitTitle(toolbar, "Cash");
                 activity.findViewById(R.id.navigation_drawer_header).performClick();
                 shadowOf(Looper.getMainLooper()).idle();
                 assertFalse(activity.onNavigationItemSelected(drawer(activity).getMenu().findItem(walletItem(mSecondWallet))));
                 // only the change broadcast, which the switch queues first. Idling could also
                 // deliver the reloaded row and hide an empty subtitle in between
                 shadowOf(Looper.getMainLooper()).runOneTask();
-                assertEquals("Bank", String.valueOf(toolbar.getSubtitle()));
-                awaitSubtitle(toolbar, "Bank");
+                assertEquals("Bank", String.valueOf(toolbar.getTitle()));
+                awaitTitle(toolbar, "Bank");
                 for (int i = 0; i < 20; i++) {
                     shadowOf(Looper.getMainLooper()).idle();
                     sleep();
                 }
-                assertEquals("Bank", String.valueOf(toolbar.getSubtitle()));
+                assertEquals("Bank", String.valueOf(toolbar.getTitle()));
                 ContentValues values = new ContentValues();
                 values.put(Contract.Wallet.NAME, "Savings");
                 mResolver.update(ContentUris.withAppendedId(DataContentProvider.CONTENT_WALLETS, mSecondWallet), values, null, null);
-                awaitSubtitle(toolbar, "Savings");
+                awaitTitle(toolbar, "Savings");
             });
         }
     }
@@ -310,22 +310,22 @@ public class MainActivityTest {
                 runPending(activity);
                 assertTrue(section(activity) instanceof OverviewSinglePanelFragment);
                 Toolbar toolbar = section(activity).requireView().findViewById(R.id.primary_toolbar);
-                awaitSubtitle(toolbar, "Cash");
+                awaitTitle(toolbar, "Cash");
                 activity.findViewById(R.id.navigation_drawer_header).performClick();
                 shadowOf(Looper.getMainLooper()).idle();
                 assertFalse(activity.onNavigationItemSelected(drawer(activity).getMenu().findItem(walletItem(mSecondWallet))));
                 shadowOf(Looper.getMainLooper()).runOneTask();
-                assertEquals("Bank", String.valueOf(toolbar.getSubtitle()));
-                awaitSubtitle(toolbar, "Bank");
+                assertEquals("Bank", String.valueOf(toolbar.getTitle()));
+                awaitTitle(toolbar, "Bank");
                 for (int i = 0; i < 20; i++) {
                     shadowOf(Looper.getMainLooper()).idle();
                     sleep();
                 }
-                assertEquals("Bank", String.valueOf(toolbar.getSubtitle()));
+                assertEquals("Bank", String.valueOf(toolbar.getTitle()));
                 ContentValues values = new ContentValues();
                 values.put(Contract.Wallet.NAME, "Savings");
                 mResolver.update(ContentUris.withAppendedId(DataContentProvider.CONTENT_WALLETS, mSecondWallet), values, null, null);
-                awaitSubtitle(toolbar, "Savings");
+                awaitTitle(toolbar, "Savings");
             });
         }
     }
@@ -523,12 +523,12 @@ public class MainActivityTest {
         assertFalse("the wallets never loaded", headerName(activity).isEmpty());
     }
 
-    private static void awaitSubtitle(Toolbar toolbar, String subtitle) {
-        for (int i = 0; i < 200 && !subtitle.equals(String.valueOf(toolbar.getSubtitle())); i++) {
+    private static void awaitTitle(Toolbar toolbar, String title) {
+        for (int i = 0; i < 200 && !title.equals(String.valueOf(toolbar.getTitle())); i++) {
             shadowOf(Looper.getMainLooper()).idle();
             sleep();
         }
-        assertEquals(subtitle, String.valueOf(toolbar.getSubtitle()));
+        assertEquals(title, String.valueOf(toolbar.getTitle()));
     }
 
     private static void sleep() {
