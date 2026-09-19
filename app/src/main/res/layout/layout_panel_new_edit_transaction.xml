@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
         android:hint="@string/hint_description"
-        android:inputType="textMultiLine"
+        android:inputType="textCapWords|textMultiLine"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_format_align_left_black_24dp" />
 

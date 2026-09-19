@@ -428,6 +428,21 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
                 // no destination, so the row keeps its ripple to itself
                 itemView.setBackground(null);
             }
+            
+            // Allow collapsing/expanding by clicking the left text view (chip)
+            mLeftTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Cursor cursor = getSafeCursor(cursorPosition(getAdapterPosition()));
+                    if (cursor != null) {
+                        String key = periodKey(
+                                cursor.getInt(mIndexHeaderGroupType),
+                                cursor.getString(mIndexHeaderStartDate)
+                        );
+                        togglePeriod(key);
+                    }
+                }
+            });
         }
 
         @Override

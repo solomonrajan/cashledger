@@ -899,6 +899,11 @@ public class NewEditTransactionActivity extends NewEditItemActivity implements M
         // check if the intent contains some predefined value for fields
         if (savedInstanceState == null) {
             fillFieldsFromIntent(getIntent());
+            
+            // Auto-open calculator for new transactions
+            if (getMode() == Mode.NEW_ITEM) {
+                mMoneyPicker.showPicker();
+            }
         }
     }
 

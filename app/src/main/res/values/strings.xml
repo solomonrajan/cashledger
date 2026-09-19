@@ -206,7 +206,7 @@
     <string name="title_activity_edit_currency">"Edit currency"</string>
     <string name="title_activity_new_wallet">"New wallet"</string>
     <string name="title_activity_edit_wallet">"Edit wallet"</string>
-    <string name="title_activity_new_transaction">"New transaction"</string>
+    <string name="title_activity_new_transaction">"New Transaction"</string>
     <string name="title_activity_edit_transaction">"Edit transaction"</string>
     <string name="title_activity_new_transfer">"New transfer"</string>
     <string name="title_activity_edit_transfer">"Edit transfer"</string>
@@ -265,7 +265,7 @@
     <string name="menu_action_save_changes">"Save changes"</string>
     <string name="menu_refresh_currency_rate">"Refresh currency rate"</string>
     <string name="menu_advanced_settings">"Advanced settings"</string>
-    <string name="menu_action_new_transaction_for_person">"New transaction"</string>
+    <string name="menu_action_new_transaction_for_person">"New Transaction"</string>
     <string name="menu_action_edit_item">"Edit"</string>
     <string name="menu_action_duplicate_item">"Duplicate"</string>
     <string name="menu_action_delete_item">"Delete"</string>
