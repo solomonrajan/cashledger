@@ -20,6 +20,12 @@
 
 <changelog>
 
+    <version versionName="2.0.2" versionDate="Sep 20, 2026">
+        <change>✨ [b]UI/UX[/b]: Fixed the adaptive launcher icon being clipped by system boundaries.</change>
+        <change>🐛 [b]Fix[/b]: Enforced a clean white background for adaptive icons to eliminate a black background rendering glitch on certain Android versions.</change>
+        <change>📝 [b]Docs[/b]: Increased the display size of the application icon in the README for better visibility.</change>
+    </version>
+
     <version versionName="2.0.1" versionDate="Sep 20, 2026">
         <change>✨ [b]UI/UX[/b]: Updated app launcher and setup icons with a fresh new look.</change>
         <change>📱 [b]UI/UX[/b]: Refined transaction list UI: removed arrows and added transaction time display.</change>

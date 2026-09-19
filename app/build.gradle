@@ -35,8 +35,8 @@ android {
         applicationId "io.github.herrerad85.cashledger"
         minSdk 24
         targetSdk 35
-        versionCode 89
-        versionName "2.0.1"
+        versionCode 90
+        versionName "2.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField('String', 'API_KEY_OPEN_EXCHANGE_RATES', ApiKey_OpenExchangeRates)
     }
