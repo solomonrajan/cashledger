@@ -430,19 +430,21 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
             }
             
             // Allow collapsing/expanding by clicking the left text view (chip)
-            mLeftTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Cursor cursor = getSafeCursor(cursorPosition(getAdapterPosition()));
-                    if (cursor != null) {
-                        String key = periodKey(
-                                cursor.getInt(mIndexHeaderGroupType),
-                                cursor.getString(mIndexHeaderStartDate)
-                        );
-                        togglePeriod(key);
+            if (mLeftTextView != null) {
+                mLeftTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Cursor cursor = getSafeCursor(cursorPosition(getAdapterPosition()));
+                        if (cursor != null) {
+                            String key = periodKey(
+                                    cursor.getInt(mIndexHeaderGroupType),
+                                    cursor.getString(mIndexHeaderStartDate)
+                            );
+                            togglePeriod(key);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         @Override

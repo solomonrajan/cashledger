@@ -124,6 +124,9 @@ public class TransactionMultiPanelViewPagerFragment extends MultiPanelViewPagerM
                 return;
         }
         intent.putExtra(NewEditItemActivity.MODE, NewEditItemActivity.Mode.NEW_ITEM);
+        if (getViewPagerPosition() == 0) {
+            intent.putExtra(NewEditTransactionActivity.AUTO_OPEN_CALCULATOR, true);
+        }
         startActivity(intent);
     }
 

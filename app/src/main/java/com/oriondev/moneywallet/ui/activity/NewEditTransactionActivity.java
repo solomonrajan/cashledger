@@ -89,6 +89,7 @@ public class NewEditTransactionActivity extends NewEditItemActivity implements M
     public static final String DEBT_ACTION = "NewEditTransactionActivity::DebtAction";
     public static final String SAVING_ID = "NewEditTransactionActivity::SavingId";
     public static final String SAVING_ACTION = "NewEditTransactionActivity::SavingAction";
+    public static final String AUTO_OPEN_CALCULATOR = "auto_open_calculator";
     public static final String PERSON_ID = "NewEditTransactionActivity::PersonId";
     public static final String MODEL_ID = "NewEditTransactionActivity::ModelId";
 
@@ -901,7 +902,7 @@ public class NewEditTransactionActivity extends NewEditItemActivity implements M
             fillFieldsFromIntent(getIntent());
             
             // Auto-open calculator for new transactions
-            if (getMode() == Mode.NEW_ITEM) {
+            if (getMode() == Mode.NEW_ITEM && getIntent().getBooleanExtra(AUTO_OPEN_CALCULATOR, false)) {
                 mMoneyPicker.showPicker();
             }
         }
