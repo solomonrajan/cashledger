@@ -43,7 +43,12 @@ jobs:
           path: ~/.m2/repository/org/robolectric
           key: robolectric-${{ hashFiles('app/build.gradle', 'gradle/libs.versions.toml') }}
 
-      - run: ./gradlew clean testFlossOsmDebugUnitTest assembleFlossOsmDebug assembleFlossOsmDebugAndroidTest lintFlossOsmDebug
+      - name: Build and Test
+        run: ./gradlew clean testFlossOsmDebugUnitTest assembleFlossOsmDebug assembleFlossOsmDebugAndroidTest
+
+      - name: Lint
+        if: always()
+        run: ./gradlew lintFlossOsmDebug
 
       - uses: actions/upload-artifact@v4
         if: always()
