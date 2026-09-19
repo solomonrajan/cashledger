@@ -345,7 +345,7 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
             mMoneyFormatter.applyTintedExpense(holder.mMoneyTextView, currency, money);
         }
         Date date = DateUtils.getDateFromSQLDateTimeString(cursor.getString(mIndexTransactionDate));
-        DateFormatter.applyDate(holder.mDateTextView, date);
+        DateFormatter.applyDateTime(holder.mDateTextView, date);
         holder.itemView.setActivated(mSelectedIds.contains(cursor.getLong(mIndexTransactionId)));
     }
 
@@ -364,19 +364,6 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
         Money expense = Money.parse(cursor.getString(mIndexHeaderExpense));
         mMoneyFormatter.applyTintedIncome(holder.mIncomeTextView, orZero(income, money));
         mMoneyFormatter.applyTintedExpense(holder.mExpenseTextView, orZero(expense, money));
-        bindPeriodToggle(holder, cursor);
-    }
-
-    private void bindPeriodToggle(HeaderViewHolder holder, Cursor cursor) {
-        boolean collapsed = mCollapsedPeriods.contains(periodKey(
-                cursor.getInt(mIndexHeaderGroupType), cursor.getString(mIndexHeaderStartDate)));
-        holder.mPeriodToggle.setRotation(collapsed ? 0f : 180f);
-        // Named, because a screen reader reaches the arrow on its own and every one of them
-        // would otherwise read the same words. The date range is the one the row just drew.
-        holder.mPeriodToggle.setContentDescription(holder.itemView.getContext().getString(
-                collapsed ? R.string.description_show_period_transactions
-                        : R.string.description_hide_period_transactions,
-                holder.mLeftTextView.getText()));
     }
 
     /**
@@ -429,34 +416,12 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
         private TextView mRightTextView;
         private TextView mIncomeTextView;
         private TextView mExpenseTextView;
-        private ImageView mPeriodToggle;
-
         /*package-local*/ HeaderViewHolder(View itemView) {
             super(itemView);
             mLeftTextView = itemView.findViewById(R.id.left_text_view);
             mRightTextView = itemView.findViewById(R.id.right_text_view);
             mIncomeTextView = itemView.findViewById(R.id.income_text_view);
             mExpenseTextView = itemView.findViewById(R.id.expense_text_view);
-            mPeriodToggle = itemView.findViewById(R.id.period_toggle_image_view);
-            // Its own listener, because a tap on the row still means what it always did: open
-            // the report of this period, or nothing at all.
-            mPeriodToggle.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    Cursor cursor = getSafeCursor(cursorPosition(getAdapterPosition()));
-                    if (cursor != null) {
-                        togglePeriod(periodKey(cursor.getInt(mIndexHeaderGroupType),
-                                cursor.getString(mIndexHeaderStartDate)));
-                    }
-                }
-
-            });
-            // the arrow is a ThemedImageView, which tints itself from the row it sits on and
-            // repaints when the mode changes. A theme attribute in the vector would resolve
-            // against the xml theme, which is the light one whatever mode the user picked
-            itemView.findViewById(R.id.report_image_view)
-                    .setVisibility(mHeaderOpensReport ? View.VISIBLE : View.GONE);
             if (mHeaderOpensReport) {
                 itemView.setOnClickListener(this);
             } else {

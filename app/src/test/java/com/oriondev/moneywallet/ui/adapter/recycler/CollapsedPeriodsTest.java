@@ -217,20 +217,8 @@ public class CollapsedPeriodsTest {
         TextView leftTextView = onScreen.itemView.findViewById(R.id.left_text_view);
         String dateRange = leftTextView.getText().toString();
         assertTrue("the header drawn at position 1 was " + dateRange, dateRange.contains("14"));
-        assertTrue(toggleDescription(onScreen).startsWith("Hide"));
-        assertEquals(180f, toggle(onScreen).getRotation(), 0f);
         RecyclerView.ViewHolder folded = adapter.onCreateViewHolder(parent, HEADER);
         adapter.onBindViewHolder(folded, 0);
-        assertTrue(toggleDescription(folded).startsWith("Show"));
-        assertEquals(0f, toggle(folded).getRotation(), 0f);
-    }
-
-    private static ImageView toggle(RecyclerView.ViewHolder holder) {
-        return holder.itemView.findViewById(R.id.period_toggle_image_view);
-    }
-
-    private static String toggleDescription(RecyclerView.ViewHolder holder) {
-        return String.valueOf(toggle(holder).getContentDescription());
     }
 
     @Test
@@ -306,31 +294,7 @@ public class CollapsedPeriodsTest {
                 listener.mHeaderEnd.getTime());
     }
 
-    /**
-     * The arrow's own listener, from a tap on the view the list laid out to the stored set.
-     *
-     * The list is laid out again at the end, because a fold that is never told to the list leaves
-     * the stored set and the adapter count right and the rows the list itself is holding stale,
-     * and the next scroll on a device reads a row that is no longer on the list.
-     */
-    @Test
-    public void theArrowOnAHeaderFoldsThatHeader() {
-        TransactionCursorAdapter adapter = adapter(new RecordsClicks());
-        RecyclerView recyclerView = listWith(adapter);
-        // position 4 with nothing folded is the second day's header
-        childAt(recyclerView, 4).findViewById(R.id.period_toggle_image_view).performClick();
-        assertEquals(Collections.singleton(SECOND_DAY), PreferenceManager.getCollapsedPeriods());
-        assertEquals(5, adapter.getItemCount());
-        layOut(recyclerView);
-        // the list is holding those five rows, not the seven it laid out before the fold
-        assertEquals(5, recyclerView.getChildCount());
-        // position 4 is now the last row, the folded day's own header, which is still a header
-        // row; a transaction row carries no left_text_view at all
-        TextView leftTextView = childAt(recyclerView, 4).findViewById(R.id.left_text_view);
-        assertNotNull("the row at position 4 was not a header", leftTextView);
-        assertTrue("the header drawn at position 4 was " + leftTextView.getText(),
-                leftTextView.getText().toString().contains("14"));
-    }
+
 
     /**
      * The calendar and the search results build their cursor with a plain CursorLoader, so it
