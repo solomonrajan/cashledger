@@ -16,17 +16,17 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v6
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '21'
 
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@v4
 
       # Robolectric fetches the android-all jar for the SDK it runs against, about
       # 190 MB, into the Maven local repository and not the Gradle cache, so the
@@ -45,7 +45,7 @@ jobs:
 
       - run: ./gradlew clean testFlossOsmDebugUnitTest assembleFlossOsmDebug assembleFlossOsmDebugAndroidTest lintFlossOsmDebug
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lint-report
@@ -53,7 +53,7 @@ jobs:
 
       # The unit tests run before lint, so a failing test is the most common red
       # run and the one with no lint report to upload. Keep its own report.
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: unit-test-report
@@ -61,7 +61,7 @@ jobs:
             app/build/reports/tests/testFlossOsmDebugUnitTest/**
             app/build/test-results/testFlossOsmDebugUnitTest/**
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         with:
           name: debug-apk
           path: app/build/outputs/apk/flossOsm/debug/*.apk
