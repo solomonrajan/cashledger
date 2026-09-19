@@ -2,8 +2,7 @@ name: build
 
 on:
   push:
-    branches: [ master ]
-    branches: [ transactionpage ]
+    branches: [ master, transactionpage ]
   pull_request:
 
 permissions:
