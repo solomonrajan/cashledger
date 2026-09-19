@@ -20,6 +20,13 @@
 
 <changelog>
 
+    <version versionName="2.0.0" versionDate="Sep 19, 2026">
+        <change>[b]New![/b] Rebranded the application to Cash Ledger.</change>
+        <change>[b]New![/b] Introduced a brand new official app icon design.</change>
+        <change>[b]New![/b] Added GitHub Action workflow for building and uploading release APKs.</change>
+        <change>Updated maintainer details and added about.json resource for app metadata, authors, and licenses.</change>
+    </version>
+
     <version versionName="1.9.0" versionDate="Sep 15, 2026">
         <change>[b]New![/b] Long press a transaction to select it, tap others to add them, then delete them together or move them to another wallet or category.</change>
         <change>[b]New![/b] A debt card offers Pay in full and a credit card Receive in full, opening the editor on what is left, and every debt payment opens with the debt's description filled in.</change>
