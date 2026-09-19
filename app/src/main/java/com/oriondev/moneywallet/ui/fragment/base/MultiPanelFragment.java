@@ -273,7 +273,8 @@ public abstract class MultiPanelFragment extends Fragment implements MultiPanelC
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
             if (mPrimaryToolbar != null) {
-                mPrimaryToolbar.setSubtitle(Utils.readWalletName(data));
+                mPrimaryToolbar.setTitle(Utils.readWalletName(data));
+                mPrimaryToolbar.setSubtitle(null);
             }
         }
 
@@ -299,9 +300,11 @@ public abstract class MultiPanelFragment extends Fragment implements MultiPanelC
         long walletId = PreferenceManager.getCurrentWallet();
         if (walletId == PreferenceManager.TOTAL_WALLET_ID) {
             // synthetic, there is no row to load
-            mPrimaryToolbar.setSubtitle(R.string.total_wallet_name);
+            mPrimaryToolbar.setTitle(R.string.total_wallet_name);
+            mPrimaryToolbar.setSubtitle(null);
             LoaderManager.getInstance(this).destroyLoader(CURRENT_WALLET_LOADER_ID);
         } else if (walletId == PreferenceManager.NO_CURRENT_WALLET) {
+            mPrimaryToolbar.setTitle(getTitleRes());
             mPrimaryToolbar.setSubtitle(null);
             LoaderManager.getInstance(this).destroyLoader(CURRENT_WALLET_LOADER_ID);
         } else if (reload) {
@@ -309,7 +312,8 @@ public abstract class MultiPanelFragment extends Fragment implements MultiPanelC
             // the load lands and the toolbar keeps its height. With no name, clear, because the
             // load is asynchronous and until it lands the old name would be naming the wrong
             // wallet
-            mPrimaryToolbar.setSubtitle(walletName);
+            mPrimaryToolbar.setTitle(walletName != null ? walletName : getString(getTitleRes()));
+            mPrimaryToolbar.setSubtitle(null);
             // a loader rather than a direct query: resolving a wallet row runs a balance
             // aggregate over the transactions table, and it redelivers when the row is renamed
             LoaderManager.getInstance(this).restartLoader(CURRENT_WALLET_LOADER_ID, null, mCurrentWalletCallbacks);

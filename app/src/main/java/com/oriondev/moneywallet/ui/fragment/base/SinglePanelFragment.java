@@ -185,7 +185,8 @@ public abstract class SinglePanelFragment extends Fragment implements Toolbar.On
         @Override
         public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
             if (mToolbar != null) {
-                mToolbar.setSubtitle(Utils.readWalletName(data));
+                mToolbar.setTitle(Utils.readWalletName(data));
+                mToolbar.setSubtitle(null);
             }
         }
 
@@ -211,9 +212,11 @@ public abstract class SinglePanelFragment extends Fragment implements Toolbar.On
         long walletId = PreferenceManager.getCurrentWallet();
         if (walletId == PreferenceManager.TOTAL_WALLET_ID) {
             // synthetic, there is no row to load
-            mToolbar.setSubtitle(R.string.total_wallet_name);
+            mToolbar.setTitle(R.string.total_wallet_name);
+            mToolbar.setSubtitle(null);
             LoaderManager.getInstance(this).destroyLoader(CURRENT_WALLET_LOADER_ID);
         } else if (walletId == PreferenceManager.NO_CURRENT_WALLET) {
+            mToolbar.setTitle(getTitleRes());
             mToolbar.setSubtitle(null);
             LoaderManager.getInstance(this).destroyLoader(CURRENT_WALLET_LOADER_ID);
         } else if (reload) {
@@ -221,7 +224,8 @@ public abstract class SinglePanelFragment extends Fragment implements Toolbar.On
             // the load lands and the toolbar keeps its height. With no name, clear, because the
             // load is asynchronous and until it lands the old name would be naming the wrong
             // wallet
-            mToolbar.setSubtitle(walletName);
+            mToolbar.setTitle(walletName != null ? walletName : getString(getTitleRes()));
+            mToolbar.setSubtitle(null);
             // a loader rather than a direct query: resolving a wallet row runs a balance
             // aggregate over the transactions table, and it redelivers when the row is renamed
             LoaderManager.getInstance(this).restartLoader(CURRENT_WALLET_LOADER_ID, null, mCurrentWalletCallbacks);
