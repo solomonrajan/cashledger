@@ -128,8 +128,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
     /*package-local*/ static final int ID_SECTION_ATM = 13;
     /*package-local*/ static final int ID_SECTION_BANK = 14;
     /*package-local*/ static final int ID_SECTION_SETTING = 15;
-    /*package-local*/ static final int ID_SECTION_ABOUT = 17;
-
     /*package-local*/ static final int ID_ACTION_NEW_WALLET = 18;
     /*package-local*/ static final int ID_ACTION_MANAGE_WALLET = 19;
     // Every wallet entry takes this plus the wallet's own id, above every other id, so a lookup
@@ -219,7 +217,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         addEntry(menu, GROUP_TOOLS, ID_SECTION_ATM, R.drawable.ic_credit_card_24dp, R.string.menu_search_atm);
         addEntry(menu, GROUP_TOOLS, ID_SECTION_BANK, R.drawable.ic_account_balance_24dp, R.string.menu_search_bank);
         addEntry(menu, GROUP_SETTINGS, ID_SECTION_SETTING, R.drawable.ic_settings_24dp, R.string.menu_setting).setCheckable(true);
-        addEntry(menu, GROUP_SETTINGS, ID_SECTION_ABOUT, R.drawable.ic_info_outline_24dp, R.string.menu_about);
         mHeaderView = mNavigationView.getHeaderView(0);
         // Top only, to match the menu below it. The navigation view pads its own list from the
         // top and bottom and leaves the sides to its inset scrims, so a header that also took
@@ -404,9 +401,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
                 break;
             case ID_SECTION_BANK:
                 showBankSearchDialog();
-                break;
-            case ID_SECTION_ABOUT:
-                startActivity(new Intent(this, AboutActivity.class));
                 break;
             default:
                 selectSection(identifier);
