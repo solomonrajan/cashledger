@@ -46,6 +46,7 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final Controller mController;
 
+    private final List<IconGroup> mOriginalIconGroups = new ArrayList<>();
     private final List<IconGroup> mIconGroups = new ArrayList<>();
     private final List<ItemWrapper> mItems = new ArrayList<>();
 
@@ -85,17 +86,59 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     public void setIconGroups(List<IconGroup> iconGroups) {
+        mOriginalIconGroups.clear();
+        if (iconGroups != null) {
+            mOriginalIconGroups.addAll(iconGroups);
+        }
+        applyFilter("");
+    }
+
+    public void setFilter(String query) {
+        applyFilter(query != null ? query.toLowerCase() : "");
+    }
+
+    private void applyFilter(String query) {
         mIconGroups.clear();
         mItems.clear();
-        for (int i = 0; i < iconGroups.size(); i++) {
-            IconGroup group = iconGroups.get(i);
-            mItems.add(new ItemWrapper(i, INDEX_HEADER));
-            mIconGroups.add(group);
-            for (int j = 0; j < group.size(); j++) {
-                mItems.add(new ItemWrapper(i, j));
+        for (int i = 0; i < mOriginalIconGroups.size(); i++) {
+            IconGroup group = mOriginalIconGroups.get(i);
+            
+            // Filter icons in this group
+            List<Icon> filteredIcons = new ArrayList<>();
+            for (Icon icon : group.getGroupIcons()) {
+                if (query.isEmpty() || matchesQuery(icon, query)) {
+                    filteredIcons.add(icon);
+                }
+            }
+
+            if (!filteredIcons.isEmpty()) {
+                // We need to create a temporary group to hold the filtered icons, or map carefully.
+                // Since IconGroup doesn't have a setter for icons, we map using the original group index 
+                // but only add items that match.
+                mItems.add(new ItemWrapper(i, INDEX_HEADER));
+                mIconGroups.add(group); // Just to satisfy mIconGroups logic, although we rely on the original
+                
+                for (int j = 0; j < group.size(); j++) {
+                    Icon icon = group.getGroupIcons().get(j);
+                    if (query.isEmpty() || matchesQuery(icon, query)) {
+                        mItems.add(new ItemWrapper(i, j));
+                    }
+                }
             }
         }
         notifyDataSetChanged();
+    }
+
+    private boolean matchesQuery(Icon icon, String query) {
+        if (icon instanceof com.oriondev.moneywallet.model.VectorIcon) {
+            // e.g. "ic_icon_pizza" -> contains "pizza"
+            String name = ((com.oriondev.moneywallet.model.VectorIcon) icon).getResourceName();
+            return name != null && name.toLowerCase().contains(query);
+        } else if (icon instanceof com.oriondev.moneywallet.model.ColorIcon) {
+            String text = ((com.oriondev.moneywallet.model.ColorIcon) icon).getText();
+            return text != null && text.toLowerCase().contains(query);
+        }
+        return false;
     }
 
     public boolean isHeader(int position) {
@@ -104,13 +147,13 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private String getHeaderTextAt(int position) {
         ItemWrapper itemWrapper = mItems.get(position);
-        IconGroup group = mIconGroups.get(itemWrapper.mGroupIndex);
+        IconGroup group = mOriginalIconGroups.get(itemWrapper.mGroupIndex);
         return group.getGroupName();
     }
 
     private Icon getIconAt(int position) {
         ItemWrapper itemWrapper = mItems.get(position);
-        IconGroup group = mIconGroups.get(itemWrapper.mGroupIndex);
+        IconGroup group = mOriginalIconGroups.get(itemWrapper.mGroupIndex);
         return group.getGroupIcons().get(itemWrapper.mItemIndex);
     }
 

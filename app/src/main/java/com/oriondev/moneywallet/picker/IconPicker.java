@@ -208,7 +208,8 @@ public class IconPicker extends Fragment implements ColorChooserDialog.Callback 
                 ThemedDialog.buildBottomSheet(activity)
                         .addTitleItem(R.string.bottom_sheet_icon_picker_title)
                         .addItem(1, R.string.bottom_sheet_icon_picker_action_change_icon, R.drawable.ic_add_24dp)
-                        .addItem(2, R.string.bottom_sheet_icon_picker_action_remove_icon, R.drawable.ic_format_color_fill_black_24dp)
+                        .addItem(2, R.string.bottom_sheet_icon_picker_action_change_bg_color, R.drawable.ic_format_color_fill_black_24dp)
+                        .addItem(3, R.string.bottom_sheet_icon_picker_action_remove_icon, R.drawable.ic_delete_black_24dp)
                         .setItemClickListener(new NavigationView.OnNavigationItemSelectedListener() {
 
                             @Override
@@ -218,6 +219,9 @@ public class IconPicker extends Fragment implements ColorChooserDialog.Callback 
                                         startIconPickerActivity();
                                         break;
                                     case 2:
+                                        openColorPicker();
+                                        break;
+                                    case 3:
                                         restoreColorIcon();
                                         break;
                                 }
@@ -270,6 +274,9 @@ public class IconPicker extends Fragment implements ColorChooserDialog.Callback 
         if (mCurrentIcon instanceof ColorIcon) {
             String text = IconLoader.getColorIconString(mBindEditText != null ? mBindEditText.getText().toString() : null);
             mCurrentIcon = new ColorIcon(mLastBackgroundColor, text);
+            fireCallbackSafely();
+        } else if (mCurrentIcon instanceof VectorIcon) {
+            mCurrentIcon = new VectorIcon((VectorIcon) mCurrentIcon, mLastBackgroundColor);
             fireCallbackSafely();
         }
     }

@@ -31,6 +31,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.Menu;
+import android.view.MenuItem;
+import androidx.appcompat.widget.SearchView;
+
 import com.oriondev.moneywallet.R;
 import com.oriondev.moneywallet.background.IconGroupLoader;
 import com.oriondev.moneywallet.model.Icon;
@@ -111,6 +115,29 @@ public class IconListActivity extends SinglePanelActivity implements SwipeRefres
     @Override
     protected boolean isFloatingActionButtonEnabled() {
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_icon_list, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        if (searchItem != null) {
+            SearchView searchView = (SearchView) searchItem.getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    mAdapter.setFilter(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    mAdapter.setFilter(newText);
+                    return true;
+                }
+            });
+        }
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

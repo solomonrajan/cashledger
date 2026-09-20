@@ -39,15 +39,28 @@ import org.json.JSONObject;
 public class VectorIcon extends Icon {
 
     private static final String RESOURCE = "resource";
+    private static final String COLOR = "color";
 
     private final String mResourceName;
+    private final String mColor;
 
     public VectorIcon(JSONObject jsonObject) throws JSONException {
         mResourceName = jsonObject.getString(RESOURCE);
+        mColor = jsonObject.optString(COLOR, null);
+    }
+
+    public String getResourceName() {
+        return mResourceName;
+    }
+
+    public VectorIcon(VectorIcon original, String color) {
+        this.mResourceName = original.mResourceName;
+        this.mColor = color;
     }
 
     protected VectorIcon(Parcel source) {
         mResourceName = source.readString();
+        mColor = source.readString();
     }
 
     @Override
@@ -58,6 +71,9 @@ public class VectorIcon extends Icon {
     @Override
     protected void writeJSON(JSONObject jsonObject) throws JSONException {
         jsonObject.put(RESOURCE, mResourceName);
+        if (mColor != null && !mColor.isEmpty()) {
+            jsonObject.put(COLOR, mColor);
+        }
     }
 
     @Override
@@ -73,10 +89,16 @@ public class VectorIcon extends Icon {
     public boolean apply(ImageView imageView) {
         int resourceId = getResource(imageView.getContext());
         if (resourceId > 0) {
-            Glide.with(imageView)
-                    .load(resourceId)
-                    .transition(new DrawableTransitionOptions().crossFade())
-                    .into(imageView);
+            imageView.setImageResource(resourceId);
+            if (mColor != null && !mColor.isEmpty()) {
+                try {
+                    imageView.setColorFilter(android.graphics.Color.parseColor(mColor));
+                } catch (IllegalArgumentException e) {
+                    imageView.clearColorFilter();
+                }
+            } else {
+                imageView.clearColorFilter();
+            }
             return true;
         } else {
             return false;
@@ -91,6 +113,7 @@ public class VectorIcon extends Icon {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mResourceName);
+        dest.writeString(mColor);
     }
 
     public static final Parcelable.Creator<VectorIcon> CREATOR = new Parcelable.Creator<VectorIcon>() {
