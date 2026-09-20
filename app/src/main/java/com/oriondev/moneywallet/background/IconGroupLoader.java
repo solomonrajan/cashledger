@@ -66,8 +66,7 @@ public class IconGroupLoader extends AbstractGenericLoader<List<IconGroup>> {
             while ((line = bufferedReader.readLine()) != null) {
                 jsonBuilder.append(line);
             }
-            JSONObject iconsObj = new JSONObject(jsonBuilder.toString());
-            JSONArray categories = iconsObj.getJSONArray("categories");
+            JSONArray categories = new JSONArray(jsonBuilder.toString());
             for (int i = 0; i < categories.length(); i++) {
                 iconGroups.add(parseIconGroup(categories.getJSONObject(i)));
             }
@@ -79,8 +78,8 @@ public class IconGroupLoader extends AbstractGenericLoader<List<IconGroup>> {
     }
 
     private IconGroup parseIconGroup(JSONObject category) throws JSONException {
-        String groupName = getStringByName(category.getString("name"));
-        List<Icon> icons = parseIconList(category.getJSONArray("icons"));
+        String groupName = getStringByName(category.getString("name_resource"));
+        List<Icon> icons = parseIconList(category.getJSONArray("items"));
         return new IconGroup(groupName, icons);
     }
 
