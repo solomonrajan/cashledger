@@ -99,6 +99,10 @@ public class ColorIcon extends Icon {
         return Color.parseColor(mColor);
     }
 
+    public String getName() {
+        return mName;
+    }
+
     @Override
     public Drawable getDrawable(Context context) {
         return getDrawable();

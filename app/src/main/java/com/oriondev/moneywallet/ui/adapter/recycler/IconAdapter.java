@@ -135,7 +135,7 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             String name = ((com.oriondev.moneywallet.model.VectorIcon) icon).getResourceName();
             return name != null && name.toLowerCase().contains(query);
         } else if (icon instanceof com.oriondev.moneywallet.model.ColorIcon) {
-            String text = ((com.oriondev.moneywallet.model.ColorIcon) icon).getText();
+            String text = ((com.oriondev.moneywallet.model.ColorIcon) icon).getName();
             return text != null && text.toLowerCase().contains(query);
         }
         return false;
