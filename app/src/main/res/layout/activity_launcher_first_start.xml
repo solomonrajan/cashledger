@@ -24,7 +24,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:theme_backgroundColor="colorWindowForeground" >
+    app:theme_backgroundColor="colorWindowBackground" >
 
     <com.oriondev.moneywallet.ui.view.theme.ThemedScrollView
         android:layout_width="match_parent"
@@ -66,19 +66,31 @@
                 android:textSize="@dimen/activity_launcher_first_start_content_text_size"
                 app:theme_textColor="textColorSecondary" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/first_start_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_launcher_first_start_layout_button_margin_top"
-                android:text="@string/activity_launcher_first_start_button_first_time" />
+                android:text="@string/activity_launcher_first_start_button_first_time"
+                android:textColor="@android:color/white"
+                app:backgroundTint="@color/colorAccent"
+                app:cornerRadius="24dp"
+                app:icon="@drawable/ic_send_24dp"
+                app:iconGravity="textStart"
+                app:iconTint="@android:color/white" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/restore_backup_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/activity_launcher_first_start_layout_button_margin_bottom"
-                android:text="@string/activity_launcher_first_start_button_restore_backup" />
+                android:text="@string/activity_launcher_first_start_button_restore_backup"
+                android:textColor="@color/colorAccent"
+                app:backgroundTint="#E8F0FE"
+                app:cornerRadius="24dp"
+                app:icon="@drawable/ic_cloud_upload_24dp"
+                app:iconGravity="textStart"
+                app:iconTint="@color/colorAccent" />
 
         </LinearLayout>
 
