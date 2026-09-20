@@ -88,7 +88,7 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 - **Framework:** Native Android SDK (XML Layouts / Views)
 - **Design System:** Material Design Components
 - **Data Visualization:** MPAndroidChart for reports and statistics
-- **Icons:** Material Design Icons, Phosphor Icons, Tabler Icons, Lucide, and Bootstrap Icons
+- **Icons:** Material Symbols
 
 **Backend & Storage**
 - **Database:** Local SQLite (offline-first architecture, no accounts or cloud services required)
@@ -133,4 +133,4 @@ Cash Ledger is free software under the GNU General Public License v3.0 or later,
 
 MoneyWallet was written by AndreAle94 and its contributors. Tallybook is a fork of MoneyWallet by herrerad85 and its contributors. Cash Ledger is a fork of Tallybook and exists to keep that work usable. Cash Ledger is independent and is not endorsed by or affiliated with the original authors.
 
-The app icon and the intro illustrations are original artwork for this fork, released under the GPLv3. The category picker icons place glyphs from Phosphor Icons (MIT), Tabler Icons (MIT), Lucide (ISC) and Bootstrap Icons (MIT) on original GPLv3 disc backgrounds, and a few are original artwork. The interface also uses Material Design Icons, licensed under Apache-2.0. Full license texts are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+The app icon and the intro illustrations are original artwork for this fork, released under the GPLv3. The category picker icons and UI elements use glyphs from Material Symbols. Full license texts are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

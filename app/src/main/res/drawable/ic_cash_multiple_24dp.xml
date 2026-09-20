@@ -1,26 +1,10 @@
-<!--
-  ~ Copyright (c) 2018.
-  ~
-  ~ This file is part of MoneyWallet.
-  ~
-  ~ MoneyWallet is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ MoneyWallet is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:height="24dp"
     android:width="24dp"
-    android:viewportWidth="24"
-    android:viewportHeight="24">
-    <path android:fillColor="#000" android:pathData="M5,6H23V18H5V6M14,9A3,3 0 0,1 17,12A3,3 0 0,1 14,15A3,3 0 0,1 11,12A3,3 0 0,1 14,9M9,8A2,2 0 0,1 7,10V14A2,2 0 0,1 9,16H19A2,2 0 0,1 21,14V10A2,2 0 0,1 19,8H9M1,10H3V20H19V22H1V10Z" />
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M560,520Q510,520 475,485Q440,450 440,400Q440,350 475,315Q510,280 560,280Q610,280 645,315Q680,350 680,400Q680,450 645,485Q610,520 560,520ZM280,640Q247,640 223.5,616.5Q200,593 200,560L200,240Q200,207 223.5,183.5Q247,160 280,160L840,160Q873,160 896.5,183.5Q920,207 920,240L920,560Q920,593 896.5,616.5Q873,640 840,640L280,640ZM360,560L760,560Q760,527 783.5,503.5Q807,480 840,480L840,320Q807,320 783.5,296.5Q760,273 760,240L360,240Q360,273 336.5,296.5Q313,320 280,320L280,480Q313,480 336.5,503.5Q360,527 360,560ZM760,800L120,800Q87,800 63.5,776.5Q40,753 40,720L40,320Q40,303 51.5,291.5Q63,280 80,280Q97,280 108.5,291.5Q120,303 120,320L120,720Q120,720 120,720Q120,720 120,720L760,720Q777,720 788.5,731.5Q800,743 800,760Q800,777 788.5,788.5Q777,800 760,800ZM280,560L280,560Q280,560 280,560Q280,560 280,560L280,240Q280,240 280,240Q280,240 280,240L280,240Q280,240 280,240Q280,240 280,240L280,560Q280,560 280,560Q280,560 280,560Z"/>
 </vector>

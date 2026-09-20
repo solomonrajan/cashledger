@@ -1,20 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Original Tallybook category disc (GPLv3). Glyph from Phosphor Icons (phosphoricons.com), MIT License. Glyph recolored white and composed onto the disc. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:viewportWidth="136.914"
-    android:viewportHeight="136.914"
-    android:width="136.914dp"
-    android:height="136.914dp">
-    <path
-        android:pathData="M5.124,68.457 a63.333,63.333 0 1,0 126.666,0 a63.333,63.333 0 1,0 -126.666,0 Z"
-        android:fillColor="#5B6B8C" />
-    <group
-        android:scaleX="0.258"
-        android:scaleY="0.258"
-        android:translateX="35.457"
-        android:translateY="35.457">
-        <path
-            android:pathData="M216,40H40A16,16,0,0,0,24,56V192a16,16,0,0,0,16,16H56v16a8,8,0,0,0,16,0V208H184v16a8,8,0,0,0,16,0V208h16a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,152H40V56H216v64H199.32a48,48,0,1,0,0,16H216v56Zm-50.16-72a16,16,0,1,0,0,16H183a32,32,0,1,1,0-16Z"
-            android:fillColor="#FFFFFF" />
-    </group>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M240,880Q207,880 183.5,856.5Q160,833 160,800L160,400Q160,367 183.5,343.5Q207,320 240,320L280,320L280,240Q280,157 338.5,98.5Q397,40 480,40Q563,40 621.5,98.5Q680,157 680,240L680,320L720,320Q753,320 776.5,343.5Q800,367 800,400L800,800Q800,833 776.5,856.5Q753,880 720,880L240,880ZM240,800L720,800Q720,800 720,800Q720,800 720,800L720,400Q720,400 720,400Q720,400 720,400L240,400Q240,400 240,400Q240,400 240,400L240,800Q240,800 240,800Q240,800 240,800ZM536.5,656.5Q560,633 560,600Q560,567 536.5,543.5Q513,520 480,520Q447,520 423.5,543.5Q400,567 400,600Q400,633 423.5,656.5Q447,680 480,680Q513,680 536.5,656.5ZM360,320L600,320L600,240Q600,190 565,155Q530,120 480,120Q430,120 395,155Q360,190 360,240L360,320ZM240,800Q240,800 240,800Q240,800 240,800L240,400Q240,400 240,400Q240,400 240,400L240,400Q240,400 240,400Q240,400 240,400L240,800Q240,800 240,800Q240,800 240,800Z"/>
 </vector>

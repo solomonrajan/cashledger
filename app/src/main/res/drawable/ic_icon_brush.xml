@@ -1,35 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Original Tallybook category disc (GPLv3). Glyph from Lucide (lucide.dev), ISC License. Glyph recolored white and composed onto the disc. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:viewportWidth="136.914"
-    android:viewportHeight="136.914"
-    android:width="136.914dp"
-    android:height="136.914dp">
-    <path
-        android:pathData="M5.124,68.457 a63.333,63.333 0 1,0 126.666,0 a63.333,63.333 0 1,0 -126.666,0 Z"
-        android:fillColor="#8E44AD" />
-    <group
-        android:scaleX="2.75"
-        android:scaleY="2.75"
-        android:translateX="35.457"
-        android:translateY="35.457">
-        <path
-            android:pathData="m14.622 17.897-10.68-2.913"
-            android:strokeColor="#FFFFFF"
-            android:strokeWidth="2"
-            android:strokeLineCap="round"
-            android:strokeLineJoin="round" />
-        <path
-            android:pathData="M18.376 2.622a1 1 0 1 1 3.002 3.002L17.36 9.643a.5.5 0 0 0 0 .707l.944.944a2.41 2.41 0 0 1 0 3.408l-.944.944a.5.5 0 0 1-.707 0L8.354 7.348a.5.5 0 0 1 0-.707l.944-.944a2.41 2.41 0 0 1 3.408 0l.944.944a.5.5 0 0 0 .707 0z"
-            android:strokeColor="#FFFFFF"
-            android:strokeWidth="2"
-            android:strokeLineCap="round"
-            android:strokeLineJoin="round" />
-        <path
-            android:pathData="M9 8c-1.804 2.71-3.97 3.46-6.583 3.948a.507.507 0 0 0-.302.819l7.32 8.883a1 1 0 0 0 1.185.204C12.735 20.405 16 16.792 16 15"
-            android:strokeColor="#FFFFFF"
-            android:strokeWidth="2"
-            android:strokeLineCap="round"
-            android:strokeLineJoin="round" />
-    </group>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M240,840Q195,840 151,818Q107,796 80,760Q106,760 133,739.5Q160,719 160,680Q160,630 195,595Q230,560 280,560Q330,560 365,595Q400,630 400,680Q400,746 353,793Q306,840 240,840ZM240,760Q273,760 296.5,736.5Q320,713 320,680Q320,663 308.5,651.5Q297,640 280,640Q263,640 251.5,651.5Q240,663 240,680Q240,703 234.5,722Q229,741 220,758Q225,760 230,760Q235,760 240,760ZM470,600L360,490L718,132Q729,121 745.5,120.5Q762,120 774,132L828,186Q840,198 840,214Q840,230 828,242L470,600ZM280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Q280,680 280,680Z"/>
 </vector>

@@ -1,20 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Original Tallybook category disc (GPLv3). Glyph from Phosphor Icons (phosphoricons.com), MIT License. Glyph recolored white and composed onto the disc. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:viewportWidth="136.914"
-    android:viewportHeight="136.914"
-    android:width="136.914dp"
-    android:height="136.914dp">
-    <path
-        android:pathData="M5.124,68.457 a63.333,63.333 0 1,0 126.666,0 a63.333,63.333 0 1,0 -126.666,0 Z"
-        android:fillColor="#16A085" />
-    <group
-        android:scaleX="0.258"
-        android:scaleY="0.258"
-        android:translateX="35.457"
-        android:translateY="35.457">
-        <path
-            android:pathData="M157.73,113.13A8,8,0,0,1,159.82,102L227.48,55.7a8,8,0,0,1,9,13.21l-67.67,46.3a7.92,7.92,0,0,1-4.51,1.4A8,8,0,0,1,157.73,113.13Zm80.87,85.09a8,8,0,0,1-11.12,2.08L136,137.7,93.49,166.78a36,36,0,1,1-9-13.19L121.83,128,84.44,102.41a35.86,35.86,0,1,1,9-13.19l143,97.87A8,8,0,0,1,238.6,198.22ZM80,180a20,20,0,1,0-5.86,14.14A19.85,19.85,0,0,0,80,180ZM74.14,90.13a20,20,0,1,0-28.28,0A19.85,19.85,0,0,0,74.14,90.13Z"
-            android:fillColor="#FFFFFF" />
-    </group>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M480,560L386,654Q394,669 397,686Q400,703 400,720Q400,786 353,833Q306,880 240,880Q174,880 127,833Q80,786 80,720Q80,654 127,607Q174,560 240,560Q257,560 274,563Q291,566 306,574L400,480L306,386Q291,394 274,397Q257,400 240,400Q174,400 127,353Q80,306 80,240Q80,174 127,127Q174,80 240,80Q306,80 353,127Q400,174 400,240Q400,257 397,274Q394,291 386,306L824,744Q851,771 836,805.5Q821,840 783,840Q772,840 761.5,835.5Q751,831 743,823L480,560ZM600,440L520,360L743,137Q751,129 761.5,124.5Q772,120 783,120Q821,120 835.5,155Q850,190 823,217L600,440ZM296.5,296.5Q320,273 320,240Q320,207 296.5,183.5Q273,160 240,160Q207,160 183.5,183.5Q160,207 160,240Q160,273 183.5,296.5Q207,320 240,320Q273,320 296.5,296.5ZM494,494Q500,488 500,480Q500,472 494,466Q488,460 480,460Q472,460 466,466Q460,472 460,480Q460,488 466,494Q472,500 480,500Q488,500 494,494ZM296.5,776.5Q320,753 320,720Q320,687 296.5,663.5Q273,640 240,640Q207,640 183.5,663.5Q160,687 160,720Q160,753 183.5,776.5Q207,800 240,800Q273,800 296.5,776.5Z"/>
 </vector>

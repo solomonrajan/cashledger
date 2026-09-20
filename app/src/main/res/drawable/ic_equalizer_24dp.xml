@@ -1,28 +1,10 @@
-<!--
-  ~ Copyright (c) 2018.
-  ~
-  ~ This file is part of MoneyWallet.
-  ~
-  ~ MoneyWallet is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ MoneyWallet is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="24dp"
-        android:height="24dp"
-        android:viewportWidth="24.0"
-        android:viewportHeight="24.0">
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M10,20h4V4h-4v16zm-6,0h4v-8H4v8zM16,9v11h4V9h-4z"/>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M183.5,776.5Q160,753 160,720L160,560Q160,527 183.5,503.5Q207,480 240,480Q273,480 296.5,503.5Q320,527 320,560L320,720Q320,753 296.5,776.5Q273,800 240,800Q207,800 183.5,776.5ZM480,800Q447,800 423.5,776.5Q400,753 400,720L400,240Q400,207 423.5,183.5Q447,160 480,160Q513,160 536.5,183.5Q560,207 560,240L560,720Q560,753 536.5,776.5Q513,800 480,800ZM663.5,776.5Q640,753 640,720L640,440Q640,407 663.5,383.5Q687,360 720,360Q753,360 776.5,383.5Q800,407 800,440L800,720Q800,753 776.5,776.5Q753,800 720,800Q687,800 663.5,776.5Z"/>
 </vector>

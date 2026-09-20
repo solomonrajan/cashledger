@@ -1,28 +1,10 @@
-<!--
-  ~ Copyright (c) 2018.
-  ~
-  ~ This file is part of MoneyWallet.
-  ~
-  ~ MoneyWallet is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ MoneyWallet is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="24dp"
-        android:height="24dp"
-        android:viewportWidth="24.0"
-        android:viewportHeight="24.0">
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M19.07,4.93l-1.41,1.41C19.1,7.79 20,9.79 20,12c0,4.42 -3.58,8 -8,8s-8,-3.58 -8,-8c0,-4.08 3.05,-7.44 7,-7.93v2.02C8.16,6.57 6,9.03 6,12c0,3.31 2.69,6 6,6s6,-2.69 6,-6c0,-1.66 -0.67,-3.16 -1.76,-4.24l-1.41,1.41C15.55,9.9 16,10.9 16,12c0,2.21 -1.79,4 -4,4s-4,-1.79 -4,-4c0,-1.86 1.28,-3.41 3,-3.86v2.14c-0.6,0.35 -1,0.98 -1,1.72 0,1.1 0.9,2 2,2s2,-0.9 2,-2c0,-0.74 -0.4,-1.38 -1,-1.72V2h-1C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10c0,-2.76 -1.12,-5.26 -2.93,-7.07z"/>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M324,848.5Q251,817 197,763Q143,709 111.5,636Q80,563 80,480Q80,397 111.5,324Q143,251 197,197Q251,143 324,111.5Q397,80 480,80Q497,80 508.5,91.5Q520,103 520,120L520,411Q538,422 549,439.5Q560,457 560,480Q560,513 536.5,536.5Q513,560 480,560Q447,560 423.5,536.5Q400,513 400,480Q400,457 411,439Q422,421 440,411L440,325Q388,339 354,381.5Q320,424 320,480Q320,546 367,593Q414,640 480,640Q546,640 593,593Q640,546 640,480Q640,454 632.5,432Q625,410 612,390Q602,376 603,359Q604,342 615,331Q627,319 643.5,319Q660,319 670,333Q693,364 706.5,401Q720,438 720,480Q720,580 650,650Q580,720 480,720Q380,720 310,650Q240,580 240,480Q240,390 297,323.5Q354,257 440,243L440,162Q321,177 240.5,267Q160,357 160,480Q160,614 253,707Q346,800 480,800Q614,800 707,707Q800,614 800,480Q800,422 781,370.5Q762,319 727,277Q716,264 716,247Q716,230 728,218Q740,206 756.5,206.5Q773,207 784,220Q829,273 854.5,339Q880,405 880,480Q880,563 848.5,636Q817,709 763,763Q709,817 636,848.5Q563,880 480,880Q397,880 324,848.5Z"/>
 </vector>

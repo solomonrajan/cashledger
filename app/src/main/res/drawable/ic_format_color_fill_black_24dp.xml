@@ -1,32 +1,10 @@
-<!--
-  ~ Copyright (c) 2018.
-  ~
-  ~ This file is part of MoneyWallet.
-  ~
-  ~ MoneyWallet is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~
-  ~ MoneyWallet is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~ GNU General Public License for more details.
-  ~
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
-  -->
-
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-        android:width="24dp"
-        android:height="24dp"
-        android:viewportWidth="24.0"
-        android:viewportHeight="24.0">
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M16.56,8.94L7.62,0 6.21,1.41l2.38,2.38 -5.15,5.15c-0.59,0.59 -0.59,1.54 0,2.12l5.5,5.5c0.29,0.29 0.68,0.44 1.06,0.44s0.77,-0.15 1.06,-0.44l5.5,-5.5c0.59,-0.58 0.59,-1.53 0,-2.12zM5.21,10L10,5.21 14.79,10H5.21zM19,11.5s-2,2.17 -2,3.5c0,1.1 0.9,2 2,2s2,-0.9 2,-2c0,-1.33 -2,-3.5 -2,-3.5z"/>
-    <path
-        android:fillColor="#FF000000"
-        android:pathData="M0,20h24v4H0z"
-        android:fillAlpha=".36"/>
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="960"
+    android:viewportHeight="960"
+    android:tint="?attr/colorControlNormal">
+  <path
+      android:fillColor="@android:color/white"
+      android:pathData="M332,28L647,343Q670,366 670,400Q670,434 647,457L457,647Q434,670 400,670Q366,670 343,647L153,457Q130,434 130,400Q130,366 153,343L343,152L275,84Q263,72 263.5,56Q264,40 276,28Q288,17 304,16.5Q320,16 332,28ZM400,209L209,400Q209,400 209,400Q209,400 209,400L591,400Q591,400 591,400Q591,400 591,400L400,209ZM703.5,656.5Q680,633 680,600Q680,579 692.5,555Q705,531 720,510Q729,498 739,485Q749,472 760,460Q771,472 781,485Q791,498 800,510Q815,531 827.5,555Q840,579 840,600Q840,633 816.5,656.5Q793,680 760,680Q727,680 703.5,656.5ZM160,960Q127,960 103.5,936.5Q80,913 80,880Q80,847 103.5,823.5Q127,800 160,800L800,800Q833,800 856.5,823.5Q880,847 880,880Q880,913 856.5,936.5Q833,960 800,960L160,960Z"/>
 </vector>
