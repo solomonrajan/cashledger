@@ -118,8 +118,12 @@ public class IconListActivity extends SinglePanelActivity implements SwipeRefres
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_icon_list, menu);
+    protected int onInflateMenu() {
+        return R.menu.menu_icon_list;
+    }
+
+    @Override
+    protected void onMenuCreated(Menu menu) {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         if (searchItem != null) {
             SearchView searchView = (SearchView) searchItem.getActionView();
@@ -137,7 +141,6 @@ public class IconListActivity extends SinglePanelActivity implements SwipeRefres
                 }
             });
         }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
