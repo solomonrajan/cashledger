@@ -245,6 +245,7 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
      */
     private MenuItem addEntry(Menu menu, int group, int identifier, @DrawableRes int icon, @StringRes int name) {
         MenuItem item = menu.add(group, identifier, Menu.NONE, name).setIcon(icon);
+        item.setActionView(new View(this));
         tintEntry(item, ThemeEngine.getTheme());
         return item;
     }
