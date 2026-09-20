@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [ master, transactionpage ]
+    branches: [master, transactionpage, icons]
   pull_request:
 
 permissions:
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '21'
+          java-version: "21"
 
       - uses: gradle/actions/setup-gradle@v4
 
