@@ -41,6 +41,7 @@ import com.oriondev.moneywallet.storage.preference.PreferenceManager;
 import com.oriondev.moneywallet.storage.wrapper.AbstractHeaderCursor;
 import com.oriondev.moneywallet.storage.wrapper.TransactionHeaderCursor;
 import com.oriondev.moneywallet.ui.view.theme.ThemeEngine;
+import com.oriondev.moneywallet.utils.CardBackgroundHelper;
 import com.oriondev.moneywallet.utils.CurrencyManager;
 import com.oriondev.moneywallet.utils.DateFormatter;
 import com.oriondev.moneywallet.utils.DateUtils;
