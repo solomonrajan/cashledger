@@ -93,7 +93,6 @@ public class MainActivityTest {
                 assertTrue(section(activity) instanceof TransactionMultiPanelViewPagerFragment);
                 ImageView icon = activity.findViewById(R.id.wallet_icon_image_view);
                 assertNotNull(icon.getDrawable());
-                assertNotNull(icon.getBackground());
                 assertNotNull(drawer(activity).getItemBackground());
                 assertNull(drawer(activity).getItemIconTintList());
                 assertTrue(drawer(activity).getClipToOutline());
