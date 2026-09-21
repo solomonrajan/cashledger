@@ -341,11 +341,14 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
             txHolder.itemView.setPadding(0, 0, 0, 0); 
         } else if (holder instanceof HeaderViewHolder) {
             // Apply 8dp top margin to separate groups
-            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
-            int marginTop = (cardPos == CardBackgroundHelper.Position.TOP || cardPos == CardBackgroundHelper.Position.SINGLE) && position > 0 ? 
-                    (int) (8 * holder.itemView.getContext().getResources().getDisplayMetrics().density) : 0;
-            params.topMargin = marginTop;
-            holder.itemView.setLayoutParams(params);
+            ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+            if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) layoutParams;
+                int marginTop = (cardPos == CardBackgroundHelper.Position.TOP || cardPos == CardBackgroundHelper.Position.SINGLE) && position > 0 ? 
+                        (int) (8 * holder.itemView.getContext().getResources().getDisplayMetrics().density) : 0;
+                params.topMargin = marginTop;
+                holder.itemView.setLayoutParams(params);
+            }
         }
     }
 

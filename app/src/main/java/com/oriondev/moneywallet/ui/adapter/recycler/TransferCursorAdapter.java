@@ -120,11 +120,14 @@ public class TransferCursorAdapter extends AbstractCursorAdapter<RecyclerView.Vi
             }
             txHolder.itemView.setPadding(0, 0, 0, 0); 
         } else if (holder instanceof HeaderViewHolder) {
-            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
-            int marginTop = (cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.TOP || cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.SINGLE) && position > 0 ? 
-                    (int) (8 * holder.itemView.getContext().getResources().getDisplayMetrics().density) : 0;
-            params.topMargin = marginTop;
-            holder.itemView.setLayoutParams(params);
+            ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+            if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) layoutParams;
+                int marginTop = (cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.TOP || cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.SINGLE) && position > 0 ? 
+                        (int) (8 * holder.itemView.getContext().getResources().getDisplayMetrics().density) : 0;
+                params.topMargin = marginTop;
+                holder.itemView.setLayoutParams(params);
+            }
         }
     }
 
