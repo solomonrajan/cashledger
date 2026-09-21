@@ -422,11 +422,18 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
             mRightTextView = itemView.findViewById(R.id.right_text_view);
             mIncomeTextView = itemView.findViewById(R.id.income_text_view);
             mExpenseTextView = itemView.findViewById(R.id.expense_text_view);
+            int primary = ThemeEngine.getTheme().getColorPrimary();
+            int tintColor = android.graphics.Color.argb(26, android.graphics.Color.red(primary), android.graphics.Color.green(primary), android.graphics.Color.blue(primary));
+            
+            Drawable ripple = mHeaderOpensReport ? itemView.getBackground() : null;
+            if (ripple != null) {
+                itemView.setBackground(new LayerDrawable(new Drawable[] {new ColorDrawable(tintColor), ripple}));
+            } else {
+                itemView.setBackground(new ColorDrawable(tintColor));
+            }
+
             if (mHeaderOpensReport) {
                 itemView.setOnClickListener(this);
-            } else {
-                // no destination, so the row keeps its ripple to itself
-                itemView.setBackground(null);
             }
             
             // Allow collapsing/expanding by clicking the left text view (chip)
