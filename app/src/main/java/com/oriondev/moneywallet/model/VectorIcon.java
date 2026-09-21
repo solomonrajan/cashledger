@@ -90,14 +90,31 @@ public class VectorIcon extends Icon {
         int resourceId = getResource(imageView.getContext());
         if (resourceId > 0) {
             imageView.setImageResource(resourceId);
+            boolean hasColor = false;
+            int parsedColor = 0;
             if (mColor != null && !mColor.isEmpty()) {
                 try {
-                    imageView.setColorFilter(android.graphics.Color.parseColor(mColor));
+                    parsedColor = android.graphics.Color.parseColor(mColor);
+                    imageView.setColorFilter(parsedColor);
+                    hasColor = true;
                 } catch (IllegalArgumentException e) {
                     imageView.clearColorFilter();
                 }
             } else {
                 imageView.clearColorFilter();
+            }
+
+            if (hasColor) {
+                int backgroundColor = android.graphics.Color.argb(26, android.graphics.Color.red(parsedColor), android.graphics.Color.green(parsedColor), android.graphics.Color.blue(parsedColor));
+                android.graphics.drawable.GradientDrawable shape = new android.graphics.drawable.GradientDrawable();
+                shape.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+                shape.setColor(backgroundColor);
+                imageView.setBackground(shape);
+                int padding = (int) (8 * imageView.getResources().getDisplayMetrics().density);
+                imageView.setPadding(padding, padding, padding, padding);
+            } else {
+                imageView.setBackground(null);
+                imageView.setPadding(0, 0, 0, 0);
             }
             return true;
         } else {

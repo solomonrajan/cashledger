@@ -85,6 +85,8 @@ public class ColorIcon extends Icon {
     public boolean apply(ImageView imageView) {
         Drawable drawable = getDrawable();
         imageView.setImageDrawable(drawable);
+        imageView.setBackground(null);
+        imageView.setPadding(0, 0, 0, 0);
         return true;
     }
 
@@ -109,14 +111,15 @@ public class ColorIcon extends Icon {
     }
 
     public Drawable getDrawable() {
-        int backgroundColor = getColor();
+        int color = getColor();
+        int backgroundColor = android.graphics.Color.argb(26, android.graphics.Color.red(color), android.graphics.Color.green(color), android.graphics.Color.blue(color));
         return TextDrawable.builder()
                 .beginConfig()
                     .width(60)
                     .height(60)
-                    .textColor(Utils.getBestColor(backgroundColor))
+                    .textColor(color)
                 .endConfig()
-                .buildRound(mName, getColor());
+                .buildRound(mName, backgroundColor);
     }
 
     public static final Parcelable.Creator<ColorIcon> CREATOR = new Parcelable.Creator<ColorIcon>() {
