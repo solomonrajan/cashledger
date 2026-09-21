@@ -103,6 +103,57 @@ public class TransferCursorAdapter extends AbstractCursorAdapter<RecyclerView.Vi
         }
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        super.onBindViewHolder(holder, position);
+        
+        com.oriondev.moneywallet.utils.CardBackgroundHelper.Position cardPos = getCardPosition(position);
+        boolean isHeader = (holder instanceof HeaderViewHolder);
+        
+        com.oriondev.moneywallet.utils.CardBackgroundHelper.applyCardBackground(holder.itemView, cardPos, isHeader, true);
+
+        if (holder instanceof TransferViewHolder) {
+            TransferViewHolder txHolder = (TransferViewHolder) holder;
+            View divider = txHolder.itemView.findViewById(R.id.divider);
+            if (divider != null) {
+                divider.setVisibility(cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.BOTTOM || cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.SINGLE ? View.INVISIBLE : View.VISIBLE);
+            }
+            txHolder.itemView.setPadding(0, 0, 0, 0); 
+        } else if (holder instanceof HeaderViewHolder) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+            int marginTop = (cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.TOP || cardPos == com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.SINGLE) && position > 0 ? 
+                    (int) (8 * holder.itemView.getContext().getResources().getDisplayMetrics().density) : 0;
+            params.topMargin = marginTop;
+            holder.itemView.setLayoutParams(params);
+        }
+    }
+
+    private com.oriondev.moneywallet.utils.CardBackgroundHelper.Position getCardPosition(int position) {
+        if (getItemCount() <= 1) return com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.SINGLE;
+        
+        int viewType = getItemViewType(position);
+        boolean isHeader = (viewType == TransferHeaderCursor.TYPE_HEADER);
+        boolean isLast = (position == getItemCount() - 1);
+        
+        if (isHeader) {
+            if (isLast) return com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.SINGLE;
+            int nextViewType = getItemViewType(position + 1);
+            if (nextViewType == TransferHeaderCursor.TYPE_HEADER) {
+                return com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.SINGLE;
+            } else {
+                return com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.TOP;
+            }
+        } else {
+            if (isLast) return com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.BOTTOM;
+            int nextViewType = getItemViewType(position + 1);
+            if (nextViewType == TransferHeaderCursor.TYPE_HEADER) {
+                return com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.BOTTOM;
+            } else {
+                return com.oriondev.moneywallet.utils.CardBackgroundHelper.Position.MIDDLE;
+            }
+        }
+    }
+
     private void onBindItemViewHolder(TransferViewHolder holder, Cursor cursor) {
         Icon icon = IconLoader.parse(cursor.getString(mIndexWalletToIcon));
         IconLoader.loadInto(icon, holder.mAvatarImageView);

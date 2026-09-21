@@ -96,7 +96,7 @@ public class ThemeEngine implements ITheme {
     };
 
     private static final int[] DEFAULT_COLOR_WINDOW_BACKGROUND = new int[] {
-            Color.parseColor("#FAFAFA"), // OK
+            Color.parseColor("#F3F3F3"), // OK
             Color.parseColor("#212121"), // OK
             Color.parseColor("#212121")  // OK
     };

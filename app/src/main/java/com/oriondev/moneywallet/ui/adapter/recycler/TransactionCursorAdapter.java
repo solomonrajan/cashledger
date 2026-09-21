@@ -321,6 +321,58 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, cursorPosition(position));
+        
+        CardBackgroundHelper.Position cardPos = getCardPosition(position);
+        boolean isHeader = (holder instanceof HeaderViewHolder);
+        
+        CardBackgroundHelper.applyCardBackground(holder.itemView, cardPos, isHeader, true);
+
+        // Hide divider for the last item in a group
+        if (holder instanceof TransactionViewHolder) {
+            TransactionViewHolder txHolder = (TransactionViewHolder) holder;
+            View divider = txHolder.itemView.findViewById(R.id.divider);
+            if (divider != null) {
+                divider.setVisibility(cardPos == CardBackgroundHelper.Position.BOTTOM || cardPos == CardBackgroundHelper.Position.SINGLE ? View.INVISIBLE : View.VISIBLE);
+            }
+            
+            // Reapply padding that might be lost when setting background
+            int paddingLateral = (int) (16 * txHolder.itemView.getContext().getResources().getDisplayMetrics().density);
+            txHolder.itemView.setPadding(0, 0, 0, 0); 
+        } else if (holder instanceof HeaderViewHolder) {
+            // Apply 8dp top margin to separate groups
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) holder.itemView.getLayoutParams();
+            int marginTop = (cardPos == CardBackgroundHelper.Position.TOP || cardPos == CardBackgroundHelper.Position.SINGLE) && position > 0 ? 
+                    (int) (8 * holder.itemView.getContext().getResources().getDisplayMetrics().density) : 0;
+            params.topMargin = marginTop;
+            holder.itemView.setLayoutParams(params);
+        }
+    }
+
+    private CardBackgroundHelper.Position getCardPosition(int adapterPosition) {
+        if (getItemCount() <= 1) return CardBackgroundHelper.Position.SINGLE;
+        
+        int viewType = getItemViewType(adapterPosition);
+        boolean isHeader = (viewType == TransactionHeaderCursor.TYPE_HEADER);
+        
+        boolean isLast = (adapterPosition == getItemCount() - 1);
+        
+        if (isHeader) {
+            if (isLast) return CardBackgroundHelper.Position.SINGLE;
+            int nextViewType = getItemViewType(adapterPosition + 1);
+            if (nextViewType == TransactionHeaderCursor.TYPE_HEADER) {
+                return CardBackgroundHelper.Position.SINGLE;
+            } else {
+                return CardBackgroundHelper.Position.TOP;
+            }
+        } else {
+            if (isLast) return CardBackgroundHelper.Position.BOTTOM;
+            int nextViewType = getItemViewType(adapterPosition + 1);
+            if (nextViewType == TransactionHeaderCursor.TYPE_HEADER) {
+                return CardBackgroundHelper.Position.BOTTOM;
+            } else {
+                return CardBackgroundHelper.Position.MIDDLE;
+            }
+        }
     }
 
     @Override
@@ -422,15 +474,6 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
             mRightTextView = itemView.findViewById(R.id.right_text_view);
             mIncomeTextView = itemView.findViewById(R.id.income_text_view);
             mExpenseTextView = itemView.findViewById(R.id.expense_text_view);
-            int primary = ThemeEngine.getTheme().getColorPrimary();
-            int tintColor = android.graphics.Color.argb(26, android.graphics.Color.red(primary), android.graphics.Color.green(primary), android.graphics.Color.blue(primary));
-            
-            Drawable ripple = mHeaderOpensReport ? itemView.getBackground() : null;
-            if (ripple != null) {
-                itemView.setBackground(new LayerDrawable(new Drawable[] {new ColorDrawable(tintColor), ripple}));
-            } else {
-                itemView.setBackground(new ColorDrawable(tintColor));
-            }
 
             if (mHeaderOpensReport) {
                 itemView.setOnClickListener(this);
@@ -482,12 +525,6 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
             mMoneyTextView = itemView.findViewById(R.id.money_text_view);
             mSecondaryTextView = itemView.findViewById(R.id.secondary_text_view);
             mDateTextView = itemView.findViewById(R.id.date_text_view);
-            // the ripple color, because it is translucent and so reads on every light and dark
-            // background, while an xml attribute would resolve against the light theme only
-            StateListDrawable selected = new StateListDrawable();
-            selected.addState(new int[] {android.R.attr.state_activated},
-                    new ColorDrawable(ThemeEngine.getTheme().getColorRipple()));
-            itemView.setBackground(new LayerDrawable(new Drawable[] {selected, itemView.getBackground()}));
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
         }
