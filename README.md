@@ -97,9 +97,7 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 
 ## 🔄 Coming from Tallybook
 
-Tallybook is a maintained fork of [MoneyWallet](https://github.com/AndreAle94/moneywallet), which last had a release in 2021. It is a separate app with its own application id, so it installs beside the original and does not replace it or carry its data across on its own. [MIGRATION.md](https://github.com/herrerad85/tallybook/blob/master/MIGRATION.md) has the path that was tested. 
-
-Cash Ledger is a fork of [Tallybook](https://github.com/herrerad85/tallybook).
+As Cash Ledger is a separate app with its own application id, it installs beside the original Tallybook or MoneyWallet and does not replace them or carry its data across on its own. Please refer to [MIGRATION.md](MIGRATION.md) for information on migrating your data.
 
 ## 📚 Docs
 
@@ -131,6 +129,14 @@ Bug reports and pull requests are welcome in the [issue tracker](https://github.
 
 Cash Ledger is free software under the GNU General Public License v3.0 or later, the same license as the project it came from. See [LICENSE.md](LICENSE.md).
 
-MoneyWallet was written by AndreAle94 and its contributors. Tallybook is a fork of MoneyWallet by herrerad85 and its contributors. Cash Ledger is a fork of Tallybook and exists to keep that work usable. Cash Ledger is independent and is not endorsed by or affiliated with the original authors.
+### The History of Cash Ledger
+
+The original code that laid the foundation for this project was **MoneyWallet** ([repository](https://github.com/AndreAle94/moneywallet)), created by [AndreAle94](https://github.com/AndreAle94) and contributors. MoneyWallet was an excellent open-source expense tracker but has not seen a release since 2021.
+
+To keep the project alive, [herrerad85](https://github.com/herrerad85) created **Tallybook** ([repository](https://github.com/herrerad85/tallybook)), a maintained fork of MoneyWallet. Tallybook carried the torch forward, ensuring the app continued to work.
+
+**Cash Ledger** is a fork of Tallybook. I forked this project to continue its legacy, deeply modernizing the UI/UX, refining the design aesthetics, and ensuring the app remains usable and up-to-date with modern Android standards. The goal is to provide a premium, dynamic, and beautiful interface while keeping the powerful offline-first core functionality that users loved in the original apps. 
+
+We owe a huge thanks to [AndreAle94](https://github.com/AndreAle94) and [herrerad85](https://github.com/herrerad85) for their hard work. Cash Ledger is independent and is not endorsed by or affiliated with the original authors.
 
 The app icon and the intro illustrations are original artwork for this fork, released under the GPLv3. The category picker icons and UI elements use glyphs from Material Symbols. Full license texts are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
