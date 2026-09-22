@@ -69,6 +69,7 @@
         android:layout_marginRight="@dimen/material_component_lists_two_line_primary_text_end_margin"
         android:layout_marginEnd="@dimen/material_component_lists_two_line_primary_text_end_margin"
         android:textSize="@dimen/material_component_lists_two_line_with_avatar_primary_text_size"
+        android:fontFamily="@font/google_sans_code_family"
         app:layout_constraintBottom_toTopOf="@+id/text_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="€ 500.00" />
@@ -102,13 +103,6 @@
         app:theme_textColor="textColorSecondary"
         tools:text="February 22" />
 
-    <!-- Google Pixel Settings style divider aligning with the text -->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="?attr/dividerHorizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/primary_text_view"
-        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
