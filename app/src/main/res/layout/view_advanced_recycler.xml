@@ -32,8 +32,6 @@
             android:layout_height="match_parent"
             android:paddingTop="0dp"
             android:paddingBottom="@dimen/material_component_lists_padding_bottom"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:clipToPadding="false" />
 
         <com.oriondev.moneywallet.ui.view.theme.ThemedProgressWheel
