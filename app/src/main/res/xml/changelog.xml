@@ -20,6 +20,16 @@
 
 <changelog>
 
+    <version versionName="2.0.3" versionDate="Sep 22, 2026">
+        <change>✨ [b]UI/UX[/b]: Implement dynamic grouped card design for list pages.</change>
+        <change>🎨 [b]UI/UX[/b]: Apply dynamic primary color tint to transaction month header rows and category icons.</change>
+        <change>🚀 [b]Feature[/b]: Add TransferCursorAdapter and TransactionCursorAdapter for advanced recycler views.</change>
+        <change>🧩 [b]Feature[/b]: Add IconListActivity for browsing and selecting icons and IconGroupLoader.</change>
+        <change>📱 [b]Feature[/b]: Implement MainActivity for core navigation and wallet management.</change>
+        <change>✅ [b]Test[/b]: Add unit tests for MainActivity UI and navigation flow.</change>
+        <change>⚙️ [b]Under the Hood[/b]: Bump Gradle wrapper and add GitHub Actions workflow for building and testing.</change>
+    </version>
+
     <version versionName="2.0.2" versionDate="Sep 20, 2026">
         <change>✨ [b]UI/UX[/b]: Fixed the adaptive launcher icon being clipped by system boundaries.</change>
         <change>🐛 [b]Fix[/b]: Enforced a clean white background for adaptive icons to eliminate a black background rendering glitch on certain Android versions.</change>
