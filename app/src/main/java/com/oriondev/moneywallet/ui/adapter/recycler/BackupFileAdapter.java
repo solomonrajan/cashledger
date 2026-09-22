@@ -128,7 +128,8 @@ public class BackupFileAdapter extends RecyclerView.Adapter<BackupFileAdapter.Vi
             if (file2.isDirectory()) {
                 return 1;
             } else {
-                return file1.getName().compareTo(file2.getName());
+                // Reverse alphabetical sort so that more recent backup files appear at the top
+                return file2.getName().compareTo(file1.getName());
             }
         }
     }
