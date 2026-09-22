@@ -62,6 +62,7 @@
         app:layout_constraintHorizontal_bias="0"
         app:theme_textColor="textColorPrimary"
         android:fontFamily="@font/google_sans_code_family"
+        app:fontFamily="@font/google_sans_code_family"
         tools:text="$ 600.00" />
 
     <!-- Top Right: Incomes (moved above expenses) -->
@@ -92,6 +93,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/google_sans_code_family"
+        app:fontFamily="@font/google_sans_code_family"
         tools:text="$ 120.00" />
 
     <!-- Bottom Right: Expenses -->
@@ -125,6 +127,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:fontFamily="@font/google_sans_code_family"
+        app:fontFamily="@font/google_sans_code_family"
         tools:text="$ 720.00" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

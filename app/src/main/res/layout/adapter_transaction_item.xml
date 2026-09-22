@@ -70,6 +70,7 @@
         android:layout_marginEnd="@dimen/material_component_lists_two_line_primary_text_end_margin"
         android:textSize="@dimen/material_component_lists_two_line_with_avatar_primary_text_size"
         android:fontFamily="@font/google_sans_code_family"
+        app:fontFamily="@font/google_sans_code_family"
         app:layout_constraintBottom_toTopOf="@+id/text_guideline"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="€ 500.00" />

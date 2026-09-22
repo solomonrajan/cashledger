@@ -433,6 +433,15 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
                 itemView.setBackground(new ColorDrawable(tintColor));
             }
 
+            try {
+                android.graphics.Typeface typeface = androidx.core.content.res.ResourcesCompat.getFont(itemView.getContext(), R.font.google_sans_code_family);
+                if (typeface != null) {
+                    mRightTextView.setTypeface(typeface);
+                    mIncomeTextView.setTypeface(typeface);
+                    mExpenseTextView.setTypeface(typeface);
+                }
+            } catch (Exception ignored) { }
+
             if (mHeaderOpensReport) {
                 itemView.setOnClickListener(this);
             }
@@ -491,6 +500,13 @@ public class TransactionCursorAdapter extends AbstractCursorAdapter<RecyclerView
             itemView.setBackground(new LayerDrawable(new Drawable[] {selected, itemView.getBackground()}));
             itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+
+            try {
+                android.graphics.Typeface typeface = androidx.core.content.res.ResourcesCompat.getFont(itemView.getContext(), R.font.google_sans_code_family);
+                if (typeface != null) {
+                    mMoneyTextView.setTypeface(typeface);
+                }
+            } catch (Exception ignored) { }
         }
 
         @Override

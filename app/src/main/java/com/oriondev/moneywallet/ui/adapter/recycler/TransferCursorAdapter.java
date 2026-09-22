@@ -152,6 +152,17 @@ public class TransferCursorAdapter extends AbstractCursorAdapter<RecyclerView.Vi
             super(itemView);
             mLeftTextView = itemView.findViewById(R.id.left_text_view);
             mRightTextView = itemView.findViewById(R.id.right_text_view);
+            
+            int primary = com.oriondev.moneywallet.ui.view.theme.ThemeEngine.getTheme().getColorPrimary();
+            int tintColor = android.graphics.Color.argb(26, android.graphics.Color.red(primary), android.graphics.Color.green(primary), android.graphics.Color.blue(primary));
+            
+            android.graphics.drawable.Drawable ripple = itemView.getBackground();
+            if (ripple != null) {
+                itemView.setBackground(new android.graphics.drawable.LayerDrawable(new android.graphics.drawable.Drawable[] {new android.graphics.drawable.ColorDrawable(tintColor), ripple}));
+            } else {
+                itemView.setBackground(new android.graphics.drawable.ColorDrawable(tintColor));
+            }
+
             itemView.setOnClickListener(this);
         }
 
