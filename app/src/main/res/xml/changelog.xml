@@ -20,6 +20,14 @@
 
 <changelog>
 
+    <version versionName="2.0.4" versionDate="Sep 22, 2026">
+        <change>🔤 [b]UI/UX[/b]: Updated default app font to Google Sans Flex and Google Sans Code for numeric values.</change>
+        <change>🎨 [b]UI/UX[/b]: Updated default primary and accent theme colors to align with new Google branding.</change>
+        <change>🖌️ [b]UI/UX[/b]: Refined Transaction and Transfer lists by removing dividers and consistently applying theme colors to month headers.</change>
+        <change>📂 [b]Feature[/b]: Backup files are now conveniently sorted from most recent to oldest.</change>
+        <change>🛠️ [b]Fix[/b]: Resolved Android resource merger build failures related to invalid font file names.</change>
+    </version>
+
     <version versionName="2.0.3" versionDate="Sep 22, 2026">
         <change>✨ [b]UI/UX[/b]: Implement dynamic grouped card design for list pages.</change>
         <change>🎨 [b]UI/UX[/b]: Apply dynamic primary color tint to transaction month header rows and category icons.</change>

@@ -41,6 +41,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="14sp"
+        android:justificationMode="inter_word"
+        tools:targetApi="o"
         app:theme_textColor="textColorPrimary"
         tools:text="Fix: fixed a bug when creating new backup over the cloud." />
 
