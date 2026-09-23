@@ -25,7 +25,20 @@ jobs:
       - name: Build Release APK
         run: ./gradlew assembleFlossOsmRelease
 
+      - name: Rename APKs
+        run: |
+          cd app/build/outputs/apk/flossOsm/release/
+          VERSION=${{ github.ref_name }}
+          # Ensure version starts with 'v' if it doesn't already
+          if [[ $VERSION != v* ]]; then
+            VERSION="v$VERSION"
+          fi
+          # Rename the files
+          mv app-floss-osm-universal-release.apk "cashledger-${VERSION}-universal.apk" || true
+          mv app-floss-osm-arm64-v8a-release.apk "cashledger-${VERSION}-arm64-v8a.apk" || true
+          mv app-floss-osm-armeabi-v7a-release.apk "cashledger-${VERSION}-armeabi-v7a.apk" || true
+
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
-          files: app/build/outputs/apk/flossOsm/release/*.apk
+          files: app/build/outputs/apk/flossOsm/release/cashledger-*.apk
