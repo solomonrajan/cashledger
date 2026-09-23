@@ -68,7 +68,13 @@ jobs:
             app/build/reports/tests/testFlossOsmDebugUnitTest/**
             app/build/test-results/testFlossOsmDebugUnitTest/**
 
+      - name: Prepare debug APK
+        run: |
+          COMMIT_ID=$(git rev-parse --short HEAD)
+          mkdir -p staging/debug
+          cp app/build/outputs/apk/flossOsm/debug/*.apk "staging/debug/cashledger.dev.(#${COMMIT_ID}).debug.apk"
+
       - uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: app/build/outputs/apk/**/*.apk
+          path: staging
