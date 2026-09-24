@@ -1,4 +1,4 @@
-<!--
+﻿<!--
   ~ Copyright (c) 2018.
   ~
   ~ This file is part of MoneyWallet.
@@ -148,7 +148,7 @@
     <string name="hint_atm_name">"ATM name"</string>
     <string name="hint_bank_name">"Bank name"</string>
     <string name="hint_attachments">"Attachments"</string>
-    <string name="hint_operation_in_progress">"In progress…"</string>
+    <string name="hint_operation_in_progress">"In progressâ€¦"</string>
     <string name="hint_search_something">"Search something"</string>
     <string name="hint_exchange_rate">"Exchange rate"</string>
     <string name="hint_recurrence_finished">"Ended"</string>
@@ -435,10 +435,10 @@
     <string name="message_backup_restore_standard">"Are you sure you want to restore this backup? All current data will be lost and the operation cannot be stopped. Proceed?"</string>
     <string name="message_backup_restore_protected">"Are you sure you want to restore this backup? All current data will be lost and the operation cannot be stopped. The backup is protected by a password, please enter it and proceed."</string>
     <string name="message_backup_restore_legacy">"Are you sure you want to restore this backup? All current data will be lost and the operation cannot be stopped. WARNING!: this is a legacy backup and the application may fail to import it. Proceed?"</string>
-    <string name="message_backup_status_creation">"Creation of backup file in progress…"</string>
-    <string name="message_backup_status_uploading">"Uploading of backup file in progress…"</string>
-    <string name="message_backup_status_downloading">"Downloading of backup file in progress…"</string>
-    <string name="message_backup_status_restoring">"Restoring of backup file in progress…"</string>
+    <string name="message_backup_status_creation">"Creation of backup file in progressâ€¦"</string>
+    <string name="message_backup_status_uploading">"Uploading of backup file in progressâ€¦"</string>
+    <string name="message_backup_status_downloading">"Downloading of backup file in progressâ€¦"</string>
+    <string name="message_backup_status_restoring">"Restoring of backup file in progressâ€¦"</string>
     <string name="message_backup_creation_success">"Backup created correctly."</string>
     <string name="message_backup_restoring_success">"Backup restored correctly."</string>
     <string name="message_backup_creation_failed">"Failure during the creation of the backup. Message: %s"</string>
@@ -509,8 +509,8 @@
     <string name="message_debt_insert_master_transaction">"Do you want to add a master transaction for this debt?"</string>
     <string name="message_error_legacy_upgrade_failed">"An error has occurred while upgrading the internal database. Please, be patient and notify this message to the developer. Do not uninstall the application or you will lose your data. You will be redirected to the application to check if something got corrupted. Error message: %s"</string>
     <string name="message_data_import_without_backup">"This is a feature that could fail and mess up your data, make sure you've backed up your existing data before continuing. Do you want to proceed anyway?"</string>
-    <string name="message_data_import_running">"Importing…"</string>
-    <string name="message_data_export_running">"Exporting…"</string>
+    <string name="message_data_import_running">"Importingâ€¦"</string>
+    <string name="message_data_export_running">"Exportingâ€¦"</string>
     <string name="message_data_import_failed">"Failure during the import procedure. Message: %s"</string>
     <string name="message_data_export_failed">"Failure during the export procedure. Message: %s"</string>
     <string name="message_data_import_success">"Data imported correctly."</string>
@@ -518,7 +518,7 @@
     <string name="message_data_import_already_saved">"Rows already in the wallet were skipped: %1$d."</string>
     <string name="message_data_export_success">"Data exported correctly. Do you want to open the created file?"</string>
 
-    <string name="message_async_init">"Initialization …"</string>
+    <string name="message_async_init">"Initialization â€¦"</string>
 
     <string name="snackbar_message_model_transaction_added">"Transaction added"</string>
     <string name="snackbar_message_model_transfer_added">"Transfer added"</string>
@@ -624,13 +624,13 @@
     <string name="notification_title_backup_creation_failed">"Backup creation failed"</string>
     <string name="notification_title_backup_restoring_failed">"Backup restoring failed"</string>
     <string name="notification_title_csv_export_failed">"Scheduled CSV export failed"</string>
-    <string name="notification_content_downloading_data">"Downloading updated data…"</string>
-    <string name="notification_content_caching_data">"Storing updated data…"</string>
+    <string name="notification_content_downloading_data">"Downloading updated dataâ€¦"</string>
+    <string name="notification_content_caching_data">"Storing updated dataâ€¦"</string>
     <string name="notification_content_error_message">"Error: %s"</string>
-    <string name="notification_content_backup_file_creation">"Writing local backup file…"</string>
-    <string name="notification_content_backup_file_uploading">"Uploading backup file…"</string>
-    <string name="notification_content_backup_file_downloading">"Downloading backup file…"</string>
-    <string name="notification_content_backup_file_restoring">"Reading backup file…"</string>
+    <string name="notification_content_backup_file_creation">"Writing local backup fileâ€¦"</string>
+    <string name="notification_content_backup_file_uploading">"Uploading backup fileâ€¦"</string>
+    <string name="notification_content_backup_file_downloading">"Downloading backup fileâ€¦"</string>
+    <string name="notification_content_backup_file_restoring">"Reading backup fileâ€¦"</string>
     <string name="notification_content_backup_error_wifi_network">"The operation has been programmed to be performed only when the device is connected to a WiFi network. Connect to a WiFi network and try again."</string>
     <string name="notification_content_backup_error_backend_recoverable">"There was an error while communicating with the backend service. Check your internet connection and try again."</string>
     <string name="notification_content_backup_error_backend">"There was an error with the backend and the auto backup has been disabled. Check if there is any problem."</string>
@@ -660,22 +660,22 @@
     <string name="about_hint_icon_pack">"Icon pack"</string>
     <string name="about_hint_translators">"Translators"</string>
 
-    <string name="activity_launcher_legacy_edition_upgrade_title">"Upgrading…"</string>
+    <string name="activity_launcher_legacy_edition_upgrade_title">"Upgradingâ€¦"</string>
     <string name="activity_launcher_first_start_title">"Welcome to Cash Ledger"</string>
     <string name="activity_launcher_first_start_content">"Is this your first time using Cash Ledger, or do you want to restore a backup?"</string>
     <string name="activity_launcher_first_start_button_first_time">"First time"</string>
     <string name="activity_launcher_first_start_button_restore_backup">"Restore backup"</string>
 
-    <string name="activity_intro_title_slide_1">"No more bad surprises"</string>
-    <string name="activity_intro_title_slide_2">"Discover and plan"</string>
-    <string name="activity_intro_title_slide_3">"Open source"</string>
-    <string name="activity_intro_title_slide_4">"Backups"</string>
-    <string name="activity_intro_title_slide_5">"Well done"</string>
-    <string name="activity_intro_description_slide_1">"Cash Ledger helps you track your expenses"</string>
-    <string name="activity_intro_description_slide_2">"You can analyze where you spend a lot and setup some budget"</string>
-    <string name="activity_intro_description_slide_3">"Cash Ledger is open source and everyone can contribute"</string>
-    <string name="activity_intro_description_slide_4">"Cash Ledger helps you create backups so you can restore your data when needed"</string>
-    <string name="activity_intro_description_slide_5">"You will now be redirected to create your first wallet"</string>
+    <string name="activity_intro_title_slide_1">"Welcome to Cash Ledger"</string>
+    <string name="activity_intro_title_slide_2">"Insights that matter"</string>
+    <string name="activity_intro_title_slide_3">"Built for transparency"</string>
+    <string name="activity_intro_title_slide_4">"Rock-solid security"</string>
+    <string name="activity_intro_title_slide_5">"You\'re all set"</string>
+    <string name="activity_intro_description_slide_1">"Your beautiful, unified dashboard for total financial clarity."</string>
+    <string name="activity_intro_description_slide_2">"Visualize your spending habits and take control of your financial future."</string>
+    <string name="activity_intro_description_slide_3">"A fully open-source experience designed with your privacy in mind."</string>
+    <string name="activity_intro_description_slide_4">"Your data is yours. Secure, encrypted backups keep you safe at all times."</string>
+    <string name="activity_intro_description_slide_5">"Let\'s create your first wallet and begin your journey."</string>
 
     <string name="help_create_new_pin_code">"Create a new pin code"</string>
     <string name="help_verify_created_pin_code">"Reinsert the pin code"</string>
@@ -723,12 +723,12 @@
     <string name="keyboard_00">00</string>
     <string name="keyboard_point">.</string>
     <string name="keyboard_clear">"C"</string>
-    <string name="keyboard_multiplication">"×"</string>
-    <string name="keyboard_division">"÷"</string>
+    <string name="keyboard_multiplication">"Ã—"</string>
+    <string name="keyboard_division">"Ã·"</string>
     <string name="keyboard_addition">"+"</string>
-    <string name="keyboard_subtraction">"−"</string>
+    <string name="keyboard_subtraction">"âˆ’"</string>
     <string name="keyboard_equal">"="</string>
-    <string name="keyboard_confirm">"✓"</string>
+    <string name="keyboard_confirm">"âœ“"</string>
     <string name="keyboard_commit">">"</string>
 
     <string name="recurrence_type_daily">"Daily"</string>
@@ -795,3 +795,4 @@
     <string name="hint_widget_show_when_locked">"Show the balance even when the app is locked"</string>
 
 </resources>
+
