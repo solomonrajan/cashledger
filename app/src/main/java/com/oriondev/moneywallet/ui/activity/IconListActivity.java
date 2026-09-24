@@ -54,7 +54,7 @@ public class IconListActivity extends SinglePanelActivity implements SwipeRefres
 
     private static final int ICON_LOADER_ID = 46;
 
-    private static final int ICON_WIDTH_DP = 64;
+    private static final int ICON_WIDTH_DP = 48;
 
     private AdvancedRecyclerView mAdvancedRecyclerView;
     private IconAdapter mAdapter;

@@ -19,6 +19,15 @@
       },
       {
         "resource": "ic_icon_smart_button"
+      },
+      {
+        "resource": "ic_icon_shirt"
+      },
+      {
+        "resource": "ic_icon_shoewear"
+      },
+      {
+        "resource": "ic_icon_umbrella"
       }
     ]
   },
@@ -83,6 +92,15 @@
       },
       {
         "resource": "ic_icon_luggage"
+      },
+      {
+        "resource": "ic_icon_car"
+      },
+      {
+        "resource": "ic_icon_ship_2"
+      },
+      {
+        "resource": "ic_icon_truck"
       }
     ]
   },
@@ -127,6 +145,27 @@
       },
       {
         "resource": "ic_icon_coffee_maker"
+      },
+      {
+        "resource": "ic_icon_bathtub"
+      },
+      {
+        "resource": "ic_icon_cooker"
+      },
+      {
+        "resource": "ic_icon_fire"
+      },
+      {
+        "resource": "ic_icon_lightning"
+      },
+      {
+        "resource": "ic_icon_water_bottle"
+      },
+      {
+        "resource": "ic_icon_wifi_high"
+      },
+      {
+        "resource": "ic_icon_internet"
       }
     ]
   },
@@ -149,9 +188,6 @@
         "resource": "ic_icon_sell"
       },
       {
-        "resource": "ic_icon_receipt_long"
-      },
-      {
         "resource": "ic_icon_loyalty"
       },
       {
@@ -162,6 +198,21 @@
       },
       {
         "resource": "ic_icon_inventory_2"
+      },
+      {
+        "resource": "ic_icon_bag"
+      },
+      {
+        "resource": "ic_icon_barcode"
+      },
+      {
+        "resource": "ic_icon_gift"
+      },
+      {
+        "resource": "ic_icon_handbag"
+      },
+      {
+        "resource": "ic_icon_invoice"
       }
     ]
   },
@@ -200,6 +251,24 @@
       },
       {
         "resource": "ic_icon_piano"
+      },
+      {
+        "resource": "ic_icon_book"
+      },
+      {
+        "resource": "ic_icon_dumbbell"
+      },
+      {
+        "resource": "ic_icon_music_notes"
+      },
+      {
+        "resource": "ic_icon_pencil"
+      },
+      {
+        "resource": "ic_icon_puzzle_piece"
+      },
+      {
+        "resource": "ic_icon_science"
       }
     ]
   },
@@ -241,6 +310,33 @@
       },
       {
         "resource": "ic_icon_water_drop"
+      },
+      {
+        "resource": "ic_icon_beer_stein"
+      },
+      {
+        "resource": "ic_icon_bowl_food"
+      },
+      {
+        "resource": "ic_icon_bread"
+      },
+      {
+        "resource": "ic_icon_champagne"
+      },
+      {
+        "resource": "ic_icon_cocktail"
+      },
+      {
+        "resource": "ic_icon_coffee"
+      },
+      {
+        "resource": "ic_icon_cookie"
+      },
+      {
+        "resource": "ic_icon_fork_knife"
+      },
+      {
+        "resource": "ic_icon_wine"
       }
     ]
   },
@@ -258,9 +354,6 @@
       },
       {
         "resource": "ic_icon_tablet_mac"
-      },
-      {
-        "resource": "ic_icon_watch"
       },
       {
         "resource": "ic_icon_mouse"
@@ -314,6 +407,39 @@
       },
       {
         "resource": "ic_icon_trending_up"
+      },
+      {
+        "resource": "ic_icon_calculator"
+      },
+      {
+        "resource": "ic_icon_chart_line_up"
+      },
+      {
+        "resource": "ic_icon_chart_line_down"
+      },
+      {
+        "resource": "ic_icon_coins"
+      },
+      {
+        "resource": "ic_icon_hand_deposit"
+      },
+      {
+        "resource": "ic_icon_hand_withdraw"
+      },
+      {
+        "resource": "ic_icon_piggy_bank"
+      },
+      {
+        "resource": "ic_icon_percent"
+      },
+      {
+        "resource": "ic_icon_screen_graph"
+      },
+      {
+        "resource": "ic_icon_vault"
+      },
+      {
+        "resource": "ic_icon_abacus"
       }
     ]
   },
@@ -327,34 +453,28 @@
         "resource": "ic_icon_group"
       },
       {
-        "resource": "ic_icon_groups"
-      },
-      {
         "resource": "ic_icon_diversity_3"
       },
       {
         "resource": "ic_icon_face"
       },
       {
-        "resource": "ic_icon_face_3"
-      },
-      {
         "resource": "ic_icon_accessibility_new"
       },
       {
         "resource": "ic_icon_child_care"
+      },
+      {
+        "resource": "ic_icon_hand_heart"
+      },
+      {
+        "resource": "ic_icon_handshake"
       }
     ]
   },
   {
     "name_resource": "icon_category_animals",
     "items": [
-      {
-        "resource": "ic_icon_pets"
-      },
-      {
-        "resource": "ic_icon_cruelty_free"
-      },
       {
         "resource": "ic_icon_bug_report"
       },
@@ -363,6 +483,30 @@
       },
       {
         "resource": "ic_icon_emoji_nature"
+      },
+      {
+        "resource": "ic_icon_cat"
+      },
+      {
+        "resource": "ic_icon_dog"
+      },
+      {
+        "resource": "ic_icon_horse"
+      },
+      {
+        "resource": "ic_icon_cow"
+      },
+      {
+        "resource": "ic_icon_bird"
+      },
+      {
+        "resource": "ic_icon_fish"
+      },
+      {
+        "resource": "ic_icon_butterfly"
+      },
+      {
+        "resource": "ic_icon_rabbit"
       }
     ]
   },
@@ -374,9 +518,6 @@
       },
       {
         "resource": "ic_icon_credit_card"
-      },
-      {
-        "resource": "ic_icon_payments"
       },
       {
         "resource": "ic_icon_receipt"
@@ -406,21 +547,12 @@
       },
       {
         "resource": "ic_icon_party_mode"
-      },
-      {
-        "resource": "ic_icon_liquor"
-      },
-      {
-        "resource": "ic_icon_cake"
       }
     ]
   },
   {
     "name_resource": "icon_category_baby",
     "items": [
-      {
-        "resource": "ic_icon_child_care"
-      },
       {
         "resource": "ic_icon_child_friendly"
       },
@@ -429,9 +561,6 @@
       },
       {
         "resource": "ic_icon_stroller"
-      },
-      {
-        "resource": "ic_icon_toys"
       },
       {
         "resource": "ic_icon_crib"
@@ -467,6 +596,30 @@
       },
       {
         "resource": "ic_icon_sanitizer"
+      },
+      {
+        "resource": "ic_icon_ambulance"
+      },
+      {
+        "resource": "ic_icon_bandaids"
+      },
+      {
+        "resource": "ic_icon_first_aid_kit"
+      },
+      {
+        "resource": "ic_icon_heartbeat"
+      },
+      {
+        "resource": "ic_icon_pill"
+      },
+      {
+        "resource": "ic_icon_thermometer_2"
+      },
+      {
+        "resource": "ic_icon_hair_dryer"
+      },
+      {
+        "resource": "ic_icon_flower_lotus"
       }
     ]
   }
