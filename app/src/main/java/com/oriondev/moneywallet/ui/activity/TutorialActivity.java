@@ -60,12 +60,11 @@ public class TutorialActivity extends AppIntro2 {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.enableEdgeToEdge(getWindow());
-        addSlide(R.drawable.ic_intro_slide_1, R.string.activity_intro_title_slide_1, R.string.activity_intro_description_slide_1, Color.parseColor("#76bec0"));
-        addSlide(R.drawable.ic_intro_slide_2, R.string.activity_intro_title_slide_2, R.string.activity_intro_description_slide_2, Color.parseColor("#8464a9"));
-        addSlide(R.drawable.ic_intro_slide_3, R.string.activity_intro_title_slide_3, R.string.activity_intro_description_slide_3, Color.parseColor("#19beed"));
-        addSlide(R.drawable.ic_intro_slide_4, R.string.activity_intro_title_slide_4, R.string.activity_intro_description_slide_4, Color.parseColor("#47a0e1"));
-        addSlide(R.drawable.ic_intro_slide_5, R.string.activity_intro_title_slide_5, R.string.activity_intro_description_slide_5, Color.parseColor("#4CAF50"));
-        showStatusBar(false);
+        addSlide(R.drawable.ic_intro_slide_1, R.string.activity_intro_title_slide_1, R.string.activity_intro_description_slide_1, Color.parseColor("#4285F4"));
+        addSlide(R.drawable.ic_intro_slide_2, R.string.activity_intro_title_slide_2, R.string.activity_intro_description_slide_2, Color.parseColor("#EA4335"));
+        addSlide(R.drawable.ic_intro_slide_3, R.string.activity_intro_title_slide_3, R.string.activity_intro_description_slide_3, Color.parseColor("#FBBC05"));
+        addSlide(R.drawable.ic_intro_slide_4, R.string.activity_intro_title_slide_4, R.string.activity_intro_description_slide_4, Color.parseColor("#34A853"));
+        addSlide(R.drawable.ic_intro_slide_5, R.string.activity_intro_title_slide_5, R.string.activity_intro_description_slide_5, Color.parseColor("#4285F4"));
         setColorTransitionsEnabled(true);
         applySystemBarInsets();
     }
