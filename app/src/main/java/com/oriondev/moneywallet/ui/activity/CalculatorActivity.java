@@ -54,7 +54,7 @@ public class CalculatorActivity extends SinglePanelActivity implements View.OnCl
     public static final int MODE_CALCULATOR = 0;
     public static final int MODE_KEYPAD = 1;
 
-    private static final String OP_000 = "000";
+    private static final String OP_00 = "00";
     private static final String OP_0 = "0";
     private static final String OP_1 = "1";
     private static final String OP_2 = "2";
@@ -133,7 +133,7 @@ public class CalculatorActivity extends SinglePanelActivity implements View.OnCl
         mDisplayEditText.setCustomInsertionActionModeCallback(NO_TEXT_ACTION_MODE);
         mDisplayEditText.requestFocus();
         mActionButton = view.findViewById(R.id.keyboard_action_button);
-        registerListener(view.findViewById(R.id.keyboard_000_button), OP_000);
+        registerListener(view.findViewById(R.id.keyboard_00_button), OP_00);
         registerListener(view.findViewById(R.id.keyboard_0_button), OP_0);
         registerListener(view.findViewById(R.id.keyboard_1_button), OP_1);
         registerListener(view.findViewById(R.id.keyboard_2_button), OP_2);

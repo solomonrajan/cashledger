@@ -18400,8 +18400,8 @@
 
     <issue
         id="MissingTranslation"
-        message="&quot;keyboard_000&quot; is not translated in &quot;ru&quot; (Russian), &quot;hr&quot; (Croatian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan)"
-        errorLine1="    &lt;string name=&quot;keyboard_000&quot;>000&lt;/string>"
+        message="&quot;keyboard_00&quot; is not translated in &quot;ru&quot; (Russian), &quot;hr&quot; (Croatian), &quot;es&quot; (Spanish), &quot;zh&quot; (Chinese), &quot;sk&quot; (Slovak), &quot;ro&quot; (Romanian), &quot;ca&quot; (Catalan)"
+        errorLine1="    &lt;string name=&quot;keyboard_00&quot;>000&lt;/string>"
         errorLine2="            ~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"

@@ -340,11 +340,11 @@
             style="?android:attr/borderlessButtonStyle" />
 
         <com.oriondev.moneywallet.ui.view.theme.ThemedKeypadButton
-            android:id="@+id/keyboard_000_button"
+            android:id="@+id/keyboard_00_button"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="?attr/selectableItemBackground"
-            android:text="@string/keyboard_000"
+            android:text="@string/keyboard_00"
             android:textSize="@dimen/activity_calculator_button_text_size"
             app:layout_constraintStart_toEndOf="@+id/horizontal_guideline_1"
             app:layout_constraintEnd_toStartOf="@+id/horizontal_guideline_2"

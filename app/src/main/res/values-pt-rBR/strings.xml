@@ -600,7 +600,7 @@
     <string name="keyboard_2">2</string>
     <string name="keyboard_1">1</string>
     <string name="keyboard_0">0</string>
-    <string name="keyboard_000">000</string>
+    <string name="keyboard_00">00</string>
     <string name="keyboard_point">.</string>
     <string name="keyboard_clear">"C"</string>
     <string name="keyboard_multiplication">"×"</string>

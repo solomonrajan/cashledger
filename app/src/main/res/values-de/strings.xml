@@ -194,7 +194,7 @@
     <string name="activity_intro_title_slide_5">Gut gemacht</string>
     <string name="activity_intro_description_slide_5">Du wirst jetzt weitergeleitet, um deine erste Geldbörse zu erstellen</string>
     <string name="keyboard_0">0</string>
-    <string name="keyboard_000">000</string>
+    <string name="keyboard_00">00</string>
     <string name="keyboard_1">1</string>
     <string name="keyboard_2">2</string>
     <string name="keyboard_3">3</string>
