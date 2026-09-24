@@ -728,7 +728,7 @@
     <string name="keyboard_addition">"+"</string>
     <string name="keyboard_subtraction">"-"</string>
     <string name="keyboard_equal">"="</string>
-    <string name="keyboard_confirm">"="</string>
+    <string name="keyboard_confirm">"✓"</string>
     <string name="keyboard_commit">">"</string>
 
     <string name="recurrence_type_daily">"Daily"</string>
