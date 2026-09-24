@@ -3,20 +3,31 @@
     xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
-            android:width="200dp"
-            android:height="200dp"
-            android:viewportWidth="48"
-            android:viewportHeight="48">
-                    <group android:name="star1" android:translateX="12" android:translateY="12" android:pivotX="0" android:pivotY="0">
-            <path android:pathData="M-1,2 h2 v-4 h-2 z M-2,-1 h4 v2 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.7"/>
+            android:width="400dp"
+            android:height="400dp"
+            android:viewportWidth="500"
+            android:viewportHeight="500">
+            
+                    <group android:name="star1" android:translateX="100" android:translateY="120" android:pivotX="0" android:pivotY="0">
+            <path android:pathData="M-5,10 h10 v-20 h-10 z M-10,-5 h20 v10 h-20 z" android:fillColor="#FFFFFF" android:fillAlpha="0.5"/>
         </group>
-        <group android:name="star2" android:translateX="36" android:translateY="12" android:pivotX="0" android:pivotY="0">
-            <path android:pathData="M-1,2 h2 v-4 h-2 z M-2,-1 h4 v2 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.7"/>
+        <group android:name="star2" android:translateX="400" android:translateY="100" android:pivotX="0" android:pivotY="0">
+            <path android:pathData="M-4,8 h8 v-16 h-8 z M-8,-4 h16 v8 h-16 z" android:fillColor="#FFFFFF" android:fillAlpha="0.4"/>
         </group>
-        <group android:name="star3" android:translateX="36" android:translateY="36" android:pivotX="0" android:pivotY="0">
-            <path android:pathData="M-1,2 h2 v-4 h-2 z M-2,-1 h4 v2 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.7"/>
+        <group android:name="star3" android:translateX="420" android:translateY="380" android:pivotX="0" android:pivotY="0">
+            <path android:pathData="M-6,12 h12 v-24 h-12 z M-12,-6 h24 v12 h-24 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
         </group>
-            <group android:name="main_icon" android:pivotX="24" android:pivotY="24">
+        <group android:name="star4" android:translateX="80" android:translateY="400" android:pivotX="0" android:pivotY="0">
+            <path android:pathData="M-3,6 h6 v-12 h-6 z M-6,-3 h12 v6 h-12 z" android:fillColor="#FFFFFF" android:fillAlpha="0.3"/>
+        </group>
+            
+            <group android:name="main_icon_group" 
+                   android:translateX="150" 
+                   android:translateY="150" 
+                   android:scaleX="4.16" 
+                   android:scaleY="4.16"
+                   android:pivotX="24"
+                   android:pivotY="24">
                 <path
                     android:pathData="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-60h65v60h340v-60h65v60h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm0-490h600v-130H180v130Zm0 0v-130 130Zm300 230q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"
                     android:fillColor="#FFFFFF" />
@@ -26,27 +37,30 @@
     
         <target android:name="star1">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="rotation" android:valueFrom="0" android:valueTo="360" android:duration="3000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
+            <objectAnimator android:propertyName="rotation" android:valueFrom="0" android:valueTo="360" android:duration="6000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
     <target android:name="star2">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="rotation" android:valueFrom="0" android:valueTo="-360" android:duration="2500" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
+            <objectAnimator android:propertyName="rotation" android:valueFrom="0" android:valueTo="-360" android:duration="4500" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
     <target android:name="star3">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="rotation" android:valueFrom="0" android:valueTo="360" android:duration="4000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
+            <objectAnimator android:propertyName="rotation" android:valueFrom="0" android:valueTo="360" android:duration="8000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
-    <target android:name="main_icon">
+    <target android:name="star4">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleX" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <objectAnimator android:propertyName="rotation" android:valueFrom="0" android:valueTo="-360" android:duration="5000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
-    <target android:name="main_icon">
+    <target android:name="main_icon_group">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleY" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <set>
+                <objectAnimator android:propertyName="scaleX" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator android:propertyName="scaleY" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            </set>
         </aapt:attr>
     </target>
 </animated-vector>

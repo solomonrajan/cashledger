@@ -3,20 +3,28 @@
     xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
-            android:width="200dp"
-            android:height="200dp"
-            android:viewportWidth="48"
-            android:viewportHeight="48">
-                    <group android:name="point1" android:translateX="10" android:translateY="10" android:pivotX="10" android:pivotY="10">
-            <path android:pathData="M8,8 h4 v4 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+            android:width="400dp"
+            android:height="400dp"
+            android:viewportWidth="500"
+            android:viewportHeight="500">
+            
+                    <group android:name="point1" android:translateX="90" android:translateY="90" android:pivotX="0" android:pivotY="0">
+            <path android:pathData="M-15,-15 h30 v30 h-30 z" android:fillColor="#FFFFFF" android:fillAlpha="0.5"/>
         </group>
-        <group android:name="point2" android:translateX="38" android:translateY="10" android:pivotX="38" android:pivotY="10">
-            <path android:pathData="M36,8 h4 v4 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        <group android:name="point2" android:translateX="410" android:translateY="150" android:pivotX="0" android:pivotY="0">
+            <path android:pathData="M-10,-10 h20 v20 h-20 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
         </group>
-        <group android:name="point3" android:translateX="10" android:translateY="38" android:pivotX="10" android:pivotY="38">
-            <path android:pathData="M8,36 h4 v4 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        <group android:name="point3" android:translateX="120" android:translateY="410" android:pivotX="0" android:pivotY="0">
+            <path android:pathData="M-20,-20 h40 v40 h-40 z" android:fillColor="#FFFFFF" android:fillAlpha="0.3"/>
         </group>
-            <group android:name="main_icon" android:pivotX="24" android:pivotY="24">
+            
+            <group android:name="main_icon_group" 
+                   android:translateX="150" 
+                   android:translateY="150" 
+                   android:scaleX="4.16" 
+                   android:scaleY="4.16"
+                   android:pivotX="24"
+                   android:pivotY="24">
                 <path
                     android:pathData="M510-510h309q-11-122-98.5-211.5T510-819v309Zm-60 369v-678q-131 11-220.5 109T140-480q0 132 89.5 230T450-141Zm60 0q123-8 210.5-97.5T819-450H510v309Zm-30-339Zm0 400q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"
                     android:fillColor="#FFFFFF" />
@@ -26,27 +34,40 @@
     
         <target android:name="point1">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleX" android:valueFrom="1.0" android:valueTo="1.5" android:duration="1000" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="0.8" android:valueTo="1.6" android:duration="1800" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="point1">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleY" android:valueFrom="0.8" android:valueTo="1.6" android:duration="1800" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
         </aapt:attr>
     </target>
     <target android:name="point2">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleX" android:valueFrom="1.0" android:valueTo="1.5" android:duration="1200" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="1.0" android:valueTo="1.8" android:duration="1500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="point2">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleY" android:valueFrom="1.0" android:valueTo="1.8" android:duration="1500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
         </aapt:attr>
     </target>
     <target android:name="point3">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleX" android:valueFrom="1.0" android:valueTo="1.5" android:duration="1400" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="0.5" android:valueTo="1.3" android:duration="2200" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
         </aapt:attr>
     </target>
-    <target android:name="main_icon">
+    <target android:name="point3">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleX" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <objectAnimator android:propertyName="scaleY" android:valueFrom="0.5" android:valueTo="1.3" android:duration="2200" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
         </aapt:attr>
     </target>
-    <target android:name="main_icon">
+    <target android:name="main_icon_group">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleY" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <set>
+                <objectAnimator android:propertyName="scaleX" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator android:propertyName="scaleY" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            </set>
         </aapt:attr>
     </target>
 </animated-vector>

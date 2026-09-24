@@ -3,20 +3,31 @@
     xmlns:aapt="http://schemas.android.com/aapt">
     <aapt:attr name="android:drawable">
         <vector
-            android:width="200dp"
-            android:height="200dp"
-            android:viewportWidth="48"
-            android:viewportHeight="48">
-                    <group android:name="bubble1" android:translateX="12" android:translateY="40">
-            <path android:pathData="M0,-2 a2,2 0 1,1 0,4 a2,2 0 1,1 0,-4" android:fillColor="#FFFFFF" android:fillAlpha="0.5"/>
+            android:width="400dp"
+            android:height="400dp"
+            android:viewportWidth="500"
+            android:viewportHeight="500">
+            
+                    <group android:name="bubble1" android:translateX="80" android:translateY="480">
+            <path android:pathData="M0,-15 a15,15 0 1,1 0,30 a15,15 0 1,1 0,-30" android:fillColor="#FFFFFF" android:fillAlpha="0.3"/>
         </group>
-        <group android:name="bubble2" android:translateX="24" android:translateY="45">
-            <path android:pathData="M0,-1.5 a1.5,1.5 0 1,1 0,3 a1.5,1.5 0 1,1 0,-3" android:fillColor="#FFFFFF" android:fillAlpha="0.5"/>
+        <group android:name="bubble2" android:translateX="250" android:translateY="450">
+            <path android:pathData="M0,-10 a10,10 0 1,1 0,20 a10,10 0 1,1 0,-20" android:fillColor="#FFFFFF" android:fillAlpha="0.5"/>
         </group>
-        <group android:name="bubble3" android:translateX="36" android:translateY="38">
-            <path android:pathData="M0,-2.5 a2.5,2.5 0 1,1 0,5 a2.5,2.5 0 1,1 0,-5" android:fillColor="#FFFFFF" android:fillAlpha="0.5"/>
+        <group android:name="bubble3" android:translateX="420" android:translateY="500">
+            <path android:pathData="M0,-20 a20,20 0 1,1 0,40 a20,20 0 1,1 0,-40" android:fillColor="#FFFFFF" android:fillAlpha="0.2"/>
         </group>
-            <group android:name="main_icon" android:pivotX="24" android:pivotY="24">
+        <group android:name="bubble4" android:translateX="150" android:translateY="420">
+            <path android:pathData="M0,-8 a8,8 0 1,1 0,16 a8,8 0 1,1 0,-16" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        </group>
+            
+            <group android:name="main_icon_group" 
+                   android:translateX="150" 
+                   android:translateY="150" 
+                   android:scaleX="4.16" 
+                   android:scaleY="4.16"
+                   android:pivotX="24"
+                   android:pivotY="24">
                 <path
                     android:pathData="m412-279 230-230-40-40-189 189-100-100-41 41 140 140ZM251-160q-88 0-149.5-61.5T40-371q0-78 50-137t127-71q20-97 94-158.5T482-799q112 0 189 81.5T748-522v24q72-2 122 46.5T920-329q0 69-50 119t-119 50H251Zm0-60h500q45 0 77-32t32-77q0-45-32-77t-77-32h-63v-84q0-91-61-154t-149-63q-88 0-149.5 63T267-522h-19q-62 0-105 43.5T100-371q0 63 44 107t107 44Zm229-260Z"
                     android:fillColor="#FFFFFF" />
@@ -26,27 +37,30 @@
     
         <target android:name="bubble1">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="translateY" android:valueFrom="40" android:valueTo="10" android:duration="3000" android:repeatCount="infinite" />
+            <objectAnimator android:propertyName="translateY" android:valueFrom="480" android:valueTo="50" android:duration="6000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
     <target android:name="bubble2">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="translateY" android:valueFrom="45" android:valueTo="15" android:duration="2500" android:repeatCount="infinite" />
+            <objectAnimator android:propertyName="translateY" android:valueFrom="450" android:valueTo="20" android:duration="4500" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
     <target android:name="bubble3">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="translateY" android:valueFrom="38" android:valueTo="8" android:duration="3500" android:repeatCount="infinite" />
+            <objectAnimator android:propertyName="translateY" android:valueFrom="500" android:valueTo="80" android:duration="7000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
-    <target android:name="main_icon">
+    <target android:name="bubble4">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleX" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <objectAnimator android:propertyName="translateY" android:valueFrom="420" android:valueTo="100" android:duration="5000" android:repeatCount="infinite" android:interpolator="@android:interpolator/linear" />
         </aapt:attr>
     </target>
-    <target android:name="main_icon">
+    <target android:name="main_icon_group">
         <aapt:attr name="android:animation">
-            <objectAnimator android:propertyName="scaleY" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+            <set>
+                <objectAnimator android:propertyName="scaleX" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator android:propertyName="scaleY" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+            </set>
         </aapt:attr>
     </target>
 </animated-vector>
