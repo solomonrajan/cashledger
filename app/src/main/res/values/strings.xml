@@ -1,4 +1,4 @@
-﻿<!--
+<!--
   ~ Copyright (c) 2018.
   ~
   ~ This file is part of MoneyWallet.
@@ -723,12 +723,12 @@
     <string name="keyboard_00">00</string>
     <string name="keyboard_point">.</string>
     <string name="keyboard_clear">"C"</string>
-    <string name="keyboard_multiplication">"Ã—"</string>
-    <string name="keyboard_division">"Ã·"</string>
+    <string name="keyboard_multiplication">"×"</string>
+    <string name="keyboard_division">"÷"</string>
     <string name="keyboard_addition">"+"</string>
-    <string name="keyboard_subtraction">"âˆ’"</string>
+    <string name="keyboard_subtraction">"-"</string>
     <string name="keyboard_equal">"="</string>
-    <string name="keyboard_confirm">"âœ“"</string>
+    <string name="keyboard_confirm">"="</string>
     <string name="keyboard_commit">">"</string>
 
     <string name="recurrence_type_daily">"Daily"</string>
