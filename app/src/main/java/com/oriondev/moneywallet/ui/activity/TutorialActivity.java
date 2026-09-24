@@ -66,6 +66,7 @@ public class TutorialActivity extends AppIntro2 {
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         addSlide(R.drawable.ic_intro_slide_1, R.string.activity_intro_title_slide_1, R.string.activity_intro_description_slide_1, Color.parseColor("#4285F4"));
         addSlide(R.drawable.ic_intro_slide_2, R.string.activity_intro_title_slide_2, R.string.activity_intro_description_slide_2, Color.parseColor("#EA4335"));
         addSlide(R.drawable.ic_intro_slide_3, R.string.activity_intro_title_slide_3, R.string.activity_intro_description_slide_3, Color.parseColor("#FBBC05"));
