@@ -1,10 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="200dp"
-    android:height="200dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
-    <path
-        android:pathData="M240-160q-66 0-113-47T80-320v-320q0-66 47-113t113-47h480q66 0 113 47t47 113v320q0 66-47 113t-113 47H240Zm0-470h480q29 0 54.5 9t45.5 26v-45q0-42-29-71t-71-29H240q-42 0-71 29t-29 71v45q20-17 45.5-26t54.5-9Zm-97 136 477 115q7 2 14.5.5T647-385l160-134q-13-23-36-37t-51-14H240q-35 0-62 21.5T143-494Z"
-        android:fillColor="#FFFFFF" />
-</vector>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="200dp"
+            android:height="200dp"
+            android:viewportWidth="48"
+            android:viewportHeight="48">
+                    <group android:name="coin1" android:translateX="8" android:translateY="8">
+            <path android:pathData="M0,-3 a3,3 0 1,1 0,6 a3,3 0 1,1 0,-6" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        </group>
+        <group android:name="coin2" android:translateX="40" android:translateY="12">
+            <path android:pathData="M0,-2 a2,2 0 1,1 0,4 a2,2 0 1,1 0,-4" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        </group>
+        <group android:name="coin3" android:translateX="12" android:translateY="40">
+            <path android:pathData="M0,-2.5 a2.5,2.5 0 1,1 0,5 a2.5,2.5 0 1,1 0,-5" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        </group>
+            <group android:name="main_icon" android:pivotX="24" android:pivotY="24">
+                <path
+                    android:pathData="M240-160q-66 0-113-47T80-320v-320q0-66 47-113t113-47h480q66 0 113 47t47 113v320q0 66-47 113t-113 47H240Zm0-470h480q29 0 54.5 9t45.5 26v-45q0-42-29-71t-71-29H240q-42 0-71 29t-29 71v45q20-17 45.5-26t54.5-9Zm-97 136 477 115q7 2 14.5.5T647-385l160-134q-13-23-36-37t-51-14H240q-35 0-62 21.5T143-494Z"
+                    android:fillColor="#FFFFFF" />
+            </group>
+        </vector>
+    </aapt:attr>
+    
+        <target android:name="coin1">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY" android:valueFrom="8" android:valueTo="4" android:duration="1500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="coin2">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY" android:valueFrom="12" android:valueTo="16" android:duration="1200" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="coin3">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="translateY" android:valueFrom="40" android:valueTo="35" android:duration="1800" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+        </aapt:attr>
+    </target>
+    <target android:name="main_icon">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+    <target android:name="main_icon">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleY" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+</animated-vector>

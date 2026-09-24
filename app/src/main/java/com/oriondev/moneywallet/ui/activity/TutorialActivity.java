@@ -24,13 +24,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewGroupCompat;
 import androidx.core.view.WindowCompat;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.github.paolorotolo.appintro.AppIntro2;
@@ -60,6 +63,9 @@ public class TutorialActivity extends AppIntro2 {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         WindowCompat.enableEdgeToEdge(getWindow());
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
         addSlide(R.drawable.ic_intro_slide_1, R.string.activity_intro_title_slide_1, R.string.activity_intro_description_slide_1, Color.parseColor("#4285F4"));
         addSlide(R.drawable.ic_intro_slide_2, R.string.activity_intro_title_slide_2, R.string.activity_intro_description_slide_2, Color.parseColor("#EA4335"));
         addSlide(R.drawable.ic_intro_slide_3, R.string.activity_intro_title_slide_3, R.string.activity_intro_description_slide_3, Color.parseColor("#FBBC05"));
@@ -107,6 +113,36 @@ public class TutorialActivity extends AppIntro2 {
     public void onDonePressed(Fragment currentFragment) {
         super.onDonePressed(currentFragment);
         startActivityForResult(new Intent(this, NewEditWalletActivity.class), REQUEST_NEW_WALLET);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        View content = findViewById(android.R.id.content);
+        if (content != null) {
+            content.post(() -> {
+                if (getSlides() != null && !getSlides().isEmpty() && getPager() != null) {
+                    Fragment current = (Fragment) getSlides().get(getPager().getCurrentItem());
+                    if (current != null && current.getView() != null) {
+                        ImageView imageView = current.getView().findViewById(com.github.paolorotolo.appintro.R.id.image);
+                        if (imageView != null && imageView.getDrawable() instanceof Animatable) {
+                            ((Animatable) imageView.getDrawable()).start();
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onSlideChanged(@Nullable Fragment oldFragment, @Nullable Fragment newFragment) {
+        super.onSlideChanged(oldFragment, newFragment);
+        if (newFragment != null && newFragment.getView() != null) {
+            ImageView imageView = newFragment.getView().findViewById(com.github.paolorotolo.appintro.R.id.image);
+            if (imageView != null && imageView.getDrawable() instanceof Animatable) {
+                ((Animatable) imageView.getDrawable()).start();
+            }
+        }
     }
 
     @Override

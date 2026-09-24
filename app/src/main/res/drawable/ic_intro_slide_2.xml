@@ -1,10 +1,52 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="200dp"
-    android:height="200dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
-    <path
-        android:pathData="M510-510h309q-11-122-98.5-211.5T510-819v309Zm-60 369v-678q-131 11-220.5 109T140-480q0 132 89.5 230T450-141Zm60 0q123-8 210.5-97.5T819-450H510v309Zm-30-339Zm0 400q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"
-        android:fillColor="#FFFFFF" />
-</vector>
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="200dp"
+            android:height="200dp"
+            android:viewportWidth="48"
+            android:viewportHeight="48">
+                    <group android:name="point1" android:translateX="10" android:translateY="10" android:pivotX="10" android:pivotY="10">
+            <path android:pathData="M8,8 h4 v4 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        </group>
+        <group android:name="point2" android:translateX="38" android:translateY="10" android:pivotX="38" android:pivotY="10">
+            <path android:pathData="M36,8 h4 v4 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        </group>
+        <group android:name="point3" android:translateX="10" android:translateY="38" android:pivotX="10" android:pivotY="38">
+            <path android:pathData="M8,36 h4 v4 h-4 z" android:fillColor="#FFFFFF" android:fillAlpha="0.6"/>
+        </group>
+            <group android:name="main_icon" android:pivotX="24" android:pivotY="24">
+                <path
+                    android:pathData="M510-510h309q-11-122-98.5-211.5T510-819v309Zm-60 369v-678q-131 11-220.5 109T140-480q0 132 89.5 230T450-141Zm60 0q123-8 210.5-97.5T819-450H510v309Zm-30-339Zm0 400q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"
+                    android:fillColor="#FFFFFF" />
+            </group>
+        </vector>
+    </aapt:attr>
+    
+        <target android:name="point1">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="1.0" android:valueTo="1.5" android:duration="1000" android:repeatCount="infinite" android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+    <target android:name="point2">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="1.0" android:valueTo="1.5" android:duration="1200" android:repeatCount="infinite" android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+    <target android:name="point3">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="1.0" android:valueTo="1.5" android:duration="1400" android:repeatCount="infinite" android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+    <target android:name="main_icon">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleX" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+    <target android:name="main_icon">
+        <aapt:attr name="android:animation">
+            <objectAnimator android:propertyName="scaleY" android:valueFrom="0.95" android:valueTo="1.05" android:duration="2000" android:repeatCount="infinite" android:repeatMode="reverse" />
+        </aapt:attr>
+    </target>
+</animated-vector>
