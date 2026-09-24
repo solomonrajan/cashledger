@@ -1,54 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Original Tallybook vector asset, released under GPL-3.0-or-later with the project. -->
+﻿<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="300dp"
     android:height="300dp"
-    android:viewportWidth="500"
-    android:viewportHeight="500">
+    android:viewportWidth="48"
+    android:viewportHeight="48">
     <path
-        android:pathData="M455.00,250.00 C455.00,363.22 363.22,455.00 250.00,455.00 C136.78,455.00 45.00,363.22 45.00,250.00 C45.00,136.78 136.78,45.00 250.00,45.00 C363.22,45.00 455.00,136.78 455.00,250.00 Z"
-        android:fillColor="#E9F8FF" />
+        android:pathData="M0,0 h48 v48 h-48 z"
+        android:fillColor="#FBBC0522" />
     <path
-        android:pathData="M135.00,150.00 L365.00,150.00 L365.00,320.00 L135.00,320.00 Z"
-        android:fillColor="#263238" />
-    <path
-        android:pathData="M155.00,175.00 L345.00,175.00 L345.00,285.00 L155.00,285.00 Z"
-        android:fillColor="#E7F5FB" />
-    <path
-        android:pathData="M205,211 L176,235 L205,259"
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#1DA7D6"
-        android:strokeWidth="13"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M295,211 L324,235 L295,259"
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#1DA7D6"
-        android:strokeWidth="13"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M266,195 L235,275"
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#7E57C2"
-        android:strokeWidth="11"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M210.00,320.00 L290.00,320.00 L290.00,340.00 L210.00,340.00 Z"
-        android:fillColor="#263238" />
-    <path
-        android:pathData="M170.00,340.00 L330.00,340.00 L330.00,360.00 L170.00,360.00 Z"
-        android:fillColor="#78909C" />
-    <path
-        android:pathData="M286.00,396.00 C286.00,415.88 269.88,432.00 250.00,432.00 C230.12,432.00 214.00,415.88 214.00,396.00 C214.00,376.12 230.12,360.00 250.00,360.00 C269.88,360.00 286.00,376.12 286.00,396.00 Z"
-        android:fillColor="#1DA7D6" />
-    <path
-        android:pathData="M250,374 L250,418 M228,396 L272,396"
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="8"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
+        android:pathData="M180-80q-24 0-42-18t-18-42v-620q0-24 18-42t42-18h65v-60h65v60h340v-60h65v60h65q24 0 42 18t18 42v620q0 24-18 42t-42 18H180Zm0-60h600v-430H180v430Zm0-490h600v-130H180v130Zm0 0v-130 130Zm300 230q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-188.5-11.5Q280-423 280-440t11.5-28.5Q303-480 320-480t28.5 11.5Q360-457 360-440t-11.5 28.5Q337-400 320-400t-28.5-11.5ZM640-400q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-188.5-11.5Q280-263 280-280t11.5-28.5Q303-320 320-320t28.5 11.5Q360-297 360-280t-11.5 28.5Q337-240 320-240t-28.5-11.5ZM640-240q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"
+        android:fillColor="#FBBC05" />
 </vector>

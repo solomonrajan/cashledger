@@ -1,39 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Original Tallybook vector asset, released under GPL-3.0-or-later with the project. -->
+﻿<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="300dp"
     android:height="300dp"
-    android:viewportWidth="500"
-    android:viewportHeight="500">
+    android:viewportWidth="48"
+    android:viewportHeight="48">
     <path
-        android:pathData="M455.00,250.00 C455.00,363.22 363.22,455.00 250.00,455.00 C136.78,455.00 45.00,363.22 45.00,250.00 C45.00,136.78 136.78,45.00 250.00,45.00 C363.22,45.00 455.00,136.78 455.00,250.00 Z"
-        android:fillColor="#EAF7EE" />
+        android:pathData="M0,0 h48 v48 h-48 z"
+        android:fillColor="#4285F422" />
     <path
-        android:pathData="M376.00,250.00 C376.00,319.59 319.59,376.00 250.00,376.00 C180.41,376.00 124.00,319.59 124.00,250.00 C124.00,180.41 180.41,124.00 250.00,124.00 C319.59,124.00 376.00,180.41 376.00,250.00 Z"
-        android:fillColor="#4CAF50" />
-    <path
-        android:pathData="M190,250 L232,292 L316,204"
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="20"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M145.00,350.00 L355.00,350.00 L355.00,394.00 L145.00,394.00 Z"
-        android:fillColor="#FFFFFF" />
-    <path
-        android:pathData="M178.00,362.00 L248.00,362.00 L248.00,374.00 L178.00,374.00 Z"
-        android:fillColor="#B8E1C2" />
-    <path
-        android:pathData="M260.00,362.00 L322.00,362.00 L322.00,374.00 L260.00,374.00 Z"
-        android:fillColor="#B8E1C2" />
-    <path
-        android:pathData="M196.00,140.00 C196.00,155.46 183.46,168.00 168.00,168.00 C152.54,168.00 140.00,155.46 140.00,140.00 C140.00,124.54 152.54,112.00 168.00,112.00 C183.46,112.00 196.00,124.54 196.00,140.00 Z"
-        android:fillColor="#F6C445" />
-    <path
-        android:pathData="M365.00,156.00 C365.00,167.05 356.05,176.00 345.00,176.00 C333.95,176.00 325.00,167.05 325.00,156.00 C325.00,144.95 333.95,136.00 345.00,136.00 C356.05,136.00 365.00,144.95 365.00,156.00 Z"
-        android:fillColor="#55A868" />
-    <path
-        android:pathData="M386.00,340.00 C386.00,353.25 375.25,364.00 362.00,364.00 C348.75,364.00 338.00,353.25 338.00,340.00 C338.00,326.75 348.75,316.00 362.00,316.00 C375.25,316.00 386.00,326.75 386.00,340.00 Z"
-        android:fillColor="#41A6A6" />
+        android:pathData="m412-279 230-230-40-40-189 189-100-100-41 41 140 140ZM251-160q-88 0-149.5-61.5T40-371q0-78 50-137t127-71q20-97 94-158.5T482-799q112 0 189 81.5T748-522v24q72-2 122 46.5T920-329q0 69-50 119t-119 50H251Zm0-60h500q45 0 77-32t32-77q0-45-32-77t-77-32h-63v-84q0-91-61-154t-149-63q-88 0-149.5 63T267-522h-19q-62 0-105 43.5T100-371q0 63 44 107t107 44Zm229-260Z"
+        android:fillColor="#4285F4" />
 </vector>

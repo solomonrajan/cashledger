@@ -1,35 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Original Tallybook vector asset, released under GPL-3.0-or-later with the project. -->
+﻿<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="300dp"
     android:height="300dp"
-    android:viewportWidth="500"
-    android:viewportHeight="500">
+    android:viewportWidth="48"
+    android:viewportHeight="48">
     <path
-        android:pathData="M455.00,250.00 C455.00,363.22 363.22,455.00 250.00,455.00 C136.78,455.00 45.00,363.22 45.00,250.00 C45.00,136.78 136.78,45.00 250.00,45.00 C363.22,45.00 455.00,136.78 455.00,250.00 Z"
-        android:fillColor="#F2EEFB" />
+        android:pathData="M0,0 h48 v48 h-48 z"
+        android:fillColor="#EA433522" />
     <path
-        android:pathData="M312.00,250.00 C312.00,300.81 270.81,342.00 220.00,342.00 C169.19,342.00 128.00,300.81 128.00,250.00 C128.00,199.19 169.19,158.00 220.00,158.00 C270.81,158.00 312.00,199.19 312.00,250.00 Z"
-        android:fillColor="#7E57C2" />
-    <path
-        android:pathData="M220,250 L220,158 C270,158 312,200 312,250 Z"
-        android:fillColor="#F6C445" />
-    <path
-        android:pathData="M220,250 L312,250 C312,295 280,334 236,341 Z"
-        android:fillColor="#44A6A6" />
-    <path
-        android:pathData="M340.00,175.00 L378.00,175.00 L378.00,325.00 L340.00,325.00 Z"
-        android:fillColor="#FFFFFF" />
-    <path
-        android:pathData="M333.00,195.00 L385.00,195.00 L385.00,211.00 L333.00,211.00 Z"
-        android:fillColor="#7E57C2" />
-    <path
-        android:pathData="M333.00,233.00 L385.00,233.00 L385.00,249.00 L333.00,249.00 Z"
-        android:fillColor="#44A6A6" />
-    <path
-        android:pathData="M333.00,271.00 L385.00,271.00 L385.00,287.00 L333.00,287.00 Z"
-        android:fillColor="#F6C445" />
-    <path
-        android:pathData="M120.00,370.00 L380.00,370.00 L380.00,398.00 L120.00,398.00 Z"
-        android:fillColor="#D8CFF1" />
+        android:pathData="M510-510h309q-11-122-98.5-211.5T510-819v309Zm-60 369v-678q-131 11-220.5 109T140-480q0 132 89.5 230T450-141Zm60 0q123-8 210.5-97.5T819-450H510v309Zm-30-339Zm0 400q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"
+        android:fillColor="#EA4335" />
 </vector>
