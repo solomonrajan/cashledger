@@ -18,13 +18,14 @@
             <path android:pathData="M-20,-20 h40 v40 h-40 z" android:fillColor="#FFFFFF" android:fillAlpha="0.3"/>
         </group>
             
+            <!-- Scale down the 960x960 icon (0 to 960 X, -960 to 0 Y) to fit in the center. -->
             <group android:name="main_icon_group" 
-                   android:translateX="150" 
-                   android:translateY="150" 
-                   android:scaleX="4.16" 
-                   android:scaleY="4.16"
-                   android:pivotX="24"
-                   android:pivotY="24">
+                   android:translateX="-230" 
+                   android:translateY="730" 
+                   android:scaleX="0.2083" 
+                   android:scaleY="0.2083"
+                   android:pivotX="480"
+                   android:pivotY="-480">
                 <path
                     android:pathData="M510-510h309q-11-122-98.5-211.5T510-819v309Zm-60 369v-678q-131 11-220.5 109T140-480q0 132 89.5 230T450-141Zm60 0q123-8 210.5-97.5T819-450H510v309Zm-30-339Zm0 400q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"
                     android:fillColor="#FFFFFF" />
@@ -65,8 +66,8 @@
     <target android:name="main_icon_group">
         <aapt:attr name="android:animation">
             <set>
-                <objectAnimator android:propertyName="scaleX" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
-                <objectAnimator android:propertyName="scaleY" android:valueFrom="4.16" android:valueTo="4.5" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator android:propertyName="scaleX" android:valueFrom="0.2083" android:valueTo="0.22" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator android:propertyName="scaleY" android:valueFrom="0.2083" android:valueTo="0.22" android:duration="2500" android:repeatCount="infinite" android:repeatMode="reverse" android:interpolator="@android:interpolator/fast_out_slow_in" />
             </set>
         </aapt:attr>
     </target>
