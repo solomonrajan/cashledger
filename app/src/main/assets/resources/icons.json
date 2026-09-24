@@ -21,9 +21,6 @@
         "resource": "ic_icon_smart_button"
       },
       {
-        "resource": "ic_icon_shirt"
-      },
-      {
         "resource": "ic_icon_shoewear"
       },
       {
@@ -44,9 +41,6 @@
         "resource": "ic_icon_smart_toy"
       },
       {
-        "resource": "ic_icon_sports_esports"
-      },
-      {
         "resource": "ic_icon_casino"
       },
       {
@@ -62,12 +56,6 @@
       },
       {
         "resource": "ic_icon_train"
-      },
-      {
-        "resource": "ic_icon_directions_car"
-      },
-      {
-        "resource": "ic_icon_directions_bus"
       },
       {
         "resource": "ic_icon_directions_boat"
@@ -94,12 +82,6 @@
         "resource": "ic_icon_luggage"
       },
       {
-        "resource": "ic_icon_car"
-      },
-      {
-        "resource": "ic_icon_ship_2"
-      },
-      {
         "resource": "ic_icon_truck"
       }
     ]
@@ -114,13 +96,7 @@
         "resource": "ic_icon_apartment"
       },
       {
-        "resource": "ic_icon_chair"
-      },
-      {
         "resource": "ic_icon_bed"
-      },
-      {
-        "resource": "ic_icon_kitchen"
       },
       {
         "resource": "ic_icon_weekend"
@@ -150,9 +126,6 @@
         "resource": "ic_icon_bathtub"
       },
       {
-        "resource": "ic_icon_cooker"
-      },
-      {
         "resource": "ic_icon_fire"
       },
       {
@@ -176,16 +149,10 @@
         "resource": "ic_icon_shopping_cart"
       },
       {
-        "resource": "ic_icon_shopping_bag"
-      },
-      {
         "resource": "ic_icon_storefront"
       },
       {
         "resource": "ic_icon_local_mall"
-      },
-      {
-        "resource": "ic_icon_sell"
       },
       {
         "resource": "ic_icon_loyalty"
@@ -209,9 +176,6 @@
         "resource": "ic_icon_gift"
       },
       {
-        "resource": "ic_icon_handbag"
-      },
-      {
         "resource": "ic_icon_invoice"
       }
     ]
@@ -223,25 +187,13 @@
         "resource": "ic_icon_sports_soccer"
       },
       {
-        "resource": "ic_icon_sports_basketball"
-      },
-      {
         "resource": "ic_icon_sports_tennis"
-      },
-      {
-        "resource": "ic_icon_fitness_center"
       },
       {
         "resource": "ic_icon_hiking"
       },
       {
         "resource": "ic_icon_pool"
-      },
-      {
-        "resource": "ic_icon_sports_golf"
-      },
-      {
-        "resource": "ic_icon_pedal_bike"
       },
       {
         "resource": "ic_icon_surfing"
@@ -262,12 +214,6 @@
         "resource": "ic_icon_music_notes"
       },
       {
-        "resource": "ic_icon_pencil"
-      },
-      {
-        "resource": "ic_icon_puzzle_piece"
-      },
-      {
         "resource": "ic_icon_science"
       }
     ]
@@ -275,12 +221,6 @@
   {
     "name_resource": "icon_category_food_and_drinks",
     "items": [
-      {
-        "resource": "ic_icon_restaurant"
-      },
-      {
-        "resource": "ic_icon_local_cafe"
-      },
       {
         "resource": "ic_icon_fastfood"
       },
@@ -294,31 +234,16 @@
         "resource": "ic_icon_wine_bar"
       },
       {
-        "resource": "ic_icon_sports_bar"
-      },
-      {
-        "resource": "ic_icon_liquor"
-      },
-      {
         "resource": "ic_icon_cake"
       },
       {
-        "resource": "ic_icon_icecream"
-      },
-      {
         "resource": "ic_icon_egg"
-      },
-      {
-        "resource": "ic_icon_water_drop"
       },
       {
         "resource": "ic_icon_beer_stein"
       },
       {
         "resource": "ic_icon_bowl_food"
-      },
-      {
-        "resource": "ic_icon_bread"
       },
       {
         "resource": "ic_icon_champagne"
@@ -334,9 +259,6 @@
       },
       {
         "resource": "ic_icon_fork_knife"
-      },
-      {
-        "resource": "ic_icon_wine"
       }
     ]
   },
@@ -347,16 +269,7 @@
         "resource": "ic_icon_computer"
       },
       {
-        "resource": "ic_icon_smartphone"
-      },
-      {
         "resource": "ic_icon_laptop_mac"
-      },
-      {
-        "resource": "ic_icon_tablet_mac"
-      },
-      {
-        "resource": "ic_icon_mouse"
       },
       {
         "resource": "ic_icon_keyboard"
@@ -385,13 +298,7 @@
         "resource": "ic_icon_account_balance"
       },
       {
-        "resource": "ic_icon_monetization_on"
-      },
-      {
         "resource": "ic_icon_attach_money"
-      },
-      {
-        "resource": "ic_icon_savings"
       },
       {
         "resource": "ic_icon_currency_bitcoin"
@@ -406,12 +313,6 @@
         "resource": "ic_icon_credit_score"
       },
       {
-        "resource": "ic_icon_trending_up"
-      },
-      {
-        "resource": "ic_icon_calculator"
-      },
-      {
         "resource": "ic_icon_chart_line_up"
       },
       {
@@ -419,15 +320,6 @@
       },
       {
         "resource": "ic_icon_coins"
-      },
-      {
-        "resource": "ic_icon_hand_deposit"
-      },
-      {
-        "resource": "ic_icon_hand_withdraw"
-      },
-      {
-        "resource": "ic_icon_piggy_bank"
       },
       {
         "resource": "ic_icon_percent"
@@ -462,9 +354,6 @@
         "resource": "ic_icon_accessibility_new"
       },
       {
-        "resource": "ic_icon_child_care"
-      },
-      {
         "resource": "ic_icon_hand_heart"
       },
       {
@@ -482,21 +371,6 @@
         "resource": "ic_icon_pest_control"
       },
       {
-        "resource": "ic_icon_emoji_nature"
-      },
-      {
-        "resource": "ic_icon_cat"
-      },
-      {
-        "resource": "ic_icon_dog"
-      },
-      {
-        "resource": "ic_icon_horse"
-      },
-      {
-        "resource": "ic_icon_cow"
-      },
-      {
         "resource": "ic_icon_bird"
       },
       {
@@ -504,18 +378,12 @@
       },
       {
         "resource": "ic_icon_butterfly"
-      },
-      {
-        "resource": "ic_icon_rabbit"
       }
     ]
   },
   {
     "name_resource": "icon_category_payments",
     "items": [
-      {
-        "resource": "ic_icon_payment"
-      },
       {
         "resource": "ic_icon_credit_card"
       },
@@ -537,9 +405,6 @@
     "name_resource": "icon_category_party",
     "items": [
       {
-        "resource": "ic_icon_celebration"
-      },
-      {
         "resource": "ic_icon_festival"
       },
       {
@@ -553,9 +418,6 @@
   {
     "name_resource": "icon_category_baby",
     "items": [
-      {
-        "resource": "ic_icon_child_friendly"
-      },
       {
         "resource": "ic_icon_baby_changing_station"
       },
@@ -571,9 +433,6 @@
     "name_resource": "icon_category_beauty_and_wellness",
     "items": [
       {
-        "resource": "ic_icon_spa"
-      },
-      {
         "resource": "ic_icon_content_cut"
       },
       {
@@ -583,19 +442,7 @@
         "resource": "ic_icon_health_and_safety"
       },
       {
-        "resource": "ic_icon_medical_services"
-      },
-      {
-        "resource": "ic_icon_healing"
-      },
-      {
-        "resource": "ic_icon_monitor_heart"
-      },
-      {
         "resource": "ic_icon_self_care"
-      },
-      {
-        "resource": "ic_icon_sanitizer"
       },
       {
         "resource": "ic_icon_ambulance"
@@ -614,9 +461,6 @@
       },
       {
         "resource": "ic_icon_thermometer_2"
-      },
-      {
-        "resource": "ic_icon_hair_dryer"
       },
       {
         "resource": "ic_icon_flower_lotus"
