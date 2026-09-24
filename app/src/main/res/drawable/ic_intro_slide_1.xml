@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Original Tallybook vector asset, released under GPL-3.0-or-later with the project. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="500dp"
-    android:height="500dp"
+    android:width="300dp"
+    android:height="300dp"
     android:viewportWidth="500"
     android:viewportHeight="500">
     <path
@@ -34,6 +34,13 @@
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
+        android:pathData="M174,354 L230,326 L280,347 L334,301"
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#2E7D8A"
+        android:strokeWidth="9"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
         android:pathData="M380.00,305.00 C380.00,324.33 364.33,340.00 345.00,340.00 C325.67,340.00 310.00,324.33 310.00,305.00 C310.00,285.67 325.67,270.00 345.00,270.00 C364.33,270.00 380.00,285.67 380.00,305.00 Z"
         android:fillColor="#D95C5C" />
     <path
@@ -41,13 +48,6 @@
         android:fillColor="@android:color/transparent"
         android:strokeColor="#FFFFFF"
         android:strokeWidth="8"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round" />
-    <path
-        android:pathData="M174,354 L230,326 L280,347 L334,301"
-        android:fillColor="@android:color/transparent"
-        android:strokeColor="#2E7D8A"
-        android:strokeWidth="9"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
 </vector>
