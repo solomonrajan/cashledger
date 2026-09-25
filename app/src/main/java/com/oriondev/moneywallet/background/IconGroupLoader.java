@@ -78,17 +78,45 @@ public class IconGroupLoader extends AbstractGenericLoader<List<IconGroup>> {
     }
 
     private IconGroup parseIconGroup(JSONObject category) throws JSONException {
-        String groupName = getStringByName(category.getString("name_resource"));
-        List<Icon> icons = parseIconList(category.getJSONArray("items"));
+        String nameResource = category.getString("name_resource");
+        String groupName = getStringByName(nameResource);
+        String color = getColorForCategory(nameResource);
+        List<Icon> icons = parseIconList(category.getJSONArray("items"), color);
         return new IconGroup(groupName, icons);
     }
 
-    private List<Icon> parseIconList(JSONArray icons) throws JSONException {
+    private List<Icon> parseIconList(JSONArray icons, String color) throws JSONException {
         List<Icon> iconList = new ArrayList<>();
         for (int i = 0; i < icons.length(); i++) {
-            iconList.add(new VectorIcon(icons.getJSONObject(i)));
+            JSONObject iconJson = icons.getJSONObject(i);
+            if (!iconJson.has("color")) {
+                iconJson.put("color", color);
+            }
+            iconList.add(new VectorIcon(iconJson));
         }
         return iconList;
+    }
+
+    private String getColorForCategory(String nameResource) {
+        switch (nameResource) {
+            case "icon_category_clothes": return "#2196F3";
+            case "icon_category_toys": return "#9C27B0";
+            case "icon_category_travel_and_transportation": return "#FFEB3B";
+            case "icon_category_home": return "#795548";
+            case "icon_category_shopping": return "#E91E63";
+            case "icon_category_sport_and_free_time": return "#FF9800";
+            case "icon_category_food_and_drinks": return "#F44336"; // Red for pizza
+            case "icon_category_technology": return "#607D8B";
+            case "icon_category_finance": return "#4CAF50";
+            case "icon_category_people": return "#00BCD4";
+            case "icon_category_animals": return "#FF5722";
+            case "icon_category_payments": return "#3F51B5";
+            case "icon_category_party": return "#9C27B0";
+            case "icon_category_baby": return "#03A9F4";
+            case "icon_category_beauty_and_wellness": return "#F44336"; // Red for heart
+            case "icon_category_others": return "#9E9E9E"; // Grey for others
+            default: return "#9E9E9E";
+        }
     }
 
     private String getStringByName(String name) {

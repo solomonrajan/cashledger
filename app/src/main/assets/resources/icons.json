@@ -466,5 +466,376 @@
         "resource": "ic_icon_flower_lotus"
       }
     ]
+  },
+  {
+    "items": [
+      {
+        "resource": "ic_icon_address_book"
+      },
+      {
+        "resource": "ic_icon_android_phone_black"
+      },
+      {
+        "resource": "ic_icon_android_phone_white"
+      },
+      {
+        "resource": "ic_icon_armchair_lamp"
+      },
+      {
+        "resource": "ic_icon_arrows_left_right"
+      },
+      {
+        "resource": "ic_icon_atm"
+      },
+      {
+        "resource": "ic_icon_baby_carriage"
+      },
+      {
+        "resource": "ic_icon_baby"
+      },
+      {
+        "resource": "ic_icon_balloon"
+      },
+      {
+        "resource": "ic_icon_baseball"
+      },
+      {
+        "resource": "ic_icon_basketball"
+      },
+      {
+        "resource": "ic_icon_bicycle_2"
+      },
+      {
+        "resource": "ic_icon_bookmark_2"
+      },
+      {
+        "resource": "ic_icon_bookmark"
+      },
+      {
+        "resource": "ic_icon_bread"
+      },
+      {
+        "resource": "ic_icon_briefcase"
+      },
+      {
+        "resource": "ic_icon_brush"
+      },
+      {
+        "resource": "ic_icon_bus"
+      },
+      {
+        "resource": "ic_icon_calculator"
+      },
+      {
+        "resource": "ic_icon_car_2"
+      },
+      {
+        "resource": "ic_icon_car"
+      },
+      {
+        "resource": "ic_icon_carrot"
+      },
+      {
+        "resource": "ic_icon_cat"
+      },
+      {
+        "resource": "ic_icon_celebration"
+      },
+      {
+        "resource": "ic_icon_chair"
+      },
+      {
+        "resource": "ic_icon_cheers"
+      },
+      {
+        "resource": "ic_icon_child_care"
+      },
+      {
+        "resource": "ic_icon_child_friendly"
+      },
+      {
+        "resource": "ic_icon_clock"
+      },
+      {
+        "resource": "ic_icon_computer_mouse"
+      },
+      {
+        "resource": "ic_icon_confetti"
+      },
+      {
+        "resource": "ic_icon_cooker"
+      },
+      {
+        "resource": "ic_icon_cow"
+      },
+      {
+        "resource": "ic_icon_currency_circle_dollar"
+      },
+      {
+        "resource": "ic_icon_dart_board_2"
+      },
+      {
+        "resource": "ic_icon_directions_bus"
+      },
+      {
+        "resource": "ic_icon_directions_car"
+      },
+      {
+        "resource": "ic_icon_disco_ball"
+      },
+      {
+        "resource": "ic_icon_dog"
+      },
+      {
+        "resource": "ic_icon_double_decker_bus"
+      },
+      {
+        "resource": "ic_icon_dress"
+      },
+      {
+        "resource": "ic_icon_emoji_nature"
+      },
+      {
+        "resource": "ic_icon_equalizer"
+      },
+      {
+        "resource": "ic_icon_face_3"
+      },
+      {
+        "resource": "ic_icon_factory"
+      },
+      {
+        "resource": "ic_icon_fitness_center"
+      },
+      {
+        "resource": "ic_icon_folding_fan"
+      },
+      {
+        "resource": "ic_icon_golf_ball"
+      },
+      {
+        "resource": "ic_icon_graduation_cap"
+      },
+      {
+        "resource": "ic_icon_groups"
+      },
+      {
+        "resource": "ic_icon_hair_dryer"
+      },
+      {
+        "resource": "ic_icon_hamburger"
+      },
+      {
+        "resource": "ic_icon_hand_coins"
+      },
+      {
+        "resource": "ic_icon_hand_deposit"
+      },
+      {
+        "resource": "ic_icon_hand_soap"
+      },
+      {
+        "resource": "ic_icon_hand_withdraw"
+      },
+      {
+        "resource": "ic_icon_handbag"
+      },
+      {
+        "resource": "ic_icon_healing"
+      },
+      {
+        "resource": "ic_icon_horse"
+      },
+      {
+        "resource": "ic_icon_ice_cream"
+      },
+      {
+        "resource": "ic_icon_icecream"
+      },
+      {
+        "resource": "ic_icon_ipad_white"
+      },
+      {
+        "resource": "ic_icon_kitchen"
+      },
+      {
+        "resource": "ic_icon_lego"
+      },
+      {
+        "resource": "ic_icon_liquor"
+      },
+      {
+        "resource": "ic_icon_local_cafe"
+      },
+      {
+        "resource": "ic_icon_map_position"
+      },
+      {
+        "resource": "ic_icon_medical_services"
+      },
+      {
+        "resource": "ic_icon_microphone_stage"
+      },
+      {
+        "resource": "ic_icon_mill"
+      },
+      {
+        "resource": "ic_icon_monetization_on"
+      },
+      {
+        "resource": "ic_icon_monitor_heart"
+      },
+      {
+        "resource": "ic_icon_moon_stars"
+      },
+      {
+        "resource": "ic_icon_mouse"
+      },
+      {
+        "resource": "ic_icon_pants"
+      },
+      {
+        "resource": "ic_icon_paperclip_paper"
+      },
+      {
+        "resource": "ic_icon_pass"
+      },
+      {
+        "resource": "ic_icon_path_direction"
+      },
+      {
+        "resource": "ic_icon_paw_print"
+      },
+      {
+        "resource": "ic_icon_payment"
+      },
+      {
+        "resource": "ic_icon_payments"
+      },
+      {
+        "resource": "ic_icon_pedal_bike"
+      },
+      {
+        "resource": "ic_icon_pencil_brush"
+      },
+      {
+        "resource": "ic_icon_pencil"
+      },
+      {
+        "resource": "ic_icon_perfume"
+      },
+      {
+        "resource": "ic_icon_pets"
+      },
+      {
+        "resource": "ic_icon_piggy_bank"
+      },
+      {
+        "resource": "ic_icon_pizza"
+      },
+      {
+        "resource": "ic_icon_plane_ticket_2"
+      },
+      {
+        "resource": "ic_icon_plane_ticket"
+      },
+      {
+        "resource": "ic_icon_pos"
+      },
+      {
+        "resource": "ic_icon_puzzle_piece"
+      },
+      {
+        "resource": "ic_icon_rabbit"
+      },
+      {
+        "resource": "ic_icon_receipt_long"
+      },
+      {
+        "resource": "ic_icon_restaurant"
+      },
+      {
+        "resource": "ic_icon_sale"
+      },
+      {
+        "resource": "ic_icon_sanitizer"
+      },
+      {
+        "resource": "ic_icon_savings"
+      },
+      {
+        "resource": "ic_icon_scissors"
+      },
+      {
+        "resource": "ic_icon_sell"
+      },
+      {
+        "resource": "ic_icon_ship_2"
+      },
+      {
+        "resource": "ic_icon_shirt"
+      },
+      {
+        "resource": "ic_icon_shopping_bag"
+      },
+      {
+        "resource": "ic_icon_shower_bathroom"
+      },
+      {
+        "resource": "ic_icon_slippers"
+      },
+      {
+        "resource": "ic_icon_smartphone"
+      },
+      {
+        "resource": "ic_icon_spa"
+      },
+      {
+        "resource": "ic_icon_speaker_high"
+      },
+      {
+        "resource": "ic_icon_sports_bar"
+      },
+      {
+        "resource": "ic_icon_sports_basketball"
+      },
+      {
+        "resource": "ic_icon_sports_esports"
+      },
+      {
+        "resource": "ic_icon_sports_golf"
+      },
+      {
+        "resource": "ic_icon_tablet_mac"
+      },
+      {
+        "resource": "ic_icon_trending_up"
+      },
+      {
+        "resource": "ic_icon_usb_stick_1"
+      },
+      {
+        "resource": "ic_icon_user"
+      },
+      {
+        "resource": "ic_icon_users_three"
+      },
+      {
+        "resource": "ic_icon_users"
+      },
+      {
+        "resource": "ic_icon_wallet_2"
+      },
+      {
+        "resource": "ic_icon_water_drop"
+      },
+      {
+        "resource": "ic_icon_water_tab_1"
+      },
+      {
+        "resource": "ic_icon_wine"
+      }
+    ],
+    "name_resource": "icon_category_others"
   }
 ]

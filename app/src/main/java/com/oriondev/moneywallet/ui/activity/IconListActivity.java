@@ -43,12 +43,16 @@ import com.oriondev.moneywallet.ui.activity.base.SinglePanelActivity;
 import com.oriondev.moneywallet.ui.adapter.recycler.IconAdapter;
 import com.oriondev.moneywallet.ui.view.AdvancedRecyclerView;
 
+import com.oriondev.moneywallet.ui.fragment.dialog.ColorChooserDialog;
+import com.oriondev.moneywallet.utils.Utils;
+import android.graphics.Color;
+
 import java.util.List;
 
 /**
  * Created by andrea on 03/02/18.
  */
-public class IconListActivity extends SinglePanelActivity implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<List<IconGroup>>, IconAdapter.Controller {
+public class IconListActivity extends SinglePanelActivity implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<List<IconGroup>>, IconAdapter.Controller, ColorChooserDialog.Callback {
 
     public static final String RESULT_ICON = "IconListActivity::Result::SelectedIcon";
 
@@ -144,6 +148,16 @@ public class IconListActivity extends SinglePanelActivity implements SwipeRefres
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_color) {
+            ColorChooserDialog.newInstance(R.string.dialog_color_picker_title_icon_picker_background_color, true, Color.GRAY)
+                    .showNow(getSupportFragmentManager(), "IconListActivity::Tag::ColorChooserDialog");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onIconClick(Icon icon) {
         Intent intent = new Intent();
         intent.putExtra(RESULT_ICON, icon);
@@ -176,5 +190,15 @@ public class IconListActivity extends SinglePanelActivity implements SwipeRefres
     @Override
     public void onLoaderReset(@NonNull Loader<List<IconGroup>> loader) {
         // nothing to release
+    }
+
+    @Override
+    public void onColorSelection(ColorChooserDialog dialog, int selectedColor) {
+        mAdapter.setOverrideColor(Utils.getHexColor(selectedColor));
+    }
+
+    @Override
+    public void onColorChooserDismissed(ColorChooserDialog dialog) {
+        // do nothing
     }
 }

@@ -151,10 +151,21 @@ public class IconAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return group.getGroupName();
     }
 
+    private String mOverrideColor;
+
+    public void setOverrideColor(String color) {
+        mOverrideColor = color;
+        notifyDataSetChanged();
+    }
+
     private Icon getIconAt(int position) {
         ItemWrapper itemWrapper = mItems.get(position);
         IconGroup group = mOriginalIconGroups.get(itemWrapper.mGroupIndex);
-        return group.getGroupIcons().get(itemWrapper.mItemIndex);
+        Icon icon = group.getGroupIcons().get(itemWrapper.mItemIndex);
+        if (mOverrideColor != null && icon instanceof com.oriondev.moneywallet.model.VectorIcon) {
+            return new com.oriondev.moneywallet.model.VectorIcon((com.oriondev.moneywallet.model.VectorIcon) icon, mOverrideColor);
+        }
+        return icon;
     }
 
     private static class ItemWrapper {
