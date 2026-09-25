@@ -118,6 +118,7 @@ public class ColorIcon extends Icon {
                     .width(60)
                     .height(60)
                     .textColor(color)
+                    .bold()
                 .endConfig()
                 .buildRound(mName, backgroundColor);
     }
