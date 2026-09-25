@@ -107,6 +107,9 @@ public class OpenExchangeRatesCurrencyRateDownloadIntentService extends Abstract
         CurrencyUnit base = CurrencyManager.getCurrency(response.getString("base"));
         long timestamp = response.getLong("timestamp");
         JSONObject rates = response.getJSONObject("rates");
+        if (base != null && !rates.has(base.getIso())) {
+            rates.put(base.getIso(), 1.0d);
+        }
         Collection<CurrencyUnit> currencies = CurrencyManager.getCurrencies();
         float progress = 35;
         float offset = (100f - progress) / currencies.size();
