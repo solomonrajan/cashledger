@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_color"
-        android:icon="@drawable/ic_color_lens_black_24dp"
-        android:title="Change Color"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_black_24dp"
         android:title="Search"
