@@ -141,7 +141,7 @@ We owe a huge thanks to [AndreAle94](https://github.com/AndreAle94) and [herrera
 
 <div align="justify">
 
-The intro illustrations are original artwork for this fork, released under the GPLv3. The new app icon is designed by solomonrajan. The category picker icons and UI elements use glyphs from Material Symbols. Full license texts are in [THIRD_PARTY_NOTICES.md](https://github.com/solomonrajan/cashledger/blob/master/THIRD_PARTY_NOTICES.md).
+The intro illustrations and the new app icon are designed by [solomonrajan](https://github.com/solomonrajan) (commit ID [3b9cac8](https://github.com/solomonrajan/cashledger/commit/3b9cac8)), released under the GPLv3. The category picker icons and UI elements use glyphs from Material Symbols. Full license texts are in [THIRD_PARTY_NOTICES.md](https://github.com/solomonrajan/cashledger/blob/master/THIRD_PARTY_NOTICES.md).
 
 </div>
 
