@@ -35,7 +35,7 @@ android {
     if (rootProject.file("local.properties").exists()) {
         localProperties.load(new FileInputStream(rootProject.file("local.properties")))
     }
-    def appId = localProperties.getProperty("APPLICATION_ID", "io.github.herrerad85.cashledger")
+    def appId = localProperties.getProperty("APPLICATION_ID", "io.github.solomonrajan.cashledger")
 
     defaultConfig {
         applicationId appId

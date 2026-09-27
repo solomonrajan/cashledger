@@ -43,6 +43,9 @@ import com.oriondev.moneywallet.R;
 import com.oriondev.moneywallet.model.Category;
 import com.oriondev.moneywallet.model.ColorIcon;
 import com.oriondev.moneywallet.model.Icon;
+import com.oriondev.moneywallet.model.VectorIcon;
+import org.json.JSONObject;
+import org.json.JSONException;
 import com.oriondev.moneywallet.storage.database.Contract;
 import com.oriondev.moneywallet.storage.database.DataContentProvider;
 import com.oriondev.moneywallet.utils.IconLoader;
@@ -175,25 +178,33 @@ public class TutorialActivity extends AppIntro2 {
 
     private static List<Category> generateDefaultCategories(Context context) {
         List<Category> categoryList = new ArrayList<>();
-        categoryList.add(getDefaultCategory(context, R.string.default_category_tip, Contract.CategoryType.INCOME, "default::tip", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_prize, Contract.CategoryType.INCOME, "default::prize", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_salary, Contract.CategoryType.INCOME, "default::salary", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_interests, Contract.CategoryType.INCOME, "default::interests", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_sale, Contract.CategoryType.INCOME, "default::sale", Utils.getRandomMDColor()));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_tip, Contract.CategoryType.INCOME, "default::tip", Utils.getRandomMDColor(), "ic_coin_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_prize, Contract.CategoryType.INCOME, "default::prize", Utils.getRandomMDColor(), "ic_star_black_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_salary, Contract.CategoryType.INCOME, "default::salary", Utils.getRandomMDColor(), "ic_account_balance_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_interests, Contract.CategoryType.INCOME, "default::interests", Utils.getRandomMDColor(), "ic_equalizer_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_sale, Contract.CategoryType.INCOME, "default::sale", Utils.getRandomMDColor(), "ic_shopping_cart_24dp"));
         // add expense categories
-        categoryList.add(getDefaultCategory(context, R.string.default_category_car_expenses, Contract.CategoryType.EXPENSE, "default::car_expenses", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_travel, Contract.CategoryType.EXPENSE, "default::travel", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_friends, Contract.CategoryType.EXPENSE, "default::friends", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_technology, Contract.CategoryType.EXPENSE, "default::technology", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_food_drinks, Contract.CategoryType.EXPENSE, "default::food_drinks", Utils.getRandomMDColor()));
-        categoryList.add(getDefaultCategory(context, R.string.default_category_hobby, Contract.CategoryType.EXPENSE, "default::hobby", Utils.getRandomMDColor()));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_car_expenses, Contract.CategoryType.EXPENSE, "default::car_expenses", Utils.getRandomMDColor(), "ic_map_black_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_travel, Contract.CategoryType.EXPENSE, "default::travel", Utils.getRandomMDColor(), "ic_airplanemode_on_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_friends, Contract.CategoryType.EXPENSE, "default::friends", Utils.getRandomMDColor(), "ic_people_black_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_technology, Contract.CategoryType.EXPENSE, "default::technology", Utils.getRandomMDColor(), "ic_storage_black_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_food_drinks, Contract.CategoryType.EXPENSE, "default::food_drinks", Utils.getRandomMDColor(), "ic_receipt_black_24dp"));
+        categoryList.add(getDefaultCategory(context, R.string.default_category_hobby, Contract.CategoryType.EXPENSE, "default::hobby", Utils.getRandomMDColor(), "ic_color_lens_black_24dp"));
         return categoryList;
     }
 
-    private static Category getDefaultCategory(Context context, int nameRes, Contract.CategoryType type, String tag, int color) {
-        String name = context.getString(nameRes);
-        String label = IconLoader.getColorIconString(name);
-        Icon icon = new ColorIcon(Utils.getHexColor(color), label);
+    private static Category getDefaultCategory(Context context, int nameRes, Contract.CategoryType type, String tag, int color, String iconName) {
+        Icon icon = null;
+        try {
+            JSONObject json = new JSONObject();
+            json.put("resource", iconName);
+            json.put("color", Utils.getHexColor(color));
+            icon = new VectorIcon(json);
+        } catch (JSONException e) {
+            String name = context.getString(nameRes);
+            String label = IconLoader.getColorIconString(name);
+            icon = new ColorIcon(Utils.getHexColor(color), label);
+        }
         return new Category(-1L, context.getString(nameRes), icon, type, tag);
     }
 }
