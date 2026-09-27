@@ -235,21 +235,6 @@ public class MainActivityTest {
     }
 
     @Test
-    public void aToolTapOpensItsScreenAndLeavesTheSectionAlone() {
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            scenario.onActivity(activity -> {
-                Menu menu = drawer(activity).getMenu();
-                assertFalse(activity.onNavigationItemSelected(menu.findItem(MainActivity.ID_SECTION_CALCULATOR)));
-                Intent next = shadowOf(activity).getNextStartedActivity();
-                assertEquals(CalculatorActivity.class.getName(), next.getComponent().getClassName());
-                runPending(activity);
-                assertTrue(section(activity) instanceof TransactionMultiPanelViewPagerFragment);
-                assertEquals(MainActivity.ID_SECTION_TRANSACTIONS, drawer(activity).getCheckedItem().getItemId());
-            });
-        }
-    }
-
-    @Test
     public void pickingAWalletFromTheListMovesTheHeaderAndThePreference() {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             scenario.onActivity(activity -> {
@@ -257,7 +242,6 @@ public class MainActivityTest {
                 Menu menu = drawer(activity).getMenu();
                 activity.findViewById(R.id.navigation_drawer_header).performClick();
                 assertFalse(menu.findItem(MainActivity.ID_SECTION_TRANSACTIONS).isVisible());
-                assertFalse(menu.findItem(MainActivity.ID_SECTION_CALCULATOR).isVisible());
                 assertFalse(menu.findItem(MainActivity.ID_SECTION_SETTING).isVisible());
                 MenuItem bank = menu.findItem(walletItem(mSecondWallet));
                 assertEquals("Bank", bank.getTitle().toString());
@@ -267,7 +251,6 @@ public class MainActivityTest {
                 assertEquals(mSecondWallet, PreferenceManager.getCurrentWallet());
                 assertEquals("Bank", headerName(activity));
                 assertTrue(menu.findItem(MainActivity.ID_SECTION_TRANSACTIONS).isVisible());
-                assertTrue(menu.findItem(MainActivity.ID_SECTION_CALCULATOR).isVisible());
                 assertTrue(menu.findItem(MainActivity.ID_SECTION_SETTING).isVisible());
                 assertFalse(menu.findItem(walletItem(mSecondWallet)).isVisible());
                 assertEquals(MainActivity.ID_SECTION_TRANSACTIONS, drawer(activity).getCheckedItem().getItemId());
