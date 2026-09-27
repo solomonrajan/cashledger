@@ -30,6 +30,7 @@ The GitHub Actions build is reproducible and carries the developer signature, so
 |---------|-------------|
 | [✨ What it does](#what-it-does) | Features and capabilities of Cash Ledger |
 | [🗺️ App Blueprint](#app-blueprint) | UI/UX Flow and Navigation Map |
+| [📱 App Pages](#app-pages) | List of screens in the application |
 | [💻 Technology Stack](#technology-stack) | Languages, frameworks, and architecture used |
 | [🔄 Coming from Tallybook](#coming-from-tallybook) | Information for users migrating from Tallybook |
 | [📚 Docs](#docs) | Documentation, guides, and privacy policy |
@@ -78,6 +79,53 @@ graph TD
     H --> H2[Categories Management]
     H --> H3[Security / PIN Lock]
 ```
+
+## 📱 App Pages
+
+Here is a breakdown of the various pages (Activities) available in the app:
+
+### Core / Initial Pages
+* **Launcher Page**: The startup or splash screen (`LauncherActivity`).
+* **Main Page**: The main dashboard or entry point of the app (`MainActivity`).
+* **Tutorial Page**: Intro and onboarding screens for new users (`TutorialActivity`).
+* **Lock Screen**: The PIN or biometric lock screen to protect the app (`LockActivity`).
+
+### Lists & Overviews
+* **Transaction List**: Shows a list of all transactions (`TransactionListActivity`).
+* **Wallet List**: Displays all your accounts/wallets (`WalletListActivity`).
+* **Calendar View**: Shows transactions organized on a calendar (`CalendarActivity`).
+* **Map View**: A map page showing locations of transactions (`MapActivity`).
+* **Period Detail**: Shows a detailed breakdown of a specific time period (`PeriodDetailActivity`).
+* **Currency List**: A list of available currencies (`CurrencyListActivity`).
+
+### Creation / Editing Pages
+* **New/Edit Transaction** (`NewEditTransactionActivity`)
+* **New/Edit Transfer** (`NewEditTransferActivity`)
+* **New/Edit Wallet** (`NewEditWalletActivity`)
+* **New/Edit Category** (`NewEditCategoryActivity`)
+* **New/Edit Budget** (`NewEditBudgetActivity`)
+* **New/Edit Debt** (`NewEditDebtActivity`)
+* **New/Edit Saving** (`NewEditSavingActivity`)
+* **New/Edit Event** (`NewEditEventActivity`)
+* **New/Edit Place** (`NewEditPlaceActivity`)
+* **New/Edit Person** (`NewEditPersonActivity`)
+* **New/Edit Recurrent Transaction** (`NewEditRecurrentTransactionActivity`)
+* **New/Edit Transaction Model** (`NewEditTransactionModelActivity`)
+
+### Sorting & Configuration Pages
+* **Settings Page**: The main configuration and preferences page (`SettingsActivity`).
+* **Category Picker / Sort**: `CategoryPickerActivity`, `CategorySortActivity`.
+* **Category Rules**: `CategoryRuleListActivity`, `NewEditCategoryRuleActivity`, `CategoryRuleSortActivity`.
+* **Wallet Sort**: `WalletSortActivity`.
+* **Icon List**: Pick icons for categories or wallets (`IconListActivity`).
+* **Place Picker**: Select a location on a map (`PlacePickerActivity`).
+
+### Tools & System Pages
+* **Search Page**: To find specific transactions (`SearchActivity`).
+* **Import / Export**: To backup or restore data (`ImportExportActivity`).
+* **Backup List**: Shows existing backups (`BackupListActivity`).
+* **Backend Explorer**: A debug or database viewer screen (`BackendExplorerActivity`).
+* **About Page**: Shows app info, versions, and credits (`AboutActivity`).
 
 ## 💻 Technology Stack
 
