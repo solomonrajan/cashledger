@@ -26,8 +26,7 @@ import android.database.Cursor;
 import android.os.LocaleList;
 
 import com.oriondev.moneywallet.model.CurrencyUnit;
-import com.oriondev.moneywallet.model.ExchangeRate;
-import com.oriondev.moneywallet.storage.cache.ExchangeRateCache;
+
 import com.oriondev.moneywallet.storage.database.Contract;
 import com.oriondev.moneywallet.storage.database.DataContentProvider;
 
@@ -113,7 +112,7 @@ public class CurrencyManager {
         }
     }
 
-    private final ExchangeRateCache mExchangeRateCache;
+
 
     /**
      * Built whole and never written to again once it is published, so a reader takes no lock and
@@ -125,7 +124,6 @@ public class CurrencyManager {
     private volatile Map<String, CurrencyUnit> mCurrencyCache;
 
     private CurrencyManager(Context context) {
-        mExchangeRateCache = new ExchangeRateCache(context);
         mCurrencyCache = loadCurrencies(context);
     }
 
@@ -302,16 +300,7 @@ public class CurrencyManager {
         return currency != null ? currency.getDecimals() : 2;
     }
 
-    /**
-     * @return the rate between the two currencies, or null if either is absent or no rate is
-     *         known for the pair.
-     */
-    public static ExchangeRate getExchangeRate(CurrencyUnit currency1, CurrencyUnit currency2) {
-        if (currency1 == null || currency2 == null) {
-            return null;
-        }
-        return mInstance.mExchangeRateCache.getExchangeRate(currency1.getIso(), currency2.getIso());
-    }
+
 
     /**
      * Obtain the currency the user's language settings imply.
@@ -354,7 +343,5 @@ public class CurrencyManager {
         }
     }
 
-    public static ExchangeRateCache getExchangeRateCache() {
-        return mInstance.mExchangeRateCache;
-    }
+
 }

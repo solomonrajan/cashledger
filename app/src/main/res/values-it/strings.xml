@@ -137,7 +137,6 @@
     <string name="hint_attachments">"Allegato"</string>
     <string name="hint_operation_in_progress">"In corso…"</string>
     <string name="hint_search_something">"Cerca qualcosa"</string>
-    <string name="hint_exchange_rate">"Cambia valuta"</string>
     <string name="hint_recurrence_finished">"Terminato"</string>
     <string name="hint_new_folder">"Nuova cartella"</string>
     <string name="hint_import_format">"Formato file"</string>
@@ -355,7 +354,6 @@
     <string name="title_changelog">"Changelog"</string>
     <string name="title_licenses">"Licenze"</string>
     <string name="title_debt_insert_master_transaction">"Ben fatto"</string>
-    <string name="title_currency_exchange_rate">"Tasso di cambio"</string>
     <string name="title_data_importing">"Importazione dati"</string>
     <string name="title_data_exporting">"Esportazione dati"</string>
     <string name="message_multiply_currency_decimals">"Gli importi nel database devono essere aggiornati al fine di corrispondere al nuovo numero di cifre decimali. L'operazione puo richiedere del tempo. Se vuoi puoi saltare l'aggiornamento ma visualizzerai gli importi come divisi per %d dopo la modifica."</string>
@@ -460,18 +458,11 @@
 
     <string name="setting_category_utility_notification">"Notifica"</string>
     <string name="setting_category_utility_security">"Sicurezza"</string>
-    <string name="setting_category_utility_exchange_rates">"Tassi di cambio"</string>
     <string name="setting_title_daily_reminder">"Promemoria giornaliero"</string>
     <string name="setting_summary_daily_reminder">"Ogni giorno alle: %1$s"</string>
     <string name="setting_title_security">"Protezione accesso"</string>
     <string name="setting_title_security_change_pin">"Cambia codice pin"</string>
     <string name="setting_title_security_change_sequence">"Cambia sequenza di sblocco"</string>
-    <string name="setting_title_exchange_rate_source">"Servizio"</string>
-    <string name="setting_title_exchange_rate_api_key">"Api-key personale"</string>
-    <string name="setting_summary_exchange_rate_api_key">"Api-key: %s"</string>
-    <string name="setting_summary_exchange_rate_api_key_missing">"Api-key mancante"</string>
-    <string name="setting_title_exchange_rate_update">"Aggiorna i tassi di cambio"</string>
-    <string name="setting_summary_exchange_rate_update">"Ultimo aggiornamento: %s"</string>
     <string name="setting_title_currency_management">"Gestisci valute"</string>
     <string name="setting_summary_currency_management">"Aggiungi valute personalizzate"</string>
     <string name="setting_subtitle_user_interface">"Personalizza come vuoi"</string>
@@ -490,8 +481,6 @@
     <string name="setting_item_ui_theme_type_light">"Chiaro"</string>
     <string name="setting_item_ui_theme_type_dark">"Scuro"</string>
     <string name="setting_item_ui_theme_type_deep_dark">"Nero profondo"</string>
-    <string name="setting_item_utility_exchange_rates_custom_api_key_hint">"Inserisci api-key"</string>
-    <string name="setting_item_utility_exchange_rates_service_oer_custom_api_key_message">"Questo servizio richiede un api-key valida per funzionare. Questo vuol dire che questa release dell'applicazione è stata compilata senza una chiave di default, probabilmente a causa di una licenza. Per poter comunicare con questa piattaforma devi andare sul sito https://openexchangerates.org e registrarti: riceverai una chiave gratuitamente."</string>
 
     <string name="setting_category_database_backup">"Backup"</string>
     <string name="setting_title_database_backup_services">"Servizio backup"</string>
@@ -504,7 +493,6 @@
 
     <string name="notification_title_daily_reminder_title">"Qualche transazione oggi?"</string>
     <string name="notification_title_daily_reminder_text">"Tocca qui per aggiungerlo immediatamente"</string>
-    <string name="notification_title_download_exchange_rates">"Aggiornamento tassi di cambio"</string>
     <string name="notification_title_backup_creation">"Creazione backup"</string>
     <string name="notification_title_backup_restoring">"Ripristino backup"</string>
     <string name="notification_title_backup_creation_failed">"Creazione backup fallito"</string>
@@ -656,7 +644,6 @@
 
     <string name="notification_channel_name_backup">"Backup"</string>
     <string name="notification_channel_name_reminder">"Promemoria"</string>
-    <string name="notification_channel_name_exchange_rate">"Tassi di cambio"</string>
     <string name="notification_channel_name_error">"Errori"</string>
 
 

@@ -137,7 +137,6 @@
     <string name="hint_attachments">"Επισυνημμένα"</string>
     <string name="hint_operation_in_progress">"Σε εξέλιξη.."</string>
     <string name="hint_search_something">"Αναζητήστε κάτι"</string>
-    <string name="hint_exchange_rate">"Ισοτιμία συναλλάγματος"</string>
     <string name="hint_recurrence_finished">"Ολοκληρωμένη επανάληψη ενέργειας"</string>
     <string name="hint_new_folder">"Νέος Φάκελος"</string>
     <string name="hint_import_format">"Μορφή εισαγωγής"</string>
@@ -356,7 +355,6 @@
     <string name="title_changelog">"Ιστορικό αλλαγών"</string>
     <string name="title_licenses">"Άδειες"</string>
     <string name="title_debt_insert_master_transaction">"Πολύ καλά"</string>
-    <string name="title_currency_exchange_rate">"Ισοτιμία συναλλάγματος"</string>
     <string name="title_data_importing">"Εισαγωγή δεδομένων"</string>
     <string name="title_data_exporting">"Εξαγωγή δεδομένων"</string>
     <string name="message_multiply_currency_decimals">"Τα ποσά στη βάση δεδομένων πρέπει να έχουν ενημερωθεί για να ταιριάζουν με το νέο πλήθος δεκαδικών ψηφίων. Η διαδικασία αυτή μπορεί να πάρει λίγη ώρα. Αν θέλετε μπορείτε να παραλείψετε αυτή την ενημέρωση αλλά τα ποσά θα εμφανίζονται ως διαιρεμένα κατά %d μετά την αλλαγή."</string>
@@ -461,18 +459,11 @@
 
     <string name="setting_category_utility_notification">"Ειδοποίηση"</string>
     <string name="setting_category_utility_security">"Ασφάλεια"</string>
-    <string name="setting_category_utility_exchange_rates">"Ισοτιμίες συναλλάγματος"</string>
     <string name="setting_title_daily_reminder">"Καθημερινή υπενθύμιση"</string>
     <string name="setting_summary_daily_reminder">"Κάθε μέρα στις: %1$s"</string>
     <string name="setting_title_security">"Προστασία πρόσβασης"</string>
     <string name="setting_title_security_change_pin">"Άλλαξε τον αριθμό PIN"</string>
     <string name="setting_title_security_change_sequence">"Άλλαξε την ακολουθία ξεκλειδώματος"</string>
-    <string name="setting_title_exchange_rate_source">"Υπηρεσία"</string>
-    <string name="setting_title_exchange_rate_api_key">"Το δικό σου Api-Key"</string>
-    <string name="setting_summary_exchange_rate_api_key">"Api-Key: %s"</string>
-    <string name="setting_summary_exchange_rate_api_key_missing">"Το Api-Key λείπει"</string>
-    <string name="setting_title_exchange_rate_update">"Ενημέρωσε τις ισοτιμίες συναλλάγματος"</string>
-    <string name="setting_summary_exchange_rate_update">"Τελευταία ενημέρωση: %s"</string>
     <string name="setting_title_currency_management">"Διαχείρηση νομισμάτων"</string>
     <string name="setting_summary_currency_management">"Πρόσθεσε δικό σου νόμισμα"</string>
     <string name="setting_subtitle_user_interface">"Εξατομίκευσέ το όπως θέλεις"</string>
@@ -491,8 +482,6 @@
     <string name="setting_item_ui_theme_type_light">"Light"</string>
     <string name="setting_item_ui_theme_type_dark">"Dark"</string>
     <string name="setting_item_ui_theme_type_deep_dark">"Deep dark"</string>
-    <string name="setting_item_utility_exchange_rates_custom_api_key_hint">"Δώσε Api-Key"</string>
-    <string name="setting_item_utility_exchange_rates_service_oer_custom_api_key_message">"Αυτή η υπηρεσία απαιτεί ένα έγκυρο Api-Key για να δουλέψει. Αυτό σημαίνει ότι αυτή η έκδοση της εφαρμογής συντάχθηκε χωρίς κάποιο Key, πιθανόν λόγω θεμάτων άδειας. Για να μπορείς να επικοινωνήσεις με τον εξωτερικό πάροχο πρέπει να πας στο https://openexchangerates.org και να κάνεις εγγραφή: Θα λάβεις ένα δωρεάν Key."</string>
 
     <string name="setting_category_database_backup">"Αντίγραφο ασφαλείας"</string>
     <string name="setting_title_database_backup_services">"Υπηρεσίες αντιγράφου ασφαλείας"</string>
@@ -505,7 +494,6 @@
 
     <string name="notification_title_daily_reminder_title">"Έγινε κάποια συναλλαγή σήμερα;"</string>
     <string name="notification_title_daily_reminder_text">"Κλικ εδώ για να την προσθέσεις απευθείας"</string>
-    <string name="notification_title_download_exchange_rates">"Ενημέρωσε τις ισοτιμίες συναλλάγματος"</string>
     <string name="notification_title_backup_creation">"Δημιουργία αντίγραφου ασφαλείας"</string>
     <string name="notification_title_backup_restoring">"Επαναφορά αντίγραφου ασφαλείας"</string>
     <string name="notification_title_backup_creation_failed">"Η δημιουργία αντιγράφου ασφαλείας απέτυχε"</string>
@@ -657,7 +645,6 @@
 
     <string name="notification_channel_name_backup">"Αντίγραφο ασφαλείας"</string>
     <string name="notification_channel_name_reminder">"Υπενθύμιση"</string>
-    <string name="notification_channel_name_exchange_rate">"Ισοτιμίες συναλλάγματος"</string>
     <string name="notification_channel_name_error">"Σφάλμα"</string>
 
 

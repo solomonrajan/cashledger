@@ -151,7 +151,6 @@
     <string name="hint_attachments">"Attachments"</string>
     <string name="hint_operation_in_progress">"In progressâ€¦"</string>
     <string name="hint_search_something">"Search something"</string>
-    <string name="hint_exchange_rate">"Exchange rate"</string>
     <string name="hint_recurrence_finished">"Ended"</string>
     <string name="hint_new_folder">"New folder"</string>
     <string name="hint_import_format">"Import format"</string>
@@ -424,7 +423,6 @@
     <string name="title_changelog">"Changelog"</string>
     <string name="title_licenses">"Licenses"</string>
     <string name="title_debt_insert_master_transaction">"Well done"</string>
-    <string name="title_currency_exchange_rate">"Exchange rate"</string>
     <string name="title_data_importing">"Importing data"</string>
     <string name="title_data_exporting">"Exporting data"</string>
     <string name="message_multiply_currency_decimals">"The amounts in the database must be updated in order to match the new number of decimal digits. The operation may take some time. If you want you can skip the update but the amounts will be displayed as divided by %d after the change."</string>
@@ -572,18 +570,11 @@
     <string name="setting_summary_map_tile_server_default">"Using the default OpenStreetMap servers. Enter another https address, with {z}, {x} and {y} or with none of them."</string>
     <string name="setting_summary_map_tile_server">"Loading tiles from %1$s"</string>
     <string name="setting_summary_map_tile_server_invalid">"Not a usable address. Needs https, a server name, and {z}, {x} and {y} or none of them."</string>
-    <string name="setting_category_utility_exchange_rates">"Exchange rates"</string>
     <string name="setting_title_daily_reminder">"Daily reminder"</string>
     <string name="setting_summary_daily_reminder">"Every day at: %1$s"</string>
     <string name="setting_title_security">"Access protection"</string>
     <string name="setting_title_security_change_pin">"Change pin code"</string>
     <string name="setting_title_security_change_sequence">"Change unlock sequence"</string>
-    <string name="setting_title_exchange_rate_source">"Service"</string>
-    <string name="setting_title_exchange_rate_api_key">"Custom api-key"</string>
-    <string name="setting_summary_exchange_rate_api_key">"Api-key: %s"</string>
-    <string name="setting_summary_exchange_rate_api_key_missing">"Api-key is missing"</string>
-    <string name="setting_title_exchange_rate_update">"Update exchange rates"</string>
-    <string name="setting_summary_exchange_rate_update">"Last update: %s"</string>
     <string name="setting_title_currency_management">"Manage currencies"</string>
     <string name="setting_summary_currency_management">"Add custom currencies"</string>
     <string name="setting_title_category_rules">"Automatic categories"</string>
@@ -605,9 +596,6 @@
     <string name="setting_item_ui_theme_type_dark">"Dark"</string>
     <string name="setting_item_ui_theme_type_deep_dark">"Amoled"</string>
     <string name="setting_item_ui_theme_type_system_default">"System Default"</string>
-    <string name="setting_item_utility_exchange_rates_custom_api_key_hint">"Insert api-key"</string>
-    <string name="setting_item_utility_exchange_rates_service_oer" translatable="false">"OpenExchangeRates.org"</string>
-    <string name="setting_item_utility_exchange_rates_service_oer_custom_api_key_message">"This service requires a valid api-key in order to work. This means that this application release was compiled without a default key, probably due to licensing issues. To be able to communicate with this external provider you must go to https://openexchangerates.org and register: you will receive a free key."</string>
 
     <string name="setting_category_database_backup">"Backup"</string>
     <string name="setting_title_database_backup_services">"Backup services"</string>
@@ -620,7 +608,6 @@
 
     <string name="notification_title_daily_reminder_title">"Any transaction today?"</string>
     <string name="notification_title_daily_reminder_text">"Tap here to add it immediately"</string>
-    <string name="notification_title_download_exchange_rates">"Update exchange rates"</string>
     <string name="notification_title_backup_creation">"Backup creation"</string>
     <string name="notification_title_backup_restoring">"Backup restoring"</string>
     <string name="notification_title_backup_creation_failed">"Backup creation failed"</string>
@@ -782,7 +769,6 @@
 
     <string name="notification_channel_name_backup">"Backup"</string>
     <string name="notification_channel_name_reminder">"Reminder"</string>
-    <string name="notification_channel_name_exchange_rate">"Exchange rates"</string>
     <string name="notification_channel_name_error">"Error"</string>
 
     <string name="widget_label">"Wallet balance"</string>

@@ -44,7 +44,7 @@ android {
         versionCode 92
         versionName "2.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField('String', 'API_KEY_OPEN_EXCHANGE_RATES', ApiKey_OpenExchangeRates)
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17

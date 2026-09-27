@@ -92,7 +92,7 @@
         <activity
             android:name=".ui.activity.CalculatorActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".ui.activity.CurrencyConverterActivity" />
+
         <activity android:name=".ui.activity.AboutActivity" />
         <activity android:name=".ui.activity.SearchActivity" />
         <activity android:name=".ui.activity.CalendarActivity" />
@@ -161,9 +161,7 @@
                 android:resource="@xml/file_provider_paths" />
         </provider>
 
-        <service
-            android:name=".service.openexchangerates.OpenExchangeRatesCurrencyRateDownloadIntentService"
-            android:foregroundServiceType="dataSync" />
+
         <service android:name=".service.AttachmentHandlerIntentService" />
         <service
             android:name=".service.BackupHandlerIntentService"

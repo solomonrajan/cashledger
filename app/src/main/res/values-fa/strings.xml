@@ -136,7 +136,6 @@
     <string name="hint_attachments">"پیوست‌ها"</string>
     <string name="hint_operation_in_progress">"در جریان …"</string>
     <string name="hint_search_something">"چیزی را جستجو کنید"</string>
-    <string name="hint_exchange_rate">"قیمت ارز"</string>
     <string name="hint_recurrence_finished">"پایان یافت"</string>
     <string name="hint_new_folder">"پوشه جدید"</string>
 
@@ -328,7 +327,6 @@
     <string name="title_changelog">"تغییرات"</string>
     <string name="title_licenses">"مجوزها"</string>
     <string name="title_debt_insert_master_transaction">"آفرین"</string>
-    <string name="title_currency_exchange_rate">"قیمت ارز"</string>
     <string name="message_backend_create_folder">"نام پوشه ای که می خواهید ایجاد کنید را وارد کنید"</string>
     <string name="message_permission_required_external_storage">"مجوز دسترسی به حافظه خارجی برای خواندن و نوشتن فایل ها لازم است. لطفا آن را فعال کنید."</string>
     <string name="message_permission_required_not_granted">"مجوز انکار شد لطفا به تنظیمات برنامه بروید و آن را فعال کنید."</string>
@@ -420,18 +418,11 @@
 
     <string name="setting_category_utility_notification">"اطلاع"</string>
     <string name="setting_category_utility_security">"امنیت"</string>
-    <string name="setting_category_utility_exchange_rates">"نرخ‌های تبدیل"</string>
     <string name="setting_title_daily_reminder">"یادآوری روزانه"</string>
     <string name="setting_summary_daily_reminder">"هر روز در: %1$s"</string>
     <string name="setting_title_security">"حفاظت از دسترسی"</string>
     <string name="setting_title_security_change_pin">"تغییر کد پین"</string>
     <string name="setting_title_security_change_sequence">"تغییر توالی باز کردن"</string>
-    <string name="setting_title_exchange_rate_source">"سرویس"</string>
-    <string name="setting_title_exchange_rate_api_key">"سفارشی api-key"</string>
-    <string name="setting_summary_exchange_rate_api_key">"Api-key: %s"</string>
-    <string name="setting_summary_exchange_rate_api_key_missing">"Api-key گم شده است"</string>
-    <string name="setting_title_exchange_rate_update">"به روز رسانی نرخ ارز"</string>
-    <string name="setting_summary_exchange_rate_update">"اخرین بروزرسانی: %s"</string>
     <string name="setting_subtitle_user_interface">"شخصی سازی کنید همانطور که می خواهید"</string>
     <string name="setting_subtitle_utility">"راه اندازی ابزارهای موجود"</string>
     <string name="setting_subtitle_database">"داده های خود را مدیریت کنید"</string>
@@ -448,8 +439,6 @@
     <string name="setting_item_ui_theme_type_light">"روشن"</string>
     <string name="setting_item_ui_theme_type_dark">"تاریک"</string>
     <string name="setting_item_ui_theme_type_deep_dark">"تیره کامل"</string>
-    <string name="setting_item_utility_exchange_rates_custom_api_key_hint">"قرار دادن api-key"</string>
-    <string name="setting_item_utility_exchange_rates_service_oer_custom_api_key_message">"این سرویس نیاز به کلید API معتبر دارد تا کار کند. این به این معنی است که انتشار این برنامه بدون کلید پیش فرض کامپایل شده است، احتمالا به دلیل مسائل مربوط به صدور مجوز. برای برقراری ارتباط با این ارائه دهنده خارجی، باید به https://openexchangerates.org بروید و ثبت نام کنید: یک کلید رایگان دریافت خواهید کرد."</string>
 
     <string name="setting_category_database_backup">"پشتیبان گیری"</string>
     <string name="setting_title_database_backup_services">"خدمات پشتیبان گیری"</string>
@@ -457,7 +446,6 @@
 
     <string name="notification_title_daily_reminder_title">"هر تراکنشی امروز؟"</string>
     <string name="notification_title_daily_reminder_text">"برای اضافه کردن آن بلافاصله ضربه بزنید"</string>
-    <string name="notification_title_download_exchange_rates">"به روز رسانی نرخ ارز"</string>
     <string name="notification_title_backup_creation">"ایجاد پشتیبان"</string>
     <string name="notification_title_backup_restoring">"بازگرداندن پشتیبان"</string>
     <string name="notification_title_backup_creation_failed">"ایجاد پشتیبان انجام نشد"</string>
@@ -609,7 +597,6 @@
 
     <string name="notification_channel_name_backup">"پشتیبان"</string>
     <string name="notification_channel_name_reminder">"یادآور"</string>
-    <string name="notification_channel_name_exchange_rate">"نرخ تبدیل"</string>
     <string name="notification_channel_name_error">"خطا"</string>
 
 

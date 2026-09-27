@@ -55,20 +55,13 @@
     </com.oriondev.moneywallet.ui.preference.ThemedPreferenceCategory>
 
     <com.oriondev.moneywallet.ui.preference.ThemedPreferenceCategory
-        android:title="@string/setting_category_utility_exchange_rates" >
+        android:title="@string/setting_title_currency_management" >
 
-        <com.oriondev.moneywallet.ui.preference.ThemedListPreference
-            android:key="exchange_rate_source"
-            android:title="@string/setting_title_exchange_rate_source"
-            android:persistent="false" />
 
-        <com.oriondev.moneywallet.ui.preference.ThemedInputPreference
-            android:key="exchange_rate_api_key"
-            android:title="@string/setting_title_exchange_rate_api_key"/>
 
-        <com.oriondev.moneywallet.ui.preference.ThemedPreference
-            android:key="exchange_rate_update"
-            android:title="@string/setting_title_exchange_rate_update"/>
+
+
+
 
         <com.oriondev.moneywallet.ui.preference.ThemedPreference
             android:key="currency_management"

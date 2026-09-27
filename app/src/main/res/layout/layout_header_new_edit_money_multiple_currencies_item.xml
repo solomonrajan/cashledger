@@ -37,7 +37,7 @@
             android:layout_marginEnd="@dimen/material_activity_header_text_end_margin"
             android:textSize="@dimen/header_money_text_size"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/exchange_rate_text_view"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/money_text_view"
             app:theme_textColor="textOverColorPrimary"
@@ -52,42 +52,13 @@
             android:textSize="@dimen/header_money_text_size"
             android:gravity="end"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/secondary_money_text_view"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/currency_text_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:theme_textColor="textOverColorPrimary"
             tools:text="520.56" />
 
-        <com.oriondev.moneywallet.ui.view.theme.ThemedTextView
-            android:id="@+id/exchange_rate_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/material_activity_header_text_start_margin"
-            android:layout_marginStart="@dimen/material_activity_header_text_start_margin"
-            android:layout_marginRight="@dimen/material_activity_header_text_end_margin"
-            android:layout_marginEnd="@dimen/material_activity_header_text_end_margin"
-            android:textSize="@dimen/header_money_secondary_text_size"
-            app:layout_constraintTop_toBottomOf="@+id/currency_text_view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/secondary_money_text_view"
-            app:theme_textColor="textOverColorPrimary"
-            tools:text="€ → $: 1.27" />
 
-        <com.oriondev.moneywallet.ui.view.theme.ThemedTextView
-            android:id="@+id/secondary_money_text_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/material_activity_header_text_end_margin"
-            android:layout_marginEnd="@dimen/material_activity_header_text_end_margin"
-            android:textSize="@dimen/header_money_secondary_text_size"
-            android:gravity="end"
-            app:layout_constraintTop_toBottomOf="@+id/money_text_view"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/exchange_rate_text_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:theme_textColor="textOverColorPrimary"
-            tools:text="$ 580.92" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

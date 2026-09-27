@@ -319,7 +319,6 @@
     <string name="hint_auto_backup_wifi_only">Nur über WLAN</string>
     <string name="hint_decimals">Anzahl der Nachkommastellen</string>
     <string name="hint_directory">Ordner</string>
-    <string name="hint_exchange_rate">Wechselkurs</string>
     <string name="hint_expenses">Ausgaben</string>
     <string name="hint_export_folder">Exportordner</string>
     <string name="hint_export_format">Exportformat</string>
@@ -451,7 +450,6 @@
     <string name="title_debt_insert_master_transaction">Sehr gut</string>
     <string name="title_data_importing">Importiere Daten</string>
     <string name="title_data_exporting">Exportiere Daten</string>
-    <string name="title_currency_exchange_rate">Wechselkurs</string>
     <string name="title_changelog">Änderungsprotokoll</string>
     <string name="title_bank_search">Bank suchen</string>
     <string name="title_backup_restoring">Sicherung wiederherstellen</string>
@@ -499,18 +497,12 @@
     <string name="setting_title_security">Zugangsbeschränkung</string>
     <string name="setting_title_import_data">Daten importieren</string>
     <string name="setting_title_export_data">Daten exportieren</string>
-    <string name="setting_title_exchange_rate_update">Wechselkurse ändern</string>
-    <string name="setting_title_exchange_rate_source">Service</string>
-    <string name="setting_title_exchange_rate_api_key">Benutzerdefinierter API-Schlüssel</string>
     <string name="setting_title_database_backup_services">Sicherungsservice</string>
     <string name="setting_title_database">Datenbank</string>
     <string name="setting_title_currency_management">Währungen verwalten</string>
     <string name="setting_summary_ui_custom_digits">Stil der Ziffern personalisieren</string>
     <string name="setting_summary_import_data">Daten von externer Datei lesen</string>
     <string name="setting_summary_export_data">Daten zu externer Datei schreiben</string>
-    <string name="setting_summary_exchange_rate_update">Letzte Aktualisierung: %s</string>
-    <string name="setting_summary_exchange_rate_api_key_missing">API-Schlüssel fehlt</string>
-    <string name="setting_summary_exchange_rate_api_key">API-Schlüssel: %s</string>
     <string name="setting_summary_database_backup_services">Datenbank erstellen und wiederherstellen</string>
     <string name="setting_summary_daily_reminder">Täglich um %1$s</string>
     <string name="setting_summary_currency_management">Benutzerdefinierte Währung hinzufügen</string>
@@ -518,8 +510,6 @@
     <string name="setting_subtitle_user_interface">Personalisiere</string>
     <string name="setting_subtitle_database">Verwalte deine Daten</string>
     <string name="setting_subtitle_about">Anerkennungen und Lizenz</string>
-    <string name="setting_item_utility_exchange_rates_service_oer_custom_api_key_message">Dieser Service benötigt einen API-Schlüssel, um zu funktionieren. Dies bedeutet, dass diese Version der Anwendung ohne den voreingestellten Schlüssel kompiliert wurde, vermutlich aus lizensrechtlichen Gründen. Um mit diesem Anbieter zu kommunizieren, musst du dich auf https://openexchangerates.org registrieren, um einen kostenlosen API-Schlüssel zu erhalten.</string>
-    <string name="setting_item_utility_exchange_rates_custom_api_key_hint">API-Schlüssel eingeben</string>
     <string name="setting_item_security_sequence">Abfolge</string>
     <string name="setting_item_security_pin">PIN</string>
     <string name="setting_item_security_none">Ausgeschaltet</string>
@@ -527,7 +517,6 @@
     <string name="setting_item_daily_reminder_none">Ausgeschaltet</string>
     <string name="setting_category_utility_security">Sicherheit</string>
     <string name="setting_category_utility_notification">Benachrichtigung</string>
-    <string name="setting_category_utility_exchange_rates">Wechselkurs</string>
     <string name="setting_category_ui_theme">Thema</string>
     <string name="setting_category_ui_appearance">Aussehen</string>
     <string name="setting_category_database_import_export">Import/Export</string>
@@ -581,7 +570,6 @@
     <string name="recurrence_end_type_until">Bis</string>
     <string name="recurrence_end_type_for">Für</string>
     <string name="recurrence_end_type_forever">Für immer</string>
-    <string name="notification_title_download_exchange_rates">Wechselkurse aktualisieren</string>
     <string name="notification_content_error_message">Fehler: %s</string>
     <string name="notification_title_backup_creation">Sicherungserzeugung</string>
     <string name="notification_title_backup_creation_failed">Sicherungserzeugung fehlgeschlagen</string>
@@ -596,7 +584,6 @@
     <string name="notification_content_backup_error_backend_recoverable">Es gab einen Fehler bei der Kommunikation mit dem Back-End. Überprüfe deine Internetverbindung und versuche es erneut.</string>
     <string name="notification_content_backup_error_backend">Es gab einen Fehler mit dem Back-End und automatische Sicherungen wurden ausgeschaltet. Bitte überprüfe, ob es ein Problem gibt.</string>
     <string name="notification_channel_name_reminder">Erinnerung</string>
-    <string name="notification_channel_name_exchange_rate">Wechselkurse</string>
     <string name="notification_channel_name_error">Fehler</string>
     <string name="notification_channel_name_backup">Sicherung</string>
     <string name="notification_action_retry">Erneut Versuchen</string>

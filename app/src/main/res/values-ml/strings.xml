@@ -121,7 +121,6 @@
     <string name="hint_attachments">"അറ്റാച്ചുമെന്റുകൾ"</string>
     <string name="hint_operation_in_progress">"പുരോഗതിയിൽ…"</string>
     <string name="hint_search_something">"എന്തെങ്കിലും തിരയുക"</string>
-    <string name="hint_exchange_rate">"വിനിമയ നിരക്ക്"</string>
     <string name="hint_recurrence_finished">"അവസാനിച്ചു"</string>
     <string name="hint_new_folder">"പുതിയ ഫോൾഡർ"</string>
     <string name="hint_import_format">"ഫോർമാറ്റ് ഇറക്കുമതി ചെയ്യുക"</string>
@@ -342,7 +341,6 @@
     <string name="title_changelog">"ചേഞ്ച്ലോഗ്"</string>
     <string name="title_licenses">"ലൈസൻസുകൾ"</string>
     <string name="title_debt_insert_master_transaction">"നന്നായി"</string>
-    <string name="title_currency_exchange_rate">"വിനിമയ നിരക്ക്"</string>
     <string name="title_data_importing">"ഡാറ്റ ഇമ്പോർട്ടുചെയ്യുന്നു"</string>
     <string name="title_data_exporting">"ഡാറ്റ എക്സ്പോർട്ടുചെയ്യുന്നു"</string>
     <string name="message_multiply_currency_decimals">"പുതിയ ദശാംശ അക്കങ്ങളുമായി പൊരുത്തപ്പെടുന്നതിന് ഡാറ്റാബേസിലെ തുകകൾ അപ്ഡേറ്റ് ചെയ്തിരിക്കണം. പ്രവർത്തനത്തിന് കുറച്ച് സമയമെടുക്കും. നിങ്ങൾക്ക് വേണമെങ്കിൽ അപ്ഡേറ്റ് ഒഴിവാക്കാം, പക്ഷേ മാറ്റത്തിന് ശേഷം %d കൊണ്ട് വിഭജിച്ച് തുക പ്രദർശിപ്പിക്കും. "</string>
@@ -447,18 +445,11 @@
 
     <string name="setting_category_utility_notification">"അറിയിപ്പ്"</string>
     <string name="setting_category_utility_security">"സുരക്ഷ"</string>
-    <string name="setting_category_utility_exchange_rates">"വിനിമയ നിരക്ക്"</string>
     <string name="setting_title_daily_reminder">"പ്രതിദിന ഓർമ്മപ്പെടുത്തൽ"</string>
     <string name="setting_summary_daily_reminder">"എല്ലാ ദിവസവും: %1$s"</string>
     <string name="setting_title_security">"ആക്സസ് പരിരക്ഷണം"</string>
     <string name="setting_title_security_change_pin">"പിൻ കോഡ് മാറ്റുക"</string>
     <string name="setting_title_security_change_sequence">"അൺലോക്ക് സീക്വൻസ് മാറ്റുക"</string>
-    <string name="setting_title_exchange_rate_source">"സേവനം"</string>
-    <string name="setting_title_exchange_rate_api_key">"ഇഷ്ടാനുസൃത API- കീ"</string>
-    <string name="setting_summary_exchange_rate_api_key">"Api-key: %s"</string>
-    <string name="setting_summary_exchange_rate_api_key_missing">"Api-key കാണുന്നില്ല"</string>
-    <string name="setting_title_exchange_rate_update">"വിനിമയ നിരക്കുകൾ അപ്ഡേറ്റുചെയ്യുക"</string>
-    <string name="setting_summary_exchange_rate_update">"അവസാന അപ്ഡേറ്റ്: %s"</string>
     <string name="setting_title_currency_management">"കറൻസികൾ നിയന്ത്രിക്കുക"</string>
     <string name="setting_summary_currency_management">"ഇഷ്ടാനുസൃത കറൻസികൾ ചേർക്കുക"</string>
     <string name="setting_subtitle_user_interface">"നിങ്ങൾക്കാവശ്യമുള്ളതുപോലെ വ്യക്തിഗതമാക്കുക"</string>
@@ -477,9 +468,6 @@
     <string name="setting_item_ui_theme_type_light">"ലൈറ്റ്"</string>
     <string name="setting_item_ui_theme_type_dark">"ഇരുണ്ടത്"</string>
     <string name="setting_item_ui_theme_type_deep_dark">"ആഴത്തിലുള്ള ഇരുണ്ടത്"</string>
-    <string name="setting_item_utility_exchange_rates_custom_api_key_hint">"API കീ ചേർക്കുക"</string>
-    <string name="setting_item_utility_exchange_rates_service_oer" translatable="false">"OpenExchangeRates.org"</string>
-    <string name="setting_item_utility_exchange_rates_service_oer_custom_api_key_message">"പ്രവർത്തിക്കുന്നതിന് ഈ സേവനത്തിന് സാധുവായ ഒരു എപി-കീ ആവശ്യമാണ്. ഇതിനർത്ഥം സ്ഥിരസ്ഥിതി കീയില്ലാതെ ഈ ആപ്ലിക്കേഷൻ റിലീസ് സമാഹരിച്ചത്, ലൈസൻസിംഗ് പ്രശ്നങ്ങൾ കാരണമാകാം എന്നാണ്. ഈ ബാഹ്യ ദാതാവുമായി ആശയവിനിമയം നടത്താൻ നിങ്ങൾ https: // ലേക്ക് പോകണം. openexchangerates.org കൂടാതെ രജിസ്റ്റർ ചെയ്യുക: നിങ്ങൾക്ക് ഒരു സ key ജന്യ കീ ലഭിക്കും. "</string>
 
     <string name="setting_category_database_backup">"ബാക്കപ്പ്"</string>
     <string name="setting_title_database_backup_services">"ബാക്കപ്പ് സേവനങ്ങൾ"</string>
@@ -492,7 +480,6 @@
 
     <string name="notification_title_daily_reminder_title">"ഇന്ന് എന്തെങ്കിലും ഇടപാട് ഉണ്ടോ?"</string>
     <string name="notification_title_daily_reminder_text">"ഇത് ഉടനടി ചേർക്കാൻ ഇവിടെ ടാപ്പുചെയ്യുക"</string>
-    <string name="notification_title_download_exchange_rates">"വിനിമയ നിരക്കുകൾ അപ്ഡേറ്റുചെയ്യുക"</string>
     <string name="notification_title_backup_creation">"ബാക്കപ്പ് സൃഷ്ടിക്കൽ"</string>
     <string name="notification_title_backup_restoring">"ബാക്കപ്പ് പുന oring സ്ഥാപിക്കൽ"</string>
     <string name="notification_title_backup_creation_failed">"ബാക്കപ്പ് സൃഷ്ടിക്കൽ പരാജയപ്പെട്ടു"</string>
@@ -644,7 +631,6 @@
 
     <string name="notification_channel_name_backup">"ബാക്കപ്പ്"</string>
     <string name="notification_channel_name_reminder">"ഓർമ്മപ്പെടുത്തൽ"</string>
-    <string name="notification_channel_name_exchange_rate">"വിനിമയ നിരക്ക്"</string>
     <string name="notification_channel_name_error">"പിശക്"</string>
 
 

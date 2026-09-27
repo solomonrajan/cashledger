@@ -46,7 +46,7 @@ import android.view.ViewGroup;
 import com.oriondev.moneywallet.R;
 import com.oriondev.moneywallet.broadcast.LocalAction;
 import com.oriondev.moneywallet.model.LockMode;
-import com.oriondev.moneywallet.service.AbstractCurrencyRateDownloadIntentService;
+
 import com.oriondev.moneywallet.storage.preference.PreferenceManager;
 import com.oriondev.moneywallet.utils.SystemBars;
 import com.oriondev.moneywallet.ui.activity.CategoryRuleListActivity;
@@ -86,32 +86,14 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
     private ThemedListPreference mDailyReminderPreference;
     private ThemedListPreference mSecurityModeListPreference;
     private Preference mSecurityModeChangeKeyPreference;
-    private ThemedListPreference mExchangeRateServiceListPreference;
-    private ThemedInputPreference mExchangeRateCustomApiKey;
+    
+    
     private ThemedInputPreference mMapTileServerPreference;
-    private Preference mExchangeRateUpdatePreference;
+    
     private Preference mCurrencyManagementPreference;
     private Preference mCategoryRulesPreference;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Activity activity = getActivity();
-        if (activity != null) {
-            LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(activity);
-            broadcastManager.registerReceiver(mLocalBroadcastReceiver, new IntentFilter(LocalAction.ACTION_EXCHANGE_RATES_UPDATED));
-        }
-    }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Activity activity = getActivity();
-        if (activity != null) {
-            LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(activity);
-            broadcastManager.unregisterReceiver(mLocalBroadcastReceiver);
-        }
-    }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -119,9 +101,9 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
         mDailyReminderPreference = (ThemedListPreference) findPreference("daily_reminder");
         mSecurityModeListPreference = (ThemedListPreference) findPreference("security_mode");
         mSecurityModeChangeKeyPreference = findPreference("security_change_key");
-        mExchangeRateServiceListPreference = (ThemedListPreference) findPreference("exchange_rate_source");
-        mExchangeRateCustomApiKey = (ThemedInputPreference) findPreference("exchange_rate_api_key");
-        mExchangeRateUpdatePreference = findPreference("exchange_rate_update");
+        
+        
+        
         mCurrencyManagementPreference = findPreference("currency_management");
         mCategoryRulesPreference = findPreference("category_rules");
         mMapTileServerPreference = (ThemedInputPreference) findPreference("map_tile_server");
@@ -166,19 +148,12 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
                     String.valueOf(PreferenceManager.LOCK_MODE_SEQUENCE)
             });
         }
-        mExchangeRateServiceListPreference.setEntries(new String[] {
-                getString(R.string.setting_item_utility_exchange_rates_service_oer)
-        });
-        mExchangeRateServiceListPreference.setEntryValues(new String[] {
-                String.valueOf(PreferenceManager.SERVICE_OPEN_EXCHANGE_RATE)
-        });
+
         // setup current (or default) values
         setupCurrentDailyReminder();
         setupCurrentLockMode();
         setupCurrentMapTileServer();
-        setupCurrentExchangeRateService();
-        setupCurrentExchangeRateCustomApiKey();
-        setupCurrentExchangeRateUpdate();
+
         // attach a listener to get notified when values changes
         mDailyReminderPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
@@ -236,30 +211,7 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
             }
 
         });
-        mExchangeRateServiceListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int index = Integer.parseInt((String) newValue);
-                PreferenceManager.setCurrentExchangeRateService(index);
-                setupCurrentExchangeRateService();
-                setupCurrentExchangeRateCustomApiKey();
-                return false;
-            }
-
-        });
-        mExchangeRateCustomApiKey.setInput(R.string.setting_item_utility_exchange_rates_custom_api_key_hint, true, InputType.TYPE_CLASS_TEXT);
-        mExchangeRateCustomApiKey.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                int service = PreferenceManager.getCurrentExchangeRateService();
-                PreferenceManager.setServiceApiKey(service, (String) newValue);
-                setupCurrentExchangeRateCustomApiKey();
-                return false;
-            }
-
-        });
         if (mMapTileServerPreference != null) {
             mMapTileServerPreference.setInput(R.string.setting_hint_map_tile_server, true, InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_URI);
             mMapTileServerPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -285,19 +237,7 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
             });
             setupCurrentMapTileServer();
         }
-        mExchangeRateUpdatePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Activity activity = getActivity();
-                if (activity != null) {
-                    Intent intent = AbstractCurrencyRateDownloadIntentService.buildIntent(activity);
-                    activity.startService(intent);
-                }
-                return false;
-            }
-
-        });
         mCurrencyManagementPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
             @Override
@@ -353,9 +293,7 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
         // configuration change, so nothing recreates this screen on the way back
         setupDailyReminderEntries();
         setupCurrentDailyReminder();
-        // this row renders a time too, from the same place, so leaving it out would have the two
-        // rows on one screen disagreeing about the format
-        setupCurrentExchangeRateUpdate();
+
     }
 
     /**
@@ -438,21 +376,6 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
         }
     }
 
-    private void setupCurrentExchangeRateService() {
-        int index = PreferenceManager.getCurrentExchangeRateService();
-        mExchangeRateServiceListPreference.setValue(String.valueOf(index));
-        switch (index) {
-            case PreferenceManager.SERVICE_OPEN_EXCHANGE_RATE:
-                mExchangeRateServiceListPreference.setSummary(R.string.setting_item_utility_exchange_rates_service_oer);
-                mExchangeRateCustomApiKey.setContent(R.string.setting_item_utility_exchange_rates_service_oer_custom_api_key_message);
-                break;
-        }
-        if (PreferenceManager.hasCurrentExchangeRateServiceDefaultApiKey()) {
-            mExchangeRateCustomApiKey.setVisible(false);
-        } else {
-            mExchangeRateCustomApiKey.setVisible(true);
-        }
-    }
 
     private void setupCurrentMapTileServer() {
         if (mMapTileServerPreference == null) {
@@ -470,29 +393,6 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
         mMapTileServerPreference.setCurrentValue(url);
     }
 
-    private void setupCurrentExchangeRateCustomApiKey() {
-        if (!PreferenceManager.hasCurrentExchangeRateServiceDefaultApiKey()) {
-            String apiKey = PreferenceManager.getCurrentExchangeRateServiceCustomApiKey();
-            if (!TextUtils.isEmpty(apiKey)) {
-                mExchangeRateCustomApiKey.setSummary(getString(R.string.setting_summary_exchange_rate_api_key, apiKey));
-                mExchangeRateCustomApiKey.setCurrentValue(apiKey);
-            } else {
-                mExchangeRateCustomApiKey.setSummary(R.string.setting_summary_exchange_rate_api_key_missing);
-                mExchangeRateCustomApiKey.setCurrentValue(null);
-            }
-        } else {
-            mExchangeRateCustomApiKey.setSummary(null);
-            mExchangeRateCustomApiKey.setCurrentValue(null);
-        }
-    }
-
-    private void setupCurrentExchangeRateUpdate() {
-        long timestamp = PreferenceManager.getLastExchangeRateUpdateTimestamp();
-        String summary = DateFormatter.getDateFromToday(new Date(timestamp));
-        String fullSummary = getString(R.string.setting_summary_exchange_rate_update, summary);
-        mExchangeRateUpdatePreference.setSummary(fullSummary);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_LOCK_ACTIVITY) {
@@ -502,14 +402,4 @@ public class UtilitySettingFragment extends PreferenceFragmentCompat {
         }
     }
 
-    private BroadcastReceiver mLocalBroadcastReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (LocalAction.ACTION_EXCHANGE_RATES_UPDATED.equals(intent.getAction())) {
-                setupCurrentExchangeRateUpdate();
-            }
-        }
-
-    };
 }

@@ -47,7 +47,7 @@ import com.oriondev.moneywallet.model.Person;
 import com.oriondev.moneywallet.model.Place;
 import com.oriondev.moneywallet.model.Wallet;
 import com.oriondev.moneywallet.picker.AttachmentPicker;
-import com.oriondev.moneywallet.picker.CurrencyConverterPicker;
+
 import com.oriondev.moneywallet.picker.DateTimePicker;
 import com.oriondev.moneywallet.picker.EventPicker;
 import com.oriondev.moneywallet.picker.MoneyPicker;
@@ -76,8 +76,7 @@ import java.util.Locale;
 /**
  * Created by andrea on 16/03/18.
  */
-public class NewEditTransferActivity extends NewEditItemActivity  implements CurrencyConverterPicker.Controller,
-                                                                            MoneyPicker.Controller,
+public class NewEditTransferActivity extends NewEditItemActivity  implements MoneyPicker.Controller,
                                                                             DateTimePicker.Controller,
                                                                             WalletPicker.SingleWalletController,
                                                                             EventPicker.Controller,
@@ -91,7 +90,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
     public static final int TYPE_STANDARD = 0;
     public static final int TYPE_MODEL = 1;
 
-    private static final String TAG_CONVERTER_PICKER = "NewEditTransferModelActivity::Tag::ConverterPicker";
+
     private static final String TAG_MONEY_PICKER = "NewEditTransferModelActivity::Tag::MoneyPicker";
     private static final String TAG_DATETIME_PICKER = "NewEditTransferModelActivity::Tag::DateTimePicker";
     private static final String TAG_WALLET_FROM_PICKER = "NewEditTransferModelActivity::Tag::WalletFromPicker";
@@ -104,8 +103,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
 
     private TextView mCurrencyTextView;
     private TextView mMoneyTextView;
-    private TextView mExchangeRateTextView;
-    private TextView mSecondaryMoneyTextView;
+
     private MaterialEditText mDescriptionEditText;
     private MaterialEditText mDateEditText;
     private MaterialEditText mTimeEditText;
@@ -120,7 +118,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
     private CheckBox mCountInTotalCheckBox;
     private AttachmentView mAttachmentView;
 
-    private CurrencyConverterPicker mConverterPicker;
+
     private MoneyPicker mMoneyPicker;
     private DateTimePicker mDateTimePicker;
     private WalletPicker mWalletFromPicker;
@@ -138,8 +136,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
         View view = inflater.inflate(R.layout.layout_header_new_edit_money_multiple_currencies_item, parent, true);
         mCurrencyTextView = view.findViewById(R.id.currency_text_view);
         mMoneyTextView = view.findViewById(R.id.money_text_view);
-        mExchangeRateTextView = view.findViewById(R.id.exchange_rate_text_view);
-        mSecondaryMoneyTextView = view.findViewById(R.id.secondary_money_text_view);
+
         // attach a listener to the views
         mMoneyTextView.setOnClickListener(new View.OnClickListener() {
 
@@ -149,14 +146,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
             }
 
         });
-        mExchangeRateTextView.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                mConverterPicker.showPicker(mMoneyPicker.getCurrentMoney());
-            }
-
-        });
     }
 
     @Override
@@ -322,7 +312,6 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
     protected void onViewCreated(Bundle savedInstanceState) {
         super.onViewCreated(savedInstanceState);
         long moneyFrom = 0L;
-        double conversionRate = 0D;
         long tax = 0L;
         Date datetime = null;
         Wallet walletFrom = null;
@@ -406,9 +395,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
                                     DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Transfer.EVENT_END_DATE)))
                             );
                         }
-                        conversionRate = MoneyScale.deriveRate(moneyFrom, moneyTo,
-                                CurrencyManager.getDecimals(walletFrom.getCurrency()),
-                                CurrencyManager.getDecimals(walletTo.getCurrency()));
+
                         mConfirmedCheckBox.setChecked(cursor.getInt(cursor.getColumnIndex(Contract.Transfer.CONFIRMED)) == 1);
                         mCountInTotalCheckBox.setChecked(cursor.getInt(cursor.getColumnIndex(Contract.Transfer.COUNT_IN_TOTAL)) == 1);
                     }
@@ -537,9 +524,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
                                         DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.EVENT_END_DATE)))
                                 );
                             }
-                            conversionRate = MoneyScale.deriveRate(moneyFrom, moneyTo,
-                                    CurrencyManager.getDecimals(walletFrom.getCurrency()),
-                                    CurrencyManager.getDecimals(walletTo.getCurrency()));
+
                             mConfirmedCheckBox.setChecked(cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.CONFIRMED)) == 1);
                             mCountInTotalCheckBox.setChecked(cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.COUNT_IN_TOTAL)) == 1);
                         }
@@ -583,7 +568,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
         // now we can create pickers with default values or existing item parameters
         // and update all the views according to the data
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mConverterPicker = CurrencyConverterPicker.createPicker(fragmentManager, TAG_CONVERTER_PICKER, null, null, conversionRate);
+
         mMoneyPicker = MoneyPicker.createPicker(fragmentManager, TAG_MONEY_PICKER, null, moneyFrom);
         mTaxPicker = MoneyPicker.createPicker(fragmentManager, TAG_TAX_PICKER, null, tax);
         mDateTimePicker = DateTimePicker.createPicker(fragmentManager, TAG_DATETIME_PICKER, datetime);
@@ -631,7 +616,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
     }
 
     private boolean validate() {
-        if (mWalletFromEditText.validate() && mWalletToEditText.validate() && mConverterPicker.isReady()) {
+        if (mWalletFromEditText.validate() && mWalletToEditText.validate()) {
             if (mAttachmentPicker.areAllAttachmentsReady()) {
                 return true;
             } else {
@@ -651,7 +636,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
                     .toWalletId(mWalletToPicker.getCurrentWallet().getId())
                     .taxWalletId(mWalletFromPicker.getCurrentWallet().getId())
                     .fromMoney(mMoneyPicker.getCurrentMoney())
-                    .toMoney(mConverterPicker.convert(mMoneyPicker.getCurrentMoney()))
+                    .toMoney(mMoneyPicker.getCurrentMoney())
                     .taxMoney(mTaxPicker.getCurrentMoney())
                     .note(mNoteEditText.getTextAsString())
                     .placeId(mPlacePicker.isSelected() ? mPlacePicker.getCurrentPlace().getId() : null)
@@ -720,21 +705,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
         return null;
     }
 
-    @Override
-    public void onConversionRateChanged(String tag, CurrencyUnit currencyUnit1, CurrencyUnit currencyUnit2, Double conversionRate) {
-        if (currencyUnit1 != null && currencyUnit2 != null && !currencyUnit1.equals(currencyUnit2)) {
-            // we have two different currencies, its time to show the secondary currency line and do
-            // a conversion on the fly with the provided conversion rate.
-            mExchangeRateTextView.setText(String.format(Locale.getDefault(), "%s -> %s: %.2f", currencyUnit1.getSymbol(), currencyUnit2.getSymbol(), conversionRate));
-            long convertedAmount = mConverterPicker.convert(mMoneyPicker.getCurrentMoney());
-            mMoneyFormatter.applyNotTinted(mSecondaryMoneyTextView, currencyUnit2, convertedAmount);
-            mExchangeRateTextView.setVisibility(View.VISIBLE);
-            mSecondaryMoneyTextView.setVisibility(View.VISIBLE);
-        } else {
-            mExchangeRateTextView.setVisibility(View.GONE);
-            mSecondaryMoneyTextView.setVisibility(View.GONE);
-        }
-    }
+
 
     @Override
     public void onMoneyChanged(String tag, CurrencyUnit currency, long money) {
@@ -746,7 +717,7 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
                     mCurrencyTextView.setText("?");
                 }
                 mMoneyTextView.setText(mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN));
-                mConverterPicker.notifyMoneyChanged();
+
                 break;
             case TAG_TAX_PICKER:
                 mMoneyFormatter.applyNotTinted(mTaxEditText, currency, money);
@@ -773,21 +744,21 @@ public class NewEditTransferActivity extends NewEditItemActivity  implements Cur
                     mWalletFromEditText.setText(wallet.getName());
                     mMoneyPicker.setCurrency(wallet.getCurrency());
                     mTaxPicker.setCurrency(wallet.getCurrency());
-                    mConverterPicker.setCurrency1(wallet.getCurrency());
+
                 } else {
                     mWalletFromEditText.setText(null);
                     mMoneyPicker.setCurrency(null);
                     mTaxPicker.setCurrency(null);
-                    mConverterPicker.setCurrency1(null);
+
                 }
                 break;
             case TAG_WALLET_TO_PICKER:
                 if (wallet != null) {
                     mWalletToEditText.setText(wallet.getName());
-                    mConverterPicker.setCurrency2(wallet.getCurrency());
+
                 } else {
                     mWalletToEditText.setText(null);
-                    mConverterPicker.setCurrency2(null);
+
                 }
                 break;
         }

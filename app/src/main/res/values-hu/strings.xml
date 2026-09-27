@@ -157,7 +157,6 @@
     <string name="hint_directory">Könyvtár</string>
     <string name="hint_end_date">Befejezési dátum</string>
     <string name="hint_event">Esemény</string>
-    <string name="hint_exchange_rate">Árfolyam</string>
     <string name="hint_expense">Kiadás</string>
     <string name="hint_expenses">Kiadások</string>
     <string name="hint_expiration_date">Lejárat idátum</string>
@@ -375,7 +374,6 @@
     <string name="notification_action_retry">Pórbáld újra</string>
     <string name="notification_channel_name_backup">Biztonsági mentés</string>
     <string name="notification_channel_name_error">Hiba</string>
-    <string name="notification_channel_name_exchange_rate">Árfolyamok</string>
     <string name="notification_channel_name_reminder">Emlékeztető</string>
     <string name="notification_content_backup_error_backend">Hiba történ az autómatikus mentés fogadása közben és a mentés ki lett kapcsolva. Ellenőrizd a problémát a szolgáltatódnál.</string>
     <string name="notification_content_backup_error_backend_recoverable">Probléma történt a kommunkiáció közben. Ellenőrizd az internet kapcsolatot és próbáld újra.</string>
@@ -394,7 +392,6 @@
     <string name="notification_title_backup_restoring_failed">Biztonsági mentés visszaáálítása nem sikerült</string>
     <string name="notification_title_daily_reminder_text">Kattints ide az azonnali hozzáadáshoz</string>
     <string name="notification_title_daily_reminder_title">Új tranzakció a nap folyamán?</string>
-    <string name="notification_title_download_exchange_rates">Árfolyamok frissítése</string>
     <string name="recurrence_end_type_for">Alkalommal</string>
     <string name="recurrence_end_type_forever">Örökké</string>
     <string name="recurrence_end_type_until">Időpontig</string>
@@ -449,7 +446,6 @@
     <string name="setting_category_database_import_export">Betöltés/Mentés</string>
     <string name="setting_category_ui_appearance">Megjelenés</string>
     <string name="setting_category_ui_theme">Téma</string>
-    <string name="setting_category_utility_exchange_rates">Árfolyamok</string>
     <string name="setting_category_utility_notification">Értesítések</string>
     <string name="setting_category_utility_security">Biztonság</string>
     <string name="setting_item_daily_reminder_none">Kikapcsolva</string>
@@ -464,8 +460,6 @@
     <string name="setting_item_ui_theme_type_dark">Sötét</string>
     <string name="setting_item_ui_theme_type_deep_dark">Mély sötét</string>
     <string name="setting_item_ui_theme_type_light">Világos</string>
-    <string name="setting_item_utility_exchange_rates_custom_api_key_hint">API kulcs beillesztése</string>
-    <string name="setting_item_utility_exchange_rates_service_oer_custom_api_key_message">Ennek a szolgáltatásnak a működéséhez egy érvényes API kulcsra van szükség. Ahhoz, hogy a kommunikáció létrejöjjön ezzel a külső szolgáltatóval látogasd meg a https://openexchangerates.org weblapot és regisztrálj. így kapni fogsz egy ingyenes API kulcsot.</string>
     <string name="setting_subtitle_about">Licenszek és köszönet</string>
     <string name="setting_subtitle_database">Adatbázis management</string>
     <string name="setting_subtitle_user_interface">Személyre szabás</string>
@@ -473,9 +467,6 @@
     <string name="setting_summary_currency_management">Saját valuták hozzáadása</string>
     <string name="setting_summary_daily_reminder">Minden nap %1$s időpontban</string>
     <string name="setting_summary_database_backup_services">Adatbázis készítése és visszaállítása</string>
-    <string name="setting_summary_exchange_rate_api_key">API kulcs: %s</string>
-    <string name="setting_summary_exchange_rate_api_key_missing">API kulcs hiányzik</string>
-    <string name="setting_summary_exchange_rate_update">Utolsó frissítés időpontja: %s</string>
     <string name="setting_summary_export_data">Adat írása külső file-ba.</string>
     <string name="setting_summary_import_data">Adat olvasása külső file-ból.</string>
     <string name="setting_summary_ui_custom_digits">Számok megjelenítésének személyre szabása</string>
@@ -484,9 +475,6 @@
     <string name="setting_title_daily_reminder">Napi emlékeztető</string>
     <string name="setting_title_database">Adatbázis</string>
     <string name="setting_title_database_backup_services">Biztonsái mentés lehetőségek</string>
-    <string name="setting_title_exchange_rate_api_key">Saját API kulcs</string>
-    <string name="setting_title_exchange_rate_source">Forrás</string>
-    <string name="setting_title_exchange_rate_update">Árfolyamok frissítése</string>
     <string name="setting_title_export_data">Adatok mentése</string>
     <string name="setting_title_import_data">Adatok betöltése</string>
     <string name="setting_title_security">Hozzáférés védelem</string>
@@ -577,7 +565,6 @@
     <string name="title_backup_restoring">Biztonsági mentés visszaállítása folyamatban</string>
     <string name="title_bank_search">Bank kereső</string>
     <string name="title_changelog">Változások listája</string>
-    <string name="title_currency_exchange_rate">Árfolyam</string>
     <string name="title_data_exporting">Adat mentése folyamatban</string>
     <string name="title_data_importing">Adat betöltése folyamatban</string>
     <string name="title_debt_insert_master_transaction">Vágjunk bele!</string>

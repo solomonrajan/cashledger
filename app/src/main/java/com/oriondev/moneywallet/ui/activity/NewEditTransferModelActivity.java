@@ -39,7 +39,7 @@ import com.oriondev.moneywallet.model.Event;
 import com.oriondev.moneywallet.model.MoneyScale;
 import com.oriondev.moneywallet.model.Place;
 import com.oriondev.moneywallet.model.Wallet;
-import com.oriondev.moneywallet.picker.CurrencyConverterPicker;
+
 import com.oriondev.moneywallet.picker.EventPicker;
 import com.oriondev.moneywallet.picker.MoneyPicker;
 import com.oriondev.moneywallet.picker.PlacePicker;
@@ -59,13 +59,12 @@ import java.util.Locale;
 /**
  * Created by andrea on 14/03/18.
  */
-public class NewEditTransferModelActivity extends NewEditItemActivity implements CurrencyConverterPicker.Controller,
-                                                                                MoneyPicker.Controller,
+public class NewEditTransferModelActivity extends NewEditItemActivity implements MoneyPicker.Controller,
                                                                                 WalletPicker.SingleWalletController,
                                                                                 EventPicker.Controller,
                                                                                 PlacePicker.Controller {
 
-    private static final String TAG_CONVERTER_PICKER = "NewEditTransferModelActivity::Tag::ConverterPicker";
+
     private static final String TAG_MONEY_PICKER = "NewEditTransferModelActivity::Tag::MoneyPicker";
     private static final String TAG_WALLET_FROM_PICKER = "NewEditTransferModelActivity::Tag::WalletFromPicker";
     private static final String TAG_WALLET_TO_PICKER = "NewEditTransferModelActivity::Tag::WalletToPicker";
@@ -75,8 +74,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
 
     private TextView mCurrencyTextView;
     private TextView mMoneyTextView;
-    private TextView mExchangeRateTextView;
-    private TextView mSecondaryMoneyTextView;
+
     private MaterialEditText mDescriptionEditText;
     private MaterialEditText mWalletFromEditText;
     private MaterialEditText mWalletToEditText;
@@ -87,7 +85,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
     private CheckBox mConfirmedCheckBox;
     private CheckBox mCountInTotalCheckBox;
 
-    private CurrencyConverterPicker mConverterPicker;
+
     private MoneyPicker mMoneyPicker;
     private WalletPicker mWalletFromPicker;
     private WalletPicker mWalletToPicker;
@@ -102,8 +100,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
         View view = inflater.inflate(R.layout.layout_header_new_edit_money_multiple_currencies_item, parent, true);
         mCurrencyTextView = view.findViewById(R.id.currency_text_view);
         mMoneyTextView = view.findViewById(R.id.money_text_view);
-        mExchangeRateTextView = view.findViewById(R.id.exchange_rate_text_view);
-        mSecondaryMoneyTextView = view.findViewById(R.id.secondary_money_text_view);
+
         // attach a listener to the views
         mMoneyTextView.setOnClickListener(new View.OnClickListener() {
 
@@ -113,14 +110,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
             }
 
         });
-        mExchangeRateTextView.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                mConverterPicker.showPicker(mMoneyPicker.getCurrentMoney());
-            }
-
-        });
     }
 
     @Override
@@ -245,7 +235,6 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
     protected void onViewCreated(Bundle savedInstanceState) {
         super.onViewCreated(savedInstanceState);
         long moneyFrom = 0L;
-        double conversionRate = 0D;
         long tax = 0L;
         Wallet walletFrom = null;
         Wallet walletTo = null;
@@ -325,9 +314,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
                                     DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.EVENT_END_DATE)))
                             );
                         }
-                        conversionRate = MoneyScale.deriveRate(moneyFrom, moneyTo,
-                                CurrencyManager.getDecimals(walletFrom.getCurrency()),
-                                CurrencyManager.getDecimals(walletTo.getCurrency()));
+
                         mConfirmedCheckBox.setChecked(cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.CONFIRMED)) == 1);
                         mCountInTotalCheckBox.setChecked(cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.COUNT_IN_TOTAL)) == 1);
                     }
@@ -369,7 +356,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
         // now we can create pickers with default values or existing item parameters
         // and update all the views according to the data
         FragmentManager fragmentManager = getSupportFragmentManager();
-        mConverterPicker = CurrencyConverterPicker.createPicker(fragmentManager, TAG_CONVERTER_PICKER, null, null, conversionRate);
+
         mMoneyPicker = MoneyPicker.createPicker(fragmentManager, TAG_MONEY_PICKER, null, moneyFrom);
         mTaxPicker = MoneyPicker.createPicker(fragmentManager, TAG_TAX_PICKER, null, tax);
         mWalletFromPicker = WalletPicker.createPicker(fragmentManager, TAG_WALLET_FROM_PICKER, walletFrom);
@@ -391,7 +378,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
     }
 
     private boolean validate() {
-        return mWalletFromEditText.validate() && mWalletToEditText.validate() && mConverterPicker.isReady();
+        return mWalletFromEditText.validate() && mWalletToEditText.validate();
     }
 
     @Override
@@ -402,7 +389,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
             contentValues.put(Contract.TransferModel.WALLET_FROM_ID, mWalletFromPicker.getCurrentWallet().getId());
             contentValues.put(Contract.TransferModel.WALLET_TO_ID, mWalletToPicker.getCurrentWallet().getId());
             contentValues.put(Contract.TransferModel.MONEY_FROM, mMoneyPicker.getCurrentMoney());
-            contentValues.put(Contract.TransferModel.MONEY_TO, mConverterPicker.convert(mMoneyPicker.getCurrentMoney()));
+            contentValues.put(Contract.TransferModel.MONEY_TO, mMoneyPicker.getCurrentMoney());
             contentValues.put(Contract.TransferModel.MONEY_TAX, mTaxPicker.getCurrentMoney());
             contentValues.put(Contract.TransferModel.NOTE, mNoteEditText.getTextAsString());
             contentValues.put(Contract.TransferModel.EVENT_ID, mEventPicker.isSelected() ? mEventPicker.getCurrentEvent().getId() : null);
@@ -424,21 +411,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
         }
     }
 
-    @Override
-    public void onConversionRateChanged(String tag, CurrencyUnit currencyUnit1, CurrencyUnit currencyUnit2, Double conversionRate) {
-        if (currencyUnit1 != null && currencyUnit2 != null && !currencyUnit1.equals(currencyUnit2)) {
-            // we have two different currencies, its time to show the secondary currency line and do
-            // a conversion on the fly with the provided conversion rate.
-            mExchangeRateTextView.setText(String.format(Locale.getDefault(), "%s -> %s: %.2f", currencyUnit1.getSymbol(), currencyUnit2.getSymbol(), conversionRate));
-            long convertedAmount = mConverterPicker.convert(mMoneyPicker.getCurrentMoney());
-            mMoneyFormatter.applyNotTinted(mSecondaryMoneyTextView, currencyUnit2, convertedAmount);
-            mExchangeRateTextView.setVisibility(View.VISIBLE);
-            mSecondaryMoneyTextView.setVisibility(View.VISIBLE);
-        } else {
-            mExchangeRateTextView.setVisibility(View.GONE);
-            mSecondaryMoneyTextView.setVisibility(View.GONE);
-        }
-    }
+
 
     @Override
     public void onMoneyChanged(String tag, CurrencyUnit currency, long money) {
@@ -450,7 +423,7 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
                     mCurrencyTextView.setText("?");
                 }
                 mMoneyTextView.setText(mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN));
-                mConverterPicker.notifyMoneyChanged();
+
                 break;
             case TAG_TAX_PICKER:
                 mMoneyFormatter.applyNotTinted(mTaxEditText, currency, money);
@@ -466,21 +439,21 @@ public class NewEditTransferModelActivity extends NewEditItemActivity implements
                     mWalletFromEditText.setText(wallet.getName());
                     mMoneyPicker.setCurrency(wallet.getCurrency());
                     mTaxPicker.setCurrency(wallet.getCurrency());
-                    mConverterPicker.setCurrency1(wallet.getCurrency());
+
                 } else {
                     mWalletFromEditText.setText(null);
                     mMoneyPicker.setCurrency(null);
                     mTaxPicker.setCurrency(null);
-                    mConverterPicker.setCurrency1(null);
+
                 }
                 break;
             case TAG_WALLET_TO_PICKER:
                 if (wallet != null) {
                     mWalletToEditText.setText(wallet.getName());
-                    mConverterPicker.setCurrency2(wallet.getCurrency());
+
                 } else {
                     mWalletToEditText.setText(null);
-                    mConverterPicker.setCurrency2(null);
+
                 }
                 break;
         }

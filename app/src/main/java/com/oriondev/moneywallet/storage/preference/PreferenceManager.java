@@ -64,13 +64,11 @@ public class PreferenceManager {
     private static final String FIRST_DAY_OF_WEEK = "first_day_of_week";
     private static final String FIRST_DAY_OF_MONTH = "first_day_of_month";
     private static final String GROUP_TYPE = "group_type";
-    private static final String EXCHANGE_RATE_SERVICE = "exchange_rate_service";
-    private static final String EXCHANGE_RATE_LAST_UPDATE = "exchange_rate_last_update";
+
     private static final String DAILY_REMINDER = "daily_reminder";
     private static final String FIRST_START = "first_start";
     private static final String SERVICE_API_KEY = "user_api_key_";
-    private static final String CONVERTER_LAST_CURRENCY_1 = "converter_currency_iso_1";
-    private static final String CONVERTER_LAST_CURRENCY_2 = "converter_currency_iso_2";
+
     private static final String CSV_IMPORT_MAPPING = "csv_import_mapping_";
 
     private static final String MAP_TILE_SERVER = "map_tile_server";
@@ -99,7 +97,7 @@ public class PreferenceManager {
     public static final int GROUP_TYPE_MONTHLY = 2;
     public static final int GROUP_TYPE_YEARLY = 3;
 
-    public static final int SERVICE_OPEN_EXCHANGE_RATE = 1;
+
 
     public static final int DAILY_REMINDER_DISABLED = -1;
 
@@ -275,13 +273,7 @@ public class PreferenceManager {
         }
     }
 
-    public static void setCurrentExchangeRateService(int exchangeRateService) {
-        mPreferences.edit().putInt(EXCHANGE_RATE_SERVICE, exchangeRateService).apply();
-    }
 
-    public static void setLastExchangeRateUpdateTimestamp(long timestamp) {
-        mPreferences.edit().putLong(EXCHANGE_RATE_LAST_UPDATE, timestamp).apply();
-    }
 
     public static void setIsFirstStartDone(boolean done) {
         mPreferences.edit().putBoolean(FIRST_START, done).apply();
@@ -291,13 +283,7 @@ public class PreferenceManager {
         mPreferences.edit().putString(SERVICE_API_KEY + String.valueOf(service), key).apply();
     }
 
-    public static void setCurrencyConverterLastCurrency1(String iso) {
-        mPreferences.edit().putString(CONVERTER_LAST_CURRENCY_1, iso).apply();
-    }
 
-    public static void setCurrencyConverterLastCurrency2(String iso) {
-        mPreferences.edit().putString(CONVERTER_LAST_CURRENCY_2, iso).apply();
-    }
 
     public static void setLastTimeDataIsChanged(long timestamp) {
         mPreferences.edit().putLong(LAST_DATA_CHANGE_TIME, timestamp).apply();
@@ -397,26 +383,7 @@ public class PreferenceManager {
         mPreferences.edit().putBoolean(ASKED_NOTIFICATION_PERMISSION, true).apply();
     }
 
-    public static int getCurrentExchangeRateService() {
-        return mPreferences.getInt(EXCHANGE_RATE_SERVICE, SERVICE_OPEN_EXCHANGE_RATE);
-    }
 
-    public static boolean hasCurrentExchangeRateServiceDefaultApiKey() {
-        switch (getCurrentExchangeRateService()) {
-            case SERVICE_OPEN_EXCHANGE_RATE:
-                return !TextUtils.isEmpty(BuildConfig.API_KEY_OPEN_EXCHANGE_RATES) && !"INSERT_API_KEY_HERE".equals(BuildConfig.API_KEY_OPEN_EXCHANGE_RATES);
-            default:
-                return false;
-        }
-    }
-
-    public static String getCurrentExchangeRateServiceCustomApiKey() {
-        return getServiceApiKey(getCurrentExchangeRateService());
-    }
-
-    public static long getLastExchangeRateUpdateTimestamp() {
-        return mPreferences.getLong(EXCHANGE_RATE_LAST_UPDATE, 0);
-    }
 
     public static boolean isFirstStartDone() {
         return mPreferences.getBoolean(FIRST_START, false);
@@ -438,13 +405,7 @@ public class PreferenceManager {
         mPreferences.edit().putString(CSV_IMPORT_MAPPING + headerSignature, encodedMapping).apply();
     }
 
-    public static String getCurrencyConverterLastCurrency1() {
-        return mPreferences.getString(CONVERTER_LAST_CURRENCY_1, null);
-    }
 
-    public static String getCurrencyConverterLastCurrency2() {
-        return mPreferences.getString(CONVERTER_LAST_CURRENCY_2, null);
-    }
 
     public static long getLastTimeDataIsChanged() {
         return mPreferences.getLong(LAST_DATA_CHANGE_TIME, 0L);

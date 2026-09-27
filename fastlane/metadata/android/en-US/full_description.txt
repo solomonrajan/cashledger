@@ -11,7 +11,6 @@ Features:
 * Select several transactions and delete them together or move them to another wallet or category
 * Budgets to keep categories on track
 * Recurring transactions for bills and regular income
-* Multi-currency with exchange rates
 * Debts and credits
 * Saving goals
 * Overview charts and reports
