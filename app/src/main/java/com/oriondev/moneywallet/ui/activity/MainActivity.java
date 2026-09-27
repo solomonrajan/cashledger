@@ -109,7 +109,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
     // The drawer menu holds the sections in the first three groups and the wallet list in the
     // last one; the header arrow swaps which of the two is visible.
     private static final int GROUP_SECTIONS = 1;
-    private static final int GROUP_TOOLS = 2;
     private static final int GROUP_SETTINGS = 3;
     private static final int GROUP_WALLETS = 4;
 
@@ -124,10 +123,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
     /*package-local*/ static final int ID_SECTION_MODELS = 8;
     /*package-local*/ static final int ID_SECTION_PLACES = 9;
     /*package-local*/ static final int ID_SECTION_PEOPLE = 10;
-    /*package-local*/ static final int ID_SECTION_CALCULATOR = 11;
-    /*package-local*/ static final int ID_SECTION_CONVERTER = 12;
-    /*package-local*/ static final int ID_SECTION_ATM = 13;
-    /*package-local*/ static final int ID_SECTION_BANK = 14;
     /*package-local*/ static final int ID_SECTION_SETTING = 15;
     /*package-local*/ static final int ID_ACTION_NEW_WALLET = 18;
     /*package-local*/ static final int ID_ACTION_MANAGE_WALLET = 19;
@@ -213,10 +208,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         addEntry(menu, GROUP_SECTIONS, ID_SECTION_PLACES, R.drawable.ic_place_24dp, R.string.menu_place);
         addEntry(menu, GROUP_SECTIONS, ID_SECTION_PEOPLE, R.drawable.ic_people_black_24dp, R.string.menu_people);
         menu.setGroupCheckable(GROUP_SECTIONS, true, false);
-        addEntry(menu, GROUP_TOOLS, ID_SECTION_CALCULATOR, R.drawable.ic_calculator_24dp, R.string.menu_calculator);
-        addEntry(menu, GROUP_TOOLS, ID_SECTION_CONVERTER, R.drawable.ic_converter_24dp, R.string.menu_converter);
-        addEntry(menu, GROUP_TOOLS, ID_SECTION_ATM, R.drawable.ic_credit_card_24dp, R.string.menu_search_atm);
-        addEntry(menu, GROUP_TOOLS, ID_SECTION_BANK, R.drawable.ic_account_balance_24dp, R.string.menu_search_bank);
         addEntry(menu, GROUP_SETTINGS, ID_SECTION_SETTING, R.drawable.ic_settings_24dp, R.string.menu_setting).setCheckable(true);
         mHeaderView = mNavigationView.getHeaderView(0);
         // Top only, to match the menu below it. The navigation view pads its own list from the
@@ -390,26 +381,9 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
             closeDrawer();
             return false;
         }
-        switch (identifier) {
-            case ID_SECTION_CALCULATOR:
-                startActivity(new Intent(this, CalculatorActivity.class));
-                break;
-            case ID_SECTION_CONVERTER:
-                startActivity(new Intent(this, CurrencyConverterActivity.class));
-                break;
-            case ID_SECTION_ATM:
-                showAtmSearchDialog();
-                break;
-            case ID_SECTION_BANK:
-                showBankSearchDialog();
-                break;
-            default:
-                selectSection(identifier);
-                closeDrawer();
-                return true;
-        }
+        selectSection(identifier);
         closeDrawer();
-        return false;
+        return true;
     }
 
     /**
@@ -435,7 +409,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         mWalletListShown = show;
         Menu menu = mNavigationView.getMenu();
         menu.setGroupVisible(GROUP_SECTIONS, !show);
-        menu.setGroupVisible(GROUP_TOOLS, !show);
         menu.setGroupVisible(GROUP_SETTINGS, !show);
         menu.setGroupVisible(GROUP_WALLETS, show);
         if (show) {
@@ -448,63 +421,7 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         mWalletListArrowView.animate().rotation(show ? 180 : 0).start();
     }
 
-    private void showAtmSearchDialog() {
-        View inputView = LayoutInflater.from(this).inflate(R.layout.dialog_input, null);
-        final EditText inputEditText = inputView.findViewById(R.id.dialog_input_edit_text);
-        inputEditText.setHint(R.string.hint_atm_name);
-        AlertDialog dialog = ThemedDialog.buildMaterialDialog(this)
-                .setTitle(R.string.title_atm_search)
-                .setView(inputView)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Uri mapUri = Uri.parse("geo:0,0?q=atm " + inputEditText.getText());
-                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
-                        try {
-                            startActivity(mapIntent);
-                        } catch (ActivityNotFoundException ignore) {
-                            showActivityNotFoundDialog();
-                        }
-                    }
-
-                })
-                .create();
-        ThemedDialog.showWithInput(dialog, inputEditText, false);
-    }
-
-    private void showBankSearchDialog() {
-        View inputView = LayoutInflater.from(this).inflate(R.layout.dialog_input, null);
-        final EditText inputEditText = inputView.findViewById(R.id.dialog_input_edit_text);
-        inputEditText.setHint(R.string.hint_bank_name);
-        AlertDialog dialog = ThemedDialog.buildMaterialDialog(this)
-                .setTitle(R.string.title_bank_search)
-                .setView(inputView)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Uri mapUri = Uri.parse("geo:0,0?q=bank " + inputEditText.getText());
-                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, mapUri);
-                        try {
-                            startActivity(mapIntent);
-                        } catch (ActivityNotFoundException ignore) {
-                            showActivityNotFoundDialog();
-                        }
-                    }
-
-                })
-                .create();
-        ThemedDialog.showWithInput(dialog, inputEditText, false);
-    }
-
-    private void showActivityNotFoundDialog() {
-        ThemedDialog.buildMaterialDialog(this)
-                .setTitle(R.string.title_error)
-                .setMessage(R.string.message_error_activity_not_found)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
-    }
 
     /**
      * Load the fragment of the specified section inside the frame of the activity.
