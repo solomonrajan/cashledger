@@ -20,6 +20,17 @@
 
 <changelog>
 
+    <version versionName="2.1.0" versionDate="Sep 27, 2026">
+        <change>✨ [b]Feature[/b]: Used Material vector icons for default categories.</change>
+        <change>✨ [b]Feature[/b]: Enhanced icon picker with category colors, custom overrides, and new icons.</change>
+        <change>✨ [b]Feature[/b]: Added System Default theme and renamed Deep Dark to Amoled.</change>
+        <change>🎨 [b]UI/UX[/b]: Updated transaction list and header typography.</change>
+        <change>🎨 [b]UI/UX[/b]: Modernized intro experience with Pixel-style animations, new copy, and edge-to-edge layout.</change>
+        <change>🎨 [b]UI/UX[/b]: Removed all exchange rate and currency conversion features.</change>
+        <change>🐛 [b]Fix[/b]: Fixed garbled symbols on calculator keypad and updated "000" button to "00".</change>
+        <change>🐛 [b]Fix[/b]: Fixed delay when auto-opening calculator for new transactions.</change>
+    </version>
+
     <version versionName="2.0.4" versionDate="Sep 22, 2026">
         <change>🔤 [b]UI/UX[/b]: Updated default app font to Google Sans Flex and Google Sans Code for numeric values.</change>
         <change>🎨 [b]UI/UX[/b]: Updated default primary and accent theme colors to align with new Google branding.</change>
