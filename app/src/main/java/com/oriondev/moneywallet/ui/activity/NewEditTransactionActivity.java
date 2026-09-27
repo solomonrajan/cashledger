@@ -922,12 +922,8 @@ public class NewEditTransactionActivity extends NewEditItemActivity implements M
             
             // Auto-open calculator for new transactions
             if (getMode() == Mode.NEW_ITEM && getIntent().getBooleanExtra(AUTO_OPEN_CALCULATOR, false)) {
-                mDescriptionEditText.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mMoneyPicker.showPicker();
-                    }
-                });
+                getSupportFragmentManager().executePendingTransactions();
+                mMoneyPicker.showPicker();
             }
         }
     }
