@@ -73,8 +73,7 @@ jobs:
           COMMIT_ID=$(git rev-parse --short HEAD)
           mkdir -p staging/debug
           for apk in app/build/outputs/apk/flossOsm/debug/*.apk; do
-            base=$(basename "$apk" .apk)
-            cp "$apk" "staging/debug/cashledger.dev-${base}.(#${COMMIT_ID}).apk"
+            cp "$apk" "staging/debug/cashledger-build#${COMMIT_ID}-dev.apk"
           done
 
       - uses: actions/upload-artifact@v4
