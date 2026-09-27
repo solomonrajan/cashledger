@@ -134,6 +134,7 @@ public class ThemeEngine implements ITheme {
     private static final int INDEX_MODE_LIGHT = 0;
     private static final int INDEX_MODE_DARK = 1;
     private static final int INDEX_MODE_DEEP_DARK = 2;
+    private static final int INDEX_MODE_SYSTEM_DEFAULT = 3;
 
     private static final List<ThemeObserver> mThemeObserverList = new ArrayList<>();
 
@@ -281,8 +282,10 @@ public class ThemeEngine implements ITheme {
     }
 
     private final SharedPreferences mPreferences;
+    private final Context mContext;
 
     private ThemeEngine(Context context) {
+        mContext = context.getApplicationContext();
         mPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
     }
 
@@ -330,65 +333,82 @@ public class ThemeEngine implements ITheme {
                 return Mode.DARK;
             case INDEX_MODE_DEEP_DARK:
                 return Mode.DEEP_DARK;
+            case INDEX_MODE_SYSTEM_DEFAULT:
+                return Mode.SYSTEM_DEFAULT;
             default:
                 // the stored value has been manually altered
                 return Mode.LIGHT;
         }
     }
 
+    private int getResolvedIndex() {
+        int index = mPreferences.getInt(MODE, DEFAULT_MODE.getIndex());
+        if (index == INDEX_MODE_SYSTEM_DEFAULT) {
+            int currentNightMode = mContext.getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+            if (currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES) {
+                return INDEX_MODE_DARK;
+            } else {
+                return INDEX_MODE_LIGHT;
+            }
+        } else if (index == INDEX_MODE_LIGHT || index == INDEX_MODE_DARK || index == INDEX_MODE_DEEP_DARK) {
+            return index;
+        }
+        return INDEX_MODE_LIGHT;
+    }
+
     @Override
     public boolean isDark() {
-        return getMode() != Mode.LIGHT;
+        return getResolvedIndex() != INDEX_MODE_LIGHT;
     }
 
     @Override
     public int getTextColorPrimary() {
-        return DEFAULT_TEXT_COLOR_PRIMARY[getMode().getIndex()];
+        return DEFAULT_TEXT_COLOR_PRIMARY[getResolvedIndex()];
     }
 
     @Override
     public int getTextColorSecondary() {
-        return DEFAULT_TEXT_COLOR_SECONDARY[getMode().getIndex()];
+        return DEFAULT_TEXT_COLOR_SECONDARY[getResolvedIndex()];
     }
 
     @Override
     public int getTextColorPrimaryInverse() {
-        return DEFAULT_TEXT_COLOR_PRIMARY_INVERSE[getMode().getIndex()];
+        return DEFAULT_TEXT_COLOR_PRIMARY_INVERSE[getResolvedIndex()];
     }
 
     @Override
     public int getTextColorSecondaryInverse() {
-        return DEFAULT_TEXT_COLOR_SECONDARY_INVERSE[getMode().getIndex()];
+        return DEFAULT_TEXT_COLOR_SECONDARY_INVERSE[getResolvedIndex()];
     }
 
     @Override
     public int getColorCardBackground() {
-        return DEFAULT_COLOR_CARD_BACKGROUND[getMode().getIndex()];
+        return DEFAULT_COLOR_CARD_BACKGROUND[getResolvedIndex()];
     }
 
     @Override
     public int getColorWindowForeground() {
-        return DEFAULT_COLOR_WINDOW_FOREGROUND[getMode().getIndex()];
+        return DEFAULT_COLOR_WINDOW_FOREGROUND[getResolvedIndex()];
     }
 
     @Override
     public int getColorWindowBackground() {
-        return DEFAULT_COLOR_WINDOW_BACKGROUND[getMode().getIndex()];
+        return DEFAULT_COLOR_WINDOW_BACKGROUND[getResolvedIndex()];
     }
 
     @Override
     public int getColorRipple() {
-        return DEFAULT_COLOR_RIPPLE[getMode().getIndex()];
+        return DEFAULT_COLOR_RIPPLE[getResolvedIndex()];
     }
 
     @Override
     public int getIconColor() {
-        return DEFAULT_ICON_COLOR[getMode().getIndex()];
+        return DEFAULT_ICON_COLOR[getResolvedIndex()];
     }
 
     @Override
     public int getHintTextColor() {
-        return DEFAULT_HINT_TEXT_COLOR[getMode().getIndex()];
+        return DEFAULT_HINT_TEXT_COLOR[getResolvedIndex()];
     }
 
     @Override
@@ -398,12 +418,12 @@ public class ThemeEngine implements ITheme {
 
     @Override
     public int getDrawerBackgroundColor() {
-        return DRAWER_BACKGROUND_COLOR[getMode().getIndex()];
+        return DRAWER_BACKGROUND_COLOR[getResolvedIndex()];
     }
 
     @Override
     public int getDrawerIconColor() {
-        return DRAWER_ICON_COLOR[getMode().getIndex()];
+        return DRAWER_ICON_COLOR[getResolvedIndex()];
     }
 
     @Override
@@ -413,7 +433,7 @@ public class ThemeEngine implements ITheme {
 
     @Override
     public int getDrawerTextColor() {
-        return DRAWER_TEXT_COLOR[getMode().getIndex()];
+        return DRAWER_TEXT_COLOR[getResolvedIndex()];
     }
 
     @Override
@@ -430,7 +450,7 @@ public class ThemeEngine implements ITheme {
 
     @Override
     public int getDrawerSelectedItemColor() {
-        return DRAWER_SELECTED_ITEM_COLOR[getMode().getIndex()];
+        return DRAWER_SELECTED_ITEM_COLOR[getResolvedIndex()];
     }
 
     @Override
@@ -462,7 +482,7 @@ public class ThemeEngine implements ITheme {
     }
 
     private int getColorByMode(int colorLight, int colorDark) {
-        switch (mPreferences.getInt(MODE, DEFAULT_MODE.getIndex())) {
+        switch (getResolvedIndex()) {
             case INDEX_MODE_LIGHT:
                 return colorLight;
             default:
@@ -474,7 +494,8 @@ public class ThemeEngine implements ITheme {
 
         LIGHT(INDEX_MODE_LIGHT),
         DARK(INDEX_MODE_DARK),
-        DEEP_DARK(INDEX_MODE_DEEP_DARK);
+        DEEP_DARK(INDEX_MODE_DEEP_DARK),
+        SYSTEM_DEFAULT(INDEX_MODE_SYSTEM_DEFAULT);
 
         private final int mIndex;
 

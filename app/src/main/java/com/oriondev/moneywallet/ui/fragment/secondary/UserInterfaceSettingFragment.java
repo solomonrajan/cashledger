@@ -67,6 +67,7 @@ public class UserInterfaceSettingFragment extends PreferenceFragmentCompat imple
     private static final String THEME_TYPE_LIGHT = "light";
     private static final String THEME_TYPE_DARK = "dark";
     private static final String THEME_TYPE_DEEP_DARK = "deep_dark";
+    private static final String THEME_TYPE_SYSTEM_DEFAULT = "system_default";
 
     private ColorPreference mColorIncomePreference;
     private ColorPreference mColorExpensePreference;
@@ -191,7 +192,7 @@ public class UserInterfaceSettingFragment extends PreferenceFragmentCompat imple
 
         });
         mThemeTypePreference.setEntries(R.array.theme_types);
-        mThemeTypePreference.setEntryValues(new String[] {THEME_TYPE_LIGHT, THEME_TYPE_DARK, THEME_TYPE_DEEP_DARK});
+        mThemeTypePreference.setEntryValues(new String[] {THEME_TYPE_LIGHT, THEME_TYPE_DARK, THEME_TYPE_DEEP_DARK, THEME_TYPE_SYSTEM_DEFAULT});
         // setup current values
         setupCurrentDateFormat();
         setupCurrentTimeFormat();
@@ -287,6 +288,9 @@ public class UserInterfaceSettingFragment extends PreferenceFragmentCompat imple
                         break;
                     case THEME_TYPE_DEEP_DARK:
                         ThemeEngine.setMode(ThemeEngine.Mode.DEEP_DARK);
+                        break;
+                    case THEME_TYPE_SYSTEM_DEFAULT:
+                        ThemeEngine.setMode(ThemeEngine.Mode.SYSTEM_DEFAULT);
                         break;
                 }
                 setupCurrentThemeType();
@@ -391,6 +395,10 @@ public class UserInterfaceSettingFragment extends PreferenceFragmentCompat imple
             case DEEP_DARK:
                 mThemeTypePreference.setValue(THEME_TYPE_DEEP_DARK);
                 mThemeTypePreference.setSummary(R.string.setting_item_ui_theme_type_deep_dark);
+                break;
+            case SYSTEM_DEFAULT:
+                mThemeTypePreference.setValue(THEME_TYPE_SYSTEM_DEFAULT);
+                mThemeTypePreference.setSummary(R.string.setting_item_ui_theme_type_system_default);
                 break;
         }
     }
