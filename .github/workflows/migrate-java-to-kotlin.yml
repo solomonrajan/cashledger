@@ -5,6 +5,7 @@ on:
     branches:
       - kotlin
   workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+  schedule:
     - cron: '0 0 * * *' # Optionally runs every midnight
 
 jobs:
