@@ -215,15 +215,12 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         // the sides would sit inset from the rows under it.
         SystemBars.pad(mHeaderView, true, false, false);
         mHeaderView.setOnClickListener(view -> showWalletList(!mWalletListShown));
-        mWalletIconView = mHeaderView.findViewById(R.id.wallet_icon_image_view);
-        mFirstWalletView = mHeaderView.findViewById(R.id.first_wallet_image_view);
-        mSecondWalletView = mHeaderView.findViewById(R.id.second_wallet_image_view);
-        mWalletNameView = mHeaderView.findViewById(R.id.wallet_name_text_view);
+        mWalletIconView = null;
+        mFirstWalletView = null;
+        mSecondWalletView = null;
+        mWalletNameView = null;
         mWalletMoneyView = mHeaderView.findViewById(R.id.wallet_money_text_view);
-        mWalletListArrowView = mHeaderView.findViewById(R.id.wallet_list_arrow_image_view);
-        View.OnClickListener quickSwitch = view -> switchWallet((WalletAccount) view.getTag(view.getId()));
-        if (mFirstWalletView != null) mFirstWalletView.setOnClickListener(quickSwitch);
-        if (mSecondWalletView != null) mSecondWalletView.setOnClickListener(quickSwitch);
+        mWalletListArrowView = null;
     }
 
     /**
