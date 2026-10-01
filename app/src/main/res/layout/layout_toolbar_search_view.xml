@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:hint="@string/hint_search_something"
-        android:inputType="text"
+        android:inputType="textCapWords"
         android:maxLines="1"
         app:theme_backgroundColor="colorPrimary" />
 

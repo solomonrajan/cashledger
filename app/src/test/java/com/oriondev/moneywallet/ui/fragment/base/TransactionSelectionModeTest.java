@@ -196,13 +196,13 @@ public class TransactionSelectionModeTest {
         long[] others = insertTransferDebtAndSaving(cash, dollar);
         long already = insertTransaction(bank, category, 1250L);
         insertTransaction(dollar, category, 1250L);
-        assertEquals("Move 2 transactions to Bank? 1 of them is in another currency. Its amount will be kept as shown, not converted.",
+        assertEquals("Move 2 Transactions To Bank? 1 Of Them Is In Another Currency. Its Amount Will Be Kept As Shown, Not Converted.",
                 TransactionSelectionMode.buildMoveMessage(resources, mResolver,
                         new long[] {euroRow, dollarRow, others[0], others[1], others[2], already}, bank, "Bank", "EUR"));
-        assertEquals("Move 1 transaction to Bank?",
+        assertEquals("Move 1 Transaction To Bank?",
                 TransactionSelectionMode.buildMoveMessage(resources, mResolver,
                         new long[] {euroRow, others[1], already}, bank, "Bank", "EUR"));
-        assertEquals("Move 0 transactions to Bank?",
+        assertEquals("Move 0 Transactions To Bank?",
                 TransactionSelectionMode.buildMoveMessage(resources, mResolver,
                         new long[] {euroRow, dollarRow}, bank, "Bank", null));
     }
@@ -218,7 +218,7 @@ public class TransactionSelectionModeTest {
         long already = insertTransaction(cash, salary, 1250L);
         long[] others = insertTransferDebtAndSaving(cash, insertWallet("Bank", "EUR"));
         insertTransaction(cash, food, 1250L);
-        assertEquals("Change the category of 2 transactions to Salary?",
+        assertEquals("Change The Category Of 2 Transactions To Salary?",
                 TransactionSelectionMode.buildCategoryMessage(resources, mResolver,
                         new long[] {first, second, already, others[0], others[1], others[2]}, salary, "Salary"));
     }

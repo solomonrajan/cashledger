@@ -45,7 +45,7 @@ public class ThemeEngine implements ITheme {
     private static final int DEFAULT_COLOR_PRIMARY = Color.parseColor("#4285F4");
     private static final int DEFAULT_COLOR_PRIMARY_DARK = Color.parseColor("#3367D6");
     private static final int DEFAULT_COLOR_ACCENT = Color.parseColor("#EA4335");
-    private static final Mode DEFAULT_MODE = Mode.LIGHT;
+    private static final Mode DEFAULT_MODE = Mode.SYSTEM_DEFAULT;
 
     private static final int[] DEFAULT_TEXT_COLOR_PRIMARY = new int[] {
             Color.parseColor("#DE000000"), // OK

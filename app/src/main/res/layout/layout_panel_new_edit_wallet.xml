@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
         android:hint="@string/hint_currency"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_search_black_24dp" />
 
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
         android:hint="@string/hint_start_money"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_mode_edit_black_24dp" />
 
@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_note"
-        android:inputType="textMultiLine"
+        android:inputType="textCapWords|textMultiLine"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_content_paste_black_24dp" />
 

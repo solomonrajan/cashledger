@@ -34,8 +34,9 @@
         android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
         android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
         android:hint="@string/hint_category"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_label_outline_black_24dp" />
 
 </merge>
+

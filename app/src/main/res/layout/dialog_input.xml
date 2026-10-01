@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:importantForAutofill="no"
-        android:inputType="text"
+        android:inputType="textCapWords"
         android:maxLines="1"
         android:singleLine="true"
         tools:ignore="LabelFor">
@@ -42,3 +42,4 @@
     </EditText>
 
 </FrameLayout>
+

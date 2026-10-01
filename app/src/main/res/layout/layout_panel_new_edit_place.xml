@@ -38,7 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="@string/hint_address"
-            android:inputType="text"
+            android:inputType="textCapWords"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_place_24dp"
             app:layout_constraintStart_toStartOf="parent"
