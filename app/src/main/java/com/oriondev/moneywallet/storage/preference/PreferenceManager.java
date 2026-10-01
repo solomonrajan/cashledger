@@ -107,8 +107,8 @@ public class PreferenceManager {
     // Color.BLUE is 1.17:1 on a card, unreadable in both dark modes. These two are what a color
     // that cannot be seen falls back to, and getVisibleColor returns a fallback unchecked, so
     // each has to clear every surface an amount is drawn on by itself.
-    private static final int DEFAULT_COLOR_INCOME = 0xFF2196F3;
-    private static final int DEFAULT_COLOR_EXPENSE = Color.RED;
+    private static final int DEFAULT_COLOR_INCOME = 0xFF388E3C;
+    private static final int DEFAULT_COLOR_EXPENSE = 0xFFD32F2F;
 
     private static SharedPreferences mPreferences;
     private static Context mApplicationContext;
