@@ -134,7 +134,7 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 **Frontend & UI**
 - **Language:** Java & Kotlin
 <div align="center">
-  <img src="https://quickchart.io/chart?c={type:'horizontalBar',data:{labels:[''],datasets:[{label:'Java (445)',data:[445],backgroundColor:'%234285F4'},{label:'Kotlin (1)',data:[1],backgroundColor:'%23EA4335'}]},options:{legend:{position:'bottom',labels:{fontSize:14,fontFamily:'sans-serif'}},scales:{xAxes:[{stacked:true,display:false}],yAxes:[{stacked:true,display:false}]},plugins:{datalabels:{display:false}},maintainAspectRatio:false}}&w=600&h=100&bkg=transparent" alt="Language Breakdown" />
+  <img src="https://quickchart.io/chart?w=600&h=100&bkg=transparent&c=%7B%22type%22%3A%22horizontalBar%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Java%20%28445%29%22%2C%22data%22%3A%5B445%5D%2C%22backgroundColor%22%3A%22%234285F4%22%7D%2C%7B%22label%22%3A%22Kotlin%20%281%29%22%2C%22data%22%3A%5B1%5D%2C%22backgroundColor%22%3A%22%23EA4335%22%7D%5D%7D%2C%22options%22%3A%7B%22legend%22%3A%7B%22position%22%3A%22bottom%22%2C%22labels%22%3A%7B%22fontSize%22%3A14%2C%22fontFamily%22%3A%22sans-serif%22%7D%7D%2C%22scales%22%3A%7B%22xAxes%22%3A%5B%7B%22stacked%22%3Atrue%2C%22display%22%3Afalse%7D%5D%2C%22yAxes%22%3A%5B%7B%22stacked%22%3Atrue%2C%22display%22%3Afalse%7D%5D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%22maintainAspectRatio%22%3Afalse%7D%7D" alt="Language Breakdown" />
 </div>
 - **Framework:** Native Android SDK (XML Layouts / Views)
 - **Design System:** Material Design Components
