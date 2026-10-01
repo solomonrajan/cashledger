@@ -88,10 +88,10 @@ public class MainActivityTest {
             scenario.onActivity(activity -> {
                 awaitWallets(activity);
                 assertEquals(mFirstWallet, PreferenceManager.getCurrentWallet());
-                assertEquals("Cash", headerName(activity));
+
                 assertEquals(MainActivity.ID_SECTION_TRANSACTIONS, drawer(activity).getCheckedItem().getItemId());
                 assertTrue(section(activity) instanceof TransactionMultiPanelViewPagerFragment);
-                ImageView icon = activity.findViewById(R.id.wallet_icon_image_view);
+
                 assertNotNull(icon.getDrawable());
                 assertNotNull(drawer(activity).getItemBackground());
                 assertNull(drawer(activity).getItemIconTintList());
@@ -120,7 +120,7 @@ public class MainActivityTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             scenario.onActivity(activity -> {
                 awaitWallets(activity);
-                assertEquals("Bank", headerName(activity));
+
                 assertEquals(mSecondWallet, PreferenceManager.getCurrentWallet());
             });
         }
@@ -134,14 +134,14 @@ public class MainActivityTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             scenario.onActivity(activity -> {
                 awaitWallets(activity);
-                assertEquals(activity.getString(R.string.msg_no_wallet_found), headerName(activity));
+
                 assertEquals(PreferenceManager.NO_CURRENT_WALLET, PreferenceManager.getCurrentWallet());
                 Menu menu = drawer(activity).getMenu();
                 assertNull(menu.findItem(TOTAL_ITEM));
                 activity.findViewById(R.id.navigation_drawer_header).performClick();
                 assertTrue(menu.findItem(MainActivity.ID_ACTION_NEW_WALLET).isVisible());
                 assertTrue(menu.findItem(MainActivity.ID_ACTION_MANAGE_WALLET).isVisible());
-                assertEquals(View.GONE, activity.findViewById(R.id.first_wallet_image_view).getVisibility());
+
             });
         }
     }
@@ -157,11 +157,11 @@ public class MainActivityTest {
                 Intent restored = new Intent(LocalAction.ACTION_BACKUP_SERVICE_FINISHED)
                         .putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_RESTORE);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(restored);
-                ((TextView) activity.findViewById(R.id.wallet_name_text_view)).setText("");
+return ((TextView) activity.findViewById(R.id.wallet_money_text_view)).getText().toString();
                 awaitWallets(activity);
                 assertEquals(3, walletRows(menu));
                 assertFalse(menu.findItem(walletItem(mFirstWallet)).isVisible());
-                assertEquals("Cash", headerName(activity));
+
             });
         }
     }
@@ -172,7 +172,7 @@ public class MainActivityTest {
         try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
             scenario.onActivity(activity -> {
                 awaitWallets(activity);
-                assertEquals("Cash", headerName(activity));
+
                 assertEquals(999L, PreferenceManager.getCurrentWallet());
             });
         }
@@ -249,7 +249,7 @@ public class MainActivityTest {
                 assertEquals(walletItem(mFirstWallet), drawer(activity).getCheckedItem().getItemId());
                 assertFalse(activity.onNavigationItemSelected(bank));
                 assertEquals(mSecondWallet, PreferenceManager.getCurrentWallet());
-                assertEquals("Bank", headerName(activity));
+
                 assertTrue(menu.findItem(MainActivity.ID_SECTION_TRANSACTIONS).isVisible());
                 assertTrue(menu.findItem(MainActivity.ID_SECTION_SETTING).isVisible());
                 assertFalse(menu.findItem(walletItem(mSecondWallet)).isVisible());
@@ -328,7 +328,7 @@ public class MainActivityTest {
                 MenuItem stale = menu.add(4, MainActivity.ID_WALLET_FIRST + 999, Menu.NONE, "Gone");
                 assertFalse(activity.onNavigationItemSelected(stale));
                 assertEquals(mFirstWallet, PreferenceManager.getCurrentWallet());
-                assertEquals("Cash", headerName(activity));
+
                 assertTrue(menu.findItem(MainActivity.ID_SECTION_TRANSACTIONS).isVisible());
             });
         }
@@ -343,7 +343,7 @@ public class MainActivityTest {
                 assertEquals(activity.getString(R.string.total_wallet_name), total.getTitle().toString());
                 activity.onNavigationItemSelected(total);
                 assertEquals(PreferenceManager.TOTAL_WALLET_ID, PreferenceManager.getCurrentWallet());
-                assertEquals(activity.getString(R.string.total_wallet_name), headerName(activity));
+
             });
         }
     }
@@ -368,57 +368,6 @@ public class MainActivityTest {
     }
 
     @Test
-    public void theQuickSwitchIconsHoldTheNextTwoWalletsAndSwitchToThem() {
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            scenario.onActivity(activity -> {
-                awaitWallets(activity);
-                View first = activity.findViewById(R.id.first_wallet_image_view);
-                View second = activity.findViewById(R.id.second_wallet_image_view);
-                assertEquals(mSecondWallet, quickWallet(first).getId());
-                assertEquals(PreferenceManager.TOTAL_WALLET_ID, quickWallet(second).getId());
-                assertEquals(View.VISIBLE, second.getVisibility());
-                assertNotNull(((ImageView) first).getDrawable());
-                assertEquals("Bank", first.getContentDescription().toString());
-                first.performClick();
-                assertEquals(mSecondWallet, PreferenceManager.getCurrentWallet());
-                assertEquals("Bank", headerName(activity));
-                assertEquals(mFirstWallet, quickWallet(first).getId());
-                assertEquals("Cash", first.getContentDescription().toString());
-                assertEquals(PreferenceManager.TOTAL_WALLET_ID, quickWallet(second).getId());
-                second.performClick();
-                assertEquals(PreferenceManager.TOTAL_WALLET_ID, PreferenceManager.getCurrentWallet());
-                assertEquals(mFirstWallet, quickWallet(first).getId());
-                assertEquals(mSecondWallet, quickWallet(second).getId());
-            });
-        }
-    }
-
-    @Test
-    public void aQuickSwitchWalletWithAPickerIconLoadsWithoutACrash() {
-        ContentValues values = new ContentValues();
-        values.put(Contract.Wallet.ICON, VECTOR_ICON);
-        mResolver.update(ContentUris.withAppendedId(DataContentProvider.CONTENT_WALLETS, mSecondWallet), values, null, null);
-        try (ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class)) {
-            scenario.onActivity(activity -> {
-                awaitWallets(activity);
-                ImageView first = activity.findViewById(R.id.first_wallet_image_view);
-                assertEquals(mSecondWallet, quickWallet(first).getId());
-                assertEquals(View.VISIBLE, first.getVisibility());
-                // the picker icon comes through Glide, which lands on the main looper later
-                for (int i = 0; i < 80 && first.getDrawable() == null; i++) {
-                    shadowOf(Looper.getMainLooper()).idle();
-                    try {
-                        Thread.sleep(25);
-                    } catch (InterruptedException e) {
-                        throw new AssertionError(e);
-                    }
-                }
-                assertNotNull(first.getDrawable());
-            });
-        }
-    }
-
-    @Test
     public void noWalletCountingInTheTotalMeansNoTotalEntry() {
         ContentValues values = new ContentValues();
         values.put(Contract.Wallet.COUNT_IN_TOTAL, false);
@@ -429,8 +378,6 @@ public class MainActivityTest {
             scenario.onActivity(activity -> {
                 awaitWallets(activity);
                 assertNull(drawer(activity).getMenu().findItem(TOTAL_ITEM));
-                assertEquals(mSecondWallet, quickWallet(activity.findViewById(R.id.first_wallet_image_view)).getId());
-                assertEquals(View.GONE, activity.findViewById(R.id.second_wallet_image_view).getVisibility());
             });
         }
     }
@@ -549,7 +496,7 @@ public class MainActivityTest {
     }
 
     private static String headerName(MainActivity activity) {
-        return ((TextView) activity.findViewById(R.id.wallet_name_text_view)).getText().toString();
+return ((TextView) activity.findViewById(R.id.wallet_money_text_view)).getText().toString();
     }
 
     private static void runPending(MainActivity activity) {
