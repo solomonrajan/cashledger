@@ -1,0 +1,36 @@
+name: Migrate Java to Kotlin
+
+on:
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab
+  schedule:
+    - cron: '0 0 * * *' # Optionally runs every midnight
+
+jobs:
+  migrate:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Migration Script
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          .\Migrate-JavaToKotlin.ps1 -ApiKey $env:GEMINI_API_KEY
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          
+          # Check if there are any changes to commit
+          if (git diff --staged --quiet) {
+              Write-Host "No files were converted."
+          } else {
+              git commit -m "Automated migration from Java to Kotlin"
+              git push
+          }
