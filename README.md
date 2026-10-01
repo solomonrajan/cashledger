@@ -132,7 +132,10 @@ Here is a breakdown of the various pages (Activities) available in the app:
 Cash Ledger is built as a fully native and privacy-respecting Android application.
 
 **Frontend & UI**
-- **Language:** Java
+- **Language:** Java & Kotlin
+<div align="center">
+  <img src="https://quickchart.io/chart?c={type:'horizontalBar',data:{labels:[''],datasets:[{label:'Java (445)',data:[445],backgroundColor:'%234285F4'},{label:'Kotlin (1)',data:[1],backgroundColor:'%23EA4335'}]},options:{legend:{position:'bottom',labels:{fontSize:14,fontFamily:'sans-serif'}},scales:{xAxes:[{stacked:true,display:false}],yAxes:[{stacked:true,display:false}]},plugins:{datalabels:{display:false}},maintainAspectRatio:false}}&w=600&h=100&bkg=transparent" alt="Language Breakdown" />
+</div>
 - **Framework:** Native Android SDK (XML Layouts / Views)
 - **Design System:** Material Design Components
 - **Data Visualization:** MPAndroidChart for reports and statistics
