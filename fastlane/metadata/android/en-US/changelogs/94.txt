@@ -1,0 +1,3 @@
+🚀 New Release v2.1.1
+🎨 Merged userinterface changes for a better look and feel.
+🔧 Updated to use the fork's own namespace for the default application id.
