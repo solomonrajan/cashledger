@@ -34,7 +34,7 @@
             android:layout_marginStart="@dimen/material_activity_header_text_start_margin"
             android:layout_marginRight="@dimen/material_activity_header_text_end_margin"
             android:layout_marginEnd="@dimen/material_activity_header_text_end_margin"
-            android:inputType="textNoSuggestions"
+            android:inputType="textCapWords|textNoSuggestions"
             android:hint="@string/hint_name"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

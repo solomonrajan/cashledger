@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
         android:hint="@string/hint_description"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_format_align_left_black_24dp" />
 
@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_start_money"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_cash_multiple_24dp" />
 
@@ -51,7 +51,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_expiration_date"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_calendar_black_24dp"
         app:met_showCancelButton="true" />
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_wallet"
-        android:inputType="textMultiLine"
+        android:inputType="textCapWords|textMultiLine"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_folder_black_24dp" />
 
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
         android:hint="@string/hint_note"
-        android:inputType="textMultiLine"
+        android:inputType="textCapWords|textMultiLine"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_content_paste_black_24dp" />
 

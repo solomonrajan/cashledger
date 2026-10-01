@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
         android:hint="@string/hint_iso_code"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         android:textAllCaps="true"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_code_array_24dp" />
@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/hint_symbol"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_coin_24dp" />
 

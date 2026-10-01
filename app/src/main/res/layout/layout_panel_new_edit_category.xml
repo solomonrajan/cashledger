@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
         android:hint="@string/hint_parent_category"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         app:met_mode="floatingLabel"
         app:met_leftIcon="@drawable/ic_table_large_24dp"
         app:met_showCancelButton="true" />

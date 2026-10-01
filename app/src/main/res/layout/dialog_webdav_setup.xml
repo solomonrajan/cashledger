@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="@string/hint_webdav_username"
-        android:inputType="textNoSuggestions"
+        android:inputType="textCapWords|textNoSuggestions"
         android:maxLines="1"
         android:importantForAutofill="no" />
 
@@ -46,3 +46,4 @@
         android:textSize="12sp" />
 
 </LinearLayout>
+

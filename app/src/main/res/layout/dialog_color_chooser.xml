@@ -70,7 +70,7 @@
                 android:digits="0123456789abcdefABCDEF"
                 android:hint="2196F3"
                 android:importantForAutofill="no"
-                android:inputType="text"
+                android:inputType="textCapWords"
                 android:maxLines="1"
                 android:singleLine="true"
                 tools:ignore="HardcodedText" />
@@ -85,3 +85,4 @@
     </LinearLayout>
 
 </ScrollView>
+

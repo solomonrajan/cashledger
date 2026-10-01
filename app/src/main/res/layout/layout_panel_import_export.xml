@@ -19,7 +19,7 @@
             android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_import_format"
-            android:inputType="textNoSuggestions"
+            android:inputType="textCapWords|textNoSuggestions"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_file_table"/>
 
@@ -30,7 +30,7 @@
             android:layout_marginTop="@dimen/material_activity_body_edit_text_margin_top"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_export_format"
-            android:inputType="textNoSuggestions"
+            android:inputType="textCapWords|textNoSuggestions"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_file_table"/>
 
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_start_date"
-            android:inputType="textNoSuggestions"
+            android:inputType="textCapWords|textNoSuggestions"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_today_black_24dp"
             app:met_showCancelButton="true"/>
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_end_date"
-            android:inputType="textNoSuggestions"
+            android:inputType="textCapWords|textNoSuggestions"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_calendar_black_24dp"
             app:met_showCancelButton="true" />
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_wallets"
-            android:inputType="textMultiLine"
+            android:inputType="textCapWords|textMultiLine"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_folder_black_24dp" />
 
@@ -72,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_import_file"
-            android:inputType="textNoSuggestions"
+            android:inputType="textCapWords|textNoSuggestions"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_file_outline_24dp"/>
 
@@ -98,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/hint_wallet"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_folder_black_24dp" />
 
@@ -108,7 +108,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/csv_import_date_column"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_format_columns_24dp" />
 
@@ -118,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/csv_import_amount_column"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_format_columns_24dp" />
 
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/csv_import_description_column"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_format_columns_24dp" />
 
@@ -138,7 +138,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/csv_import_note_column"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_format_columns_24dp" />
 
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/csv_import_category_column"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_format_columns_24dp" />
 
@@ -158,7 +158,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/csv_import_date_format"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_today_black_24dp" />
 
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
                 android:hint="@string/csv_import_decimal_separator"
-                android:inputType="textNoSuggestions"
+                android:inputType="textCapWords|textNoSuggestions"
                 app:met_mode="floatingLabel"
                 app:met_leftIcon="@drawable/ic_file_table" />
 
@@ -192,7 +192,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_export_folder"
-            android:inputType="textNoSuggestions"
+            android:inputType="textCapWords|textNoSuggestions"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_folder_open_black_24dp"/>
 
@@ -202,7 +202,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/material_activity_body_edit_text_margin_bottom"
             android:hint="@string/hint_export_optional_columns"
-            android:inputType="textMultiLine"
+            android:inputType="textCapWords|textMultiLine"
             app:met_mode="floatingLabel"
             app:met_leftIcon="@drawable/ic_format_columns_24dp" />
 
