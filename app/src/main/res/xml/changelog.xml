@@ -19,6 +19,10 @@
   -->
 
 <changelog>
+    <version versionName="2.1.1" versionDate="Oct 02, 2026">
+        <change>🎨 [b]UI/UX[/b]: Merged userinterface changes for a better look and feel.</change>
+        <change>🔧 [b]Fix[/b]: Updated to use the fork's own namespace for the default application id.</change>
+    </version>
 
     <version versionName="2.0.4" versionDate="Sep 22, 2026">
         <change>🔤 [b]UI/UX[/b]: Updated default app font to Google Sans Flex and Google Sans Code for numeric values.</change>
