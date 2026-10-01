@@ -215,12 +215,15 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         // the sides would sit inset from the rows under it.
         SystemBars.pad(mHeaderView, true, false, false);
         mHeaderView.setOnClickListener(view -> showWalletList(!mWalletListShown));
-        mWalletIconView = null;
-        mFirstWalletView = null;
-        mSecondWalletView = null;
-        mWalletNameView = null;
+        mWalletIconView = mHeaderView.findViewById(R.id.wallet_icon_image_view);
+        mFirstWalletView = mHeaderView.findViewById(R.id.first_wallet_image_view);
+        mSecondWalletView = mHeaderView.findViewById(R.id.second_wallet_image_view);
+        mWalletNameView = mHeaderView.findViewById(R.id.wallet_name_text_view);
         mWalletMoneyView = mHeaderView.findViewById(R.id.wallet_money_text_view);
-        mWalletListArrowView = null;
+        mWalletListArrowView = mHeaderView.findViewById(R.id.wallet_list_arrow_image_view);
+        View.OnClickListener quickSwitch = view -> switchWallet((WalletAccount) view.getTag(view.getId()));
+        mFirstWalletView.setOnClickListener(quickSwitch);
+        mSecondWalletView.setOnClickListener(quickSwitch);
     }
 
     /**
@@ -415,7 +418,7 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         } else {
             mNavigationView.setCheckedItem(mCurrentSelection);
         }
-        if (mWalletListArrowView != null) mWalletListArrowView.animate().rotation(show ? 180 : 0).start();
+        mWalletListArrowView.animate().rotation(show ? 180 : 0).start();
     }
 
 
@@ -605,16 +608,14 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
      */
     private void bindHeader() {
         if (mCurrentWallet != null) {
-            if (mWalletIconView != null) {
-                IconLoader.loadInto(mCurrentWallet.getIcon(), mWalletIconView);
-                mWalletIconView.setVisibility(View.VISIBLE);
-            }
-            if (mWalletNameView != null) mWalletNameView.setText(mCurrentWallet.getName());
-            if (mWalletMoneyView != null) mWalletMoneyView.setText(mMoneyFormatter.getNotTintedString(mCurrentWallet.getMoney()));
+            IconLoader.loadInto(mCurrentWallet.getIcon(), mWalletIconView);
+            mWalletIconView.setVisibility(View.VISIBLE);
+            mWalletNameView.setText(mCurrentWallet.getName());
+            mWalletMoneyView.setText(mMoneyFormatter.getNotTintedString(mCurrentWallet.getMoney()));
         } else {
-            if (mWalletIconView != null) mWalletIconView.setVisibility(View.INVISIBLE);
-            if (mWalletNameView != null) mWalletNameView.setText(R.string.msg_no_wallet_found);
-            if (mWalletMoneyView != null) mWalletMoneyView.setText(R.string.msg_add_one_wallet);
+            mWalletIconView.setVisibility(View.INVISIBLE);
+            mWalletNameView.setText(R.string.msg_no_wallet_found);
+            mWalletMoneyView.setText(R.string.msg_add_one_wallet);
         }
         List<WalletAccount> others = new ArrayList<>(mWallets);
         others.remove(mCurrentWallet);
@@ -623,7 +624,6 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
     }
 
     private void bindQuickSwitch(ImageView view, WalletAccount wallet) {
-        if (view == null) return;
         // keyed, because Glide keeps its own request in the plain tag of any view it loads into
         view.setTag(view.getId(), wallet);
         view.setVisibility(wallet != null ? View.VISIBLE : View.GONE);
@@ -658,16 +658,14 @@ public class MainActivity extends BaseActivity implements DrawerController, Navi
         int backgroundColor = theme.getColorPrimary();
         int textColor = theme.getBestTextColor(backgroundColor);
         mHeaderView.setBackgroundColor(backgroundColor);
-        if (mWalletNameView != null) mWalletNameView.setTextColor(textColor);
-        if (mWalletMoneyView != null) mWalletMoneyView.setTextColor(textColor);
-        if (mWalletListArrowView != null) mWalletListArrowView.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
-        if (mWalletIconView != null) {
-            // a thin ring keeps the wallet icon visible when its color is the header's own
-            GradientDrawable ring = new GradientDrawable();
-            ring.setShape(GradientDrawable.OVAL);
-            ring.setStroke(Math.round(getResources().getDisplayMetrics().density), ColorUtils.setAlphaComponent(textColor, 0x66));
-            mWalletIconView.setBackground(ring);
-        }
+        mWalletNameView.setTextColor(textColor);
+        mWalletMoneyView.setTextColor(textColor);
+        mWalletListArrowView.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP);
+        // a thin ring keeps the wallet icon visible when its color is the header's own
+        GradientDrawable ring = new GradientDrawable();
+        ring.setShape(GradientDrawable.OVAL);
+        ring.setStroke(Math.round(getResources().getDisplayMetrics().density), ColorUtils.setAlphaComponent(textColor, 0x66));
+        mWalletIconView.setBackground(ring);
     }
 
     private void applyNavigationDrawerBodyTheme(ITheme theme) {
