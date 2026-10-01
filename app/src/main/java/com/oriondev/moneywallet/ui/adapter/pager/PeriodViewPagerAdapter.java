@@ -50,11 +50,11 @@ public class PeriodViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return PeriodDetailFlowFragment.newInstance(mStartDate, mEndDate, true);
-            case 1:
-                return PeriodDetailFlowFragment.newInstance(mStartDate, mEndDate, false);
-            case 2:
                 return PeriodDetailSummaryFragment.newInstance(mStartDate, mEndDate);
+            case 1:
+                return PeriodDetailFlowFragment.newInstance(mStartDate, mEndDate, true);
+            case 2:
+                return PeriodDetailFlowFragment.newInstance(mStartDate, mEndDate, false);
             default:
                 throw new IllegalArgumentException("Invalid position");
         }
@@ -69,11 +69,11 @@ public class PeriodViewPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return mContext.getString(R.string.hint_incomes);
-            case 1:
-                return mContext.getString(R.string.hint_expenses);
-            case 2:
                 return mContext.getString(R.string.hint_summary);
+            case 1:
+                return mContext.getString(R.string.hint_incomes);
+            case 2:
+                return mContext.getString(R.string.hint_expenses);
         }
         return null;
     }
