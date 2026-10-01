@@ -104,7 +104,10 @@ public class SystemCategoryLocalizer {
                     continue;
                 }
                 String currentName = category.getName(context);
-                if (currentName.equals(stored.name)) {
+                Icon parsedIcon = IconLoader.parse(stored.icon);
+                boolean isColorIcon = parsedIcon instanceof ColorIcon;
+
+                if (currentName.equals(stored.name) && !isColorIcon) {
                     continue;
                 }
                 if (seededNames == null) {
@@ -112,7 +115,7 @@ public class SystemCategoryLocalizer {
                 }
                 Set<String> names = seededNames.get(stored.tag);
                 if (names != null && names.contains(stored.name)) {
-                    rewrite(contentResolver, stored, currentName);
+                    rewrite(contentResolver, stored, category, context, currentName);
                 }
             } catch (Throwable t) {
                 // per row, so that one unwritable row does not leave the others stale
@@ -218,10 +221,10 @@ public class SystemCategoryLocalizer {
         return categories;
     }
 
-    private static void rewrite(ContentResolver contentResolver, StoredCategory stored, String currentName) {
+    private static void rewrite(ContentResolver contentResolver, StoredCategory stored, SystemCategory category, Context context, String currentName) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(Contract.Category.NAME, currentName);
-        String icon = relocalizedIcon(stored.icon, currentName);
+        String icon = relocalizedIcon(stored.icon, currentName, category, context);
         if (icon != null) {
             contentValues.put(Contract.Category.ICON, icon);
         }
@@ -238,13 +241,21 @@ public class SystemCategoryLocalizer {
      * @return the updated icon, or null to leave the stored one alone, which happens for a vector
      *          icon and for anything unreadable. The name is corrected either way.
      */
-    private static String relocalizedIcon(String storedIcon, String currentName) {
+    private static String relocalizedIcon(String storedIcon, String currentName, SystemCategory category, Context context) {
         try {
             Icon icon = IconLoader.parse(storedIcon);
             if (!(icon instanceof ColorIcon)) {
                 return null;
             }
-            return new ColorIcon((ColorIcon) icon, IconLoader.getColorIconString(currentName)).toString();
+            ColorIcon colorIcon = (ColorIcon) icon;
+            String resourceName = category.getResourceName();
+            if (resourceName != null) {
+                org.json.JSONObject jsonObject = new org.json.JSONObject();
+                jsonObject.put("resource", resourceName);
+                jsonObject.put("color", com.oriondev.moneywallet.utils.Utils.getHexColor(colorIcon.getColor()));
+                return new com.oriondev.moneywallet.model.VectorIcon(jsonObject).toString();
+            }
+            return new ColorIcon(colorIcon, IconLoader.getColorIconString(currentName)).toString();
         } catch (Exception e) {
             Log.e(TAG, "unreadable icon on a system category, keeping the old one", e);
             return null;
