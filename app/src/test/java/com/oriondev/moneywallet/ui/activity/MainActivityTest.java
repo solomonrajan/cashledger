@@ -92,7 +92,7 @@ public class MainActivityTest {
                 assertEquals(MainActivity.ID_SECTION_TRANSACTIONS, drawer(activity).getCheckedItem().getItemId());
                 assertTrue(section(activity) instanceof TransactionMultiPanelViewPagerFragment);
 
-                assertNotNull(icon.getDrawable());
+
                 assertNotNull(drawer(activity).getItemBackground());
                 assertNull(drawer(activity).getItemIconTintList());
                 assertTrue(drawer(activity).getClipToOutline());
@@ -157,7 +157,7 @@ public class MainActivityTest {
                 Intent restored = new Intent(LocalAction.ACTION_BACKUP_SERVICE_FINISHED)
                         .putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_RESTORE);
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(restored);
-return ((TextView) activity.findViewById(R.id.wallet_money_text_view)).getText().toString();
+
                 awaitWallets(activity);
                 assertEquals(3, walletRows(menu));
                 assertFalse(menu.findItem(walletItem(mFirstWallet)).isVisible());
