@@ -26,16 +26,16 @@ The GitHub Actions build is reproducible and carries the developer signature, so
 
 ## 📑 Table of Contents
 
-| Section | Description |
-|---------|-------------|
-| [✨ What it does](#what-it-does) | Features and capabilities of Cash Ledger |
-| [🗺️ App Blueprint](#app-blueprint) | UI/UX Flow and Navigation Map |
-| [📱 App Pages](#app-pages) | List of screens in the application |
-| [💻 Technology Stack](#technology-stack) | Languages, frameworks, and architecture used |
-| [🔄 Coming from Tallybook](#coming-from-tallybook) | Information for users migrating from Tallybook |
-| [📚 Docs](#docs) | Documentation, guides, and privacy policy |
-| [🛠️ Build from source](#build-from-source) | Instructions to build the app from source |
-| [🤝 Contributing](#contributing) | How to contribute to the project |
+| Section                                                      | Description                                        |
+| ------------------------------------------------------------ | -------------------------------------------------- |
+| [✨ What it does](#what-it-does)                             | Features and capabilities of Cash Ledger           |
+| [🗺️ App Blueprint](#app-blueprint)                           | UI/UX Flow and Navigation Map                      |
+| [📱 App Pages](#app-pages)                                   | List of screens in the application                 |
+| [💻 Technology Stack](#technology-stack)                     | Languages, frameworks, and architecture used       |
+| [🔄 Coming from Tallybook](#coming-from-tallybook)           | Information for users migrating from Tallybook     |
+| [📚 Docs](#docs)                                             | Documentation, guides, and privacy policy          |
+| [🛠️ Build from source](#build-from-source)                   | Instructions to build the app from source          |
+| [🤝 Contributing](#contributing)                             | How to contribute to the project                   |
 | [🙏 Credits and Acknowledgment](#credits-and-acknowledgment) | People and projects that made Cash Ledger possible |
 
 ## ✨ What it does
@@ -65,16 +65,16 @@ graph TD
     B --> F[Budgets]
     B --> G[Reports / Statistics]
     B --> H[Settings]
-    
+
     C --> C1[Transaction Details]
     C --> C2[Edit / Delete]
-    
+
     E --> E1[Add / Edit Wallet]
     E --> E2[Wallet Transfer]
-    
+
     F --> F1[Create / Edit Budget]
     F --> F2[Budget Details]
-    
+
     H --> H1[Backup & Restore]
     H --> H2[Categories Management]
     H --> H3[Security / PIN Lock]
@@ -85,53 +85,59 @@ graph TD
 Here is a breakdown of the various pages (Activities) available in the app:
 
 ### Core / Initial Pages
-* **Launcher Page**: The startup or splash screen (`LauncherActivity`).
-* **Main Page**: The main dashboard or entry point of the app (`MainActivity`).
-* **Tutorial Page**: Intro and onboarding screens for new users (`TutorialActivity`).
-* **Lock Screen**: The PIN or biometric lock screen to protect the app (`LockActivity`).
+
+- **Launcher Page**: The startup or splash screen (`LauncherActivity`).
+- **Main Page**: The main dashboard or entry point of the app (`MainActivity`).
+- **Tutorial Page**: Intro and onboarding screens for new users (`TutorialActivity`).
+- **Lock Screen**: The PIN or biometric lock screen to protect the app (`LockActivity`).
 
 ### Lists & Overviews
-* **Transaction List**: Shows a list of all transactions (`TransactionListActivity`).
-* **Wallet List**: Displays all your accounts/wallets (`WalletListActivity`).
-* **Calendar View**: Shows transactions organized on a calendar (`CalendarActivity`).
-* **Map View**: A map page showing locations of transactions (`MapActivity`).
-* **Period Detail**: Shows a detailed breakdown of a specific time period (`PeriodDetailActivity`).
-* **Currency List**: A list of available currencies (`CurrencyListActivity`).
+
+- **Transaction List**: Shows a list of all transactions (`TransactionListActivity`).
+- **Wallet List**: Displays all your accounts/wallets (`WalletListActivity`).
+- **Calendar View**: Shows transactions organized on a calendar (`CalendarActivity`).
+- **Map View**: A map page showing locations of transactions (`MapActivity`).
+- **Period Detail**: Shows a detailed breakdown of a specific time period (`PeriodDetailActivity`).
+- **Currency List**: A list of available currencies (`CurrencyListActivity`).
 
 ### Creation / Editing Pages
-* **New/Edit Transaction** (`NewEditTransactionActivity`)
-* **New/Edit Transfer** (`NewEditTransferActivity`)
-* **New/Edit Wallet** (`NewEditWalletActivity`)
-* **New/Edit Category** (`NewEditCategoryActivity`)
-* **New/Edit Budget** (`NewEditBudgetActivity`)
-* **New/Edit Debt** (`NewEditDebtActivity`)
-* **New/Edit Saving** (`NewEditSavingActivity`)
-* **New/Edit Event** (`NewEditEventActivity`)
-* **New/Edit Place** (`NewEditPlaceActivity`)
-* **New/Edit Person** (`NewEditPersonActivity`)
-* **New/Edit Recurrent Transaction** (`NewEditRecurrentTransactionActivity`)
-* **New/Edit Transaction Model** (`NewEditTransactionModelActivity`)
+
+- **New/Edit Transaction** (`NewEditTransactionActivity`)
+- **New/Edit Transfer** (`NewEditTransferActivity`)
+- **New/Edit Wallet** (`NewEditWalletActivity`)
+- **New/Edit Category** (`NewEditCategoryActivity`)
+- **New/Edit Budget** (`NewEditBudgetActivity`)
+- **New/Edit Debt** (`NewEditDebtActivity`)
+- **New/Edit Saving** (`NewEditSavingActivity`)
+- **New/Edit Event** (`NewEditEventActivity`)
+- **New/Edit Place** (`NewEditPlaceActivity`)
+- **New/Edit Person** (`NewEditPersonActivity`)
+- **New/Edit Recurrent Transaction** (`NewEditRecurrentTransactionActivity`)
+- **New/Edit Transaction Model** (`NewEditTransactionModelActivity`)
 
 ### Sorting & Configuration Pages
-* **Settings Page**: The main configuration and preferences page (`SettingsActivity`).
-* **Category Picker / Sort**: `CategoryPickerActivity`, `CategorySortActivity`.
-* **Category Rules**: `CategoryRuleListActivity`, `NewEditCategoryRuleActivity`, `CategoryRuleSortActivity`.
-* **Wallet Sort**: `WalletSortActivity`.
-* **Icon List**: Pick icons for categories or wallets (`IconListActivity`).
-* **Place Picker**: Select a location on a map (`PlacePickerActivity`).
+
+- **Settings Page**: The main configuration and preferences page (`SettingsActivity`).
+- **Category Picker / Sort**: `CategoryPickerActivity`, `CategorySortActivity`.
+- **Category Rules**: `CategoryRuleListActivity`, `NewEditCategoryRuleActivity`, `CategoryRuleSortActivity`.
+- **Wallet Sort**: `WalletSortActivity`.
+- **Icon List**: Pick icons for categories or wallets (`IconListActivity`).
+- **Place Picker**: Select a location on a map (`PlacePickerActivity`).
 
 ### Tools & System Pages
-* **Search Page**: To find specific transactions (`SearchActivity`).
-* **Import / Export**: To backup or restore data (`ImportExportActivity`).
-* **Backup List**: Shows existing backups (`BackupListActivity`).
-* **Backend Explorer**: A debug or database viewer screen (`BackendExplorerActivity`).
-* **About Page**: Shows app info, versions, and credits (`AboutActivity`).
+
+- **Search Page**: To find specific transactions (`SearchActivity`).
+- **Import / Export**: To backup or restore data (`ImportExportActivity`).
+- **Backup List**: Shows existing backups (`BackupListActivity`).
+- **Backend Explorer**: A debug or database viewer screen (`BackendExplorerActivity`).
+- **About Page**: Shows app info, versions, and credits (`AboutActivity`).
 
 ## 💻 Technology Stack
 
 Cash Ledger is built as a fully native and privacy-respecting Android application.
 
 **Frontend & UI**
+
 - **Language:** Java
 - **Framework:** Native Android SDK (XML Layouts / Views)
 - **Design System:** Material Design Components
@@ -139,6 +145,7 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 - **Icons:** Material Symbols
 
 **Backend & Storage**
+
 - **Database:** Local SQLite (offline-first architecture, no accounts or cloud services required)
 - **Backups:** Local storage, WebDAV (Nextcloud, NAS), and Android Auto Backup
 - **Import/Export:** CSV, XLS, PDF, and legacy MoneyWallet backups
@@ -183,7 +190,7 @@ The original code that laid the foundation for this project was **MoneyWallet** 
 
 To keep the project alive, [herrerad85](https://github.com/herrerad85) created **Tallybook** ([repository](https://github.com/herrerad85/tallybook)), a maintained fork of MoneyWallet. Tallybook carried the torch forward, ensuring the app continued to work.
 
-**Cash Ledger** is a fork of Tallybook. I forked this project to continue its legacy, deeply modernizing the UI/UX, refining the design aesthetics, and ensuring the app remains usable and up-to-date with modern Android standards. The goal is to provide a premium, dynamic, and beautiful interface while keeping the powerful offline-first core functionality that users loved in the original apps. 
+**Cash Ledger** is a fork of Tallybook. I forked this project to continue its legacy, deeply modernizing the UI/UX, refining the design aesthetics, and ensuring the app remains usable and up-to-date with modern Android standards. The goal is to provide a premium, dynamic, and beautiful interface while keeping the powerful offline-first core functionality that users loved in the original apps.
 
 We owe a huge thanks to [AndreAle94](https://github.com/AndreAle94) and [herrerad85](https://github.com/herrerad85) for their hard work. Cash Ledger is independent and is not endorsed by or affiliated with the original authors.
 
@@ -192,4 +199,3 @@ We owe a huge thanks to [AndreAle94](https://github.com/AndreAle94) and [herrera
 The intro illustrations and the new app icon are designed by [solomonrajan](https://github.com/solomonrajan) (commit ID [3b9cac8](https://github.com/solomonrajan/cashledger/commit/3b9cac8)), released under the GPLv3. The category picker icons and UI elements use glyphs from Material Symbols. Full license texts are in [THIRD_PARTY_NOTICES.md](https://github.com/solomonrajan/cashledger/blob/master/THIRD_PARTY_NOTICES.md).
 
 </div>
-
