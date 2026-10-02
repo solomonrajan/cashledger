@@ -370,7 +370,7 @@ class ImportExportActivity : SinglePanelActivity(),
         return false
     }
 
-    private fun importData() {
+    fun importData() {
         val intent = Intent(this, ImportExportIntentService::class.java).apply {
             putExtra(ImportExportIntentService.MODE, ImportExportIntentService.MODE_IMPORT)
             putExtra(ImportExportIntentService.FORMAT, dataFormatPicker.currentFormat)
@@ -393,7 +393,7 @@ class ImportExportActivity : SinglePanelActivity(),
         startService(intent)
     }
 
-    private fun exportData() {
+    fun exportData() {
         val intent = Intent(this, ImportExportIntentService::class.java).apply {
             putExtra(ImportExportIntentService.MODE, ImportExportIntentService.MODE_EXPORT)
             putExtra(ImportExportIntentService.FORMAT, dataFormatPicker.currentFormat)
