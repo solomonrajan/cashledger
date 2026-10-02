@@ -73,15 +73,17 @@ class TransactionMultiPanelFragment : MultiPanelFragment(), CurrentWalletControl
         }
     }
 
-    override fun onCreateView(
+    private var secondaryFragment: SecondaryPanelFragment? = null
+
+    override fun onCreatePrimaryPanel(
         inflater: LayoutInflater,
-        container: ViewGroup?,
+        primaryPanel: ViewGroup,
         savedInstanceState: Bundle?
-    ): View {
-        return ComposeView(requireContext()).apply {
+    ) {
+        val composeView = ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                MoneyWalletTheme {
+                androidx.compose.material3.MaterialTheme {
                     TransactionListScreen(
                         viewModel = viewModel,
                         onTransactionClick = { id ->
@@ -92,14 +94,33 @@ class TransactionMultiPanelFragment : MultiPanelFragment(), CurrentWalletControl
                 }
             }
         }
+        primaryPanel.addView(composeView)
     }
 
-    override fun onCreateSecondaryPanel(): SecondaryPanelFragment {
-        return TransactionItemFragment()
+    override fun onCreateSecondaryPanel(
+        inflater: LayoutInflater,
+        secondaryPanel: ViewGroup,
+        savedInstanceState: Bundle?
+    ) {
+        val fragmentManager = childFragmentManager
+        val fragmentTag = getSecondaryFragmentTag()
+        secondaryFragment = fragmentManager.findFragmentByTag(fragmentTag) as? SecondaryPanelFragment
+        if (secondaryFragment != null) {
+            fragmentManager.beginTransaction().show(secondaryFragment!!).commitNow()
+        } else {
+            secondaryFragment = TransactionItemFragment()
+            fragmentManager.beginTransaction()
+                .replace(secondaryPanel.id, secondaryFragment!!, fragmentTag)
+                .commitNow()
+        }
     }
 
-    override fun getSecondaryFragmentTag(): String {
+    private fun getSecondaryFragmentTag(): String {
         return SECONDARY_PANEL_TAG
+    }
+
+    fun showItemId(id: Long) {
+        secondaryFragment?.showItemId(id)
     }
 
     override fun getTitleRes(): Int {

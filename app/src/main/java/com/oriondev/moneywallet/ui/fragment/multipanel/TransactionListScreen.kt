@@ -161,7 +161,7 @@ fun HeaderRow(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val dateStr = DateFormatter.getDateRangeString(item.startDate, item.endDate)
+            val dateStr = DateFormatter.getDateRange(androidx.compose.ui.platform.LocalContext.current, item.startDate, item.endDate)
             Text(
                 text = dateStr,
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
@@ -290,7 +290,7 @@ fun TransactionRow(
                 color = moneyColor
             )
             Text(
-                text = DateFormatter.getDateTimeString(item.date),
+                text = DateFormatter.getFormattedDateTime(item.date),
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
