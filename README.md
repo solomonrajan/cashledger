@@ -157,11 +157,11 @@ The codebase is currently undergoing a complete migration from Java to modern Ko
 
 ```mermaid
 pie title Java to Kotlin UI Migration Progress
-    "Migrated (Kotlin)" : 2
-    "Pending (Java)" : 34
+    "Migrated (Kotlin)" : 3
+    "Pending (Java)" : 33
 ```
 
-- **Migrated Screens:** `AboutActivity`, `CalculatorActivity`
+- **Migrated Screens:** `AboutActivity`, `CalculatorActivity`, `SearchActivity`
 - **Pending:** Core screens, Lists, Pickers, Settings
 
 ## 🔄 Coming from Tallybook
