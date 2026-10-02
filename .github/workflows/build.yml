@@ -48,6 +48,9 @@ jobs:
           chmod +x gradlew
           ./gradlew clean testFlossOsmDebugUnitTest assembleFlossOsmDebug assembleFlossOsmDebugAndroidTest
 
+      - name: Run Detekt (Kotlin Static Analysis)
+        run: ./gradlew detekt
+
       - name: Lint
         if: always()
         run: ./gradlew lintFlossOsmDebug

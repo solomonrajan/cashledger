@@ -21,6 +21,8 @@ package com.oriondev.moneywallet.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by andrea on 09/03/18.
@@ -34,7 +36,7 @@ public class Wallet implements Identifiable, Parcelable {
     private final long mStartMoney;
     private final long mTotalMoney;
 
-    public Wallet(long id, String name, Icon icon, CurrencyUnit currency, long startMoney, long totalMoney) {
+    public Wallet(long id, @NonNull String name, @Nullable Icon icon, @NonNull CurrencyUnit currency, long startMoney, long totalMoney) {
         mId = id;
         mName = name;
         mIcon = icon;
@@ -48,10 +50,12 @@ public class Wallet implements Identifiable, Parcelable {
         return mId;
     }
 
+    @NonNull
     public String getName() {
         return mName;
     }
 
+    @NonNull
     public CurrencyUnit getCurrency() {
         return mCurrency;
     }

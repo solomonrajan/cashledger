@@ -18,6 +18,8 @@
  */
 
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 android {
     namespace "com.oriondev.moneywallet"
@@ -130,6 +132,7 @@ configurations {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.22"
     implementation libs.androidx.activity
     implementation libs.androidx.annotation
     implementation libs.androidx.appcompat
