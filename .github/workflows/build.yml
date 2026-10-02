@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [master, userinterface]
+    branches: [master, userinterface, javatokotlin]
   pull_request:
 
 permissions:
