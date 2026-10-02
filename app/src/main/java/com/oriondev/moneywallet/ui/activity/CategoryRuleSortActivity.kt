@@ -60,7 +60,7 @@ class CategoryRuleSortActivity : SinglePanelSimpleListActivity(), CategoryRuleSo
     override fun isFloatingActionButtonEnabled(): Boolean = false
 
     override fun onPrepareRecyclerView(recyclerView: AdvancedRecyclerView) {
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setEmptyText(R.string.message_no_category_rule_found_sort)
         recyclerView.isEnabled = false
 
@@ -85,7 +85,7 @@ class CategoryRuleSortActivity : SinglePanelSimpleListActivity(), CategoryRuleSo
         itemTouchHelper.attachToRecyclerView(recyclerView.recyclerView)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter = CategoryRuleSortCursorAdapter(this)
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> = CategoryRuleSortCursorAdapter(this)
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val uri: Uri = DataContentProvider.CONTENT_CATEGORY_RULES

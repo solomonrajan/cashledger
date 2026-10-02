@@ -100,10 +100,10 @@ class BackendExplorerActivity : SinglePanelActivity(), SwipeRefreshLayout.OnRefr
     override fun onCreatePanelView(inflater: LayoutInflater, parent: ViewGroup, savedInstanceState: Bundle?) {
         val view = inflater.inflate(R.layout.layout_activity_single_panel_body_list, parent, true)
         advancedRecyclerView = view.findViewById(R.id.advanced_recycler_view)
-        advancedRecyclerView.layoutManager = LinearLayoutManager(this)
+        advancedRecyclerView.setLayoutManager(LinearLayoutManager(this))
         advancedRecyclerView.setEmptyText(R.string.message_no_file_found)
         adapter = BackupFileAdapter(this)
-        advancedRecyclerView.adapter = adapter
+        advancedRecyclerView.setAdapter(adapter)
         advancedRecyclerView.setOnRefreshListener(this)
 
         val currentIntent = intent

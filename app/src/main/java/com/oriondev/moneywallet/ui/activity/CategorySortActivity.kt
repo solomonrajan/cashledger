@@ -68,7 +68,7 @@ class CategorySortActivity : SinglePanelSimpleListActivity(), CategorySortCursor
                 categoryType = typeExtra
             }
         }
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setLayoutManager(LinearLayoutManager(this))
         recyclerView.setEmptyText(R.string.message_no_category_found)
         recyclerView.isEnabled = false
         
@@ -93,7 +93,7 @@ class CategorySortActivity : SinglePanelSimpleListActivity(), CategorySortCursor
         itemTouchHelper.attachToRecyclerView(recyclerView.recyclerView)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter = CategorySortCursorAdapter(this)
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> = CategorySortCursorAdapter(this)
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
         val uri: Uri = DataContentProvider.CONTENT_CATEGORIES
