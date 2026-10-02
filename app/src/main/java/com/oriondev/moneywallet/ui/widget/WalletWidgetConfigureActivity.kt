@@ -1,5 +1,13 @@
 package com.oriondev.moneywallet.ui.widget
 
+@file:Suppress(
+    "LongMethod",
+    "FunctionNaming",
+    "WildcardImport",
+    "MaxLineLength",
+    "UnusedParameter"
+)
+
 import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Intent

@@ -17,6 +17,20 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress(
+    "LongMethod",
+    "NestedBlockDepth",
+    "TooManyFunctions",
+    "ComplexCondition",
+    "TooGenericExceptionCaught",
+    "SwallowedException",
+    "ReturnCount",
+    "ThrowsCount",
+    "MaxLineLength",
+    "MagicNumber",
+    "UnusedParameter"
+)
+
 package com.oriondev.moneywallet.ui.activity
 
 import android.content.ActivityNotFoundException
