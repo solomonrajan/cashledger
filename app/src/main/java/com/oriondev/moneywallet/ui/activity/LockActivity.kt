@@ -17,6 +17,8 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("TooManyFunctions", "LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth", "UnusedParameter", "EmptyFunctionBlock")
+
 package com.oriondev.moneywallet.ui.activity
 
 import android.app.Activity

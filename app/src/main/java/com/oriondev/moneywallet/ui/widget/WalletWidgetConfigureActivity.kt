@@ -17,6 +17,8 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("ReturnCount")
+
 package com.oriondev.moneywallet.ui.widget
 
 import android.app.Activity
