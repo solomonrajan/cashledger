@@ -18,6 +18,7 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("TooManyFunctions")
 package com.oriondev.moneywallet.ui.fragment.multipanel
 
 import android.content.BroadcastReceiver

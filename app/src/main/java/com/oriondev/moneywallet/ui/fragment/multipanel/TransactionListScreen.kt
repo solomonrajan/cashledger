@@ -1,3 +1,4 @@
+@file:Suppress("LongMethod", "FunctionNaming", "MaxLineLength", "UnusedPrivateProperty")
 package com.oriondev.moneywallet.ui.fragment.multipanel
 
 import androidx.compose.foundation.ExperimentalFoundationApi

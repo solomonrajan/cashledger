@@ -1,3 +1,4 @@
+@file:Suppress("LongMethod", "CyclomaticComplexMethod", "ComplexCondition", "MaxLineLength")
 package com.oriondev.moneywallet.ui.fragment.multipanel
 
 import android.app.Application
