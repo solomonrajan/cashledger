@@ -37,6 +37,10 @@ test-core = "1.7.0"
 test-runner = "1.7.0"
 viewpager = "1.1.0"
 zip4j = "1.3.2"
+compose-bom = "2024.11.00"
+activity-compose = "1.9.3"
+lifecycle = "2.8.7"
+coroutines = "1.9.0"
 
 [libraries]
 androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
@@ -92,3 +96,11 @@ robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectr
 # 2.x moved ZipFile out of net.lingala.zip4j.core and removed Zip4jConstants and
 # net.lingala.zip4j.io.ZipInputStream. The backup code imports all three.
 zip4j = { module = "net.lingala.zip4j:zip4j", version.ref = "zip4j" }
+compose-bom = { module = "androidx.compose:compose-bom", version.ref = "compose-bom" }
+compose-ui = { module = "androidx.compose.ui:ui" }
+compose-material3 = { module = "androidx.compose.material3:material3" }
+compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activity-compose" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle" }
+coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
