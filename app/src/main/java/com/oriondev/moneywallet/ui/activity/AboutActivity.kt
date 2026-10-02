@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
+ * Copyright (c) 2018. MoneyWallet
+ * Copyright (c) 2026. solomonrajan/CashLedger
  * This file is part of MoneyWallet.
  *
  * MoneyWallet is free software: you can redistribute it and/or modify

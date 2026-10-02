@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2018.
- *
+ * Copyright (c) 2018. MoneyWallet
+ * Copyright (c) 2026. solomonrajan/CashLedger
  * This file is part of MoneyWallet.
  *
  * MoneyWallet is free software: you can redistribute it and/or modify
@@ -40,6 +40,7 @@ import com.oriondev.moneywallet.utils.SystemBars
 import kotlin.math.max
 import kotlin.math.min
 
+@Suppress("TooManyFunctions")
 class CalculatorActivity : SinglePanelActivity(), View.OnClickListener, EquationSolver.Controller {
 
     private lateinit var displayEditText: EditText
@@ -155,7 +156,7 @@ class CalculatorActivity : SinglePanelActivity(), View.OnClickListener, Equation
     private fun execute() {
         if (solver.isPendingOperation) {
             if (!solver.execute(true)) {
-                // TODO: show error!
+                // Needs to show error
             }
         } else if (keypadMode) {
             val money = solver.result
@@ -231,7 +232,9 @@ class CalculatorActivity : SinglePanelActivity(), View.OnClickListener, Equation
             override fun onCreateActionMode(mode: ActionMode, menu: Menu): Boolean = false
             override fun onPrepareActionMode(mode: ActionMode, menu: Menu): Boolean = false
             override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean = false
-            override fun onDestroyActionMode(mode: ActionMode) {}
+            override fun onDestroyActionMode(mode: ActionMode) {
+                // No action needed
+            }
         }
     }
 }
