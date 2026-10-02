@@ -157,11 +157,11 @@ The codebase is currently undergoing a complete migration from Java to modern Ko
 
 ```mermaid
 pie title Java to Kotlin UI Migration Progress
-    "Migrated (Kotlin)" : 6
-    "Pending (Java)" : 30
+    "Migrated (Kotlin)" : 8
+    "Pending (Java)" : 28
 ```
 
-- **Migrated Screens:** `AboutActivity`, `CalculatorActivity`, `SearchActivity`, `CalendarActivity`, `MapActivity`, `PeriodDetailActivity`
+- **Migrated Screens:** `AboutActivity`, `CalculatorActivity`, `SearchActivity`, `CalendarActivity`, `MapActivity`, `PeriodDetailActivity`, `BackendExplorerActivity`, `WalletWidgetConfigureActivity`
 - **Pending:** Core screens, Lists, Pickers, Settings
 
 > **Note on GitHub Language Stats:** The pie chart above tracks our progress migrating specific UI **screens (Activities)**. In contrast, the GitHub language statistics bar at the top of the repository calculates percentages based on the **total byte size** of all files. Because the app has hundreds of other backend Java files (Fragments, ViewModels, Database Helpers) yet to be migrated, GitHub's chart will heavily skew towards Java until more of the core logic is converted.
