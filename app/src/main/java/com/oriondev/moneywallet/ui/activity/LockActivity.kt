@@ -17,7 +17,7 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("TooManyFunctions", "LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth", "UnusedParameter", "EmptyFunctionBlock")
+@file:Suppress("TooManyFunctions", "LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth", "UnusedParameter", "EmptyFunctionBlock", "MaxLineLength")
 
 package com.oriondev.moneywallet.ui.activity
 
