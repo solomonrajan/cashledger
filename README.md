@@ -32,6 +32,7 @@ The GitHub Actions build is reproducible and carries the developer signature, so
 | [🗺️ App Blueprint](#app-blueprint)                           | UI/UX Flow and Navigation Map                      |
 | [📱 App Pages](#app-pages)                                   | List of screens in the application                 |
 | [💻 Technology Stack](#technology-stack)                     | Languages, frameworks, and architecture used       |
+| [🔄 Kotlin Migration Status](#kotlin-migration-status)       | Current progress of the Java to Kotlin rewrite     |
 | [🔄 Coming from Tallybook](#coming-from-tallybook)           | Information for users migrating from Tallybook     |
 | [📚 Docs](#docs)                                             | Documentation, guides, and privacy policy          |
 | [🛠️ Build from source](#build-from-source)                   | Instructions to build the app from source          |
@@ -138,7 +139,7 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 
 **Frontend & UI**
 
-- **Language:** Java
+- **Language:** Kotlin & Java
 - **Framework:** Native Android SDK (XML Layouts / Views)
 - **Design System:** Material Design Components
 - **Data Visualization:** MPAndroidChart for reports and statistics
@@ -149,6 +150,19 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 - **Database:** Local SQLite (offline-first architecture, no accounts or cloud services required)
 - **Backups:** Local storage, WebDAV (Nextcloud, NAS), and Android Auto Backup
 - **Import/Export:** CSV, XLS, PDF, and legacy MoneyWallet backups
+
+## 🔄 Kotlin Migration Status
+
+The codebase is currently undergoing a complete migration from Java to modern Kotlin, enforcing strict guidelines (immutability, null safety, Coroutines) and checked by Detekt.
+
+```mermaid
+pie title Java to Kotlin UI Migration Progress
+    "Migrated (Kotlin)" : 2
+    "Pending (Java)" : 34
+```
+
+- **Migrated Screens:** `AboutActivity`, `CalculatorActivity`
+- **Pending:** Core screens, Lists, Pickers, Settings
 
 ## 🔄 Coming from Tallybook
 
