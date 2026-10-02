@@ -35,7 +35,6 @@ import com.oriondev.moneywallet.storage.preference.PreferenceManager
 import com.oriondev.moneywallet.ui.fragment.base.MultiPanelFragment
 import com.oriondev.moneywallet.ui.fragment.base.SecondaryPanelFragment
 import com.oriondev.moneywallet.ui.fragment.secondary.TransactionItemFragment
-import com.oriondev.moneywallet.ui.view.theme.MoneyWalletTheme
 import java.util.Date
 
 class TransactionMultiPanelFragment : MultiPanelFragment(), CurrentWalletController {
