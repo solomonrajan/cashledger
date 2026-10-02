@@ -1,5 +1,3 @@
-package com.oriondev.moneywallet.ui.widget
-
 @file:Suppress(
     "LongMethod",
     "FunctionNaming",
@@ -7,6 +5,8 @@ package com.oriondev.moneywallet.ui.widget
     "MaxLineLength",
     "UnusedParameter"
 )
+
+package com.oriondev.moneywallet.ui.widget
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
