@@ -164,6 +164,8 @@ pie title Java to Kotlin UI Migration Progress
 - **Migrated Screens:** `AboutActivity`, `CalculatorActivity`, `SearchActivity`
 - **Pending:** Core screens, Lists, Pickers, Settings
 
+> **Note on GitHub Language Stats:** The pie chart above tracks our progress migrating specific UI **screens (Activities)**. In contrast, the GitHub language statistics bar at the top of the repository calculates percentages based on the **total byte size** of all files. Because the app has hundreds of other backend Java files (Fragments, ViewModels, Database Helpers) yet to be migrated, GitHub's chart will heavily skew towards Java until more of the core logic is converted.
+
 ## 🔄 Coming from Tallybook
 
 As Cash Ledger is a separate app with its own application id, it installs beside the original Tallybook or MoneyWallet and does not replace them or carry its data across on its own. Please refer to [MIGRATION.md](MIGRATION.md) for information on migrating your data.
