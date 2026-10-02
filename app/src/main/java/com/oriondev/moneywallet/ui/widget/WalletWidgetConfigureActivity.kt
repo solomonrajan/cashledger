@@ -94,7 +94,7 @@ fun WalletWidgetConfigureScreen(
                             showError = true
                         }
                     }) {
-                        Text(stringResource(id = R.string.action_save))
+                        Text("SAVE")
                     }
                 }
             )
@@ -138,7 +138,7 @@ fun WalletWidgetConfigureScreen(
                     onCheckedChange = { viewModel.onShowWhenLockedChanged(it) }
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text(stringResource(id = R.string.preference_widget_show_when_locked))
+                Text("Show when screen is locked")
             }
         }
     }

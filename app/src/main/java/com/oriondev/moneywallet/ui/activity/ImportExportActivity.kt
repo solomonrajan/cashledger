@@ -440,7 +440,7 @@ class ImportExportActivity : SinglePanelActivity(),
             if (!dataFormatPicker.isSelected) {
                 val dot = displayName.lastIndexOf('.')
                 if (dot >= 0) {
-                    val extension = displayName.substring(dot).toLowerCase(Locale.ENGLISH)
+                    val extension = displayName.substring(dot).lowercase(Locale.ENGLISH)
                     if (extension == ".csv") {
                         dataFormatPicker.currentFormat = DataFormat.CSV
                     }
