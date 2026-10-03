@@ -113,7 +113,7 @@ public class AboutFragment extends MaterialAboutFragment {
                             public void onClick() {
                                 FragmentManager fragmentManager = getChildFragmentManager();
                                 com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment sheet = new com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment();
-                                sheet.show(fragmentManager, com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment.Companion.getTAG());
+                                sheet.show(fragmentManager, com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment.TAG);
                             }
                         })
                         .build()
