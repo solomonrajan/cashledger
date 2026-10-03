@@ -227,9 +227,9 @@ fun UpdateAvailableContent(
                                 .background(if (isInstalled) Color.Transparent else Color(0xFF388E3C), CircleShape)
                                 .let {
                                     if (isInstalled) {
-                                        androidx.compose.ui.draw.drawBehind {
+                                        it.drawBehind {
                                             drawCircle(color = Color(0xFF388E3C), style = androidx.compose.ui.graphics.drawscope.Stroke(width = 6f))
-                                        }(it)
+                                        }
                                     } else it
                                 }
                         )
