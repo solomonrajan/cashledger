@@ -28,7 +28,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Update
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -504,7 +504,7 @@ fun ChangelogPopup(
             shape = RoundedCornerShape(12.dp)
         ) {
             Icon(
-                imageVector = if (isInstalled) Icons.Default.Check else Icons.Default.Update,
+                imageVector = if (isInstalled) Icons.Default.Check else Icons.Default.Refresh,
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(8.dp))
