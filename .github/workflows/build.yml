@@ -101,10 +101,15 @@ jobs:
           NEXT_PATCH=$((PATCH + 1))
           NEXT_VERSION="v${MAJOR}.${MINOR}.${NEXT_PATCH}"
           
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          TAG_NAME="${NEXT_VERSION}-dev.${COMMIT_HASH}"
+          COMMITS_SINCE_TAG=$(git rev-list ${LATEST_TAG}..HEAD --count 2>/dev/null || echo "1")
+          if [ -z "$COMMITS_SINCE_TAG" ] || [ "$COMMITS_SINCE_TAG" -eq 0 ]; then
+            COMMITS_SINCE_TAG=1
+          fi
+          
+          TAG_NAME="${NEXT_VERSION}-dev.${COMMITS_SINCE_TAG}"
           DATE=$(date +'%Y-%m-%d')
           
+          COMMIT_HASH=$(git rev-parse --short HEAD)
           COMMIT_MSG=$(git log -1 --pretty=format:"%s")
           COMMIT_URL="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
           
