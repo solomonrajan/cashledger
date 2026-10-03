@@ -88,10 +88,10 @@ class UpdaterViewModel : ViewModel() {
                     latestOfficial
                 }
 
-                if (targetRelease != null && targetRelease.tagName.removePrefix("v") != currentVersion.removePrefix("v") && targetRelease.downloadUrl != null) {
+                if (targetRelease != null && targetRelease.downloadUrl != null) {
                     _updaterState.value = UpdaterState.UpdateAvailable(targetRelease, currentVersion)
                 } else {
-                    _updaterState.value = UpdaterState.UpToDate
+                    _updaterState.value = UpdaterState.Error("Could not find a valid release or download link.")
                 }
             } catch (e: IOException) {
                 _updaterState.value = UpdaterState.Error(e.message ?: "Network error")
