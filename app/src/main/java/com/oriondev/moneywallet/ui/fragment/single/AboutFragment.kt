@@ -26,7 +26,7 @@ import com.oriondev.moneywallet.ui.fragment.dialog.ChangeLogDialog
 import com.oriondev.moneywallet.ui.fragment.dialog.LicenseDialog
 import com.oriondev.moneywallet.ui.view.theme.ITheme
 import com.oriondev.moneywallet.ui.view.theme.ThemeEngine
-import com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment
+import com.oriondev.moneywallet.updater.UpdaterActivity
 import com.oriondev.moneywallet.utils.SystemBars
 import org.json.JSONException
 import org.json.JSONObject
@@ -81,9 +81,8 @@ class AboutFragment : MaterialAboutFragment() {
                         .text(R.string.about_hint_version)
                         .subText(BuildConfig.VERSION_NAME)
                         .setOnClickAction {
-                            val fragmentManager = childFragmentManager
-                            val sheet = UpdaterBottomSheetFragment()
-                            sheet.show(fragmentManager, UpdaterBottomSheetFragment.TAG)
+                            val intent = Intent(context, UpdaterActivity::class.java)
+                            startActivity(intent)
                         }
                         .build()
                 )
