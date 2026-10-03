@@ -12,6 +12,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import android.widget.Toast
+import android.util.Log
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -34,10 +36,11 @@ class UpdaterActivity : ThemedActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val isDev = BuildConfig.APPLICATION_ID.endsWith(".dev")
-        viewModel.checkForUpdates(BuildConfig.VERSION_NAME, isDev)
-        
-        setContent {
+        try {
+            val isDev = BuildConfig.APPLICATION_ID.endsWith(".dev")
+            viewModel.checkForUpdates(BuildConfig.VERSION_NAME, isDev)
+            
+            setContent {
             val context = LocalContext.current
             val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
             val colorScheme = if (dynamicColor) {
@@ -111,6 +114,10 @@ class UpdaterActivity : ThemedActivity() {
                     }
                 )
             }
+        } catch (e: Throwable) {
+            android.util.Log.e("UpdaterActivity", "Crash in onCreate", e)
+            android.widget.Toast.makeText(this, "Crash: \${e.message}", android.widget.Toast.LENGTH_LONG).show()
+            finish()
         }
     }
 }
