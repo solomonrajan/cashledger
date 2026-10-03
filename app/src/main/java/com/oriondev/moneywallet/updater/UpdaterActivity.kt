@@ -5,9 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.oriondev.moneywallet.ui.activity.base.ThemedActivity
 import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,12 +29,11 @@ import androidx.compose.ui.unit.sp
 import com.oriondev.moneywallet.BuildConfig
 import com.oriondev.moneywallet.model.GithubRelease
 
-class UpdaterActivity : AppCompatActivity() {
+class UpdaterActivity : ThemedActivity() {
     private val viewModel: UpdaterViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         val isDev = BuildConfig.APPLICATION_ID.endsWith(".dev")
         viewModel.checkForUpdates(BuildConfig.VERSION_NAME, isDev)
         
