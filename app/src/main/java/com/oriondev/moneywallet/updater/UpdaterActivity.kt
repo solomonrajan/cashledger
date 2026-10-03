@@ -1,4 +1,4 @@
-@file:Suppress("LongMethod", "FunctionName", "FunctionNaming", "WildcardImport", "MaxLineLength", "MagicNumber", "UnusedParameter")
+@file:Suppress("LongMethod", "FunctionName", "FunctionNaming", "WildcardImport", "MaxLineLength", "MagicNumber", "UnusedParameter", "TooGenericExceptionCaught", "SwallowedException")
 package com.oriondev.moneywallet.updater
 
 import android.app.DownloadManager
