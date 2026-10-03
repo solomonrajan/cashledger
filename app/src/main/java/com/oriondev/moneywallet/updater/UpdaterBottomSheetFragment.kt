@@ -58,12 +58,26 @@ class UpdaterBottomSheetFragment : BottomSheetDialogFragment() {
                         onDownloadClick = { release ->
                             if (release.downloadUrl != null) {
                                 val context = requireContext()
+                                val destFileName = "cashledger-${release.tagName}.apk"
+                                val destFile = java.io.File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), destFileName)
+                                
+                                if (destFile.exists()) {
+                                    val uri = androidx.core.content.FileProvider.getUriForFile(context, "${context.packageName}.storage.file", destFile)
+                                    val installIntent = Intent(Intent.ACTION_VIEW).apply {
+                                        setDataAndType(uri, "application/vnd.android.package-archive")
+                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                    }
+                                    context.startActivity(installIntent)
+                                    dismiss()
+                                    return@UpdaterScreen
+                                }
+
                                 val downloadManager = context.getSystemService(android.content.Context.DOWNLOAD_SERVICE) as android.app.DownloadManager
                                 val request = android.app.DownloadManager.Request(Uri.parse(release.downloadUrl))
                                     .setTitle("CashLedger Update")
-                                    .setDescription("Downloading \${release.tagName}")
+                                    .setDescription("Downloading ${release.tagName}")
                                     .setNotificationVisibility(android.app.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                                    .setDestinationInExternalPublicDir(android.os.Environment.DIRECTORY_DOWNLOADS, "cashledger-\${release.tagName}.apk")
+                                    .setDestinationInExternalPublicDir(android.os.Environment.DIRECTORY_DOWNLOADS, destFileName)
                                     .setMimeType("application/vnd.android.package-archive")
                                 
                                 val downloadId = downloadManager.enqueue(request)
@@ -122,7 +136,7 @@ fun UpdaterScreen(
             }
             is UpdaterState.Error -> {
                 Box(modifier = Modifier.fillMaxSize().padding(24.dp), contentAlignment = Alignment.Center) {
-                    Text("Error: \${s.message}", color = MaterialTheme.colorScheme.error)
+                    Text("Error: ${s.message}", color = MaterialTheme.colorScheme.error)
                 }
             }
             is UpdaterState.UpToDate -> {
@@ -157,10 +171,11 @@ fun UpdateAvailableContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 24.dp, start = 24.dp, end = 24.dp)
+            .navigationBarsPadding()
     ) {
         // Header
         Text("An update is available", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text("CashLedger • \${release.tagName}", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 24.dp))
+        Text("CashLedger • ${release.tagName}", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 24.dp))
 
         // Summary Card
         Card(
@@ -190,7 +205,7 @@ fun UpdateAvailableContent(
                     ) {
                         Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                             Text("✨ New", color = Color.White, fontWeight = FontWeight.Medium)
-                            Text("\${newCount.coerceAtLeast(1)}", color = Color.White, fontWeight = FontWeight.Bold)
+                            Text("${newCount.coerceAtLeast(1)}", color = Color.White, fontWeight = FontWeight.Bold)
                         }
                     }
                     // Fixes Card
@@ -201,7 +216,7 @@ fun UpdateAvailableContent(
                     ) {
                         Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                             Text("🐛 Fixes", color = Color(0xFF6B4226), fontWeight = FontWeight.Medium)
-                            Text("\${fixesCount.coerceAtLeast(1)}", color = Color(0xFF6B4226), fontWeight = FontWeight.Bold)
+                            Text("${fixesCount.coerceAtLeast(1)}", color = Color(0xFF6B4226), fontWeight = FontWeight.Bold)
                         }
                     }
                 }
@@ -249,7 +264,7 @@ fun UpdateAvailableContent(
         // Buttons
         Spacer(modifier = Modifier.height(16.dp))
         Button(
-            onClick = { onGithubClick("https://github.com/solomonrajan/cashledger/releases/tag/\${release.tagName}") },
+            onClick = { onGithubClick("https://github.com/solomonrajan/cashledger/releases/tag/${release.tagName}") },
             colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth().height(56.dp)
