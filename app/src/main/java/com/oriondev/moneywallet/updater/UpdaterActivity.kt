@@ -114,6 +114,7 @@ class UpdaterActivity : ThemedActivity() {
                     }
                 )
             }
+        }
         } catch (e: Throwable) {
             android.util.Log.e("UpdaterActivity", "Crash in onCreate", e)
             android.widget.Toast.makeText(this, "Crash: \${e.message}", android.widget.Toast.LENGTH_LONG).show()
