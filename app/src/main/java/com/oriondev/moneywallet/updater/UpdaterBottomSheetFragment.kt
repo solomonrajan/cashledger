@@ -163,7 +163,6 @@ fun UpdateAvailableContent(
     onGithubClick: (String) -> Unit,
     onDownloadClick: (GithubRelease) -> Unit
 ) {
-    // Parse dummy stats from release body for UI accuracy to the design
     val newCount = release.body.count { it == '*' || it == '-' } / 2
     val fixesCount = release.body.count { it == '*' || it == '-' } - newCount
 
@@ -171,30 +170,29 @@ fun UpdateAvailableContent(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 24.dp, start = 24.dp, end = 24.dp)
-            .navigationBarsPadding()
     ) {
         // Header
-        Text("An update is available", fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text("CashLedger • ${release.tagName}", fontSize = 14.sp, color = Color.Gray, modifier = Modifier.padding(bottom = 24.dp))
+        Text("An update is available", fontSize = 28.sp, fontWeight = FontWeight.ExtraBold, color = Color(0xFF1D1B1A), letterSpacing = (-0.5).sp)
+        Text("CashLedger • ${release.tagName}", fontSize = 15.sp, color = Color(0xFF757575), modifier = Modifier.padding(top = 4.dp, bottom = 24.dp))
 
         // Summary Card
         Card(
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFFF2E6DF)),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF7EFEA)),
             modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
         ) {
             Column(modifier = Modifier.padding(24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFFE6D6CA)) {
-                        Text(currentVersion, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), fontSize = 14.sp)
+                    Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFFE8DCD3)) {
+                        Text(currentVersion, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFF5D4037))
                     }
-                    Text("  →  ", fontWeight = FontWeight.Bold, color = Color.Gray)
-                    Surface(shape = RoundedCornerShape(16.dp), color = Color(0xFF6B4226)) {
-                        Text(release.tagName, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), fontSize = 14.sp, color = Color.White)
+                    Text("  →  ", fontWeight = FontWeight.Bold, color = Color(0xFF8D6E63))
+                    Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFF6B4226)) {
+                        Text(release.tagName, modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.White)
                     }
                 }
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("New updates available", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(20.dp))
+                Text("New updates available", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = Color(0xFF3E2723))
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     // New Card
@@ -203,9 +201,9 @@ fun UpdateAvailableContent(
                         shape = RoundedCornerShape(16.dp),
                         color = Color(0xFF6B4226)
                     ) {
-                        Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("✨ New", color = Color.White, fontWeight = FontWeight.Medium)
-                            Text("${newCount.coerceAtLeast(1)}", color = Color.White, fontWeight = FontWeight.Bold)
+                        Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text("✨ New", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                            Text("${newCount.coerceAtLeast(1)}", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         }
                     }
                     // Fixes Card
@@ -214,9 +212,9 @@ fun UpdateAvailableContent(
                         shape = RoundedCornerShape(16.dp),
                         color = Color(0xFFFFE0B2)
                     ) {
-                        Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("🐛 Fixes", color = Color(0xFF6B4226), fontWeight = FontWeight.Medium)
-                            Text("${fixesCount.coerceAtLeast(1)}", color = Color(0xFF6B4226), fontWeight = FontWeight.Bold)
+                        Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text("🐛 Fixes", color = Color(0xFF6B4226), fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                            Text("${fixesCount.coerceAtLeast(1)}", color = Color(0xFF6B4226), fontWeight = FontWeight.Bold, fontSize = 18.sp)
                         }
                     }
                 }
@@ -226,34 +224,43 @@ fun UpdateAvailableContent(
         // Timeline
         LazyColumn(modifier = Modifier.weight(1f)) {
             item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(modifier = Modifier.size(12.dp).background(Color(0xFF6B4226), RoundedCornerShape(6.dp)))
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Text(release.tagName, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFF6B4226)) {
-                        Text("Latest", modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), color = Color.White, fontSize = 12.sp)
+                Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+                    // Timeline Graphics
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.width(24.dp).fillMaxHeight()
+                    ) {
+                        Box(modifier = Modifier.padding(top = 6.dp).size(12.dp).background(Color(0xFF6B4226), RoundedCornerShape(50)))
+                        Box(modifier = Modifier.padding(top = 4.dp).width(2.dp).weight(1f).background(Color(0xFFE8DCD3)))
                     }
-                }
-                Row {
-                    // Timeline Line
-                    Box(modifier = Modifier.padding(start = 5.dp).width(2.dp).height(200.dp).background(Color(0xFFE6D6CA)))
                     
-                    Column(modifier = Modifier.padding(start = 20.dp, top = 8.dp, bottom = 16.dp)) {
-                        // Dummy timeline content based on body
-                        Surface(shape = RoundedCornerShape(12.dp), color = Color(0xFF6B4226), modifier = Modifier.padding(bottom = 12.dp)) {
-                            Text("✨ Changes", modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), color = Color.White, fontWeight = FontWeight.Medium)
+                    // Timeline Content
+                    Column(modifier = Modifier.weight(1f).padding(start = 16.dp, bottom = 16.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(release.tagName, fontWeight = FontWeight.ExtraBold, fontSize = 18.sp, color = Color(0xFF1D1B1A))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Surface(shape = RoundedCornerShape(8.dp), color = Color(0xFF6B4226)) {
+                                Text("Latest", modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), color = Color.White, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            }
                         }
                         
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Surface(shape = RoundedCornerShape(8.dp), color = Color(0xFF6B4226)) {
+                            Text("✨ Changes", modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp), color = Color.White, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                        }
+                        
+                        Spacer(modifier = Modifier.height(8.dp))
                         Card(
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFF2E6DF)),
-                            shape = RoundedCornerShape(16.dp)
+                            colors = CardDefaults.cardColors(containerColor = Color(0xFFF7EFEA)),
+                            shape = RoundedCornerShape(16.dp),
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
                                 text = release.body.takeIf { it.isNotBlank() } ?: "No release notes provided.",
                                 modifier = Modifier.padding(16.dp),
-                                color = Color(0xFF3E2723),
-                                fontSize = 14.sp
+                                color = Color(0xFF4E342E),
+                                fontSize = 14.sp,
+                                lineHeight = 20.sp
                             )
                         }
                     }
@@ -265,20 +272,22 @@ fun UpdateAvailableContent(
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = { onGithubClick("https://github.com/solomonrajan/cashledger/releases/tag/${release.tagName}") },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color(0xFF1D1B1A)),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.fillMaxWidth().height(56.dp)
         ) {
-            Text("GitHub", fontWeight = FontWeight.Medium, fontSize = 16.sp)
+            Text("View on GitHub", fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
         }
         Spacer(modifier = Modifier.height(8.dp))
         Button(
             onClick = { onDownloadClick(release) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD7CCC8), contentColor = Color.Black),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6B4226), contentColor = Color.White),
             shape = RoundedCornerShape(16.dp),
-            modifier = Modifier.fillMaxWidth().height(56.dp).padding(bottom = 16.dp)
+            modifier = Modifier.fillMaxWidth().height(56.dp)
         ) {
-            Text("Download", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+            Text("Download Update", fontWeight = FontWeight.Bold, fontSize = 16.sp)
         }
+        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+        Spacer(modifier = Modifier.height(24.dp))
     }
 }
