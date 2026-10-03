@@ -91,7 +91,7 @@ jobs:
         run: |
           git fetch --tags --force
           VERSION_NAME=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
-          LATEST_TAG="v\${VERSION_NAME:-1.0.0}"
+          LATEST_TAG="v${VERSION_NAME:-1.0.0}"
           
           VERSION=${LATEST_TAG#v}
           IFS='.' read -ra ADDR <<< "$VERSION"
