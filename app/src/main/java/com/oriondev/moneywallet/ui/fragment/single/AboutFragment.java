@@ -108,6 +108,14 @@ public class AboutFragment extends MaterialAboutFragment {
                         .icon(R.drawable.ic_restore_black_24dp)
                         .text(R.string.about_hint_version)
                         .subText(BuildConfig.VERSION_NAME)
+                        .setOnClickAction(new MaterialAboutItemOnClickAction() {
+                            @Override
+                            public void onClick() {
+                                FragmentManager fragmentManager = getChildFragmentManager();
+                                com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment sheet = new com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment();
+                                sheet.show(fragmentManager, com.oriondev.moneywallet.updater.UpdaterBottomSheetFragment.Companion.getTAG());
+                            }
+                        })
                         .build()
                 )
                 .addItem(new MaterialAboutActionItem.Builder()
