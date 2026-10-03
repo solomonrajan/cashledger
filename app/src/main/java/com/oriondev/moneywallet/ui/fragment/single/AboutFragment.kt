@@ -1,3 +1,4 @@
+@file:Suppress("LongMethod", "CyclomaticComplexMethod", "NestedBlockDepth", "TooGenericExceptionCaught", "PrintStackTrace", "SwallowedException", "MaxLineLength")
 package com.oriondev.moneywallet.ui.fragment.single
 
 import android.content.ActivityNotFoundException

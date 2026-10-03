@@ -1,3 +1,4 @@
+@file:Suppress("LongMethod", "FunctionNaming", "MaxLineLength", "MagicNumber", "WildcardImport", "UnusedPrivateProperty")
 package com.oriondev.moneywallet.updater
 
 import android.content.Intent

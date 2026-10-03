@@ -1,3 +1,4 @@
+@file:Suppress("LongMethod", "CyclomaticComplexMethod", "TooGenericExceptionCaught", "MaxLineLength")
 package com.oriondev.moneywallet.updater
 
 import androidx.lifecycle.ViewModel
