@@ -85,7 +85,7 @@ jobs:
           path: staging
 
       - name: Prepare Dev Release
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        if: github.event_name == 'push'
         run: |
           git fetch --tags --force
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
@@ -95,7 +95,7 @@ jobs:
           echo "DATE=$DATE" >> $GITHUB_ENV
 
       - name: Create Dev Release
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        if: github.event_name == 'push'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}
