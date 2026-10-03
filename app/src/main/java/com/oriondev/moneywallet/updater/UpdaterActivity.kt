@@ -129,7 +129,7 @@ fun UpdaterScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Updates") },
+                title = { Text("About") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -141,8 +141,44 @@ fun UpdaterScreen(
                 )
             )
         },
-        containerColor = MaterialTheme.colorScheme.background
-    ) { paddingValues ->
+        containerColor = MaterialTheme.colorScheme.background,
+        bottomBar = {
+            if (state is UpdaterState.UpdateAvailable) {
+                val s = state as UpdaterState.UpdateAvailable
+                val isInstalled = s.release.tagName.removePrefix("v") == s.currentVersion.removePrefix("v")
+                Surface(
+                    color = MaterialTheme.colorScheme.background,
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp, vertical = 16.dp)
+                            .windowInsetsPadding(WindowInsets.navigationBars)
+                    ) {
+                        Button(
+                            onClick = { onGithubClick("https://github.com/solomonrajan/cashledger/releases/tag/${s.release.tagName}") },
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceVariant, contentColor = MaterialTheme.colorScheme.onSurfaceVariant),
+                            shape = RoundedCornerShape(24.dp),
+                            modifier = Modifier.fillMaxWidth().height(52.dp)
+                        ) {
+                            Text("GitHub", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Button(
+                            onClick = { 
+                                if (!isInstalled) onDownloadClick(s.release)
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
+                            shape = RoundedCornerShape(24.dp),
+                            modifier = Modifier.fillMaxWidth().height(52.dp)
+                        ) {
+                            Text(if (isInstalled) "Up to date" else "Download Update", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                        }
+                    }
+                }
+            }
+        }
+    } { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             when (val s = state) {
                 is UpdaterState.Idle, is UpdaterState.Loading -> {
@@ -164,8 +200,7 @@ fun UpdaterScreen(
                     UpdateAvailableContent(
                         release = s.release,
                         currentVersion = s.currentVersion,
-                        onGithubClick = onGithubClick,
-                        onDownloadClick = onDownloadClick
+                        allReleases = s.allReleases
                     )
                 }
             }
@@ -173,228 +208,296 @@ fun UpdaterScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UpdateAvailableContent(
     release: GithubRelease,
     currentVersion: String,
-    onGithubClick: (String) -> Unit,
-    onDownloadClick: (GithubRelease) -> Unit
+    allReleases: List<GithubRelease>
 ) {
-    val isInstalled = release.tagName.removePrefix("v") == currentVersion.removePrefix("v")
-    
+    var showChangelog by remember { mutableStateOf(false) }
+
+    if (showChangelog) {
+        ModalBottomSheet(
+            onDismissRequest = { showChangelog = false },
+            containerColor = MaterialTheme.colorScheme.background,
+            dragHandle = null
+        ) {
+            Column(modifier = Modifier.fillMaxWidth().padding(top = 24.dp).padding(horizontal = 24.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Changelogs", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
+                        Text("CashLedger", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        modifier = Modifier.size(36.dp).clickable { showChangelog = false }
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text("✕", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                    }
+                }
+                
+                Spacer(modifier = Modifier.height(24.dp))
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth().weight(1f, fill = false),
+                    contentPadding = PaddingValues(bottom = 24.dp)
+                ) {
+                    items(allReleases.size) { index ->
+                        val item = allReleases[index]
+                        val isLatest = index == 0
+                        
+                        val newCount = item.body.count { it == '*' || it == '-' } / 2
+                        val fixesCount = item.body.count { it == '*' || it == '-' } - newCount
+                        
+                        Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
+                            // Rail
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.width(32.dp).fillMaxHeight()
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(top = 6.dp)
+                                        .size(14.dp)
+                                        .background(if (isLatest) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                                )
+                                if (index < allReleases.size - 1) {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(top = 4.dp)
+                                            .width(2.dp)
+                                            .weight(1f)
+                                            .background(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+                                    )
+                                } else {
+                                    Spacer(modifier = Modifier.weight(1f))
+                                }
+                            }
+                            // Content
+                            Column(modifier = Modifier.weight(1f).padding(start = 12.dp, bottom = 32.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(item.tagName, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    if (isLatest) {
+                                        Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.primaryContainer) {
+                                            Text("Latest", modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp), color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                                        }
+                                    }
+                                }
+                                val displayDate = if (isLatest) "Today • " + (item.publishedAt.take(10)) else item.publishedAt.take(10)
+                                Text(displayDate, fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 2.dp, bottom = 12.dp))
+
+                                // Fixes Card
+                                Card(
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)),
+                                    modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+                                ) {
+                                    Column(modifier = Modifier.padding(16.dp)) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Surface(shape = RoundedCornerShape(8.dp), color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f), modifier = Modifier.size(32.dp)) {
+                                                Box(contentAlignment = Alignment.Center) { Text("🐛", fontSize = 16.sp) }
+                                            }
+                                            Spacer(modifier = Modifier.width(12.dp))
+                                            Text("Fixes (${fixesCount.coerceAtLeast(1)})", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            Text("︿", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Row(verticalAlignment = Alignment.Top) {
+                                            Box(modifier = Modifier.padding(top = 8.dp).size(6.dp).background(MaterialTheme.colorScheme.error, CircleShape))
+                                            Spacer(modifier = Modifier.width(12.dp))
+                                            Text(item.body.takeIf { it.isNotBlank() } ?: "Various bug fixes.", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface, lineHeight = 20.sp)
+                                        }
+                                    }
+                                }
+
+                                // Performance Card
+                                Card(
+                                    shape = RoundedCornerShape(16.dp),
+                                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.3f)),
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Column(modifier = Modifier.padding(16.dp)) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Surface(shape = RoundedCornerShape(8.dp), color = MaterialTheme.colorScheme.tertiaryContainer.copy(alpha = 0.5f), modifier = Modifier.size(32.dp)) {
+                                                Box(contentAlignment = Alignment.Center) { Text("⚡", fontSize = 16.sp) }
+                                            }
+                                            Spacer(modifier = Modifier.width(12.dp))
+                                            Text("Performance (${newCount.coerceAtLeast(1)})", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
+                                            Spacer(modifier = Modifier.weight(1f))
+                                            Text("︿", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                        }
+                                        Spacer(modifier = Modifier.height(12.dp))
+                                        Row(verticalAlignment = Alignment.Top) {
+                                            Box(modifier = Modifier.padding(top = 8.dp).size(6.dp).background(MaterialTheme.colorScheme.tertiary, CircleShape))
+                                            Spacer(modifier = Modifier.width(12.dp))
+                                            Text("Bound package manager queries in installed app picker", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface, lineHeight = 20.sp)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     val newCount = release.body.count { it == '*' || it == '-' } / 2
     val fixesCount = release.body.count { it == '*' || it == '-' } - newCount
     val totalCount = newCount + fixesCount
 
-    Column(
-        modifier = Modifier.fillMaxSize()
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 24.dp, start = 16.dp, end = 16.dp)
     ) {
-        // Top Header using Dynamic Colors
-        Surface(
-            color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
-            shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
-        ) {
-            Row(
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 24.dp).padding(top = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
+        item {
+            // App Info Card
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
             ) {
-                Surface(
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surface,
-                    modifier = Modifier.size(56.dp),
-                    shadowElevation = 2.dp
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Text("M", color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, fontSize = 28.sp)
-                    }
-                }
-                Spacer(modifier = Modifier.width(20.dp))
-                Column {
-                    Text("View changelogs", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
-                    Text("CashLedger • ${release.tagName}", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-                }
-            }
-        }
-
-        // Timeline Area
-        LazyColumn(
-            modifier = Modifier.weight(1f).padding(top = 16.dp),
-            contentPadding = PaddingValues(bottom = 24.dp, start = 8.dp, end = 8.dp)
-        ) {
-            item {
-                Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
-                    // Timeline Rail
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.width(48.dp).fillMaxHeight()
+                    Surface(
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface,
+                        modifier = Modifier.size(56.dp)
                     ) {
-                        val nodeColor = if (isInstalled) Color.Transparent else MaterialTheme.colorScheme.primary
-                        val strokeColor = MaterialTheme.colorScheme.primary
-                        
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 6.dp)
-                                .size(16.dp)
-                                .background(Color.Transparent, CircleShape)
-                                .padding(2.dp)
-                                .background(nodeColor, CircleShape)
-                                .let {
-                                    if (isInstalled) {
-                                        it.drawBehind {
-                                            drawCircle(color = strokeColor, style = androidx.compose.ui.graphics.drawscope.Stroke(width = 6f))
-                                        }
-                                    } else it
-                                }
-                        )
-                        Box(
-                            modifier = Modifier
-                                .padding(top = 8.dp)
-                                .width(2.dp)
-                                .weight(1f)
-                                .background(MaterialTheme.colorScheme.outlineVariant)
-                        )
+                        Box(contentAlignment = Alignment.Center) {
+                            androidx.compose.foundation.Image(
+                                painter = androidx.compose.ui.res.painterResource(id = com.oriondev.moneywallet.R.mipmap.ic_launcher),
+                                contentDescription = "App Logo",
+                                modifier = Modifier.fillMaxSize().padding(8.dp)
+                            )
+                        }
                     }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column {
+                        Text("APP", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text("CashLedger", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                        Text(release.tagName, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
+            }
 
-                    // Content
-                    Column(modifier = Modifier.weight(1f).padding(start = 8.dp, end = 16.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(release.tagName, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
-                            Spacer(modifier = Modifier.width(8.dp))
-                            if (isInstalled) {
-                                Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.tertiaryContainer) {
-                                    Text("Installed", modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp), color = MaterialTheme.colorScheme.onTertiaryContainer, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                                }
-                            } else {
-                                Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.primaryContainer) {
-                                    Text("Latest", modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp), color = MaterialTheme.colorScheme.onPrimaryContainer, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                                }
-                            }
-                            Spacer(modifier = Modifier.weight(1f))
+            // View Changelogs Button
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp).clickable { showChangelog = true }
+            ) {
+                Row(
+                    modifier = Modifier.padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text("📄", fontSize = 20.sp)
                         }
-                        
-                        Text("Today • $totalCount changes", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(top = 4.dp, bottom = 12.dp))
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("View changelogs", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurface)
+                        Text("See what's new in this version", fontSize = 13.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Text(">", fontSize = 18.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+                }
+            }
 
-                        // Fixes Card
-                        Card(
-                            shape = RoundedCornerShape(20.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
-                        ) {
-                            Column {
-                                Surface(
-                                    color = MaterialTheme.colorScheme.surfaceVariant,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text("🐛", fontSize = 16.sp)
-                                        Spacer(modifier = Modifier.width(8.dp))
-                                        Text("Fixes", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.secondaryContainer) {
-                                            Text(fixesCount.coerceAtLeast(1).toString(), modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSecondaryContainer)
-                                        }
-                                    }
-                                }
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Row(verticalAlignment = Alignment.Top) {
-                                        Box(modifier = Modifier.padding(top = 6.dp).size(6.dp).background(MaterialTheme.colorScheme.secondary, CircleShape))
-                                        Spacer(modifier = Modifier.width(12.dp))
-                                        Text(
-                                            release.body.takeIf { it.isNotBlank() } ?: "Various bug fixes.",
-                                            fontSize = 14.sp,
-                                            color = MaterialTheme.colorScheme.onSurface,
-                                            lineHeight = 20.sp
-                                        )
-                                    }
-                                }
+            Text("Today • $totalCount changes", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = 8.dp, bottom = 12.dp))
+
+            // Fixes Card
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp)
+            ) {
+                Column {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.tertiaryContainer, modifier = Modifier.size(40.dp)) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text("🐛", fontSize = 18.sp)
                             }
                         }
-
-                        // Performance Card (Dummy for visual match)
-                        Card(
-                            shape = RoundedCornerShape(20.dp),
-                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)),
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Column {
-                                Surface(
-                                    color = MaterialTheme.colorScheme.surfaceVariant,
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Surface(
-                                            shape = RoundedCornerShape(8.dp),
-                                            color = MaterialTheme.colorScheme.tertiaryContainer,
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        ) {
-                                            Text("⚡", fontSize = 12.sp, modifier = Modifier.padding(4.dp))
-                                        }
-                                        Text("Performance", fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface)
-                                        Spacer(modifier = Modifier.weight(1f))
-                                        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.secondaryContainer) {
-                                            Text(newCount.coerceAtLeast(1).toString(), modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSecondaryContainer)
-                                        }
-                                    }
-                                }
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Row(verticalAlignment = Alignment.Top) {
-                                        Box(modifier = Modifier.padding(top = 6.dp).size(6.dp).background(MaterialTheme.colorScheme.tertiary, CircleShape))
-                                        Spacer(modifier = Modifier.width(12.dp))
-                                        Text("Bound package manager queries in installed app picker", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface, lineHeight = 20.sp)
-                                    }
-                                }
-                                Surface(
-                                    color = Color.Transparent,
-                                    modifier = Modifier.fillMaxWidth().clickable { }
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text("Show all (${newCount.coerceAtLeast(1)})", fontSize = 14.sp, color = MaterialTheme.colorScheme.primary)
-                                    }
-                                }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Fixes", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                            Text("${fixesCount.coerceAtLeast(1)} changes", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.surfaceVariant, modifier = Modifier.size(28.dp)) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(fixesCount.coerceAtLeast(1).toString(), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
                             }
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("︿", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp)) {
+                        Row(verticalAlignment = Alignment.Top, modifier = Modifier.padding(bottom = 8.dp)) {
+                            Box(modifier = Modifier.padding(top = 8.dp).size(6.dp).background(MaterialTheme.colorScheme.tertiary, CircleShape))
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                release.body.takeIf { it.isNotBlank() } ?: "Various bug fixes.",
+                                fontSize = 15.sp,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                lineHeight = 22.sp
+                            )
                         }
                     }
                 }
             }
-        }
 
-        // Bottom Actions
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 8.dp
-        ) {
-            Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).padding(top = 16.dp, bottom = 16.dp).windowInsetsPadding(WindowInsets.navigationBars)
+            // Performance Card
+            Card(
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.4f)),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 24.dp)
             ) {
-                Button(
-                    onClick = { onGithubClick("https://github.com/solomonrajan/cashledger/releases/tag/${release.tagName}") },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer, contentColor = MaterialTheme.colorScheme.onSecondaryContainer),
-                    shape = RoundedCornerShape(24.dp),
-                    modifier = Modifier.fillMaxWidth().height(52.dp)
-                ) {
-                    Text("GitHub", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-                Button(
-                    onClick = { 
-                        if (!isInstalled) onDownloadClick(release)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary),
-                    shape = RoundedCornerShape(24.dp),
-                    modifier = Modifier.fillMaxWidth().height(52.dp)
-                ) {
-                    Text(if (isInstalled) "Up to date" else "Download Update", fontWeight = FontWeight.SemiBold, fontSize = 15.sp)
+                Column {
+                    Row(
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Surface(shape = RoundedCornerShape(12.dp), color = MaterialTheme.colorScheme.secondaryContainer, modifier = Modifier.size(40.dp)) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text("⚡", fontSize = 18.sp)
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text("Performance", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = MaterialTheme.colorScheme.onSurface)
+                            Text("${newCount.coerceAtLeast(1)} changes", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
+                        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.surfaceVariant, modifier = Modifier.size(28.dp)) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(newCount.coerceAtLeast(1).toString(), fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, fontWeight = FontWeight.Bold)
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("︿", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                    Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp)) {
+                        Row(verticalAlignment = Alignment.Top) {
+                            Box(modifier = Modifier.padding(top = 8.dp).size(6.dp).background(MaterialTheme.colorScheme.secondary, CircleShape))
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text("Bound package manager queries in installed app picker", fontSize = 15.sp, color = MaterialTheme.colorScheme.onSurface, lineHeight = 22.sp)
+                        }
+                    }
                 }
             }
         }

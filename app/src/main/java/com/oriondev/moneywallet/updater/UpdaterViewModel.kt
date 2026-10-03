@@ -16,7 +16,7 @@ import java.io.IOException
 sealed class UpdaterState {
     object Idle : UpdaterState()
     object Loading : UpdaterState()
-    data class UpdateAvailable(val release: GithubRelease, val currentVersion: String) : UpdaterState()
+    data class UpdateAvailable(val release: GithubRelease, val currentVersion: String, val allReleases: List<GithubRelease> = emptyList()) : UpdaterState()
     object UpToDate : UpdaterState()
     data class Error(val message: String) : UpdaterState()
 }
@@ -47,6 +47,7 @@ class UpdaterViewModel : ViewModel() {
                 var latestOfficial: GithubRelease? = null
                 var latestPreRelease: GithubRelease? = null
 
+                val parsedReleases = mutableListOf<GithubRelease>()
                 for (i in 0 until releasesArray.length()) {
                     val releaseObj = releasesArray.getJSONObject(i)
                     val tagName = releaseObj.optString("tag_name", "")
@@ -73,13 +74,13 @@ class UpdaterViewModel : ViewModel() {
                         downloadUrl = downloadUrl
                     )
 
+                    parsedReleases.add(release)
+
                     if (isPrerelease) {
                         if (latestPreRelease == null) latestPreRelease = release
                     } else {
                         if (latestOfficial == null) latestOfficial = release
                     }
-
-                    if (latestOfficial != null && latestPreRelease != null) break
                 }
 
                 val targetRelease = if (isDevBuild) {
@@ -88,8 +89,8 @@ class UpdaterViewModel : ViewModel() {
                     latestOfficial
                 }
 
-                if (targetRelease != null && targetRelease.downloadUrl != null) {
-                    _updaterState.value = UpdaterState.UpdateAvailable(targetRelease, currentVersion)
+                if (targetRelease != null) {
+                    _updaterState.value = UpdaterState.UpdateAvailable(targetRelease, currentVersion, parsedReleases)
                 } else {
                     _updaterState.value = UpdaterState.Error("Could not find a valid release or download link.")
                 }
