@@ -6,7 +6,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 # A force push should replace the run it supersedes. Pushes get a unique group
 # each, so no merge commit can be cancelled or queued behind another one.
@@ -83,3 +83,23 @@ jobs:
         with:
           name: debug-apk
           path: staging
+
+      - name: Prepare Dev Release
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        run: |
+          git fetch --tags --force
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          TAG_NAME="${LATEST_TAG}-dev.${{ github.run_number }}"
+          DATE=$(date +'%Y-%m-%d')
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo "DATE=$DATE" >> $GITHUB_ENV
+
+      - name: Create Dev Release
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: ${{ env.TAG_NAME }} (${{ env.DATE }})
+          prerelease: true
+          generate_release_notes: true
+          files: staging/debug/cashledger-*.apk
