@@ -178,7 +178,7 @@ fun UpdaterScreen(
                 }
             }
         }
-    } { paddingValues ->
+    ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
             when (val s = state) {
                 is UpdaterState.Idle, is UpdaterState.Loading -> {
