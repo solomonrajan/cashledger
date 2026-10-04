@@ -216,4 +216,13 @@ class NewEditTransactionActivity : AppCompatActivity(),
         val itemId = intent.getLongExtra(NewEditItemActivity.ID, -1L)
         saveTransactionData(_state, itemId)
     }
+
+    // Exposed for backward compatibility with existing unit tests
+    fun onMenuItemClick(item: android.view.MenuItem): Boolean {
+        if (item.itemId == R.id.action_save_changes) {
+            saveTransaction()
+            return true
+        }
+        return false
+    }
 }
