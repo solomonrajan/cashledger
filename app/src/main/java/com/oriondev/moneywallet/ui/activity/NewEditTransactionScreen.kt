@@ -1,3 +1,5 @@
+@file:Suppress("LongMethod", "LongParameterList", "MatchingDeclarationName", "FunctionNaming", "WildcardImport", "MaxLineLength")
+
 package com.oriondev.moneywallet.ui.activity
 
 import androidx.compose.foundation.clickable
