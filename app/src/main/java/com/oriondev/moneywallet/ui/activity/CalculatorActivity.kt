@@ -215,8 +215,8 @@ fun CalculatorScreen(
                 contentAlignment = Alignment.BottomEnd
             ) {
                 Text(
-                    text = displayText,
-                    fontSize = 48.sp,
+                    text = if (displayText.isEmpty()) "0" else displayText,
+                    fontSize = 36.sp,
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.End,
                     maxLines = 2,
@@ -247,14 +247,14 @@ fun CalculatorScreen(
                         CalculatorRow(listOf("0" to CalculatorActivity.OP_0, "00" to CalculatorActivity.OP_00, "." to CalculatorActivity.OP_POINT), onInput)
                     }
                     
-                    Button(
+                    Surface(
                         onClick = { onInput(CalculatorActivity.OP_EXECUTE) },
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight(),
                         shape = MaterialTheme.shapes.medium,
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer),
-                        contentPadding = PaddingValues(0.dp)
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ) {
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                             Text(confirmLabel, fontSize = 24.sp, fontWeight = FontWeight.Bold)
