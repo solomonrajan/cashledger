@@ -1,3 +1,13 @@
+@file:Suppress(
+    "TooManyFunctions",
+    "WildcardImport",
+    "MaxLineLength",
+    "UnusedPrivateProperty",
+    "LongMethod",
+    "CyclomaticComplexMethod",
+    "MagicNumber"
+)
+
 package com.oriondev.moneywallet.ui.activity
 
 import android.content.ContentUris
