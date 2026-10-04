@@ -147,7 +147,7 @@ class NewEditTransactionActivity : AppCompatActivity(),
         _state = _state.copy(date = date)
     }
 
-    override fun onSingleWalletChanged(tag: String?, wallet: Wallet?) {
+    override fun onWalletChanged(tag: String?, wallet: Wallet?) {
         _state = _state.copy(wallet = wallet)
     }
 
