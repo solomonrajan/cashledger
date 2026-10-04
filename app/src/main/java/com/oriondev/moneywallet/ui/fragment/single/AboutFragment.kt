@@ -26,7 +26,6 @@ import com.oriondev.moneywallet.ui.fragment.dialog.ChangeLogDialog
 import com.oriondev.moneywallet.ui.fragment.dialog.LicenseDialog
 import com.oriondev.moneywallet.ui.view.theme.ITheme
 import com.oriondev.moneywallet.ui.view.theme.ThemeEngine
-import com.oriondev.moneywallet.updater.UpdaterActivity
 import com.oriondev.moneywallet.utils.SystemBars
 import org.json.JSONException
 import org.json.JSONObject
@@ -80,10 +79,6 @@ class AboutFragment : MaterialAboutFragment() {
                         .icon(R.drawable.ic_restore_black_24dp)
                         .text(R.string.about_hint_version)
                         .subText(BuildConfig.VERSION_NAME)
-                        .setOnClickAction {
-                            val intent = Intent(context, UpdaterActivity::class.java)
-                            startActivity(intent)
-                        }
                         .build()
                 )
                 .addItem(
