@@ -48,24 +48,19 @@ class NewEditTransactionActivity : AppCompatActivity(),
         const val MODEL_ID = "NewEditTransactionActivity::ModelId"
         const val DUPLICATE_ID = "NewEditTransactionActivity::DuplicateId"
         const val WALLET_ID = "NewEditTransactionActivity::WalletId"
-        @JvmField const val DEBT_ID = "NewEditTransactionActivity::DebtId"
-        @JvmField const val DEBT_ACTION = "NewEditTransactionActivity::DebtAction"
-        @JvmField const val SAVING_ID = "NewEditTransactionActivity::SavingId"
-        @JvmField const val SAVING_ACTION = "NewEditTransactionActivity::SavingAction"
+        const val TYPE_STANDARD = TransactionEditorRules.TYPE_STANDARD
+        const val TYPE_TRANSFER = TransactionEditorRules.TYPE_TRANSFER
+        const val TYPE_DEBT = TransactionEditorRules.TYPE_DEBT
+        const val TYPE_SAVING = TransactionEditorRules.TYPE_SAVING
+        const val TYPE_MODEL = TransactionEditorRules.TYPE_MODEL
 
-        @JvmField const val TYPE_STANDARD = TransactionEditorRules.TYPE_STANDARD
-        @JvmField const val TYPE_TRANSFER = TransactionEditorRules.TYPE_TRANSFER
-        @JvmField const val TYPE_DEBT = TransactionEditorRules.TYPE_DEBT
-        @JvmField const val TYPE_SAVING = TransactionEditorRules.TYPE_SAVING
-        @JvmField const val TYPE_MODEL = TransactionEditorRules.TYPE_MODEL
-
-        @JvmField const val DEBT_PAY = TransactionEditorRules.DEBT_PAY
-        @JvmField const val DEBT_RECEIVE = TransactionEditorRules.DEBT_RECEIVE
-        @JvmField const val DEBT_PAY_IN_FULL = TransactionEditorRules.DEBT_PAY_IN_FULL
-        @JvmField const val DEBT_RECEIVE_IN_FULL = TransactionEditorRules.DEBT_RECEIVE_IN_FULL
-        @JvmField const val SAVING_DEPOSIT = TransactionEditorRules.SAVING_DEPOSIT
-        @JvmField const val SAVING_WITHDRAW = TransactionEditorRules.SAVING_WITHDRAW
-        @JvmField const val SAVING_WITHDRAW_EVERYTHING = TransactionEditorRules.SAVING_WITHDRAW_EVERYTHING
+        const val DEBT_PAY = TransactionEditorRules.DEBT_PAY
+        const val DEBT_RECEIVE = TransactionEditorRules.DEBT_RECEIVE
+        const val DEBT_PAY_IN_FULL = TransactionEditorRules.DEBT_PAY_IN_FULL
+        const val DEBT_RECEIVE_IN_FULL = TransactionEditorRules.DEBT_RECEIVE_IN_FULL
+        const val SAVING_DEPOSIT = TransactionEditorRules.SAVING_DEPOSIT
+        const val SAVING_WITHDRAW = TransactionEditorRules.SAVING_WITHDRAW
+        const val SAVING_WITHDRAW_EVERYTHING = TransactionEditorRules.SAVING_WITHDRAW_EVERYTHING
 
         private const val TAG_MONEY_PICKER = "NewEditTransactionActivity::Tag::MoneyPicker"
         private const val TAG_CATEGORY_PICKER = "NewEditTransactionActivity::Tag::CategoryPicker"
