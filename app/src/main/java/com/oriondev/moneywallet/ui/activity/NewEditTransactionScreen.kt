@@ -6,7 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -79,7 +79,7 @@ fun NewEditTransactionScreen(
                 },
                 actions = {
                     IconButton(onClick = onAttachmentClick) {
-                        Icon(Icons.Default.AttachFile, contentDescription = "Attach File")
+                        Icon(Icons.Default.Add, contentDescription = "Attach File")
                     }
                 }
             )
@@ -219,12 +219,12 @@ fun NewEditTransactionScreen(
             
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                 Checkbox(checked = state.countInTotal, onCheckedChange = onCountInTotalChange)
-                Text(stringResource(R.string.hint_count_in_total), modifier = Modifier.clickable { onCountInTotalChange(!state.countInTotal) })
+                Text(stringResource(R.string.hint_show_in_total), modifier = Modifier.clickable { onCountInTotalChange(!state.countInTotal) })
             }
             
             // Attachments
             if (state.attachments.isNotEmpty()) {
-                Text(stringResource(R.string.title_attachments), fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.hint_attachments), fontWeight = FontWeight.Bold)
                 state.attachments.forEach { attachment ->
                     Row(
                         modifier = Modifier.fillMaxWidth().clickable { onAttachmentOpen(attachment) }.padding(8.dp),
