@@ -135,7 +135,7 @@ class CalculatorActivity : AppCompatActivity(), EquationSolver.Controller {
     }
 
     override fun onUpdateDisplay(text: String?) {
-        displayText = text ?: ""
+        displayText = if (text.isNullOrEmpty()) "0" else text
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -220,7 +220,7 @@ fun CalculatorScreen(
                     fontWeight = FontWeight.Light,
                     textAlign = TextAlign.End,
                     maxLines = 2,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
 
@@ -231,7 +231,7 @@ fun CalculatorScreen(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                CalculatorRow(listOf("C" to CalculatorActivity.OP_CLEAR, "B" to CalculatorActivity.OP_CANCEL, "÷" to CalculatorActivity.OP_DIVISION, "×" to CalculatorActivity.OP_MULTIPLICATION), onInput)
+                CalculatorRow(listOf("C" to CalculatorActivity.OP_CLEAR, "÷" to CalculatorActivity.OP_DIVISION, "×" to CalculatorActivity.OP_MULTIPLICATION, "DEL" to CalculatorActivity.OP_CANCEL), onInput)
                 CalculatorRow(listOf("7" to CalculatorActivity.OP_7, "8" to CalculatorActivity.OP_8, "9" to CalculatorActivity.OP_9, "-" to CalculatorActivity.OP_SUBTRACTION), onInput)
                 CalculatorRow(listOf("4" to CalculatorActivity.OP_4, "5" to CalculatorActivity.OP_5, "6" to CalculatorActivity.OP_6, "+" to CalculatorActivity.OP_ADDITION), onInput)
                 
@@ -244,7 +244,7 @@ fun CalculatorScreen(
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         CalculatorRow(listOf("1" to CalculatorActivity.OP_1, "2" to CalculatorActivity.OP_2, "3" to CalculatorActivity.OP_3), onInput)
-                        CalculatorRow(listOf("00" to CalculatorActivity.OP_00, "0" to CalculatorActivity.OP_0, "." to CalculatorActivity.OP_POINT), onInput)
+                        CalculatorRow(listOf("0" to CalculatorActivity.OP_0, "00" to CalculatorActivity.OP_00, "." to CalculatorActivity.OP_POINT), onInput)
                     }
                     
                     Button(
@@ -253,9 +253,12 @@ fun CalculatorScreen(
                             .weight(1f)
                             .fillMaxHeight(),
                         shape = MaterialTheme.shapes.medium,
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer)
+                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primaryContainer, contentColor = MaterialTheme.colorScheme.onPrimaryContainer),
+                        contentPadding = PaddingValues(0.dp)
                     ) {
-                        Text(confirmLabel, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(confirmLabel, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        }
                     }
                 }
             }
