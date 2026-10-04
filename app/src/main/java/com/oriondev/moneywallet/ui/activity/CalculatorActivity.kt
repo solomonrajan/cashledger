@@ -56,7 +56,7 @@ class CalculatorActivity : AppCompatActivity(), EquationSolver.Controller {
     private var keypadMode = false
     private var allowNegative = false
 
-    private var displayText by mutableStateOf("")
+    private var displayText by mutableStateOf("0")
     private var isPendingOperation by mutableStateOf(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -219,22 +219,26 @@ fun CalculatorScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Display
-            Box(
+            Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, shape = MaterialTheme.shapes.medium)
-                    .padding(16.dp),
-                contentAlignment = Alignment.BottomEnd
+                    .weight(1f),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surfaceVariant
             ) {
-                Text(
-                    text = if (displayText.isEmpty()) "0" else displayText,
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Light,
-                    textAlign = TextAlign.End,
-                    maxLines = 2,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    contentAlignment = Alignment.BottomEnd
+                ) {
+                    Text(
+                        text = if (displayText.isEmpty()) "0" else displayText,
+                        fontSize = 48.sp,
+                        fontWeight = FontWeight.Normal,
+                        textAlign = TextAlign.End,
+                        maxLines = 2,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
             }
 
             // Keypad
@@ -249,7 +253,7 @@ fun CalculatorScreen(
                 CalculatorRow(listOf("4" to CalculatorActivity.OP_4, "5" to CalculatorActivity.OP_5, "6" to CalculatorActivity.OP_6, "+" to CalculatorActivity.OP_ADDITION), onInput)
                 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Column(
@@ -260,18 +264,15 @@ fun CalculatorScreen(
                         CalculatorRow(listOf("0" to CalculatorActivity.OP_0, "00" to CalculatorActivity.OP_00, "." to CalculatorActivity.OP_POINT), onInput)
                     }
                     
-                    Surface(
-                        onClick = { onInput(CalculatorActivity.OP_EXECUTE) },
+                    Box(
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxHeight(),
-                        shape = MaterialTheme.shapes.medium,
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                            .fillMaxHeight()
+                            .background(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.shapes.medium)
+                            .clickable { onInput(CalculatorActivity.OP_EXECUTE) },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            Text(confirmLabel, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-                        }
+                        Text(confirmLabel, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimaryContainer)
                     }
                 }
             }
