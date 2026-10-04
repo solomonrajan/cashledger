@@ -1,3 +1,4 @@
+@file:Suppress("LongMethod", "FunctionName", "FunctionNaming", "WildcardImport", "MaxLineLength", "MagicNumber", "UnusedParameter", "LongParameterList", "ReturnCount")
 /*
  * Copyright (c) 2018.
  *
