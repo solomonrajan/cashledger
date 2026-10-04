@@ -48,12 +48,24 @@ class NewEditTransactionActivity : AppCompatActivity(),
         const val MODEL_ID = "NewEditTransactionActivity::ModelId"
         const val DUPLICATE_ID = "NewEditTransactionActivity::DuplicateId"
         const val WALLET_ID = "NewEditTransactionActivity::WalletId"
+        @JvmField const val DEBT_ID = "NewEditTransactionActivity::DebtId"
+        @JvmField const val DEBT_ACTION = "NewEditTransactionActivity::DebtAction"
+        @JvmField const val SAVING_ID = "NewEditTransactionActivity::SavingId"
+        @JvmField const val SAVING_ACTION = "NewEditTransactionActivity::SavingAction"
 
-        const val TYPE_STANDARD = TransactionEditorRules.TYPE_STANDARD
-        const val TYPE_TRANSFER = TransactionEditorRules.TYPE_TRANSFER
-        const val TYPE_DEBT = TransactionEditorRules.TYPE_DEBT
-        const val TYPE_SAVING = TransactionEditorRules.TYPE_SAVING
-        const val TYPE_MODEL = TransactionEditorRules.TYPE_MODEL
+        @JvmField const val TYPE_STANDARD = TransactionEditorRules.TYPE_STANDARD
+        @JvmField const val TYPE_TRANSFER = TransactionEditorRules.TYPE_TRANSFER
+        @JvmField const val TYPE_DEBT = TransactionEditorRules.TYPE_DEBT
+        @JvmField const val TYPE_SAVING = TransactionEditorRules.TYPE_SAVING
+        @JvmField const val TYPE_MODEL = TransactionEditorRules.TYPE_MODEL
+
+        @JvmField const val DEBT_PAY = TransactionEditorRules.DEBT_PAY
+        @JvmField const val DEBT_RECEIVE = TransactionEditorRules.DEBT_RECEIVE
+        @JvmField const val DEBT_PAY_IN_FULL = TransactionEditorRules.DEBT_PAY_IN_FULL
+        @JvmField const val DEBT_RECEIVE_IN_FULL = TransactionEditorRules.DEBT_RECEIVE_IN_FULL
+        @JvmField const val SAVING_DEPOSIT = TransactionEditorRules.SAVING_DEPOSIT
+        @JvmField const val SAVING_WITHDRAW = TransactionEditorRules.SAVING_WITHDRAW
+        @JvmField const val SAVING_WITHDRAW_EVERYTHING = TransactionEditorRules.SAVING_WITHDRAW_EVERYTHING
 
         private const val TAG_MONEY_PICKER = "NewEditTransactionActivity::Tag::MoneyPicker"
         private const val TAG_CATEGORY_PICKER = "NewEditTransactionActivity::Tag::CategoryPicker"
@@ -63,6 +75,44 @@ class NewEditTransactionActivity : AppCompatActivity(),
         private const val TAG_PLACE_PICKER = "NewEditTransactionActivity::Tag::PlacePicker"
         private const val TAG_PERSON_PICKER = "NewEditTransactionActivity::Tag::PersonPicker"
         private const val TAG_ATTACHMENT_PICKER = "NewEditTransactionActivity::Tag::AttachmentPicker"
+
+        @JvmStatic
+        fun insertTransactionFromModel(context: android.content.Context, modelId: Long): Uri? {
+            val contentResolver = context.contentResolver
+            val uri = ContentUris.withAppendedId(DataContentProvider.CONTENT_TRANSACTION_MODELS, modelId)
+            val projection = arrayOf(
+                Contract.TransactionModel.MONEY, Contract.TransactionModel.DESCRIPTION,
+                Contract.TransactionModel.CATEGORY_ID, Contract.TransactionModel.DIRECTION,
+                Contract.TransactionModel.WALLET_ID, Contract.TransactionModel.PLACE_ID,
+                Contract.TransactionModel.NOTE, Contract.TransactionModel.EVENT_ID,
+                Contract.TransactionModel.CONFIRMED, Contract.TransactionModel.COUNT_IN_TOTAL
+            )
+            contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val contentValues = TransactionContentValuesBuilder()
+                        .money(cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.MONEY)))
+                        .date(DateUtils.getSQLDateTimeString(Date()))
+                        .description(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.DESCRIPTION)))
+                        .categoryId(cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_ID)))
+                        .direction(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransactionModel.DIRECTION)))
+                        .type(Contract.TransactionType.STANDARD)
+                        .walletId(cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_ID)))
+                        .note(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.NOTE)))
+                        .confirmed(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CONFIRMED)))
+                        .countInTotal(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransactionModel.COUNT_IN_TOTAL)))
+                    
+                    if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ID))) {
+                        contentValues.placeId(cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ID)))
+                    }
+                    if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_ID))) {
+                        contentValues.eventId(cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_ID)))
+                    }
+                    
+                    return contentResolver.insert(DataContentProvider.CONTENT_TRANSACTIONS, contentValues.build())
+                }
+            }
+            return null
+        }
     }
 
     private var _state by mutableStateOf(TransactionScreenState())
