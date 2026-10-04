@@ -44,6 +44,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -293,7 +294,7 @@ fun NewEditWalletScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = onNameChange,
-                    label = { Text(context.getString(R.string.hint_name)) },
+                    label = { Text(stringResource(R.string.hint_name)) },
                     modifier = Modifier.weight(1f),
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
@@ -304,7 +305,7 @@ fun NewEditWalletScreen(
             OutlinedTextField(
                 value = currency.name ?: currency.iso,
                 onValueChange = { },
-                label = { Text(context.getString(R.string.hint_currency)) },
+                label = { Text(stringResource(R.string.hint_currency)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onCurrencyClick() },
@@ -317,11 +318,11 @@ fun NewEditWalletScreen(
             )
 
             // Starting Amount
-            val formattedMoney = MoneyFormatter.getInstance().format(currency, startMoney)
+            val formattedMoney = MoneyFormatter.getInstance().getNotTintedString(currency, startMoney)
             OutlinedTextField(
                 value = formattedMoney,
                 onValueChange = { },
-                label = { Text(context.getString(R.string.hint_start_amount)) },
+                label = { Text(stringResource(R.string.hint_start_money)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable { onStartMoneyClick() },
@@ -343,7 +344,7 @@ fun NewEditWalletScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = context.getString(R.string.hint_include_in_total),
+                    text = stringResource(R.string.hint_not_exclude_wallet),
                     style = MaterialTheme.typography.bodyLarge
                 )
                 Switch(
@@ -356,7 +357,7 @@ fun NewEditWalletScreen(
             OutlinedTextField(
                 value = note,
                 onValueChange = onNoteChange,
-                label = { Text(context.getString(R.string.hint_note)) },
+                label = { Text(stringResource(R.string.hint_note)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3,
                 maxLines = 5
