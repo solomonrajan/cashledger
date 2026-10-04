@@ -31,7 +31,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Backspace
+// Removed Backspace import
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -283,7 +283,7 @@ fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) 
                 colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor)
             ) {
                 if (op == CalculatorActivity.OP_CANCEL) {
-                    Icon(Icons.Default.Backspace, contentDescription = "Backspace")
+                    Text(text = "DEL", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 } else {
                     Text(text = label, fontSize = 24.sp, fontWeight = FontWeight.Medium)
                 }
