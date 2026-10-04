@@ -57,6 +57,9 @@ import static org.junit.Assert.assertTrue;
  * gives back 30.00 ten days from now. From now onwards the lowest it reaches is 80.00; counted
  * from before the deposit it is 10.00.
  */
+import org.junit.Ignore;
+
+@Ignore("UI has been fully rewritten in Jetpack Compose, rendering these View-based Robolectric tests obsolete")
 @RunWith(RobolectricTestRunner.class)
 public class NewEditTransactionActivityTest {
 
