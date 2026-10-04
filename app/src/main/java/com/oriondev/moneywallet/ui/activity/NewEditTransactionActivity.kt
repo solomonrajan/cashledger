@@ -124,41 +124,42 @@ class NewEditTransactionActivity : AppCompatActivity(),
     }
 
     private fun setupPickers() {
-        mMoneyPicker = MoneyPicker.createPicker(supportFragmentManager, TAG_MONEY_PICKER, null, 0L)
-        mCategoryPicker = CategoryPicker.createPicker(supportFragmentManager, TAG_CATEGORY_PICKER)
+        val currency = _state.currency ?: CurrencyManager.getDefaultCurrency()
+        mMoneyPicker = MoneyPicker.createPicker(supportFragmentManager, TAG_MONEY_PICKER, currency, 0L)
+        mCategoryPicker = CategoryPicker.createPicker(supportFragmentManager, TAG_CATEGORY_PICKER, null as Category?)
         mDateTimePicker = DateTimePicker.createPicker(supportFragmentManager, TAG_DATETIME_PICKER, Date())
-        mWalletPicker = WalletPicker.createPicker(supportFragmentManager, TAG_WALLET_PICKER)
-        mEventPicker = EventPicker.createPicker(supportFragmentManager, TAG_EVENT_PICKER, Date())
-        mPlacePicker = PlacePicker.createPicker(supportFragmentManager, TAG_PLACE_PICKER)
-        mPersonPicker = PersonPicker.createPicker(supportFragmentManager, TAG_PERSON_PICKER)
-        mAttachmentPicker = AttachmentPicker.createPicker(supportFragmentManager, TAG_ATTACHMENT_PICKER)
+        mWalletPicker = WalletPicker.createPicker(supportFragmentManager, TAG_WALLET_PICKER, null as Wallet?)
+        mEventPicker = EventPicker.createPicker(supportFragmentManager, TAG_EVENT_PICKER, null as Event?)
+        mPlacePicker = PlacePicker.createPicker(supportFragmentManager, TAG_PLACE_PICKER, null as Place?)
+        mPersonPicker = PersonPicker.createPicker(supportFragmentManager, TAG_PERSON_PICKER, emptyArray<Person>())
+        mAttachmentPicker = AttachmentPicker.createPicker(supportFragmentManager, TAG_ATTACHMENT_PICKER, ArrayList<Attachment>())
     }
 
-    override fun onMoneyChanged(money: Long) {
-        _state = _state.copy(money = money)
+    override fun onMoneyChanged(tag: String?, currency: CurrencyUnit?, money: Long) {
+        _state = _state.copy(money = money, currency = currency)
     }
 
-    override fun onCategoryChanged(category: Category?) {
+    override fun onCategoryChanged(tag: String?, category: Category?) {
         _state = _state.copy(category = category)
     }
 
-    override fun onDateTimeChanged(date: Date?) {
+    override fun onDateTimeChanged(tag: String?, date: Date?) {
         _state = _state.copy(date = date)
     }
 
-    override fun onSingleWalletChanged(wallet: Wallet?) {
+    override fun onSingleWalletChanged(tag: String?, wallet: Wallet?) {
         _state = _state.copy(wallet = wallet)
     }
 
-    override fun onEventChanged(event: Event?) {
+    override fun onEventChanged(tag: String?, event: Event?) {
         _state = _state.copy(event = event)
     }
 
-    override fun onPlaceChanged(place: Place?) {
+    override fun onPlaceChanged(tag: String?, place: Place?) {
         _state = _state.copy(place = place)
     }
 
-    override fun onPeopleChanged(people: Array<out Person>?) {
+    override fun onPeopleChanged(tag: String?, people: Array<out Person>?) {
         _state = _state.copy(people = people?.toList() ?: emptyList())
     }
 

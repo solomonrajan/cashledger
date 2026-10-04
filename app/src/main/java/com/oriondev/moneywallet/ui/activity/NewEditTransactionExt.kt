@@ -122,17 +122,17 @@ fun NewEditTransactionActivity.saveTransactionData(state: TransactionScreenState
         }
         
         val builder = TransactionContentValuesBuilder()
-            .setMoney(state.money)
-            .setDate(DateUtils.getSQLDateTimeString(state.date))
-            .setDescription(state.description)
-            .setCategoryId(state.category.id)
-            .setWalletId(state.wallet.id)
-            .setNote(state.note)
-            .setConfirmed(if (state.confirmed) 1 else 0)
-            .setCountInTotal(if (state.countInTotal) 1 else 0)
+            .money(state.money)
+            .date(DateUtils.getSQLDateTimeString(state.date))
+            .description(state.description)
+            .categoryId(state.category.id)
+            .walletId(state.wallet.id)
+            .note(state.note)
+            .confirmed(if (state.confirmed) 1 else 0)
+            .countInTotal(if (state.countInTotal) 1 else 0)
             
-        state.place?.let { builder.setPlaceId(it.id) }
-        state.event?.let { builder.setEventId(it.id) }
+        state.place?.let { builder.placeId(it.id) }
+        state.event?.let { builder.eventId(it.id) }
         
         if (state.mode == NewEditItemActivity.Mode.NEW_ITEM) {
             val insertedUri = contentResolver.insert(DataContentProvider.CONTENT_TRANSACTIONS, builder.build())
