@@ -87,7 +87,7 @@ fun NewEditTransactionScreen(
                 },
                 actions = {
                     IconButton(onClick = onAttachmentClick) {
-                        Icon(painter = painterResource(id = R.drawable.ic_attach_file_black_24dp), contentDescription = "Attach Document")
+                        Icon(Icons.Default.AttachFile, contentDescription = "Attach Document")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -159,7 +159,7 @@ fun NewEditTransactionScreen(
                             .background(Color(0xFFDCD2F5), shape = CircleShape)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_icon_calculator),
+                            imageVector = Icons.Default.Calculate,
                             contentDescription = "Calculator",
                             tint = Color(0xFF1B0B43)
                         )
@@ -168,7 +168,7 @@ fun NewEditTransactionScreen(
             }
 
             TransactionField(
-                icon = Icons.Default.Menu,
+                iconVector = Icons.Default.Menu,
                 label = "Description",
                 value = state.description,
                 placeholder = "Enter description",
@@ -177,7 +177,7 @@ fun NewEditTransactionScreen(
             )
 
             TransactionField(
-                icon = Icons.Default.LocalOffer,
+                iconVector = Icons.Default.LocalOffer,
                 label = "Category",
                 value = state.category?.name ?: "",
                 placeholder = "Select category",
@@ -189,7 +189,7 @@ fun NewEditTransactionScreen(
             val dateString = state.date?.let { dateFormat.format(it) } ?: ""
 
             TransactionField(
-                icon = Icons.Default.DateRange,
+                iconVector = Icons.Default.DateRange,
                 label = "Date & time",
                 value = dateString,
                 placeholder = "Select date and time",
@@ -198,7 +198,7 @@ fun NewEditTransactionScreen(
             )
 
             TransactionField(
-                icon = Icons.Default.AccountBalanceWallet,
+                iconVector = Icons.Default.AccountBalanceWallet,
                 label = "Wallet",
                 value = state.wallet?.name ?: "",
                 placeholder = "Select wallet",
@@ -207,7 +207,7 @@ fun NewEditTransactionScreen(
             )
             
             TransactionField(
-                icon = Icons.Default.Event,
+                iconVector = Icons.Default.Event,
                 label = "Event",
                 value = state.event?.name ?: "",
                 placeholder = "Enter event",
@@ -215,7 +215,7 @@ fun NewEditTransactionScreen(
             )
 
             TransactionField(
-                icon = Icons.Default.Group,
+                iconVector = Icons.Default.Group,
                 label = "People",
                 value = state.people.joinToString { it.name },
                 placeholder = "Add people",
@@ -223,7 +223,7 @@ fun NewEditTransactionScreen(
             )
 
             TransactionField(
-                icon = Icons.Default.LocationOn,
+                iconVector = Icons.Default.LocationOn,
                 label = "Place",
                 value = state.place?.name ?: "",
                 placeholder = "Enter place",
@@ -231,7 +231,7 @@ fun NewEditTransactionScreen(
             )
 
             TransactionField(
-                icon = Icons.Default.Description,
+                iconVector = Icons.Default.Description,
                 label = "Note",
                 value = state.note,
                 placeholder = "Add a note",
@@ -246,7 +246,8 @@ fun NewEditTransactionScreen(
 
 @Composable
 fun TransactionField(
-    icon: ImageVector,
+    iconVector: ImageVector? = null,
+    iconRes: Int? = null,
     label: String,
     value: String,
     placeholder: String,
@@ -259,12 +260,21 @@ fun TransactionField(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = label,
-            modifier = Modifier.padding(end = 16.dp),
-            tint = Color(0xFF49454F)
-        )
+        if (iconVector != null) {
+            Icon(
+                imageVector = iconVector,
+                contentDescription = label,
+                modifier = Modifier.padding(end = 16.dp),
+                tint = Color(0xFF49454F)
+            )
+        } else if (iconRes != null) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = label,
+                modifier = Modifier.padding(end = 16.dp),
+                tint = Color(0xFF49454F)
+            )
+        }
         Box(modifier = Modifier.weight(1f)) {
             val modifier = if (onClick != null) {
                 Modifier
