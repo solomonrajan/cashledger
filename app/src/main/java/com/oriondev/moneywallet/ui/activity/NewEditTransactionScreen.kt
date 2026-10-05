@@ -1,4 +1,4 @@
-@file:Suppress("LongMethod", "LongParameterList", "MatchingDeclarationName", "FunctionNaming", "WildcardImport", "MaxLineLength")
+@file:Suppress("LongMethod", "LongParameterList", "MatchingDeclarationName", "FunctionNaming", "WildcardImport", "MaxLineLength", "MagicNumber", "UnusedParameter")
 
 package com.oriondev.moneywallet.ui.activity
 
