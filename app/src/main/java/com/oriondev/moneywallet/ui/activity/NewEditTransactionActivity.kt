@@ -19,6 +19,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.*
 import androidx.lifecycle.lifecycleScope
@@ -133,9 +134,15 @@ class NewEditTransactionActivity : AppCompatActivity(),
     private lateinit var mAttachmentPicker: AttachmentPicker
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         
         setupPickers()
+        
+        if (intent.getBooleanExtra(AUTO_OPEN_CALCULATOR, false)) {
+            intent.removeExtra(AUTO_OPEN_CALCULATOR)
+            mMoneyPicker.showPicker()
+        }
         
         val mode = intent.getSerializableExtra(NewEditItemActivity.MODE) as? NewEditItemActivity.Mode ?: NewEditItemActivity.Mode.NEW_ITEM
         val itemId = intent.getLongExtra(NewEditItemActivity.ID, -1L)
@@ -145,11 +152,6 @@ class NewEditTransactionActivity : AppCompatActivity(),
             
             // Re-assign currency to money picker on load
             mMoneyPicker = MoneyPicker.createPicker(supportFragmentManager, TAG_MONEY_PICKER, _state.currency, _state.money)
-            
-            if (intent.getBooleanExtra(AUTO_OPEN_CALCULATOR, false)) {
-                intent.removeExtra(AUTO_OPEN_CALCULATOR)
-                mMoneyPicker.showPicker()
-            }
         }
         
         setContent {
@@ -159,8 +161,7 @@ class NewEditTransactionActivity : AppCompatActivity(),
                 onSaveClick = { saveTransaction() },
                 onMoneyClick = { mMoneyPicker.showPicker() },
                 onCategoryClick = { mCategoryPicker.showPicker() },
-                onDateClick = { mDateTimePicker.showDatePicker() },
-                onTimeClick = { mDateTimePicker.showTimePicker() },
+                onDateChange = { _state = _state.copy(date = it) },
                 onWalletClick = { mWalletPicker.showSingleWalletPicker() },
                 onEventClick = { mEventPicker.showPicker(_state.date) },
                 onEventClear = { _state = _state.copy(event = null) },

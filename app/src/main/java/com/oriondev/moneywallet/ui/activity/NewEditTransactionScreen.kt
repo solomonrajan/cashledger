@@ -4,10 +4,12 @@ package com.oriondev.moneywallet.ui.activity
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -19,14 +21,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.model.*
-import java.util.Date
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
+
+val GoogleSansCode = FontFamily(Font(R.font.google_sans_code_regular))
 
 data class TransactionScreenState(
     val money: Long = 0L,
@@ -59,8 +67,7 @@ fun NewEditTransactionScreen(
     onSaveClick: () -> Unit,
     onMoneyClick: () -> Unit,
     onCategoryClick: () -> Unit,
-    onDateClick: () -> Unit,
-    onTimeClick: () -> Unit,
+    onDateChange: (Date) -> Unit,
     onWalletClick: () -> Unit,
     onEventClick: () -> Unit,
     onEventClear: () -> Unit,
@@ -76,170 +83,233 @@ fun NewEditTransactionScreen(
     onConfirmedChange: (Boolean) -> Unit,
     onCountInTotalChange: (Boolean) -> Unit
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(state.titleRes)) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                },
-                actions = {
-                    IconButton(onClick = onAttachmentClick) {
-                        Icon(Icons.Default.AttachFile, contentDescription = "Attach Document")
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
-            )
-        },
-        bottomBar = {
-            Button(
-                onClick = onSaveClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5E459C)),
-                shape = RoundedCornerShape(28.dp)
-            ) {
-                Icon(Icons.Default.Check, contentDescription = "Save", modifier = Modifier.padding(end = 8.dp))
-                Text("Save Transaction", fontSize = 16.sp)
-            }
-        },
-        containerColor = MaterialTheme.colorScheme.background
-    ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            
-            // Header: Money
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFEBE5FC)),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth()
-                ) {
-                    Column {
-                        Text(
-                            text = "Amount",
-                            fontSize = 12.sp,
-                            color = Color(0xFF1E1E1E),
-                            modifier = Modifier.padding(bottom = 4.dp)
-                        )
-                        val formattedAmount = java.text.NumberFormat.getNumberInstance(java.util.Locale("en", "IN")).apply {
-                            minimumFractionDigits = 2
-                            maximumFractionDigits = 2
-                        }.format(state.money)
+    val colorScheme = if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
 
-                        Text(
-                            text = "${state.currency?.symbol ?: "₹"} $formattedAmount", 
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFF1B0B43)
-                        )
-                    }
-                    
-                    IconButton(
-                        onClick = onMoneyClick,
+    var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
+    
+    val calendar = remember(state.date) {
+        Calendar.getInstance().apply {
+            time = state.date ?: Date()
+        }
+    }
+    
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = calendar.timeInMillis
+    )
+    
+    val timePickerState = rememberTimePickerState(
+        initialHour = calendar.get(Calendar.HOUR_OF_DAY),
+        initialMinute = calendar.get(Calendar.MINUTE)
+    )
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDatePicker = false
+                    showTimePicker = true
+                }) { Text("Next") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showTimePicker) {
+        AlertDialog(
+            onDismissRequest = { showTimePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showTimePicker = false
+                    val newCalendar = Calendar.getInstance()
+                    datePickerState.selectedDateMillis?.let { newCalendar.timeInMillis = it }
+                    newCalendar.set(Calendar.HOUR_OF_DAY, timePickerState.hour)
+                    newCalendar.set(Calendar.MINUTE, timePickerState.minute)
+                    onDateChange(newCalendar.time)
+                }) { Text("OK") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showTimePicker = false }) { Text("Cancel") }
+            },
+            text = {
+                TimePicker(state = timePickerState)
+            }
+        )
+    }
+
+    MaterialTheme(colorScheme = colorScheme) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text(stringResource(state.titleRes)) },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
+                            Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick = onAttachmentClick) {
+                            Icon(Icons.Default.AttachFile, contentDescription = "Attach Document")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background
+                    )
+                )
+            },
+            bottomBar = {
+                Button(
+                    onClick = onSaveClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(56.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5E459C)),
+                    shape = RoundedCornerShape(28.dp)
+                ) {
+                    Icon(Icons.Default.Check, contentDescription = "Save", modifier = Modifier.padding(end = 8.dp))
+                    Text("Save Transaction", fontSize = 16.sp)
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.background
+        ) { padding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding)
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                
+                // Header: Money
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFFEBE5FC)),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Box(
                         modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .background(Color(0xFFDCD2F5), shape = CircleShape)
+                            .padding(16.dp)
+                            .fillMaxWidth()
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Calculate,
-                            contentDescription = "Calculator",
-                            tint = Color(0xFF1B0B43)
-                        )
+                        Column {
+                            Text(
+                                text = "Amount",
+                                fontSize = 12.sp,
+                                color = Color(0xFF1E1E1E),
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            val formattedAmount = java.text.NumberFormat.getNumberInstance(java.util.Locale("en", "IN")).apply {
+                                minimumFractionDigits = 2
+                                maximumFractionDigits = 2
+                            }.format(state.money)
+    
+                            Text(
+                                text = "${state.currency?.symbol ?: "₹"} $formattedAmount", 
+                                fontSize = 40.sp,
+                                fontWeight = FontWeight.Medium,
+                                fontFamily = GoogleSansCode,
+                                color = Color(0xFF1B0B43)
+                            )
+                        }
+                        
+                        IconButton(
+                            onClick = onMoneyClick,
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .background(Color(0xFFDCD2F5), shape = CircleShape)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Calculate,
+                                contentDescription = "Calculator",
+                                tint = Color(0xFF1B0B43)
+                            )
+                        }
                     }
                 }
+    
+                TransactionField(
+                    iconVector = Icons.Default.Menu,
+                    label = "Description",
+                    value = state.description,
+                    placeholder = "Enter description",
+                    onValueChange = onDescriptionChange,
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+                    enabled = true
+                )
+    
+                TransactionField(
+                    iconVector = Icons.Default.LocalOffer,
+                    label = "Category",
+                    value = state.category?.name ?: "",
+                    placeholder = "Select category",
+                    onClick = onCategoryClick,
+                    trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
+                )
+    
+                val dateFormat = SimpleDateFormat("EEE, MMM d, yyyy  HH:mm:ss", Locale.getDefault())
+                val dateString = state.date?.let { dateFormat.format(it) } ?: ""
+    
+                TransactionField(
+                    iconVector = Icons.Default.DateRange,
+                    label = "Date & time",
+                    value = dateString,
+                    placeholder = "Select date and time",
+                    onClick = { showDatePicker = true },
+                    trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
+                )
+    
+                TransactionField(
+                    iconVector = Icons.Default.AccountBalanceWallet,
+                    label = "Wallet",
+                    value = state.wallet?.name ?: "",
+                    placeholder = "Select wallet",
+                    onClick = onWalletClick,
+                    trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
+                )
+                
+                TransactionField(
+                    iconVector = Icons.Default.Event,
+                    label = "Event",
+                    value = state.event?.name ?: "",
+                    placeholder = "Enter event",
+                    onClick = onEventClick
+                )
+    
+                TransactionField(
+                    iconVector = Icons.Default.Group,
+                    label = "People",
+                    value = state.people.joinToString { it.name },
+                    placeholder = "Add people",
+                    onClick = onPeopleClick
+                )
+    
+                TransactionField(
+                    iconVector = Icons.Default.LocationOn,
+                    label = "Place",
+                    value = state.place?.name ?: "",
+                    placeholder = "Enter place",
+                    onClick = onPlaceClick
+                )
+    
+                TransactionField(
+                    iconVector = Icons.Default.Description,
+                    label = "Note",
+                    value = state.note,
+                    placeholder = "Add a note",
+                    onValueChange = onNoteChange,
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+                    enabled = true
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
             }
-
-            TransactionField(
-                iconVector = Icons.Default.Menu,
-                label = "Description",
-                value = state.description,
-                placeholder = "Enter description",
-                onValueChange = onDescriptionChange,
-                enabled = true
-            )
-
-            TransactionField(
-                iconVector = Icons.Default.LocalOffer,
-                label = "Category",
-                value = state.category?.name ?: "",
-                placeholder = "Select category",
-                onClick = onCategoryClick,
-                trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
-            )
-
-            val dateFormat = SimpleDateFormat("EEE, MMM d, yyyy  HH:mm:ss", Locale.getDefault())
-            val dateString = state.date?.let { dateFormat.format(it) } ?: ""
-
-            TransactionField(
-                iconVector = Icons.Default.DateRange,
-                label = "Date & time",
-                value = dateString,
-                placeholder = "Select date and time",
-                onClick = onDateClick, // Can combine date and time clicks or just open date first
-                trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
-            )
-
-            TransactionField(
-                iconVector = Icons.Default.AccountBalanceWallet,
-                label = "Wallet",
-                value = state.wallet?.name ?: "",
-                placeholder = "Select wallet",
-                onClick = onWalletClick,
-                trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
-            )
-            
-            TransactionField(
-                iconVector = Icons.Default.Event,
-                label = "Event",
-                value = state.event?.name ?: "",
-                placeholder = "Enter event",
-                onClick = onEventClick
-            )
-
-            TransactionField(
-                iconVector = Icons.Default.Group,
-                label = "People",
-                value = state.people.joinToString { it.name },
-                placeholder = "Add people",
-                onClick = onPeopleClick
-            )
-
-            TransactionField(
-                iconVector = Icons.Default.LocationOn,
-                label = "Place",
-                value = state.place?.name ?: "",
-                placeholder = "Enter place",
-                onClick = onPlaceClick
-            )
-
-            TransactionField(
-                iconVector = Icons.Default.Description,
-                label = "Note",
-                value = state.note,
-                placeholder = "Add a note",
-                onValueChange = onNoteChange,
-                enabled = true
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -254,6 +324,7 @@ fun TransactionField(
     onClick: (() -> Unit)? = null,
     onValueChange: ((String) -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     enabled: Boolean = false
 ) {
     Row(
@@ -291,6 +362,7 @@ fun TransactionField(
                 placeholder = { Text(placeholder) },
                 modifier = modifier,
                 enabled = enabled,
+                keyboardOptions = keyboardOptions,
                 trailingIcon = trailingIcon,
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = MaterialTheme.colorScheme.onSurface,
