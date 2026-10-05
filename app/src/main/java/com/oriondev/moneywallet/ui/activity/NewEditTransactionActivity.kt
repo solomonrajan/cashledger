@@ -145,6 +145,11 @@ class NewEditTransactionActivity : AppCompatActivity(),
             
             // Re-assign currency to money picker on load
             mMoneyPicker = MoneyPicker.createPicker(supportFragmentManager, TAG_MONEY_PICKER, _state.currency, _state.money)
+            
+            if (intent.getBooleanExtra(AUTO_OPEN_CALCULATOR, false)) {
+                intent.removeExtra(AUTO_OPEN_CALCULATOR)
+                mMoneyPicker.showPicker()
+            }
         }
         
         setContent {

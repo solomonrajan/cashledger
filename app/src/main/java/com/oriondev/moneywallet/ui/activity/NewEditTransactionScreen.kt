@@ -2,18 +2,22 @@
 
 package com.oriondev.moneywallet.ui.activity
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -21,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.model.*
 import java.util.Date
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 data class TransactionScreenState(
     val money: Long = 0L,
@@ -81,196 +87,213 @@ fun NewEditTransactionScreen(
                 },
                 actions = {
                     IconButton(onClick = onAttachmentClick) {
-                        Icon(Icons.Default.Add, contentDescription = "Attach File")
+                        Icon(painter = painterResource(id = R.drawable.ic_attach_file_black_24dp), contentDescription = "Attach Document")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background
+                )
             )
         },
-        floatingActionButton = {
-            FloatingActionButton(onClick = onSaveClick) {
-                Icon(androidx.compose.material.icons.Icons.Default.ArrowBack, contentDescription = "Save") // Use a save icon if available, or just fallback
+        bottomBar = {
+            Button(
+                onClick = onSaveClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .height(56.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5E459C)),
+                shape = RoundedCornerShape(28.dp)
+            ) {
+                Icon(Icons.Default.Check, contentDescription = "Save", modifier = Modifier.padding(end = 8.dp))
+                Text("Save Transaction", fontSize = 16.sp)
             }
-        }
+        },
+        containerColor = MaterialTheme.colorScheme.background
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             
             // Header: Money
             Card(
-                modifier = Modifier.fillMaxWidth().clickable(enabled = state.isMoneyEnabled, onClick = onMoneyClick),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFEBE5FC)),
+                shape = RoundedCornerShape(8.dp)
             ) {
-                Row(
-                    modifier = Modifier.padding(24.dp).fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
                 ) {
-                    Text(
-                        text = "${state.currency?.symbol ?: "?"} ${state.money}", 
-                        fontSize = 32.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                }
-            }
+                    Column {
+                        Text(
+                            text = "Amount",
+                            fontSize = 12.sp,
+                            color = Color(0xFF1E1E1E),
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                        val formattedAmount = java.text.NumberFormat.getNumberInstance(java.util.Locale("en", "IN")).apply {
+                            minimumFractionDigits = 2
+                            maximumFractionDigits = 2
+                        }.format(state.money)
 
-            OutlinedTextField(
-                value = state.description,
-                onValueChange = onDescriptionChange,
-                label = { Text(stringResource(R.string.hint_description)) },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            // Category Picker
-            OutlinedTextField(
-                value = state.category?.name ?: "",
-                onValueChange = {},
-                label = { Text(stringResource(R.string.hint_category)) },
-                modifier = Modifier.fillMaxWidth().clickable(enabled = state.isCategoryEnabled, onClick = onCategoryClick),
-                enabled = false,
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledBorderColor = MaterialTheme.colorScheme.outline,
-                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            )
-
-            // Date & Time
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
-                    value = state.date?.toString() ?: "", // Placeholder formatting
-                    onValueChange = {},
-                    label = { Text(stringResource(R.string.hint_date)) },
-                    modifier = Modifier.weight(1f).clickable(onClick = onDateClick),
-                    enabled = false,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                        disabledBorderColor = MaterialTheme.colorScheme.outline,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                )
-                OutlinedTextField(
-                    value = state.date?.toString() ?: "", // Placeholder formatting
-                    onValueChange = {},
-                    label = { Text(stringResource(R.string.hint_time)) },
-                    modifier = Modifier.weight(1f).clickable(onClick = onTimeClick),
-                    enabled = false,
-                    colors = OutlinedTextFieldDefaults.colors(
-                        disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                        disabledBorderColor = MaterialTheme.colorScheme.outline,
-                        disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                )
-            }
-
-            // Wallet
-            OutlinedTextField(
-                value = state.wallet?.name ?: "",
-                onValueChange = {},
-                label = { Text(stringResource(R.string.hint_wallet)) },
-                modifier = Modifier.fillMaxWidth().clickable(enabled = state.isWalletEnabled, onClick = onWalletClick),
-                enabled = false,
-                colors = OutlinedTextFieldDefaults.colors(
-                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledBorderColor = MaterialTheme.colorScheme.outline,
-                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            )
-            
-            // Optional Fields (Event, People, Place)
-            ClearablePickerField(
-                label = stringResource(R.string.hint_event),
-                value = state.event?.name ?: "",
-                onClick = onEventClick,
-                onClear = onEventClear
-            )
-
-            ClearablePickerField(
-                label = stringResource(R.string.hint_people),
-                value = state.people.joinToString { it.name },
-                onClick = onPeopleClick,
-                onClear = onPeopleClear
-            )
-
-            ClearablePickerField(
-                label = stringResource(R.string.hint_place),
-                value = state.place?.name ?: "",
-                onClick = onPlaceClick,
-                onClear = onPlaceClear
-            )
-
-            OutlinedTextField(
-                value = state.note,
-                onValueChange = onNoteChange,
-                label = { Text(stringResource(R.string.hint_note)) },
-                modifier = Modifier.fillMaxWidth(),
-                minLines = 3
-            )
-
-            // Checkboxes
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                Checkbox(checked = state.confirmed, onCheckedChange = onConfirmedChange)
-                Text(stringResource(R.string.hint_confirmed), modifier = Modifier.clickable { onConfirmedChange(!state.confirmed) })
-            }
-            
-            Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-                Checkbox(checked = state.countInTotal, onCheckedChange = onCountInTotalChange)
-                Text(stringResource(R.string.hint_show_in_total), modifier = Modifier.clickable { onCountInTotalChange(!state.countInTotal) })
-            }
-            
-            // Attachments
-            if (state.attachments.isNotEmpty()) {
-                Text(stringResource(R.string.hint_attachments), fontWeight = FontWeight.Bold)
-                state.attachments.forEach { attachment ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth().clickable { onAttachmentOpen(attachment) }.padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        Text(
+                            text = "${state.currency?.symbol ?: "₹"} $formattedAmount", 
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF1B0B43)
+                        )
+                    }
+                    
+                    IconButton(
+                        onClick = onMoneyClick,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .background(Color(0xFFDCD2F5), shape = CircleShape)
                     ) {
-                        Text(attachment.name ?: "Attachment")
-                        IconButton(onClick = { onAttachmentDelete(attachment) }) {
-                            Icon(Icons.Default.Close, contentDescription = "Remove")
-                        }
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_icon_calculator),
+                            contentDescription = "Calculator",
+                            tint = Color(0xFF1B0B43)
+                        )
                     }
                 }
             }
+
+            TransactionField(
+                icon = Icons.Default.Menu,
+                label = "Description",
+                value = state.description,
+                placeholder = "Enter description",
+                onValueChange = onDescriptionChange,
+                enabled = true
+            )
+
+            TransactionField(
+                icon = Icons.Default.LocalOffer,
+                label = "Category",
+                value = state.category?.name ?: "",
+                placeholder = "Select category",
+                onClick = onCategoryClick,
+                trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
+            )
+
+            val dateFormat = SimpleDateFormat("EEE, MMM d, yyyy  HH:mm:ss", Locale.getDefault())
+            val dateString = state.date?.let { dateFormat.format(it) } ?: ""
+
+            TransactionField(
+                icon = Icons.Default.DateRange,
+                label = "Date & time",
+                value = dateString,
+                placeholder = "Select date and time",
+                onClick = onDateClick, // Can combine date and time clicks or just open date first
+                trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
+            )
+
+            TransactionField(
+                icon = Icons.Default.AccountBalanceWallet,
+                label = "Wallet",
+                value = state.wallet?.name ?: "",
+                placeholder = "Select wallet",
+                onClick = onWalletClick,
+                trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
+            )
             
-            Spacer(modifier = Modifier.height(80.dp)) // FAB spacing
+            TransactionField(
+                icon = Icons.Default.Event,
+                label = "Event",
+                value = state.event?.name ?: "",
+                placeholder = "Enter event",
+                onClick = onEventClick
+            )
+
+            TransactionField(
+                icon = Icons.Default.Group,
+                label = "People",
+                value = state.people.joinToString { it.name },
+                placeholder = "Add people",
+                onClick = onPeopleClick
+            )
+
+            TransactionField(
+                icon = Icons.Default.LocationOn,
+                label = "Place",
+                value = state.place?.name ?: "",
+                placeholder = "Enter place",
+                onClick = onPlaceClick
+            )
+
+            TransactionField(
+                icon = Icons.Default.Description,
+                label = "Note",
+                value = state.note,
+                placeholder = "Add a note",
+                onValueChange = onNoteChange,
+                enabled = true
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
 
 @Composable
-fun ClearablePickerField(
+fun TransactionField(
+    icon: ImageVector,
     label: String,
     value: String,
-    onClick: () -> Unit,
-    onClear: () -> Unit
+    placeholder: String,
+    onClick: (() -> Unit)? = null,
+    onValueChange: ((String) -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    enabled: Boolean = false
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = {},
-        label = { Text(label) },
-        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
-        enabled = false,
-        trailingIcon = {
-            if (value.isNotEmpty()) {
-                IconButton(onClick = onClear) {
-                    Icon(Icons.Default.Close, contentDescription = "Clear")
-                }
-            }
-        },
-        colors = OutlinedTextFieldDefaults.colors(
-            disabledTextColor = MaterialTheme.colorScheme.onSurface,
-            disabledBorderColor = MaterialTheme.colorScheme.outline,
-            disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            modifier = Modifier.padding(end = 16.dp),
+            tint = Color(0xFF49454F)
         )
-    )
+        Box(modifier = Modifier.weight(1f)) {
+            val modifier = if (onClick != null) {
+                Modifier
+                    .fillMaxWidth()
+                    .clickable(onClick = onClick)
+            } else {
+                Modifier.fillMaxWidth()
+            }
+            
+            OutlinedTextField(
+                value = value,
+                onValueChange = onValueChange ?: {},
+                label = { Text(label) },
+                placeholder = { Text(placeholder) },
+                modifier = modifier,
+                enabled = enabled,
+                trailingIcon = trailingIcon,
+                colors = OutlinedTextFieldDefaults.colors(
+                    disabledTextColor = MaterialTheme.colorScheme.onSurface,
+                    disabledBorderColor = Color(0xFFCAC4D0),
+                    disabledLabelColor = Color(0xFF49454F),
+                    disabledPlaceholderColor = Color(0xFF49454F),
+                    disabledTrailingIconColor = Color(0xFF49454F),
+                    unfocusedBorderColor = Color(0xFFCAC4D0),
+                    unfocusedLabelColor = Color(0xFF49454F),
+                    unfocusedPlaceholderColor = Color(0xFF49454F)
+                ),
+                shape = RoundedCornerShape(4.dp)
+            )
+        }
+    }
 }
