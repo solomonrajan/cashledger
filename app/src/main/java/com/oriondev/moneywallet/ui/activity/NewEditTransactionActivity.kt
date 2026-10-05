@@ -141,6 +141,8 @@ class NewEditTransactionActivity : AppCompatActivity(),
         
         if (intent.getBooleanExtra(AUTO_OPEN_CALCULATOR, false)) {
             intent.removeExtra(AUTO_OPEN_CALCULATOR)
+            // Ensure fragments are attached before calling showPicker
+            supportFragmentManager.executePendingTransactions()
             mMoneyPicker.showPicker()
         }
         
