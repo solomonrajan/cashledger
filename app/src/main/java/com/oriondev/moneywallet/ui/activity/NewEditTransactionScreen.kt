@@ -41,7 +41,7 @@ data class TransactionScreenState(
     val currency: CurrencyUnit? = null,
     val description: String = "",
     val category: Category? = null,
-    val date: Date? = null,
+    val date: Date? = Date(),
     val wallet: Wallet? = null,
     val event: Event? = null,
     val people: List<Person> = emptyList(),
@@ -167,13 +167,16 @@ fun NewEditTransactionScreen(
                     onClick = onSaveClick,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5E459C)),
-                    shape = RoundedCornerShape(28.dp)
+                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 40.dp) // Increased bottom gap for gesture nav
+                        .height(64.dp), // Taller button for M3 expressive
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    shape = RoundedCornerShape(32.dp)
                 ) {
-                    Icon(Icons.Default.Check, contentDescription = "Save", modifier = Modifier.padding(end = 8.dp))
-                    Text("Save Transaction", fontSize = 16.sp)
+                    Icon(Icons.Default.Check, contentDescription = "Save", modifier = Modifier.padding(end = 12.dp))
+                    Text("Save Transaction", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
                 }
             },
             containerColor = MaterialTheme.colorScheme.background
@@ -190,8 +193,11 @@ fun NewEditTransactionScreen(
                 // Header: Money
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFFEBE5FC)),
-                    shape = RoundedCornerShape(8.dp)
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    ),
+                    shape = RoundedCornerShape(24.dp) // M3 expressive large rounded corners
                 ) {
                     Box(
                         modifier = Modifier
@@ -202,20 +208,21 @@ fun NewEditTransactionScreen(
                             Text(
                                 text = "Amount",
                                 fontSize = 12.sp,
-                                color = Color(0xFF1E1E1E),
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
-                            val formattedAmount = java.text.NumberFormat.getNumberInstance(java.util.Locale("en", "IN")).apply {
-                                minimumFractionDigits = 2
-                                maximumFractionDigits = 2
-                            }.format(state.money)
+                            val divisor = Math.pow(10.0, state.currency?.decimals?.toDouble() ?: 2.0)
+                            val formattedAmount = java.text.NumberFormat.getNumberInstance(java.util.Locale.US).apply {
+                                minimumFractionDigits = state.currency?.decimals ?: 2
+                                maximumFractionDigits = state.currency?.decimals ?: 2
+                            }.format(state.money / divisor)
     
                             Text(
                                 text = "${state.currency?.symbol ?: "₹"} $formattedAmount", 
-                                fontSize = 40.sp,
+                                fontSize = 48.sp, // M3 expressive larger typography
                                 fontWeight = FontWeight.Medium,
                                 fontFamily = GoogleSansCode,
-                                color = Color(0xFF1B0B43)
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
                         }
                         
@@ -223,12 +230,12 @@ fun NewEditTransactionScreen(
                             onClick = onMoneyClick,
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)
-                                .background(Color(0xFFDCD2F5), shape = CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Calculate,
                                 contentDescription = "Calculator",
-                                tint = Color(0xFF1B0B43)
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                     }
