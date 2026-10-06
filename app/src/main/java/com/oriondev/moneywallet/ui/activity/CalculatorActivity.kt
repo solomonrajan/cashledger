@@ -242,6 +242,7 @@ fun CalculatorScreen(
                     // Scale font size and weight to fill the blank space dynamically
                     val textLength = displayText.length
                     val (dynamicFontSize, dynamicFontWeight) = when {
+                        textLength <= 2 -> 144.sp to FontWeight.Bold
                         textLength <= 4 -> 112.sp to FontWeight.Bold
                         textLength <= 6 -> 88.sp to FontWeight.Medium
                         textLength <= 8 -> 64.sp to FontWeight.Medium
@@ -286,7 +287,7 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
-                            .background(MaterialTheme.colorScheme.primary, androidx.compose.foundation.shape.RoundedCornerShape(32.dp))
+                            .background(MaterialTheme.colorScheme.primary, androidx.compose.foundation.shape.CircleShape)
                             .clickable { onInput(CalculatorActivity.OP_EXECUTE) },
                         contentAlignment = Alignment.Center
                     ) {
@@ -317,15 +318,15 @@ fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) 
                 onClick = { onInput(op) },
                 modifier = Modifier
                     .weight(1f)
-                    .aspectRatio(1.1f), // Taller keys for a more substantial look
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(28.dp), // M3 expressive squircle
+                    .aspectRatio(1f), // Perfect square base for perfect circles
+                shape = androidx.compose.foundation.shape.CircleShape, // Authentic M3 expressive circular keys
                 colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
                 contentPadding = PaddingValues(0.dp)
             ) {
                 if (op == CalculatorActivity.OP_CANCEL) {
-                    Icon(Icons.Default.Backspace, contentDescription = "Delete", modifier = Modifier.size(28.dp))
+                    Icon(Icons.Default.Backspace, contentDescription = "Delete", modifier = Modifier.size(32.dp))
                 } else {
-                    Text(text = label, style = MaterialTheme.typography.headlineMedium)
+                    Text(text = label, style = MaterialTheme.typography.displaySmall) // Larger, more prominent numbers
                 }
             }
         }
