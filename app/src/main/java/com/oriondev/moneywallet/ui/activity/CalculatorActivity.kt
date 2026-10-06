@@ -31,7 +31,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-// Removed Backspace import
+import androidx.compose.material.icons.filled.Backspace
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -223,20 +224,20 @@ fun CalculatorScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-                color = MaterialTheme.colorScheme.surfaceVariant
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(36.dp), // M3 expressive huge corner radius
+                color = MaterialTheme.colorScheme.primaryContainer
             ) {
                 Box(
-                    modifier = Modifier.fillMaxSize().padding(16.dp),
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 24.dp),
                     contentAlignment = Alignment.BottomEnd
                 ) {
                     Text(
                         text = if (displayText.isEmpty()) "0" else displayText,
-                        fontSize = 48.sp,
-                        fontWeight = FontWeight.Normal,
+                        fontSize = 72.sp, // M3 expressive massive display font
+                        fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.End,
-                        maxLines = 2,
-                        color = MaterialTheme.colorScheme.onSurface
+                        maxLines = 1,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                 }
             }
@@ -246,7 +247,7 @@ fun CalculatorScreen(
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp) // M3 expressive breathing room
             ) {
                 CalculatorRow(listOf("C" to CalculatorActivity.OP_CLEAR, "÷" to CalculatorActivity.OP_DIVISION, "×" to CalculatorActivity.OP_MULTIPLICATION, "DEL" to CalculatorActivity.OP_CANCEL), onInput)
                 CalculatorRow(listOf("7" to CalculatorActivity.OP_7, "8" to CalculatorActivity.OP_8, "9" to CalculatorActivity.OP_9, "-" to CalculatorActivity.OP_SUBTRACTION), onInput)
@@ -254,11 +255,11 @@ fun CalculatorScreen(
                 
                 Row(
                     modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Column(
                         modifier = Modifier.weight(3f),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         CalculatorRow(listOf("1" to CalculatorActivity.OP_1, "2" to CalculatorActivity.OP_2, "3" to CalculatorActivity.OP_3), onInput)
                         CalculatorRow(listOf("0" to CalculatorActivity.OP_0, "00" to CalculatorActivity.OP_00, "." to CalculatorActivity.OP_POINT), onInput)
@@ -268,11 +269,15 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
-                            .background(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.primary, androidx.compose.foundation.shape.CircleShape)
                             .clickable { onInput(CalculatorActivity.OP_EXECUTE) },
                         contentAlignment = Alignment.Center
                     ) {
-                        Text(confirmLabel, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                        if (isKeypadMode && !isPendingOperation) {
+                            Icon(Icons.Default.Check, contentDescription = "Confirm", tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(36.dp))
+                        } else {
+                            Text("=", fontSize = 36.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimary)
+                        }
                     }
                 }
             }
@@ -284,25 +289,26 @@ fun CalculatorScreen(
 fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp) // Match M3 expressive spacing
     ) {
         items.forEach { (label, op) ->
             val isAction = op in listOf(CalculatorActivity.OP_CLEAR, CalculatorActivity.OP_CANCEL, CalculatorActivity.OP_DIVISION, CalculatorActivity.OP_MULTIPLICATION, CalculatorActivity.OP_SUBTRACTION, CalculatorActivity.OP_ADDITION)
-            val containerColor = if (isAction) MaterialTheme.colorScheme.secondaryContainer else MaterialTheme.colorScheme.surfaceVariant
-            val contentColor = if (isAction) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
+            val containerColor = if (isAction) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceVariant
+            val contentColor = if (isAction) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
             
             Button(
                 onClick = { onInput(op) },
                 modifier = Modifier
                     .weight(1f)
                     .aspectRatio(1.2f),
-                shape = MaterialTheme.shapes.medium,
-                colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor)
+                shape = androidx.compose.foundation.shape.CircleShape, // M3 expressive circular/pill keys
+                colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
+                contentPadding = PaddingValues(0.dp)
             ) {
                 if (op == CalculatorActivity.OP_CANCEL) {
-                    Text(text = "DEL", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Icon(Icons.Default.Backspace, contentDescription = "Delete", modifier = Modifier.size(28.dp))
                 } else {
-                    Text(text = label, fontSize = 24.sp, fontWeight = FontWeight.Medium)
+                    Text(text = label, fontSize = 32.sp, fontWeight = FontWeight.Normal)
                 }
             }
         }
