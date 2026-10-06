@@ -243,7 +243,6 @@ fun CalculatorScreen(
             }
 
             // Keypad
-            val confirmLabel = if (isKeypadMode && !isPendingOperation) stringResource(R.string.keyboard_confirm) else stringResource(R.string.keyboard_equal)
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
