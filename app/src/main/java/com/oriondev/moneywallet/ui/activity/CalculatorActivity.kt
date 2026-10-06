@@ -233,8 +233,7 @@ fun CalculatorScreen(
                 ) {
                     Text(
                         text = if (displayText.isEmpty()) "0" else displayText,
-                        fontSize = 72.sp, // M3 expressive massive display font
-                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.displayLarge, // M3 expressive display font
                         textAlign = TextAlign.End,
                         maxLines = 1,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -275,7 +274,7 @@ fun CalculatorScreen(
                         if (isKeypadMode && !isPendingOperation) {
                             Icon(Icons.Default.Check, contentDescription = "Confirm", tint = MaterialTheme.colorScheme.onPrimary, modifier = Modifier.size(36.dp))
                         } else {
-                            Text("=", fontSize = 36.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimary)
+                            Text("=", style = MaterialTheme.typography.displayMedium, color = MaterialTheme.colorScheme.onPrimary)
                         }
                     }
                 }
@@ -307,7 +306,7 @@ fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) 
                 if (op == CalculatorActivity.OP_CANCEL) {
                     Icon(Icons.Default.Backspace, contentDescription = "Delete", modifier = Modifier.size(28.dp))
                 } else {
-                    Text(text = label, fontSize = 32.sp, fontWeight = FontWeight.Normal)
+                    Text(text = label, style = MaterialTheme.typography.headlineMedium)
                 }
             }
         }

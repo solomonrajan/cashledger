@@ -176,7 +176,7 @@ fun NewEditTransactionScreen(
                     shape = RoundedCornerShape(32.dp)
                 ) {
                     Icon(Icons.Default.Check, contentDescription = "Save", modifier = Modifier.padding(end = 12.dp))
-                    Text("Save Transaction", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                    Text("Save Transaction", style = MaterialTheme.typography.titleMedium)
                 }
             },
             containerColor = MaterialTheme.colorScheme.background
@@ -207,7 +207,7 @@ fun NewEditTransactionScreen(
                         Column {
                             Text(
                                 text = "Amount",
-                                fontSize = 12.sp,
+                                style = MaterialTheme.typography.labelMedium,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
@@ -219,8 +219,7 @@ fun NewEditTransactionScreen(
     
                             Text(
                                 text = "${state.currency?.symbol ?: "₹"} $formattedAmount", 
-                                fontSize = 48.sp, // M3 expressive larger typography
-                                fontWeight = FontWeight.Medium,
+                                style = MaterialTheme.typography.displayMedium, // M3 expressive larger typography
                                 fontFamily = GoogleSansCode,
                                 color = MaterialTheme.colorScheme.onSecondaryContainer
                             )
@@ -342,15 +341,15 @@ fun TransactionField(
             Icon(
                 imageVector = iconVector,
                 contentDescription = label,
-                modifier = Modifier.padding(end = 16.dp),
-                tint = Color(0xFF49454F)
+                modifier = Modifier.padding(end = 16.dp).size(28.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
         } else if (iconRes != null) {
             Icon(
                 painter = painterResource(id = iconRes),
                 contentDescription = label,
-                modifier = Modifier.padding(end = 16.dp),
-                tint = Color(0xFF49454F)
+                modifier = Modifier.padding(end = 16.dp).size(28.dp),
+                tint = MaterialTheme.colorScheme.primary
             )
         }
         Box(modifier = Modifier.weight(1f)) {
@@ -365,7 +364,7 @@ fun TransactionField(
             OutlinedTextField(
                 value = value,
                 onValueChange = onValueChange ?: {},
-                label = { Text(label) },
+                label = { Text(label, style = MaterialTheme.typography.bodyLarge) },
                 placeholder = { Text(placeholder) },
                 modifier = modifier,
                 enabled = enabled,
@@ -373,15 +372,17 @@ fun TransactionField(
                 trailingIcon = trailingIcon,
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = MaterialTheme.colorScheme.onSurface,
-                    disabledBorderColor = Color(0xFFCAC4D0),
-                    disabledLabelColor = Color(0xFF49454F),
-                    disabledPlaceholderColor = Color(0xFF49454F),
-                    disabledTrailingIconColor = Color(0xFF49454F),
-                    unfocusedBorderColor = Color(0xFFCAC4D0),
-                    unfocusedLabelColor = Color(0xFF49454F),
-                    unfocusedPlaceholderColor = Color(0xFF49454F)
+                    disabledBorderColor = MaterialTheme.colorScheme.outline,
+                    disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    disabledTrailingIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                    unfocusedLabelColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unfocusedPlaceholderColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedLabelColor = MaterialTheme.colorScheme.primary
                 ),
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(16.dp) // M3 expressive large corners for inputs
             )
         }
     }
