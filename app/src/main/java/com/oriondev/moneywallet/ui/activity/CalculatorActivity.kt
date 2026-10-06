@@ -239,19 +239,20 @@ fun CalculatorScreen(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 24.dp),
                     contentAlignment = Alignment.BottomEnd
                 ) {
-                    // Calculate font size to fit ~10 digits
+                    // Scale font size and weight to fill the blank space dynamically
                     val textLength = displayText.length
-                    val dynamicFontSize = when {
-                        textLength <= 6 -> 72.sp
-                        textLength <= 8 -> 56.sp
-                        else -> 44.sp // Fits 10+ digits
+                    val (dynamicFontSize, dynamicFontWeight) = when {
+                        textLength <= 4 -> 112.sp to FontWeight.Bold
+                        textLength <= 6 -> 88.sp to FontWeight.Medium
+                        textLength <= 8 -> 64.sp to FontWeight.Medium
+                        else -> 46.sp to FontWeight.Normal // Fits 10+ digits
                     }
                     
                     Text(
                         text = if (displayText.isEmpty()) "0" else displayText,
                         fontSize = dynamicFontSize,
                         fontFamily = GoogleSansFlex,
-                        fontWeight = FontWeight.Medium,
+                        fontWeight = dynamicFontWeight,
                         textAlign = TextAlign.End,
                         maxLines = 1,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -263,7 +264,7 @@ fun CalculatorScreen(
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp) // M3 expressive breathing room
+                verticalArrangement = Arrangement.spacedBy(8.dp) // M3 expressive tighter grid
             ) {
                 CalculatorRow(listOf("C" to CalculatorActivity.OP_CLEAR, "÷" to CalculatorActivity.OP_DIVISION, "×" to CalculatorActivity.OP_MULTIPLICATION, "DEL" to CalculatorActivity.OP_CANCEL), onInput)
                 CalculatorRow(listOf("7" to CalculatorActivity.OP_7, "8" to CalculatorActivity.OP_8, "9" to CalculatorActivity.OP_9, "-" to CalculatorActivity.OP_SUBTRACTION), onInput)
@@ -271,11 +272,11 @@ fun CalculatorScreen(
                 
                 Row(
                     modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Column(
                         modifier = Modifier.weight(3f),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         CalculatorRow(listOf("1" to CalculatorActivity.OP_1, "2" to CalculatorActivity.OP_2, "3" to CalculatorActivity.OP_3), onInput)
                         CalculatorRow(listOf("0" to CalculatorActivity.OP_0, "00" to CalculatorActivity.OP_00, "." to CalculatorActivity.OP_POINT), onInput)
@@ -305,7 +306,7 @@ fun CalculatorScreen(
 fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp) // Match M3 expressive spacing
+        horizontalArrangement = Arrangement.spacedBy(8.dp) // Match M3 expressive tighter spacing
     ) {
         items.forEach { (label, op) ->
             val isAction = op in listOf(CalculatorActivity.OP_CLEAR, CalculatorActivity.OP_CANCEL, CalculatorActivity.OP_DIVISION, CalculatorActivity.OP_MULTIPLICATION, CalculatorActivity.OP_SUBTRACTION, CalculatorActivity.OP_ADDITION)
@@ -316,8 +317,8 @@ fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) 
                 onClick = { onInput(op) },
                 modifier = Modifier
                     .weight(1f)
-                    .aspectRatio(1.2f),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp), // M3 expressive soft rounded keys
+                    .aspectRatio(1.1f), // Taller keys for a more substantial look
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(28.dp), // M3 expressive squircle
                 colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
                 contentPadding = PaddingValues(0.dp)
             ) {
