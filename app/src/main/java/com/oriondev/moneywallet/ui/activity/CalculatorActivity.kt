@@ -41,6 +41,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -188,6 +190,12 @@ class CalculatorActivity : AppCompatActivity(), EquationSolver.Controller {
     }
 }
 
+val GoogleSansFlex = FontFamily(
+    Font(R.font.google_sans_flex_regular, FontWeight.Normal),
+    Font(R.font.google_sans_flex_medium, FontWeight.Medium),
+    Font(R.font.google_sans_flex_bold, FontWeight.Bold)
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalculatorScreen(
@@ -231,9 +239,19 @@ fun CalculatorScreen(
                     modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp, vertical = 24.dp),
                     contentAlignment = Alignment.BottomEnd
                 ) {
+                    // Calculate font size to fit ~10 digits
+                    val textLength = displayText.length
+                    val dynamicFontSize = when {
+                        textLength <= 6 -> 72.sp
+                        textLength <= 8 -> 56.sp
+                        else -> 44.sp // Fits 10+ digits
+                    }
+                    
                     Text(
                         text = if (displayText.isEmpty()) "0" else displayText,
-                        style = MaterialTheme.typography.displayLarge, // M3 expressive display font
+                        fontSize = dynamicFontSize,
+                        fontFamily = GoogleSansFlex,
+                        fontWeight = FontWeight.Medium,
                         textAlign = TextAlign.End,
                         maxLines = 1,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -267,7 +285,7 @@ fun CalculatorScreen(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxHeight()
-                            .background(MaterialTheme.colorScheme.primary, androidx.compose.foundation.shape.CircleShape)
+                            .background(MaterialTheme.colorScheme.primary, androidx.compose.foundation.shape.RoundedCornerShape(32.dp))
                             .clickable { onInput(CalculatorActivity.OP_EXECUTE) },
                         contentAlignment = Alignment.Center
                     ) {
@@ -299,7 +317,7 @@ fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) 
                 modifier = Modifier
                     .weight(1f)
                     .aspectRatio(1.2f),
-                shape = androidx.compose.foundation.shape.CircleShape, // M3 expressive circular/pill keys
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp), // M3 expressive soft rounded keys
                 colors = ButtonDefaults.buttonColors(containerColor = containerColor, contentColor = contentColor),
                 contentPadding = PaddingValues(0.dp)
             ) {
