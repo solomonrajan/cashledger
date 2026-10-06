@@ -106,7 +106,10 @@ jobs:
             COMMITS_SINCE_TAG=1
           fi
           
-          TAG_NAME="${NEXT_VERSION}-dev.${COMMITS_SINCE_TAG}"
+          # Zero-pad the commit count to ensure correct alphabetical sorting on GitHub
+          COMMITS_PADDED=$(printf "%04d" $COMMITS_SINCE_TAG)
+          
+          TAG_NAME="${NEXT_VERSION}-dev.${COMMITS_PADDED}"
           DATE=$(date +'%Y-%m-%d')
           
           COMMIT_HASH=$(git rev-parse --short HEAD)
