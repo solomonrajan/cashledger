@@ -172,8 +172,8 @@ fun NewEditTransactionScreen(
                         .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 40.dp) // Increased bottom gap for gesture nav
                         .height(64.dp), // Taller button for M3 expressive
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     shape = RoundedCornerShape(32.dp)
                 ) {
@@ -196,10 +196,10 @@ fun NewEditTransactionScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
                     ),
-                    shape = RoundedCornerShape(24.dp) // M3 expressive large rounded corners
+                    shape = RoundedCornerShape(28.dp) // M3 expressive huge rounded corners
                 ) {
                     Box(
                         modifier = Modifier
@@ -209,8 +209,8 @@ fun NewEditTransactionScreen(
                         Column {
                             Text(
                                 text = "Amount",
-                                style = MaterialTheme.typography.labelMedium,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                style = MaterialTheme.typography.labelLarge,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                                 modifier = Modifier.padding(bottom = 4.dp)
                             )
                             val divisor = Math.pow(10.0, state.currency?.decimals?.toDouble() ?: 2.0)
@@ -223,7 +223,7 @@ fun NewEditTransactionScreen(
                                 text = "${state.currency?.symbol ?: "₹"} $formattedAmount", 
                                 style = MaterialTheme.typography.displayMedium, // M3 expressive larger typography
                                 fontFamily = GoogleSansCode,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
                         
@@ -231,12 +231,14 @@ fun NewEditTransactionScreen(
                             onClick = onMoneyClick,
                             modifier = Modifier
                                 .align(Alignment.CenterEnd)
-                                .background(MaterialTheme.colorScheme.primaryContainer, shape = CircleShape)
+                                .size(48.dp)
+                                .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.6f), shape = RoundedCornerShape(16.dp))
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Calculate,
                                 contentDescription = "Calculator",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(24.dp)
                             )
                         }
                     }
@@ -349,21 +351,32 @@ fun TransactionField(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (iconVector != null) {
-            Icon(
-                imageVector = iconVector,
-                contentDescription = label,
-                modifier = Modifier.padding(end = 16.dp).size(28.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
-        } else if (iconRes != null) {
-            Icon(
-                painter = painterResource(id = iconRes),
-                contentDescription = label,
-                modifier = Modifier.padding(end = 16.dp).size(28.dp),
-                tint = MaterialTheme.colorScheme.primary
-            )
+        if (iconVector != null || iconRes != null) {
+            Box(
+                modifier = Modifier
+                    .padding(end = 12.dp)
+                    .size(56.dp) // Prominent M3 expressive squircle for icon
+                    .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(16.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                if (iconVector != null) {
+                    Icon(
+                        imageVector = iconVector,
+                        contentDescription = label,
+                        modifier = Modifier.size(28.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                } else if (iconRes != null) {
+                    Icon(
+                        painter = painterResource(id = iconRes),
+                        contentDescription = label,
+                        modifier = Modifier.size(28.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
         }
+        
         Box(modifier = Modifier.weight(1f)) {
             val modifier = if (onClick != null) {
                 Modifier
