@@ -275,27 +275,48 @@ fun NewEditTransactionScreen(
                     trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
                 )
     
+                // First row: Wallet selection and Add wallet via M3 Button Group (Segmented Buttons)
+                SingleChoiceSegmentedButtonRow(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp)
+                ) {
+                    SegmentedButton(
+                        selected = true,
+                        onClick = onWalletClick,
+                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
+                        icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                    ) {
+                        Text(state.wallet?.name ?: "Wallet 1")
+                    }
+                    SegmentedButton(
+                        selected = false,
+                        onClick = onWalletClick,
+                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
+                        icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                    ) {
+                        Text("Wallet 2")
+                    }
+                    SegmentedButton(
+                        selected = false,
+                        onClick = onWalletClick,
+                        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+                        icon = { Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                    ) {
+                        Text("Add")
+                    }
+                }
+
+                // Second row: Event, People, Place
                 FlowRow(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 8.dp),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    InputChip(
-                        selected = state.wallet != null,
-                        onClick = onWalletClick,
-                        label = { Text(state.wallet?.name ?: "Wallet") },
-                        leadingIcon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) },
-                        trailingIcon = if (state.wallet != null) { { Icon(Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(18.dp)) } } else null,
-                        shape = RoundedCornerShape(16.dp)
-                    )
-                    
                     InputChip(
                         selected = state.event != null,
                         onClick = onEventClick,
                         label = { Text(state.event?.name ?: "Event") },
                         leadingIcon = { Icon(Icons.Default.Event, contentDescription = null, modifier = Modifier.size(18.dp)) },
-                        trailingIcon = if (state.event != null) { { Icon(Icons.Default.Clear, contentDescription = "Clear Event", modifier = Modifier.size(18.dp).clickable { onEventClear() }) } } else null,
-                        shape = RoundedCornerShape(16.dp)
+                        trailingIcon = if (state.event != null) { { Icon(Icons.Default.Clear, contentDescription = "Clear Event", modifier = Modifier.size(18.dp).clickable { onEventClear() }) } } else null
                     )
                     
                     val peopleText = if (state.people.isNotEmpty()) state.people.joinToString { it.name } else "People"
@@ -304,8 +325,7 @@ fun NewEditTransactionScreen(
                         onClick = onPeopleClick,
                         label = { Text(peopleText) },
                         leadingIcon = { Icon(Icons.Default.Group, contentDescription = null, modifier = Modifier.size(18.dp)) },
-                        trailingIcon = if (state.people.isNotEmpty()) { { Icon(Icons.Default.Clear, contentDescription = "Clear People", modifier = Modifier.size(18.dp).clickable { onPeopleClear() }) } } else null,
-                        shape = RoundedCornerShape(16.dp)
+                        trailingIcon = if (state.people.isNotEmpty()) { { Icon(Icons.Default.Clear, contentDescription = "Clear People", modifier = Modifier.size(18.dp).clickable { onPeopleClear() }) } } else null
                     )
 
                     InputChip(
@@ -313,8 +333,7 @@ fun NewEditTransactionScreen(
                         onClick = onPlaceClick,
                         label = { Text(state.place?.name ?: "Place") },
                         leadingIcon = { Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(18.dp)) },
-                        trailingIcon = if (state.place != null) { { Icon(Icons.Default.Clear, contentDescription = "Clear Place", modifier = Modifier.size(18.dp).clickable { onPlaceClear() }) } } else null,
-                        shape = RoundedCornerShape(16.dp)
+                        trailingIcon = if (state.place != null) { { Icon(Icons.Default.Clear, contentDescription = "Clear Place", modifier = Modifier.size(18.dp).clickable { onPlaceClear() }) } } else null
                     )
                 }
     
@@ -411,4 +430,6 @@ fun TransactionField(
             )
         }
     }
+}
+
 }
