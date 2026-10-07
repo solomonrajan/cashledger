@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -59,7 +61,7 @@ data class TransactionScreenState(
     val isWalletEnabled: Boolean = true
 )
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun NewEditTransactionScreen(
     state: TransactionScreenState,
@@ -271,38 +273,48 @@ fun NewEditTransactionScreen(
                     trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
                 )
     
-                TransactionField(
-                    iconVector = Icons.Default.AccountBalanceWallet,
-                    label = "Wallet",
-                    value = state.wallet?.name ?: "",
-                    placeholder = "Select wallet",
-                    onClick = onWalletClick,
-                    trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
-                )
-                
-                TransactionField(
-                    iconVector = Icons.Default.Event,
-                    label = "Event",
-                    value = state.event?.name ?: "",
-                    placeholder = "Enter event",
-                    onClick = onEventClick
-                )
-    
-                TransactionField(
-                    iconVector = Icons.Default.Group,
-                    label = "People",
-                    value = state.people.joinToString { it.name },
-                    placeholder = "Add people",
-                    onClick = onPeopleClick
-                )
-    
-                TransactionField(
-                    iconVector = Icons.Default.LocationOn,
-                    label = "Place",
-                    value = state.place?.name ?: "",
-                    placeholder = "Enter place",
-                    onClick = onPlaceClick
-                )
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    InputChip(
+                        selected = state.wallet != null,
+                        onClick = onWalletClick,
+                        label = { Text(state.wallet?.name ?: "Wallet") },
+                        leadingIcon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        trailingIcon = if (state.wallet != null) { { Icon(Icons.Default.ArrowDropDown, contentDescription = null, modifier = Modifier.size(18.dp)) } } else null,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    
+                    InputChip(
+                        selected = state.event != null,
+                        onClick = onEventClick,
+                        label = { Text(state.event?.name ?: "Event") },
+                        leadingIcon = { Icon(Icons.Default.Event, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        trailingIcon = if (state.event != null) { { Icon(Icons.Default.Clear, contentDescription = "Clear Event", modifier = Modifier.size(18.dp).clickable { onEventClear() }) } } else null,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    
+                    val peopleText = if (state.people.isNotEmpty()) state.people.joinToString { it.name } else "People"
+                    InputChip(
+                        selected = state.people.isNotEmpty(),
+                        onClick = onPeopleClick,
+                        label = { Text(peopleText) },
+                        leadingIcon = { Icon(Icons.Default.Group, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        trailingIcon = if (state.people.isNotEmpty()) { { Icon(Icons.Default.Clear, contentDescription = "Clear People", modifier = Modifier.size(18.dp).clickable { onPeopleClear() }) } } else null,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+
+                    InputChip(
+                        selected = state.place != null,
+                        onClick = onPlaceClick,
+                        label = { Text(state.place?.name ?: "Place") },
+                        leadingIcon = { Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(18.dp)) },
+                        trailingIcon = if (state.place != null) { { Icon(Icons.Default.Clear, contentDescription = "Clear Place", modifier = Modifier.size(18.dp).clickable { onPlaceClear() }) } } else null,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                }
     
                 TransactionField(
                     iconVector = Icons.Default.Description,
