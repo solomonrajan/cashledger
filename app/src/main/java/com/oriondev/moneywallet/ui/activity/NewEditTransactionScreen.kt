@@ -45,6 +45,7 @@ data class TransactionScreenState(
     val category: Category? = null,
     val date: Date? = Date(),
     val wallet: Wallet? = null,
+    val availableWallets: List<Wallet> = emptyList(),
     val event: Event? = null,
     val people: List<Person> = emptyList(),
     val place: Place? = null,
@@ -71,6 +72,7 @@ fun NewEditTransactionScreen(
     onCategoryClick: () -> Unit,
     onDateChange: (Date) -> Unit,
     onWalletClick: () -> Unit,
+    onWalletSelect: (Wallet) -> Unit = {},
     onEventClick: () -> Unit,
     onEventClear: () -> Unit,
     onPeopleClick: () -> Unit,
@@ -279,26 +281,24 @@ fun NewEditTransactionScreen(
                 SingleChoiceSegmentedButtonRow(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp)
                 ) {
-                    SegmentedButton(
-                        selected = true,
-                        onClick = onWalletClick,
-                        shape = SegmentedButtonDefaults.itemShape(index = 0, count = 3),
-                        icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                    ) {
-                        Text(state.wallet?.name ?: "Wallet 1")
+                    val mockWallets = listOf("tow wallet", "State Bank of India")
+                    val totalButtons = mockWallets.size + 1
+                    
+                    mockWallets.forEachIndexed { index, walletName ->
+                        SegmentedButton(
+                            selected = state.wallet?.name == walletName,
+                            onClick = { }, // In a real app, this would call onWalletSelect(wallet)
+                            shape = SegmentedButtonDefaults.itemShape(index = index, count = totalButtons),
+                            icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                        ) {
+                            Text(walletName)
+                        }
                     }
+
                     SegmentedButton(
                         selected = false,
                         onClick = onWalletClick,
-                        shape = SegmentedButtonDefaults.itemShape(index = 1, count = 3),
-                        icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                    ) {
-                        Text("Wallet 2")
-                    }
-                    SegmentedButton(
-                        selected = false,
-                        onClick = onWalletClick,
-                        shape = SegmentedButtonDefaults.itemShape(index = 2, count = 3),
+                        shape = SegmentedButtonDefaults.itemShape(index = mockWallets.size, count = totalButtons),
                         icon = { Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp)) }
                     ) {
                         Text("Add")
