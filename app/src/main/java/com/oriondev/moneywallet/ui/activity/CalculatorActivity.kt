@@ -350,39 +350,34 @@ fun CalculatorRow(items: List<Pair<String, String>>, onInput: (String) -> Unit) 
     }
 }
 
+@Suppress("SwallowedException")
 fun getLiveResult(equation: String): String {
     val operators = listOf(" + ", " − ", " × ", " ÷ ")
-    var op: String? = null
-    for (o in operators) {
-        if (equation.contains(o)) {
-            op = o
-            break
-        }
-    }
-    if (op != null) {
-        val parts = equation.split(op)
-        if (parts.size == 2 && parts[1].isNotEmpty()) {
-            try {
-                val first = java.math.BigDecimal(parts[0])
-                val second = java.math.BigDecimal(parts[1])
-                val result = when (op) {
-                    " + " -> first.add(second)
-                    " − " -> first.subtract(second)
-                    " × " -> first.multiply(second)
-                    " ÷ " -> {
-                        if (second.compareTo(java.math.BigDecimal.ZERO) != 0) {
-                            first.divide(second, 8, java.math.RoundingMode.HALF_EVEN).stripTrailingZeros()
-                        } else {
-                            java.math.BigDecimal.ZERO
-                        }
-                    }
-                    else -> first
+    val op = operators.find { equation.contains(it) } ?: return equation
+
+    val parts = equation.split(op)
+    if (parts.size != 2 || parts[1].isEmpty()) return equation
+
+    return try {
+        val first = java.math.BigDecimal(parts[0])
+        val second = java.math.BigDecimal(parts[1])
+        val result = when (op) {
+            " + " -> first.add(second)
+            " − " -> first.subtract(second)
+            " × " -> first.multiply(second)
+            " ÷ " -> {
+                if (second.compareTo(java.math.BigDecimal.ZERO) != 0) {
+                    first.divide(second, 8, java.math.RoundingMode.HALF_EVEN).stripTrailingZeros()
+                } else {
+                    java.math.BigDecimal.ZERO
                 }
-                return result.stripTrailingZeros().toPlainString()
-            } catch (e: Exception) {
-                return equation
             }
+            else -> first
         }
+        result.stripTrailingZeros().toPlainString()
+    } catch (e: NumberFormatException) {
+        equation
+    } catch (e: ArithmeticException) {
+        equation
     }
-    return equation
 }
