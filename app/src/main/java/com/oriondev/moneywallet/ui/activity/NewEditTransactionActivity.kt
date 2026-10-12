@@ -165,6 +165,13 @@ class NewEditTransactionActivity : AppCompatActivity(),
                 onCategoryClick = { mCategoryPicker.showPicker() },
                 onDateChange = { _state = _state.copy(date = it) },
                 onWalletClick = { mWalletPicker.showSingleWalletPicker() },
+                onWalletSelect = { selectedWallet ->
+                    _state = _state.copy(
+                        wallet = selectedWallet,
+                        currency = selectedWallet.currency ?: _state.currency
+                    )
+                    mMoneyPicker = MoneyPicker.createPicker(supportFragmentManager, TAG_MONEY_PICKER, _state.currency, _state.money)
+                },
                 onEventClick = { mEventPicker.showPicker(_state.date) },
                 onEventClear = { _state = _state.copy(event = null) },
                 onPeopleClick = { mPersonPicker.showPicker() },
@@ -211,7 +218,11 @@ class NewEditTransactionActivity : AppCompatActivity(),
     }
 
     override fun onWalletChanged(tag: String?, wallet: Wallet?) {
-        _state = _state.copy(wallet = wallet)
+        _state = _state.copy(
+            wallet = wallet,
+            currency = wallet?.currency ?: _state.currency
+        )
+        mMoneyPicker = MoneyPicker.createPicker(supportFragmentManager, TAG_MONEY_PICKER, _state.currency, _state.money)
     }
 
     override fun onEventChanged(tag: String?, event: Event?) {

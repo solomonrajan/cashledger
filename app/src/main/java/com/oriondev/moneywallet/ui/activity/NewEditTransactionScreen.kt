@@ -11,8 +11,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -277,31 +279,119 @@ fun NewEditTransactionScreen(
                     trailingIcon = { Icon(Icons.Default.ArrowDropDown, contentDescription = null) }
                 )
     
-                // First row: Wallet selection and Add wallet via M3 Button Group (Segmented Buttons)
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp)
-                ) {
-                    val mockWallets = listOf("tow wallet", "State Bank of India")
-                    val totalButtons = mockWallets.size + 1
-                    
-                    mockWallets.forEachIndexed { index, walletName ->
-                        SegmentedButton(
-                            selected = state.wallet?.name == walletName,
-                            onClick = { }, // In a real app, this would call onWalletSelect(wallet)
-                            shape = SegmentedButtonDefaults.itemShape(index = index, count = totalButtons),
-                            icon = { Icon(Icons.Default.AccountBalanceWallet, contentDescription = null, modifier = Modifier.size(18.dp)) }
-                        ) {
-                            Text(walletName)
-                        }
-                    }
-
-                    SegmentedButton(
-                        selected = false,
-                        onClick = onWalletClick,
-                        shape = SegmentedButtonDefaults.itemShape(index = mockWallets.size, count = totalButtons),
-                        icon = { Icon(Icons.Default.Add, contentDescription = null, modifier = Modifier.size(18.dp)) }
+                // Wallet Selection Section (M3 Choice Chips & Quick Switch)
+                if (state.isWalletEnabled) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Add")
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.AccountBalanceWallet,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(20.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                                Text(
+                                    text = "Wallet",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+
+                            TextButton(
+                                onClick = onWalletClick,
+                                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+                                modifier = Modifier.height(32.dp)
+                            ) {
+                                Text(
+                                    text = "All Wallets",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Icon(
+                                    imageVector = Icons.Default.ChevronRight,
+                                    contentDescription = "All Wallets",
+                                    modifier = Modifier.size(16.dp),
+                                    tint = MaterialTheme.colorScheme.primary
+                                )
+                            }
+                        }
+
+                        val walletsToDisplay = if (state.availableWallets.isNotEmpty()) {
+                            state.availableWallets
+                        } else if (state.wallet != null) {
+                            listOf(state.wallet)
+                        } else {
+                            emptyList()
+                        }
+
+                        val walletScrollState = rememberScrollState()
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .horizontalScroll(walletScrollState),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Spacer(modifier = Modifier.width(2.dp))
+
+                            walletsToDisplay.forEach { wallet ->
+                                val isSelected = state.wallet?.id == wallet.id
+
+                                FilterChip(
+                                    selected = isSelected,
+                                    onClick = { onWalletSelect(wallet) },
+                                    label = {
+                                        Text(
+                                            text = wallet.name,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    },
+                                    leadingIcon = {
+                                        Icon(
+                                            imageVector = if (isSelected) Icons.Default.Check else Icons.Default.AccountBalanceWallet,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(18.dp)
+                                        )
+                                    },
+                                    colors = FilterChipDefaults.filterChipColors(
+                                        selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                        selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                    ),
+                                    shape = RoundedCornerShape(12.dp)
+                                )
+                            }
+
+                            AssistChip(
+                                onClick = onWalletClick,
+                                label = { Text("More...") },
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Add,
+                                        contentDescription = "Add or pick wallet",
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                },
+                                shape = RoundedCornerShape(12.dp)
+                            )
+
+                            Spacer(modifier = Modifier.width(2.dp))
+                        }
                     }
                 }
 

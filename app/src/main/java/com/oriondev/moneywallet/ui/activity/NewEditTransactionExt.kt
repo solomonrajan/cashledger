@@ -116,6 +116,46 @@ fun NewEditTransactionActivity.loadTransactionData(mode: NewEditItemActivity.Mod
             state = state.copy(date = Date())
         }
         
+        // Query all unarchived wallets for quick selection
+        val walletsList = mutableListOf<Wallet>()
+        val walletsUri = DataContentProvider.CONTENT_WALLETS
+        val wProjection = arrayOf(
+            Contract.Wallet.ID,
+            Contract.Wallet.NAME,
+            Contract.Wallet.ICON,
+            Contract.Wallet.CURRENCY,
+            Contract.Wallet.START_MONEY,
+            Contract.Wallet.TOTAL_MONEY
+        )
+        val wSelection = "${Contract.Wallet.ARCHIVED} = 0"
+        val wSortOrder = "${Contract.Wallet.INDEX} ASC, ${Contract.Wallet.NAME} ASC"
+        contentResolver.query(walletsUri, wProjection, wSelection, null, wSortOrder)?.use { cursor ->
+            val idIdx = cursor.getColumnIndexOrThrow(Contract.Wallet.ID)
+            val nameIdx = cursor.getColumnIndexOrThrow(Contract.Wallet.NAME)
+            val iconIdx = cursor.getColumnIndexOrThrow(Contract.Wallet.ICON)
+            val currencyIdx = cursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY)
+            val startIdx = cursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY)
+            val totalIdx = cursor.getColumnIndexOrThrow(Contract.Wallet.TOTAL_MONEY)
+            while (cursor.moveToNext()) {
+                val wCurrency = CurrencyManager.getCurrency(cursor.getString(currencyIdx))
+                walletsList.add(
+                    Wallet(
+                        cursor.getLong(idIdx),
+                        cursor.getString(nameIdx),
+                        IconLoader.parse(cursor.getString(iconIdx)),
+                        wCurrency,
+                        cursor.getLong(startIdx),
+                        cursor.getLong(totalIdx)
+                    )
+                )
+            }
+        }
+        state = state.copy(availableWallets = walletsList)
+        if (state.wallet == null && walletsList.isNotEmpty()) {
+            val defaultWallet = walletsList.first()
+            state = state.copy(wallet = defaultWallet, currency = defaultWallet.currency)
+        }
+
         withContext(Dispatchers.Main) {
             onLoaded(state)
         }
