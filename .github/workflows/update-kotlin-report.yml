@@ -1,0 +1,54 @@
+name: Update Kotlin Migration Report
+
+on:
+  push:
+    branches:
+      - master
+      - javatokotlin
+      - userinterface
+    paths:
+      - 'app/**/*.java'
+      - 'app/**/*.kt'
+      - 'scripts/update_kotlin_report.py'
+      - '.github/workflows/update-kotlin-report.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-kotlin-report-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update-report:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Report Generator
+        run: python scripts/update_kotlin_report.py
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+
+      - name: Commit and Push if Changed
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add KOTLIN_MIGRATION_REPORT.md
+          if git diff --staged --quiet; then
+            echo "No changes in Kotlin migration report."
+          else
+            git commit -m "docs: auto-update Kotlin migration report [skip ci]"
+            git push
+          fi
