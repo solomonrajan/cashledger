@@ -288,6 +288,54 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>2e3639b</code></b> — <b>Merge branch 'javatokotlin' of https://github.com/solomonrajan/cashledger into javatokotlin</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`2e3639b`](https://github.com/solomonrajan/cashledger/commit/2e3639b)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
+* **Description**: *(Single-line commit)*
+
+</details>
+
+<details open>
+<summary><b><code>48326f9</code></b> — <b>fix(transaction): persist missing direction, type, and relationships on save</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`48326f9`](https://github.com/solomonrajan/cashledger/commit/48326f9)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
+* **Description / Scope**:
+
+  > Resolve an issue where adding or editing a transaction did not show up
+  > in the transaction list screen.
+  >
+  > Root Cause:
+  > The `transaction_direction` and `transaction_type` columns in `Schema.Transaction`
+  > have `NOT NULL` constraints. During `saveTransactionData()`, both values were
+  > omitted from `TransactionContentValuesBuilder`. This resulted in silent SQLite
+  > insert failures (`insert()` returning -1), leaving the database unchanged and
+  > preventing `ContentObserver` updates on `CONTENT_TRANSACTIONS`.
+  >
+  > Changes:
+  > - Populate `direction` and `type` in `TransactionContentValuesBuilder` inside
+  >   `saveTransactionData()`.
+  > - Persist associated relations: `peopleIds`, `attachmentIds`, `savingId`, and `debtId`.
+  > - Add `type`, `debtId`, and `savingId` properties with defaults to `TransactionScreenState`.
+  > - Update `loadTransactionData()` to properly restore linked people, transaction type,
+  >   saving, and debt relationships.
+  > - Complete savings goal progress when withdrawing the entire remaining balance.
+  > - Handle post-save cleanup by invoking `cleanUpAttachments()`, setting `RESULT_OK`,
+  >   and calling `finishSaveDatedAt()`.
+
+</details>
+
+<details open>
+<summary><b><code>85f6311</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-12 by github-actions[bot])</i></summary>
+
+* **Commit Link**: [`85f6311`](https://github.com/solomonrajan/cashledger/commit/85f6311)
+* **Author**: github-actions[bot] • **Date**: 2026-10-12
+* **Description**: *(Single-line commit)*
+
+</details>
+
+<details open>
 <summary><b><code>bcc230d</code></b> — <b>UI: Replace broken wallet segmented button with Material 3 FilterChips</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`bcc230d`](https://github.com/solomonrajan/cashledger/commit/bcc230d)
@@ -346,44 +394,5 @@ gantt
 
   > - **Syntax Hotfix:** Removed an orphaned trailing `}` at the end of `NewEditTransactionScreen.kt` that was left behind after removing the custom chip composables.
   > - **CI Build Restored:** This resolves the "Expecting a top level declaration" syntax error and restores the `compileFlossOsmDebugKotlin` Gradle build pipeline to a passing state.
-
-</details>
-
-<details open>
-<summary><b><code>2a9bdd8</code></b> — <b>UI: Enforce strict Material 3 guidelines for button groups and chips</b> <i>(2026-10-07 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`2a9bdd8`](https://github.com/solomonrajan/cashledger/commit/2a9bdd8)
-* **Author**: Solomon Rajan • **Date**: 2026-10-07
-* **Description / Scope**:
-
-  > - **Segmented Button Group:** Refactored the wallet selection row from loose individual chips into a native `SingleChoiceSegmentedButtonRow`. This perfectly implements the M3 Button Group specification, visually merging the wallet options and 'Add wallet' action into a single cohesive, pill-shaped selector unit.
-  > - **Strict M3 InputChips:** Removed the oversized custom chip implementations and reverted the Event, People, and Place attributes to utilize native Compose M3 `InputChip` components.
-  > - **Guideline Compliance:** This ensures the secondary attributes strictly adhere to official Material Design 3 Chip guidelines, automatically enforcing standard `32.dp` heights, `8.dp` corner radiuses, and standardized interactive state formatting.
-
-</details>
-
-<details open>
-<summary><b><code>5834454</code></b> — <b>UI: Enhance transaction screen with bold M3 Expressive coloring and layering</b> <i>(2026-10-07 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`5834454`](https://github.com/solomonrajan/cashledger/commit/5834454)
-* **Author**: Solomon Rajan • **Date**: 2026-10-07
-* **Description / Scope**:
-
-  > - **Amount Card Layering:** Re-themed the primary amount card to utilize a soft `primaryContainer` background with an expansive `28.dp` corner radius.
-  > - **Nested Tactile Buttons:** Redesigned the inline calculator action to sit within its own semi-translucent `surface` squircle (`16.dp` radius), introducing a rich, layered "button-within-a-card" aesthetic that perfectly mirrors the target design mockup.
-  > - **Maximized Primary Action:** Upgraded the "Save Transaction" pill button to use fully saturated `primary` colors, establishing a bold visual anchor at the bottom of the screen that commands attention and cleanly reduces perceived blank space.
-
-</details>
-
-<details open>
-<summary><b><code>43afd2c</code></b> — <b>UI: Modernize transaction attributes with M3 Expressive InputChips</b> <i>(2026-10-07 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`43afd2c`](https://github.com/solomonrajan/cashledger/commit/43afd2c)
-* **Author**: Solomon Rajan • **Date**: 2026-10-07
-* **Description / Scope**:
-
-  > - **FlowRow Grouping:** Replaced the bulky, vertically stacked `OutlinedTextField` implementations for Wallet, Event, People, and Place with a responsive `FlowRow`, drastically reducing visual clutter and vertical scroll fatigue on the new transaction screen.
-  > - **Expressive InputChips:** Transitioned the attribute selectors to highly interactive M3 `InputChip` components.
-  > - **Context-Aware States:** The chips dynamically reflect their selection state (utilizing `primaryContainer` highlighting when active) and now expose inline trailing actions, such as a dropdown chevron for wallets and a quick-clear (`✖`) action for events, people, and places, fully adhering to Google's Material 3 Expressive guidelines.
 
 </details>
