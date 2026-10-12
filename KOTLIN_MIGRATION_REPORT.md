@@ -288,6 +288,29 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>bcc230d</code></b> — <b>UI: Replace broken wallet segmented button with Material 3 FilterChips</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`bcc230d`](https://github.com/solomonrajan/cashledger/commit/bcc230d)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
+* **Description / Scope**:
+
+  > - Replace rigid SingleChoiceSegmentedButtonRow with a horizontally scrollable FilterChip carousel to prevent text clipping, squashing, and layout distortion on long wallet names.
+  > - Connect live database querying in loadTransactionData to populate state.availableWallets from active, unarchived user accounts.
+  > - Wire up onWalletSelect callback in NewEditTransactionActivity to update the selected wallet, active currency, and money picker in real time.
+  > - Add an "All Wallets" header action and trailing "+ More..." chip to allow direct access to the full WalletPicker dialog.
+
+</details>
+
+<details open>
+<summary><b><code>8ecd1db</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-12 by github-actions[bot])</i></summary>
+
+* **Commit Link**: [`8ecd1db`](https://github.com/solomonrajan/cashledger/commit/8ecd1db)
+* **Author**: github-actions[bot] • **Date**: 2026-10-12
+* **Description**: *(Single-line commit)*
+
+</details>
+
+<details open>
 <summary><b><code>27700b6</code></b> — <b>Docs: Add creative Kotlin migration report with automated GitHub workflow</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`27700b6`](https://github.com/solomonrajan/cashledger/commit/27700b6)
@@ -362,32 +385,5 @@ gantt
   > - **FlowRow Grouping:** Replaced the bulky, vertically stacked `OutlinedTextField` implementations for Wallet, Event, People, and Place with a responsive `FlowRow`, drastically reducing visual clutter and vertical scroll fatigue on the new transaction screen.
   > - **Expressive InputChips:** Transitioned the attribute selectors to highly interactive M3 `InputChip` components.
   > - **Context-Aware States:** The chips dynamically reflect their selection state (utilizing `primaryContainer` highlighting when active) and now expose inline trailing actions, such as a dropdown chevron for wallets and a quick-clear (`✖`) action for events, people, and places, fully adhering to Google's Material 3 Expressive guidelines.
-
-</details>
-
-<details open>
-<summary><b><code>f27d42f</code></b> — <b>Fix: Resolve detekt static analysis violations in CalculatorActivity</b> <i>(2026-10-07 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`f27d42f`](https://github.com/solomonrajan/cashledger/commit/f27d42f)
-* **Author**: Solomon Rajan • **Date**: 2026-10-07
-* **Description / Scope**:
-
-  > - Reduce Nesting Depth: Refactored the `getLiveResult` calculator logic to utilize Kotlin's `.find` and early returns, flattening the control flow to resolve the `[NestedBlockDepth]` violation.
-  > - Specific Exception Handling: Replaced the generic `Exception` catch block with explicit captures for `NumberFormatException` and `ArithmeticException`, directly satisfying the `[TooGenericExceptionCaught]` rule.
-  > - **Suppress Expected Fallbacks:** Added the `@Suppress("SwallowedException")` annotation to formally acknowledge that swallowing calculation errors and returning the raw string is the intended UI fallback behavior.
-  > - This ensures the codebase successfully passes the rigorous `./gradlew detekt` CI validations.
-
-</details>
-
-<details open>
-<summary><b><code>96c88be</code></b> — <b>Feature: Add live equation preview and instant calculation</b> <i>(2026-10-07 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`96c88be`](https://github.com/solomonrajan/cashledger/commit/96c88be)
-* **Author**: Solomon Rajan • **Date**: 2026-10-07
-* **Description / Scope**:
-
-  > - Live Calculation Engine: Implemented a new `getLiveResult` evaluator in `CalculatorActivity` that parses and computes the current expression on the fly using `BigDecimal` for perfect precision.
-  > - Dynamic Dual-Display: Restructured the calculator amount card to intelligently utilize vertical space. While typing an equation, the raw expression (e.g., `12 + 1`) gracefully shifts up as a smaller, faded subtitle, while the massive, dynamic main text immediately displays the live evaluated result (e.g., `13`).
-  > - Enhanced UX: This transforms the calculator from a static input field into a highly responsive, smart UI that instantly informs the user of the pending outcome before they even hit the execute key.
 
 </details>
