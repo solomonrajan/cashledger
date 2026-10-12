@@ -288,6 +288,27 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>97d4d8c</code></b> — <b>fix: add missing Contract import in NewEditTransactionScreen and remove deprecated package in manifest</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`97d4d8c`](https://github.com/solomonrajan/cashledger/commit/97d4d8c)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
+* **Description / Scope**:
+
+  > - Import Contract to resolve unresolved reference in NewEditTransactionScreen
+  > - Remove deprecated package attribute from AndroidManifest.xml in favor of namespace in build.gradle
+
+</details>
+
+<details open>
+<summary><b><code>1826059</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-12 by github-actions[bot])</i></summary>
+
+* **Commit Link**: [`1826059`](https://github.com/solomonrajan/cashledger/commit/1826059)
+* **Author**: github-actions[bot] • **Date**: 2026-10-12
+* **Description**: *(Single-line commit)*
+
+</details>
+
+<details open>
 <summary><b><code>2e3639b</code></b> — <b>Merge branch 'javatokotlin' of https://github.com/solomonrajan/cashledger into javatokotlin</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`2e3639b`](https://github.com/solomonrajan/cashledger/commit/2e3639b)
@@ -369,30 +390,5 @@ gantt
   > - **Hall of Fame & Bounty Board:** Cataloged all 30 converted Kotlin files with direct GitHub repository links, identified top Java refactoring targets, and added humorous developer comparisons.
   > - **Commit Chronicles:** Integrated a live dispatch section summarizing recent migration commits, subjects, and architectural descriptions.
   > - **Automated Workflow & Tooling:** Introduced `scripts/update_kotlin_report.py` and `.github/workflows/update-kotlin-report.yml` to automatically rescan source files and regenerate the report on pushes to `master`, `javatokotlin`, and `userinterface`.
-
-</details>
-
-<details open>
-<summary><b><code>df76660</code></b> — <b>UI: Implement dynamic wallet names and adaptive sizing in Segmented Buttons</b> <i>(2026-10-07 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`df76660`](https://github.com/solomonrajan/cashledger/commit/df76660)
-* **Author**: Solomon Rajan • **Date**: 2026-10-07
-* **Description / Scope**:
-
-  > - **Realistic Data Rendering:** Replaced generic "Wallet 1" placeholders with concrete user wallet examples ("tow wallet", "State Bank of India") to visualize realistic layout constraints.
-  > - **Inline Selection:** Re-architected the segmented button interactions. Tapping a specific wallet button now acts as a direct inline selection instead of spawning the picker popup, reserving the popup strictly for the '+ Add' action.
-  > - **M3 Adaptive Text:** Removed strict `maxLines=1` text truncations. Adhering to Material 3 Button Group guidelines (which mandate equal width for all segments), the buttons will now dynamically wrap text and increase their vertical height to prevent any overlapping or clipping when displaying long wallet names.
-
-</details>
-
-<details open>
-<summary><b><code>801b268</code></b> — <b>Fix: Resolve dangling brace compilation error in transaction screen</b> <i>(2026-10-07 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`801b268`](https://github.com/solomonrajan/cashledger/commit/801b268)
-* **Author**: Solomon Rajan • **Date**: 2026-10-07
-* **Description / Scope**:
-
-  > - **Syntax Hotfix:** Removed an orphaned trailing `}` at the end of `NewEditTransactionScreen.kt` that was left behind after removing the custom chip composables.
-  > - **CI Build Restored:** This resolves the "Expecting a top level declaration" syntax error and restores the `compileFlossOsmDebugKotlin` Gradle build pipeline to a passing state.
 
 </details>
