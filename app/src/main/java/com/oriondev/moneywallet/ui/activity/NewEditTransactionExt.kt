@@ -69,6 +69,8 @@ fun NewEditTransactionActivity.loadTransactionData(mode: NewEditItemActivity.Mod
                     val walletIcon = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_ICON)))
                     val walletCurrency = CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_CURRENCY)))
 
+                    val type = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transaction.TYPE))
+
                     state = state.copy(
                         money = money,
                         date = if (!duplicating) DateUtils.getDateFromSQLDateTimeString(dateStr) else state.date,
@@ -78,11 +80,32 @@ fun NewEditTransactionActivity.loadTransactionData(mode: NewEditItemActivity.Mod
                         countInTotal = countInTotal,
                         category = Category(catId, catName, catIcon, catType, catTag),
                         wallet = Wallet(walletId, walletName, walletIcon, walletCurrency, 0L, 0L),
-                        currency = walletCurrency
+                        currency = walletCurrency,
+                        type = type
                     )
                 }
             }
             
+            // Load People
+            val peopleUri = Uri.withAppendedPath(uri, "people")
+            val pProjection = arrayOf(Contract.Person.ID, Contract.Person.NAME, Contract.Person.ICON)
+            val peopleList = mutableListOf<Person>()
+            contentResolver.query(peopleUri, pProjection, null, null, null)?.use { pCursor ->
+                val pIdIdx = pCursor.getColumnIndexOrThrow(Contract.Person.ID)
+                val pNameIdx = pCursor.getColumnIndexOrThrow(Contract.Person.NAME)
+                val pIconIdx = pCursor.getColumnIndexOrThrow(Contract.Person.ICON)
+                while (pCursor.moveToNext()) {
+                    peopleList.add(
+                        Person(
+                            pCursor.getLong(pIdIdx),
+                            pCursor.getString(pNameIdx),
+                            IconLoader.parse(pCursor.getString(pIconIdx))
+                        )
+                    )
+                }
+            }
+            state = state.copy(people = peopleList)
+
             // Load Attachments
             if (!duplicating) {
                 val attachmentsUri = Uri.withAppendedPath(uri, "attachments")
@@ -99,8 +122,30 @@ fun NewEditTransactionActivity.loadTransactionData(mode: NewEditItemActivity.Mod
             }
         } else {
             // New Item
-            val type = intent.getIntExtra(NewEditTransactionActivity.TYPE, NewEditTransactionActivity.TYPE_STANDARD)
-            if (type == NewEditTransactionActivity.TYPE_STANDARD) {
+            val type = intent.getIntExtra(NewEditTransactionActivity.TYPE, Contract.TransactionType.STANDARD)
+            val savingId = if (intent.hasExtra(NewEditTransactionActivity.SAVING_ID)) intent.getLongExtra(NewEditTransactionActivity.SAVING_ID, 0L).takeIf { it > 0L } else null
+            val debtId = if (intent.hasExtra(NewEditTransactionActivity.DEBT_ID)) intent.getLongExtra(NewEditTransactionActivity.DEBT_ID, 0L).takeIf { it > 0L } else null
+            state = state.copy(type = type, savingId = savingId, debtId = debtId, date = Date())
+
+            if (intent.hasExtra(NewEditTransactionActivity.PERSON_ID)) {
+                val personId = intent.getLongExtra(NewEditTransactionActivity.PERSON_ID, 0L)
+                if (personId > 0L) {
+                    val personUri = ContentUris.withAppendedId(DataContentProvider.CONTENT_PEOPLE, personId)
+                    val pProjection = arrayOf(Contract.Person.ID, Contract.Person.NAME, Contract.Person.ICON)
+                    contentResolver.query(personUri, pProjection, null, null, null)?.use { pCursor ->
+                        if (pCursor.moveToFirst()) {
+                            val person = Person(
+                                pCursor.getLong(pCursor.getColumnIndexOrThrow(Contract.Person.ID)),
+                                pCursor.getString(pCursor.getColumnIndexOrThrow(Contract.Person.NAME)),
+                                IconLoader.parse(pCursor.getString(pCursor.getColumnIndexOrThrow(Contract.Person.ICON)))
+                            )
+                            state = state.copy(people = listOf(person))
+                        }
+                    }
+                }
+            }
+
+            if (type == Contract.TransactionType.STANDARD) {
                 val currentWallet = intent.getLongExtra(NewEditTransactionActivity.WALLET_ID, PreferenceManager.getCurrentWallet())
                 val wUri = if (currentWallet == PreferenceManager.TOTAL_WALLET_ID) DataContentProvider.CONTENT_WALLETS else ContentUris.withAppendedId(DataContentProvider.CONTENT_WALLETS, currentWallet)
                 contentResolver.query(wUri, arrayOf(Contract.Wallet.ID, Contract.Wallet.NAME, Contract.Wallet.ICON, Contract.Wallet.CURRENCY), null, null, null)?.use { cursor ->
@@ -113,7 +158,6 @@ fun NewEditTransactionActivity.loadTransactionData(mode: NewEditItemActivity.Mod
                     }
                 }
             }
-            state = state.copy(date = Date())
         }
         
         // Query all unarchived wallets for quick selection
@@ -176,24 +220,39 @@ fun NewEditTransactionActivity.saveTransactionData(state: TransactionScreenState
             .date(DateUtils.getSQLDateTimeString(state.date))
             .description(state.description)
             .categoryId(state.category.id)
+            .direction(state.category.direction)
+            .type(state.type)
             .walletId(state.wallet.id)
             .note(state.note)
             .confirmed(if (state.confirmed) 1 else 0)
             .countInTotal(if (state.countInTotal) 1 else 0)
+            .peopleIds(Contract.getObjectIds(state.people))
+            .attachmentIds(Contract.getObjectIds(state.attachments))
             
+        state.savingId?.let { builder.savingId(it) }
+        state.debtId?.let { builder.debtId(it) }
         state.place?.let { builder.placeId(it.id) }
         state.event?.let { builder.eventId(it.id) }
         
+        val contentValues = builder.build()
         if (state.mode == NewEditItemActivity.Mode.NEW_ITEM) {
-            val insertedUri = contentResolver.insert(DataContentProvider.CONTENT_TRANSACTIONS, builder.build())
-            // Save people and attachments
+            contentResolver.insert(DataContentProvider.CONTENT_TRANSACTIONS, contentValues)
+            val action = intent.getIntExtra(NewEditTransactionActivity.SAVING_ACTION, 0)
+            if (state.savingId != null && action == NewEditTransactionActivity.SAVING_WITHDRAW_EVERYTHING) {
+                val cv = ContentValues()
+                cv.put(Contract.Saving.COMPLETE, true)
+                val uri = ContentUris.withAppendedId(DataContentProvider.CONTENT_SAVINGS, state.savingId)
+                contentResolver.update(uri, cv, null, null)
+            }
         } else {
             val uri = ContentUris.withAppendedId(DataContentProvider.CONTENT_TRANSACTIONS, itemId)
-            contentResolver.update(uri, builder.build(), null, null)
+            contentResolver.update(uri, contentValues, null, null)
         }
         
         withContext(Dispatchers.Main) {
-            finish()
+            cleanUpAttachments()
+            setResult(android.app.Activity.RESULT_OK)
+            finishSaveDatedAt(state.date)
         }
     }
 }

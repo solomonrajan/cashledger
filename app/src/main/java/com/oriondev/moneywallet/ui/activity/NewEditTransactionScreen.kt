@@ -57,6 +57,9 @@ data class TransactionScreenState(
     val attachments: List<Attachment> = emptyList(),
     val mode: NewEditItemActivity.Mode = NewEditItemActivity.Mode.NEW_ITEM,
     val titleRes: Int = R.string.title_activity_new_transaction,
+    val type: Int = Contract.TransactionType.STANDARD,
+    val debtId: Long? = null,
+    val savingId: Long? = null,
     
     // UI visibility toggles from Rules
     val isCategoryEnabled: Boolean = true,

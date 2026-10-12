@@ -246,6 +246,19 @@ class NewEditTransactionActivity : AppCompatActivity(),
         saveTransactionData(_state, itemId)
     }
 
+    fun cleanUpAttachments() {
+        if (::mAttachmentPicker.isInitialized) {
+            mAttachmentPicker.cleanUp(false)
+        }
+    }
+
+    fun finishSaveDatedAt(date: Date?) {
+        if (date != null && date.after(Date())) {
+            android.widget.Toast.makeText(this, R.string.message_saved_dated_ahead, android.widget.Toast.LENGTH_LONG).show()
+        }
+        finish()
+    }
+
     // Exposed for backward compatibility with existing unit tests
     fun onMenuItemClick(item: android.view.MenuItem): Boolean {
         if (item.itemId == R.id.action_save_changes) {
