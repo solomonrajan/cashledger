@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.model.*
+import com.oriondev.moneywallet.storage.database.Contract
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
