@@ -36,7 +36,7 @@ class NewEditTransferActivityTest {
 
     @Test
     fun testTransferWalletSwapping() {
-        val currency = CurrencyUnit("EUR", "€", "Euro", 2, "€")
+        val currency = CurrencyUnit("EUR", "Euro", "€", 2)
         val walletA = Wallet(1L, "Checking", IconLoader.parse(""), currency, 1000L, 5000L)
         val walletB = Wallet(2L, "Savings", IconLoader.parse(""), currency, 2000L, 10000L)
 
