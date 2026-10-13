@@ -291,6 +291,28 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>3dd4435</code></b> — <b>test(transfer): fix CurrencyUnit constructor parameters in unit tests</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`3dd4435`](https://github.com/solomonrajan/cashledger/commit/3dd4435)
+* **Author**: Solomon Rajan • **Date**: 2026-10-13
+* **Description / Scope**:
+
+  > - Correct CurrencyUnit initialization in NewEditTransferActivityTest.kt
+  >   from 5 arguments to the expected 4 arguments (iso, name, symbol, decimals).
+  > - Resolves the :app:compileFlossOsmDebugUnitTestKotlin build failure on CI.
+
+</details>
+
+<details open>
+<summary><b><code>a804e95</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-13 by github-actions[bot])</i></summary>
+
+* **Commit Link**: [`a804e95`](https://github.com/solomonrajan/cashledger/commit/a804e95)
+* **Author**: github-actions[bot] • **Date**: 2026-10-13
+* **Description**: *(Single-line commit)*
+
+</details>
+
+<details open>
 <summary><b><code>edd7bff</code></b> — <b>fix(transfer): resolve duplicate GoogleSansCode declaration</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`edd7bff`](https://github.com/solomonrajan/cashledger/commit/edd7bff)
@@ -368,44 +390,5 @@ gantt
 * **Commit Link**: [`1826059`](https://github.com/solomonrajan/cashledger/commit/1826059)
 * **Author**: github-actions[bot] • **Date**: 2026-10-12
 * **Description**: *(Single-line commit)*
-
-</details>
-
-<details open>
-<summary><b><code>2e3639b</code></b> — <b>Merge branch 'javatokotlin' of https://github.com/solomonrajan/cashledger into javatokotlin</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`2e3639b`](https://github.com/solomonrajan/cashledger/commit/2e3639b)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description**: *(Single-line commit)*
-
-</details>
-
-<details open>
-<summary><b><code>48326f9</code></b> — <b>fix(transaction): persist missing direction, type, and relationships on save</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`48326f9`](https://github.com/solomonrajan/cashledger/commit/48326f9)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description / Scope**:
-
-  > Resolve an issue where adding or editing a transaction did not show up
-  > in the transaction list screen.
-  >
-  > Root Cause:
-  > The `transaction_direction` and `transaction_type` columns in `Schema.Transaction`
-  > have `NOT NULL` constraints. During `saveTransactionData()`, both values were
-  > omitted from `TransactionContentValuesBuilder`. This resulted in silent SQLite
-  > insert failures (`insert()` returning -1), leaving the database unchanged and
-  > preventing `ContentObserver` updates on `CONTENT_TRANSACTIONS`.
-  >
-  > Changes:
-  > - Populate `direction` and `type` in `TransactionContentValuesBuilder` inside
-  >   `saveTransactionData()`.
-  > - Persist associated relations: `peopleIds`, `attachmentIds`, `savingId`, and `debtId`.
-  > - Add `type`, `debtId`, and `savingId` properties with defaults to `TransactionScreenState`.
-  > - Update `loadTransactionData()` to properly restore linked people, transaction type,
-  >   saving, and debt relationships.
-  > - Complete savings goal progress when withdrawing the entire remaining balance.
-  > - Handle post-save cleanup by invoking `cleanUpAttachments()`, setting `RESULT_OK`,
-  >   and calling `finishSaveDatedAt()`.
 
 </details>
