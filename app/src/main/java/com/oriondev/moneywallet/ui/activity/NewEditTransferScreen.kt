@@ -37,8 +37,6 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-private val GoogleSansCode = FontFamily(Font(R.font.google_sans_code_regular))
-
 data class TransferScreenState(
     val money: Long = 0L,
     val tax: Long = 0L,
