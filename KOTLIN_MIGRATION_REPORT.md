@@ -291,6 +291,30 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>edd7bff</code></b> — <b>fix(transfer): resolve duplicate GoogleSansCode declaration</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`edd7bff`](https://github.com/solomonrajan/cashledger/commit/edd7bff)
+* **Author**: Solomon Rajan • **Date**: 2026-10-13
+* **Description / Scope**:
+
+  > - Remove redundant top-level GoogleSansCode FontFamily definition from
+  >   NewEditTransferScreen.kt.
+  > - Use the existing package-level GoogleSansCode defined in
+  >   NewEditTransactionScreen.kt to resolve CI Kotlin compiler failures
+  >   (conflicting declarations and overload resolution ambiguity).
+
+</details>
+
+<details open>
+<summary><b><code>48079f4</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-13 by github-actions[bot])</i></summary>
+
+* **Commit Link**: [`48079f4`](https://github.com/solomonrajan/cashledger/commit/48079f4)
+* **Author**: github-actions[bot] • **Date**: 2026-10-13
+* **Description**: *(Single-line commit)*
+
+</details>
+
+<details open>
 <summary><b><code>58441b7</code></b> — <b>feat(transfer): migrate NewEditTransferActivity to Kotlin and Jetpack Compose</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`58441b7`](https://github.com/solomonrajan/cashledger/commit/58441b7)
@@ -383,28 +407,5 @@ gantt
   > - Complete savings goal progress when withdrawing the entire remaining balance.
   > - Handle post-save cleanup by invoking `cleanUpAttachments()`, setting `RESULT_OK`,
   >   and calling `finishSaveDatedAt()`.
-
-</details>
-
-<details open>
-<summary><b><code>85f6311</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-12 by github-actions[bot])</i></summary>
-
-* **Commit Link**: [`85f6311`](https://github.com/solomonrajan/cashledger/commit/85f6311)
-* **Author**: github-actions[bot] • **Date**: 2026-10-12
-* **Description**: *(Single-line commit)*
-
-</details>
-
-<details open>
-<summary><b><code>bcc230d</code></b> — <b>UI: Replace broken wallet segmented button with Material 3 FilterChips</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`bcc230d`](https://github.com/solomonrajan/cashledger/commit/bcc230d)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description / Scope**:
-
-  > - Replace rigid SingleChoiceSegmentedButtonRow with a horizontally scrollable FilterChip carousel to prevent text clipping, squashing, and layout distortion on long wallet names.
-  > - Connect live database querying in loadTransactionData to populate state.availableWallets from active, unarchived user accounts.
-  > - Wire up onWalletSelect callback in NewEditTransactionActivity to update the selected wallet, active currency, and money picker in real time.
-  > - Add an "All Wallets" header action and trailing "+ More..." chip to allow direct access to the full WalletPicker dialog.
 
 </details>
