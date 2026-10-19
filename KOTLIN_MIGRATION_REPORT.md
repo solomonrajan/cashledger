@@ -304,15 +304,6 @@ gantt
 </details>
 
 <details open>
-<summary><b><code>a804e95</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-13 by github-actions[bot])</i></summary>
-
-* **Commit Link**: [`a804e95`](https://github.com/solomonrajan/cashledger/commit/a804e95)
-* **Author**: github-actions[bot] • **Date**: 2026-10-13
-* **Description**: *(Single-line commit)*
-
-</details>
-
-<details open>
 <summary><b><code>edd7bff</code></b> — <b>fix(transfer): resolve duplicate GoogleSansCode declaration</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`edd7bff`](https://github.com/solomonrajan/cashledger/commit/edd7bff)
@@ -324,15 +315,6 @@ gantt
   > - Use the existing package-level GoogleSansCode defined in
   >   NewEditTransactionScreen.kt to resolve CI Kotlin compiler failures
   >   (conflicting declarations and overload resolution ambiguity).
-
-</details>
-
-<details open>
-<summary><b><code>48079f4</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-13 by github-actions[bot])</i></summary>
-
-* **Commit Link**: [`48079f4`](https://github.com/solomonrajan/cashledger/commit/48079f4)
-* **Author**: github-actions[bot] • **Date**: 2026-10-13
-* **Description**: *(Single-line commit)*
 
 </details>
 
@@ -364,15 +346,6 @@ gantt
 </details>
 
 <details open>
-<summary><b><code>9dde4ea</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-12 by github-actions[bot])</i></summary>
-
-* **Commit Link**: [`9dde4ea`](https://github.com/solomonrajan/cashledger/commit/9dde4ea)
-* **Author**: github-actions[bot] • **Date**: 2026-10-12
-* **Description**: *(Single-line commit)*
-
-</details>
-
-<details open>
 <summary><b><code>97d4d8c</code></b> — <b>fix: add missing Contract import in NewEditTransactionScreen and remove deprecated package in manifest</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`97d4d8c`](https://github.com/solomonrajan/cashledger/commit/97d4d8c)
@@ -385,10 +358,68 @@ gantt
 </details>
 
 <details open>
-<summary><b><code>1826059</code></b> — <b>docs: auto-update Kotlin migration report [skip ci]</b> <i>(2026-10-12 by github-actions[bot])</i></summary>
+<summary><b><code>2e3639b</code></b> — <b>Merge branch 'javatokotlin' of https://github.com/solomonrajan/cashledger into javatokotlin</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
 
-* **Commit Link**: [`1826059`](https://github.com/solomonrajan/cashledger/commit/1826059)
-* **Author**: github-actions[bot] • **Date**: 2026-10-12
+* **Commit Link**: [`2e3639b`](https://github.com/solomonrajan/cashledger/commit/2e3639b)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
 * **Description**: *(Single-line commit)*
+
+</details>
+
+<details open>
+<summary><b><code>48326f9</code></b> — <b>fix(transaction): persist missing direction, type, and relationships on save</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`48326f9`](https://github.com/solomonrajan/cashledger/commit/48326f9)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
+* **Description / Scope**:
+
+  > Resolve an issue where adding or editing a transaction did not show up
+  > in the transaction list screen.
+  >
+  > Root Cause:
+  > The `transaction_direction` and `transaction_type` columns in `Schema.Transaction`
+  > have `NOT NULL` constraints. During `saveTransactionData()`, both values were
+  > omitted from `TransactionContentValuesBuilder`. This resulted in silent SQLite
+  > insert failures (`insert()` returning -1), leaving the database unchanged and
+  > preventing `ContentObserver` updates on `CONTENT_TRANSACTIONS`.
+  >
+  > Changes:
+  > - Populate `direction` and `type` in `TransactionContentValuesBuilder` inside
+  >   `saveTransactionData()`.
+  > - Persist associated relations: `peopleIds`, `attachmentIds`, `savingId`, and `debtId`.
+  > - Add `type`, `debtId`, and `savingId` properties with defaults to `TransactionScreenState`.
+  > - Update `loadTransactionData()` to properly restore linked people, transaction type,
+  >   saving, and debt relationships.
+  > - Complete savings goal progress when withdrawing the entire remaining balance.
+  > - Handle post-save cleanup by invoking `cleanUpAttachments()`, setting `RESULT_OK`,
+  >   and calling `finishSaveDatedAt()`.
+
+</details>
+
+<details open>
+<summary><b><code>bcc230d</code></b> — <b>UI: Replace broken wallet segmented button with Material 3 FilterChips</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`bcc230d`](https://github.com/solomonrajan/cashledger/commit/bcc230d)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
+* **Description / Scope**:
+
+  > - Replace rigid SingleChoiceSegmentedButtonRow with a horizontally scrollable FilterChip carousel to prevent text clipping, squashing, and layout distortion on long wallet names.
+  > - Connect live database querying in loadTransactionData to populate state.availableWallets from active, unarchived user accounts.
+  > - Wire up onWalletSelect callback in NewEditTransactionActivity to update the selected wallet, active currency, and money picker in real time.
+  > - Add an "All Wallets" header action and trailing "+ More..." chip to allow direct access to the full WalletPicker dialog.
+
+</details>
+
+<details open>
+<summary><b><code>27700b6</code></b> — <b>Docs: Add creative Kotlin migration report with automated GitHub workflow</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`27700b6`](https://github.com/solomonrajan/cashledger/commit/27700b6)
+* **Author**: Solomon Rajan • **Date**: 2026-10-12
+* **Description / Scope**:
+
+  > - **Migration Dossier:** Added `KOTLIN_MIGRATION_REPORT.md` featuring a breakdown of Java vs Kotlin codebase statistics (495 Java vs 30 Kotlin files), interactive Mermaid pie charts, dark-fantasy realm conquest diagrams, and module heatmaps.
+  > - **Hall of Fame & Bounty Board:** Cataloged all 30 converted Kotlin files with direct GitHub repository links, identified top Java refactoring targets, and added humorous developer comparisons.
+  > - **Commit Chronicles:** Integrated a live dispatch section summarizing recent migration commits, subjects, and architectural descriptions.
+  > - **Automated Workflow & Tooling:** Introduced `scripts/update_kotlin_report.py` and `.github/workflows/update-kotlin-report.yml` to automatically rescan source files and regenerate the report on pushes to `master`, `javatokotlin`, and `userinterface`.
 
 </details>

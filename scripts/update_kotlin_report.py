@@ -21,8 +21,9 @@ GITHUB_BLOB_BASE = f"https://github.com/{GITHUB_REPO}/blob/{GITHUB_BRANCH}"
 def get_recent_commits(limit=8):
     commits = []
     try:
+        fetch_count = limit * 4
         cmd = [
-            "git", "log", f"-n{limit}",
+            "git", "log", f"-n{fetch_count}",
             "--pretty=format:HASH:%h%nSUBJECT:%s%nDATE:%ad%nAUTHOR:%an%nBODY:%b%n---END---",
             "--date=short"
         ]
@@ -50,11 +51,17 @@ def get_recent_commits(limit=8):
                 elif is_body:
                     body_lines.append(line)
             item["body"] = "\n".join(body_lines).strip()
+            # Filter out automated CI report commits
+            if "[skip ci]" in item["subject"] or "github-actions" in item["author"]:
+                continue
             if item["hash"]:
                 commits.append(item)
+                if len(commits) >= limit:
+                    break
     except Exception as e:
         print(f"Warning: could not fetch git commits: {e}", file=sys.stderr)
     return commits
+
 
 
 def scan_files():

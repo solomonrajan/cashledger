@@ -103,8 +103,8 @@ Here is a breakdown of the various pages (Activities) available in the app:
 
 ### Creation / Editing Pages
 
-- **New/Edit Transaction** (`NewEditTransactionActivity`)
-- **New/Edit Transfer** (`NewEditTransferActivity`)
+- **New/Edit Transaction** (`NewEditTransactionActivity`) — *Jetpack Compose (Material 3)*
+- **New/Edit Transfer** (`NewEditTransferActivity`) — *Jetpack Compose (Material 3)*
 - **New/Edit Wallet** (`NewEditWalletActivity`)
 - **New/Edit Category** (`NewEditCategoryActivity`)
 - **New/Edit Budget** (`NewEditBudgetActivity`)
@@ -139,11 +139,12 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 
 **Frontend & UI**
 
-- **Language:** Kotlin & Java
-- **Framework:** Native Android SDK (XML Layouts / Views)
-- **Design System:** Material Design Components
+- **Language:** Kotlin & Java (actively migrating to 100% Kotlin)
+- **UI Toolkit:** Jetpack Compose (Material 3) & Native Android SDK (Views)
+- **Design System:** Material 3 & Material Design Components
+- **Concurrency & Architecture:** Kotlin Coroutines, StateFlow, MVVM
 - **Data Visualization:** MPAndroidChart for reports and statistics
-- **Icons:** Material Symbols
+- **Icons:** Material Symbols & Material Icons
 
 **Backend & Storage**
 
@@ -153,18 +154,23 @@ Cash Ledger is built as a fully native and privacy-respecting Android applicatio
 
 ## 🔄 Kotlin Migration Status
 
-The codebase is currently undergoing a complete migration from Java to modern Kotlin, enforcing strict guidelines (immutability, null safety, Coroutines) and checked by Detekt.
+The codebase is currently undergoing a complete migration from Java to modern Kotlin, enforcing strict guidelines (immutability, null safety, Coroutines, Jetpack Compose) and checked by Detekt.
+
+> 📖 **Comprehensive Dossier:** For an interactive breakdown with domain heatmaps, Mermaid diagrams, and real-time dispatches, see [**KOTLIN_MIGRATION_REPORT.md**](KOTLIN_MIGRATION_REPORT.md).
 
 ```mermaid
-pie title Java to Kotlin UI Migration Progress
-    "Migrated (Kotlin)" : 19
-    "Pending (Java)" : 17
+pie title Activity Layer Migration Progress (ui/activity)
+    "Liberated (Kotlin)" : 24
+    "Legacy Siege (Java)" : 30
 ```
 
-- **Migrated Screens:** `AboutActivity`, `CalculatorActivity`, `SearchActivity`, `CalendarActivity`, `MapActivity`, `PeriodDetailActivity`, `BackendExplorerActivity`, `WalletWidgetConfigureActivity`, `WalletSortActivity`, `CategorySortActivity`, `CategoryRuleSortActivity`, `CategoryPickerActivity`, `LockActivity`, `ImportExportActivity`, `TransactionListActivity`, `WalletListActivity`, `BackupListActivity`, `NewEditWalletActivity`, `NewEditCategoryActivity`
-- **Pending:** Core screens, Lists, Pickers, Settings
+- **Migrated Activities & Screens (24 files in `ui/activity`):**
+  - **Transaction & Transfer Flows (Modern Jetpack Compose M3):** `NewEditTransactionActivity` (`NewEditTransactionScreen.kt`), `NewEditTransferActivity` (`NewEditTransferScreen.kt`)
+  - **Account & Category Management:** `NewEditWalletActivity`, `NewEditCategoryActivity`, `WalletListActivity`, `WalletSortActivity`, `CategoryPickerActivity`, `CategorySortActivity`, `CategoryRuleSortActivity`
+  - **Browsing & Tools:** `TransactionListActivity`, `CalculatorActivity`, `SearchActivity`, `CalendarActivity`, `MapActivity`, `PeriodDetailActivity`, `BackendExplorerActivity`, `LockActivity`, `ImportExportActivity`, `BackupListActivity`, `AboutActivity`, `WalletWidgetConfigureActivity`, `UpdaterActivity`
+- **Pending Migration Targets:** Core hub (`MainActivity`), remaining entity editors (`NewEditPersonActivity`, `NewEditPlaceActivity`, `NewEditEventActivity`, `NewEditBudgetActivity`, etc.), Lists, and storage layer.
 
-> **Note on GitHub Language Stats:** The pie chart above tracks our progress migrating specific UI **screens (Activities)**. In contrast, the GitHub language statistics bar at the top of the repository calculates percentages based on the **total byte size** of all files. Because the app has hundreds of other backend Java files (Fragments, ViewModels, Database Helpers) yet to be migrated, GitHub's chart will heavily skew towards Java until more of the core logic is converted.
+> **Note on GitHub Language Stats:** The pie chart above tracks our progress migrating the UI **Activities** layer. In contrast, the GitHub language statistics bar at the top of the repository calculates percentages based on the **total byte size** of all files. Because the app has hundreds of other backend Java files (Fragments, DAOs, Database Helpers) yet to be migrated, GitHub's chart will heavily skew towards Java until more of the core database logic is converted.
 
 ## 🔄 Coming from Tallybook
 
@@ -174,6 +180,7 @@ As Cash Ledger is a separate app with its own application id, it installs beside
 
 - [FAQ](docs/FAQ.md)
 - [Moving from Tallybook](MIGRATION.md)
+- [Kotlin Migration Status Report](KOTLIN_MIGRATION_REPORT.md)
 - [CSV import format](docs/CSV.md)
 - [Privacy](PRIVACY.md)
 - [Third party notices](THIRD_PARTY_NOTICES.md)
