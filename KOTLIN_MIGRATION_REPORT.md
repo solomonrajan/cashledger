@@ -293,6 +293,23 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>b42f590</code></b> — <b>fix(category): resolve Mode declaration and IconLoader call in NewEditCategoryRuleActivity</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`b42f590`](https://github.com/solomonrajan/cashledger/commit/b42f590)
+* **Author**: Solomon Rajan • **Date**: 2026-10-19
+* **Description / Scope**:
+
+  > - Replace invalid nested typealias inside companion object with a nested
+  >   object Mode declaring @JvmField properties for NEW_ITEM and EDIT_ITEM.
+  > - Fix unresolved reference in CategoryRuleListActivity and CategoryRuleActivityTest
+  >   by ensuring NewEditCategoryRuleActivity.Mode resolves correctly.
+  > - Replace non-existent IconLoader.loadIcon() with IconLoader.loadInto() when
+  >   rendering category icon in Jetpack Compose AndroidView.
+  > - Resolves :app:compileFlossOsmDebugKotlin compilation failures on CI.
+
+</details>
+
+<details open>
 <summary><b><code>163e47e</code></b> — <b>feat(category): migrate category rule activities to Kotlin and Jetpack Compose</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`163e47e`](https://github.com/solomonrajan/cashledger/commit/163e47e)
@@ -409,35 +426,5 @@ gantt
 * **Commit Link**: [`2e3639b`](https://github.com/solomonrajan/cashledger/commit/2e3639b)
 * **Author**: Solomon Rajan • **Date**: 2026-10-12
 * **Description**: *(Single-line commit)*
-
-</details>
-
-<details open>
-<summary><b><code>48326f9</code></b> — <b>fix(transaction): persist missing direction, type, and relationships on save</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`48326f9`](https://github.com/solomonrajan/cashledger/commit/48326f9)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description / Scope**:
-
-  > Resolve an issue where adding or editing a transaction did not show up
-  > in the transaction list screen.
-  >
-  > Root Cause:
-  > The `transaction_direction` and `transaction_type` columns in `Schema.Transaction`
-  > have `NOT NULL` constraints. During `saveTransactionData()`, both values were
-  > omitted from `TransactionContentValuesBuilder`. This resulted in silent SQLite
-  > insert failures (`insert()` returning -1), leaving the database unchanged and
-  > preventing `ContentObserver` updates on `CONTENT_TRANSACTIONS`.
-  >
-  > Changes:
-  > - Populate `direction` and `type` in `TransactionContentValuesBuilder` inside
-  >   `saveTransactionData()`.
-  > - Persist associated relations: `peopleIds`, `attachmentIds`, `savingId`, and `debtId`.
-  > - Add `type`, `debtId`, and `savingId` properties with defaults to `TransactionScreenState`.
-  > - Update `loadTransactionData()` to properly restore linked people, transaction type,
-  >   saving, and debt relationships.
-  > - Complete savings goal progress when withdrawing the entire remaining balance.
-  > - Handle post-save cleanup by invoking `cleanUpAttachments()`, setting `RESULT_OK`,
-  >   and calling `finishSaveDatedAt()`.
 
 </details>
