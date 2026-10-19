@@ -9,17 +9,17 @@
 We ran the scouters over the codebase, and here is the pulse check of our crusade against semicolon tyranny:
 
 ```
-Total Files Analyzed : 528
-Java Holdouts (☕)    : 494 files (93.6%)
-Kotlin Chads  (🟣)   :  34 files  (6.4%)
+Total Files Analyzed : 529
+Java Holdouts (☕)    : 492 files (93.0%)
+Kotlin Chads  (🟣)   :  37 files  (7.0%)
 ```
 
 ### 🥧 The Codebase Pie Chart
 
 ```mermaid
 pie title Java vs Kotlin Territory Breakdown
-    "Java (Boilerplate Kingdom)" : 494
-    "Kotlin (Concise & Null-Safe)" : 34
+    "Java (Boilerplate Kingdom)" : 492
+    "Kotlin (Concise & Null-Safe)" : 37
 ```
 
 ---
@@ -41,8 +41,8 @@ flowchart TD
 
     subgraph Castle["🏰 Realm I: The Citadel of Activities"]
         direction TB
-        A_Won["🏆 24 Bastions Liberated<br/><i>About, Calc, Search, etc.</i>"]:::liberated
-        A_Siege["⚔️ 30 Bastions Under Siege<br/><i>Boss: MainActivity.java</i>"]:::siege
+        A_Won["🏆 26 Bastions Liberated<br/><i>About, Calc, Search, etc.</i>"]:::liberated
+        A_Siege["⚔️ 28 Bastions Under Siege<br/><i>Boss: MainActivity.java</i>"]:::siege
         A_Won -.-> A_Siege
     end
 
@@ -60,16 +60,16 @@ flowchart TD
 
     subgraph Arena["🧪 Realm IV: The Proving Grounds"]
         direction TB
-        T_Trial["🛡️ 68 Untamed Test Suites<br/><i>Awaiting Kotest & MockK Reinforcements</i>"]:::occupied
+        T_Trial["🛡️ 69 Untamed Test Suites<br/><i>Awaiting Kotest & MockK Reinforcements</i>"]:::occupied
     end
 ```
 
 ### ⚔️ Realm Status Log & Boss Encounters
 
 #### 🏰 Realm I: The Citadel of Activities (UI Frontline)
-* **Liberation Progress**: `[█████████░░░░░░░░░░░]` **44.4%**
+* **Liberation Progress**: `[██████████░░░░░░░░░░]` **48.1%**
 * **Status**: ⚔️ **HEATED SIEGE**
-* **Garrison**: `24` Kotlin Knights vs `30` Java Defenders
+* **Garrison**: `26` Kotlin Knights vs `28` Java Defenders
 * **Current Boss Fight**: `MainActivity.java` *(HP: 950 Lines | Special Attack: Intent Spam)*
 * **Loot Upon Victory**: `+50 Null Safety`, `-420 Semicolons`
 
@@ -87,9 +87,9 @@ flowchart TD
 * **Debuff**: Every query incurs +5 verbose cursors and manual index mappings
 
 #### 🧪 Realm IV: The Proving Grounds (Test Suite)
-* **Liberation Progress**: `[░░░░░░░░░░░░░░░░░░░░]` **1.5%**
+* **Liberation Progress**: `[█░░░░░░░░░░░░░░░░░░░]` **2.9%**
 * **Status**: ⏳ **PEACEFUL STALEMATE**
-* **Roster**: `67` Unit Tests + `1` Android Instrumented Tests
+* **Roster**: `67` Unit Tests + `2` Android Instrumented Tests
 * **Strategy**: Deploy modern Kotlin DSL assertions & coroutine test scopes once the battle moves deeper
 
 ---
@@ -100,20 +100,20 @@ Visual progress status across different modules:
 
 | Module / Package | Kotlin | Java | Progress | Risk Level | Status Heatmap |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **`ui/activity`** | 24 | 30 | **44.4%** | 🟡 Medium | `🟩🟩🟩🟩🟨🟥🟥🟥🟥🟥` *Civil War in Progress* |
+| **`ui/activity`** | 26 | 28 | **48.1%** | 🟡 Medium | `🟩🟩🟩🟩🟨🟥🟥🟥🟥🟥` *Civil War in Progress* |
 | **`ui/fragment`** | 4 | 82 | **4.7%** | 🟠 High | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Reconnaissance Mission* |
 | **`updater`** | 2 | 0 | **100.0%** | 🟢 Safe | `🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩` *Liberated Territory* 🏆 |
 | **`model`** | 1 | 60 | **1.6%** | 🔴 Extreme | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Getters & Setters Everywhere* |
 | **`storage/database`**| 0 | 77 | **0.0%** | 💀 Critical | `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥` *The Semicolon Citadel* |
 | **`utils`** | 0 | 11 | **0.0%** | 🔴 High | `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Static Class Graveyard* |
 | **`service & background`**| 0 | 18 | **0.0%** | 🟠 High | `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Background Boilerplate* |
-| **`tests (src/test)`** | 1 | 67 | **1.5%** | 🟡 Medium | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Legacy Assertions* |
+| **`tests (src/test)`** | 2 | 67 | **2.9%** | 🟡 Medium | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Legacy Assertions* |
 
 ---
 
 ## 🏆 4. Hall of Fame (Converted Kotlin Files)
 
-These brave `34` files threw away the Java syntax baggage:
+These brave `37` files threw away the Java syntax baggage:
 
 ### 👑 Activities
 * [AboutActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/AboutActivity.kt)
@@ -122,12 +122,14 @@ These brave `34` files threw away the Java syntax baggage:
 * [CalculatorActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/CalculatorActivity.kt)
 * [CalendarActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/CalendarActivity.kt)
 * [CategoryPickerActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/CategoryPickerActivity.kt)
+* [CategoryRuleListActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/CategoryRuleListActivity.kt)
 * [CategoryRuleSortActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/CategoryRuleSortActivity.kt)
 * [CategorySortActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/CategorySortActivity.kt)
 * [ImportExportActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/ImportExportActivity.kt)
 * [LockActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/LockActivity.kt)
 * [MapActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/MapActivity.kt)
 * [NewEditCategoryActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditCategoryActivity.kt)
+* [NewEditCategoryRuleActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditCategoryRuleActivity.kt)
 * [NewEditTransactionActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditTransactionActivity.kt)
 * [NewEditTransferActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditTransferActivity.kt)
 * [NewEditWalletActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditWalletActivity.kt)
@@ -163,13 +165,13 @@ These brave `34` files threw away the Java syntax baggage:
  WANTED FOR UNLAWFUL VERBOSITY & WANTON ALLOCATION OF GETTERS/SETTERS
 ================================================================================
  [1] BaseActivity.java                   - Awaiting liberation ⚔️
- [2] CategoryRuleListActivity.java       - Awaiting liberation ⚔️
- [3] CurrencyListActivity.java           - Awaiting liberation ⚔️
- [4] DrawerController.java               - Awaiting liberation ⚔️
- [5] IconListActivity.java               - Awaiting liberation ⚔️
- [6] LauncherActivity.java               - Awaiting liberation ⚔️
- [7] MainActivity.java                   - Awaiting liberation ⚔️
- [8] MultiPanelActivity.java             - Awaiting liberation ⚔️
+ [2] CurrencyListActivity.java           - Awaiting liberation ⚔️
+ [3] DrawerController.java               - Awaiting liberation ⚔️
+ [4] IconListActivity.java               - Awaiting liberation ⚔️
+ [5] LauncherActivity.java               - Awaiting liberation ⚔️
+ [6] MainActivity.java                   - Awaiting liberation ⚔️
+ [7] MultiPanelActivity.java             - Awaiting liberation ⚔️
+ [8] NewEditBudgetActivity.java          - Awaiting liberation ⚔️
 ================================================================================
  REWARD: Infinite peace of mind & 0.00 NullPointerExceptions!
 ================================================================================
@@ -272,14 +274,14 @@ gantt
     title Kotlin Conquest Timeline
     dateFormat  YYYY-MM
     section UI Layer
-    Finish Activities (30 remaining) :active, act1, 2026-10, 2026-11
+    Finish Activities (28 remaining) :active, act1, 2026-10, 2026-11
     Convert Primary Fragments        :crit, act2, 2026-11, 2026-12
     section Data & Core
     Convert Models to Data Classes   :act3, 2026-12, 2027-01
     Database DAOs & Repository Room  :act4, 2027-01, 2027-02
     section Utilities & Tests
     Utils to Kotlin Extensions       :act5, 2027-02, 2027-03
-    Migrate 68 Test Suites           :act6, 2027-03, 2027-04
+    Migrate 69 Test Suites           :act6, 2027-03, 2027-04
 ```
 
 > **Pro-tip:** Every converted Java file eliminates an average of 42 semicolons and reduces line count by 35%. Long live `val` and `?.`! 🚀
@@ -289,6 +291,50 @@ gantt
 ## 📜 8. Chronicles of the Crusade (Recent Commits & Dispatches)
 
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
+
+<details open>
+<summary><b><code>163e47e</code></b> — <b>feat(category): migrate category rule activities to Kotlin and Jetpack Compose</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`163e47e`](https://github.com/solomonrajan/cashledger/commit/163e47e)
+* **Author**: Solomon Rajan • **Date**: 2026-10-19
+* **Description / Scope**:
+
+  > - Convert CategoryRuleListActivity to idiomatic Kotlin:
+  >   - Extend SinglePanelSimpleListActivity and implement CategoryRuleCursorAdapter.ActionListener.
+  >   - Wire up FAB (create rule), item click (edit rule), item long-click (material delete dialog),
+  >     and menu sort action launching CategoryRuleSortActivity.
+  > - Convert NewEditCategoryRuleActivity to Kotlin and Jetpack Compose (Material 3):
+  >   - Implement edge-to-edge NewEditCategoryRuleScreen with TopAppBar, save action, and
+  >     edit-mode delete confirmation dialog.
+  >   - Pattern input card featuring OutlinedTextField, clear button, and non-empty validation.
+  >   - Target category card featuring AndroidView IconLoader integration, type chip, and
+  >     CategoryPicker launch callback.
+  >   - Maintain full backward compatibility for companion constants (MODE, ID, Mode)
+  >     and @JvmStatic readCategory().
+  > - Add unit tests in CategoryRuleActivityTest.kt covering companion constants and validation logic.
+  > - Delete legacy CategoryRuleListActivity.java and NewEditCategoryRuleActivity.java.
+
+</details>
+
+<details open>
+<summary><b><code>818fa12</code></b> — <b>docs: update README tech stack and synchronize Kotlin migration report</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`818fa12`](https://github.com/solomonrajan/cashledger/commit/818fa12)
+* **Author**: Solomon Rajan • **Date**: 2026-10-19
+* **Description / Scope**:
+
+  > - Update README.md:
+  >   - Add Jetpack Compose (Material 3), Kotlin Coroutines, StateFlow, and MVVM to Technology Stack.
+  >   - Highlight modern Compose M3 implementations for NewEditTransactionActivity and NewEditTransferActivity.
+  >   - Update Activity layer migration stats to 24 Kotlin vs 30 Java (44.4% in ui/activity).
+  >   - Add direct links to KOTLIN_MIGRATION_REPORT.md in both Migration Status and Docs sections.
+  > - Update KOTLIN_MIGRATION_REPORT.md:
+  >   - Synchronize progress metrics across all codebase domains.
+  >   - Refine Section 8 (Chronicles of the Crusade) to highlight substantial engineering commits with full scopes and descriptions.
+  > - Update scripts/update_kotlin_report.py:
+  >   - Filter out automated [skip ci] bot commits in get_recent_commits() to ensure high-value engineering dispatches in future automated runs.
+
+</details>
 
 <details open>
 <summary><b><code>3dd4435</code></b> — <b>test(transfer): fix CurrencyUnit constructor parameters in unit tests</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
@@ -393,33 +439,5 @@ gantt
   > - Complete savings goal progress when withdrawing the entire remaining balance.
   > - Handle post-save cleanup by invoking `cleanUpAttachments()`, setting `RESULT_OK`,
   >   and calling `finishSaveDatedAt()`.
-
-</details>
-
-<details open>
-<summary><b><code>bcc230d</code></b> — <b>UI: Replace broken wallet segmented button with Material 3 FilterChips</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`bcc230d`](https://github.com/solomonrajan/cashledger/commit/bcc230d)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description / Scope**:
-
-  > - Replace rigid SingleChoiceSegmentedButtonRow with a horizontally scrollable FilterChip carousel to prevent text clipping, squashing, and layout distortion on long wallet names.
-  > - Connect live database querying in loadTransactionData to populate state.availableWallets from active, unarchived user accounts.
-  > - Wire up onWalletSelect callback in NewEditTransactionActivity to update the selected wallet, active currency, and money picker in real time.
-  > - Add an "All Wallets" header action and trailing "+ More..." chip to allow direct access to the full WalletPicker dialog.
-
-</details>
-
-<details open>
-<summary><b><code>27700b6</code></b> — <b>Docs: Add creative Kotlin migration report with automated GitHub workflow</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`27700b6`](https://github.com/solomonrajan/cashledger/commit/27700b6)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description / Scope**:
-
-  > - **Migration Dossier:** Added `KOTLIN_MIGRATION_REPORT.md` featuring a breakdown of Java vs Kotlin codebase statistics (495 Java vs 30 Kotlin files), interactive Mermaid pie charts, dark-fantasy realm conquest diagrams, and module heatmaps.
-  > - **Hall of Fame & Bounty Board:** Cataloged all 30 converted Kotlin files with direct GitHub repository links, identified top Java refactoring targets, and added humorous developer comparisons.
-  > - **Commit Chronicles:** Integrated a live dispatch section summarizing recent migration commits, subjects, and architectural descriptions.
-  > - **Automated Workflow & Tooling:** Introduced `scripts/update_kotlin_report.py` and `.github/workflows/update-kotlin-report.yml` to automatically rescan source files and regenerate the report on pushes to `master`, `javatokotlin`, and `userinterface`.
 
 </details>
