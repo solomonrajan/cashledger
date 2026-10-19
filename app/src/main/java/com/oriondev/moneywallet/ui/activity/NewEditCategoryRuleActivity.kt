@@ -210,10 +210,16 @@ class NewEditCategoryRuleActivity : AppCompatActivity(), CategoryPicker.Controll
         }
     }
 
+    object Mode {
+        @JvmField
+        val NEW_ITEM: NewEditItemActivity.Mode = NewEditItemActivity.Mode.NEW_ITEM
+        @JvmField
+        val EDIT_ITEM: NewEditItemActivity.Mode = NewEditItemActivity.Mode.EDIT_ITEM
+    }
+
     companion object {
         const val MODE: String = NewEditItemActivity.MODE
         const val ID: String = NewEditItemActivity.ID
-        typealias Mode = NewEditItemActivity.Mode
 
         private const val TAG_CATEGORY_PICKER = "NewEditCategoryRuleActivity::Tag::CategoryPicker"
 
@@ -434,7 +440,7 @@ fun NewEditCategoryRuleScreen(
                                         }
                                     },
                                     update = { view ->
-                                        IconLoader.loadIcon(category.icon, view)
+                                        IconLoader.loadInto(category.icon, view)
                                     }
                                 )
                                 Column(modifier = Modifier.weight(1f)) {
