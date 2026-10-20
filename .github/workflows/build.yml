@@ -6,7 +6,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 # Cancel obsolete in-progress builds when a new commit is pushed to the same branch or PR
 concurrency:
@@ -19,6 +19,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-java@v5
         with:
@@ -77,3 +79,49 @@ jobs:
         with:
           name: debug-apk
           path: staging
+
+      - name: Prepare Dev Release
+        if: github.event_name == 'push'
+        run: |
+          git fetch --tags --force
+          VERSION_NAME=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
+          LATEST_TAG="v${VERSION_NAME:-1.0.0}"
+          
+          VERSION=${LATEST_TAG#v}
+          IFS='.' read -ra ADDR <<< "$VERSION"
+          MAJOR=${ADDR[0]:-1}
+          MINOR=${ADDR[1]:-0}
+          PATCH=${ADDR[2]:-0}
+          NEXT_PATCH=$((PATCH + 1))
+          NEXT_VERSION="v${MAJOR}.${MINOR}.${NEXT_PATCH}"
+          
+          COMMITS_SINCE_TAG=$(git rev-list ${LATEST_TAG}..HEAD --count 2>/dev/null || echo "1")
+          if [ -z "$COMMITS_SINCE_TAG" ] || [ "$COMMITS_SINCE_TAG" -eq 0 ]; then
+            COMMITS_SINCE_TAG=1
+          fi
+          
+          # Zero-pad the commit count to ensure correct alphabetical sorting on GitHub
+          COMMITS_PADDED=$(printf "%04d" $COMMITS_SINCE_TAG)
+          
+          TAG_NAME="${NEXT_VERSION}-dev.${COMMITS_PADDED}"
+          DATE=$(date +'%Y-%m-%d')
+          
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          COMMIT_MSG=$(git log -1 --pretty=format:"%s")
+          COMMIT_URL="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          
+          echo "## Commit Details" > release_notes.md
+          echo "* ${COMMIT_MSG} ([${COMMIT_HASH}](${COMMIT_URL}))" >> release_notes.md
+          
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo "DATE=$DATE" >> $GITHUB_ENV
+
+      - name: Create Dev Release
+        if: github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          name: ${{ env.TAG_NAME }} (${{ env.DATE }})
+          body_path: release_notes.md
+          prerelease: true
+          files: staging/debug/cashledger-*.apk
