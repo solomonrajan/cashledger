@@ -61,11 +61,11 @@ class NewEditTransactionModelActivityTest {
 
     @Test
     fun testContractColumnNames() {
-        assertEquals("money", Contract.TransactionModel.MONEY)
-        assertEquals("description", Contract.TransactionModel.DESCRIPTION)
-        assertEquals("category", Contract.TransactionModel.CATEGORY_ID)
-        assertEquals("wallet", Contract.TransactionModel.WALLET_ID)
-        assertEquals("confirmed", Contract.TransactionModel.CONFIRMED)
-        assertEquals("count_in_total", Contract.TransactionModel.COUNT_IN_TOTAL)
+        assertEquals("model_transaction_money", Contract.TransactionModel.MONEY)
+        assertEquals("model_transaction_description", Contract.TransactionModel.DESCRIPTION)
+        assertEquals("model_transaction_category", Contract.TransactionModel.CATEGORY_ID)
+        assertEquals("model_transaction_wallet", Contract.TransactionModel.WALLET_ID)
+        assertEquals("model_transaction_confirmed", Contract.TransactionModel.CONFIRMED)
+        assertEquals("model_transaction_count_in_total", Contract.TransactionModel.COUNT_IN_TOTAL)
     }
 }

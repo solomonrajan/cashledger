@@ -47,13 +47,13 @@ class NewEditTransferModelActivityTest {
 
     @Test
     fun testContractColumnNames() {
-        assertEquals("description", Contract.TransferModel.DESCRIPTION)
-        assertEquals("wallet_from", Contract.TransferModel.WALLET_FROM_ID)
-        assertEquals("wallet_to", Contract.TransferModel.WALLET_TO_ID)
-        assertEquals("money_from", Contract.TransferModel.MONEY_FROM)
-        assertEquals("money_to", Contract.TransferModel.MONEY_TO)
-        assertEquals("money_tax", Contract.TransferModel.MONEY_TAX)
-        assertEquals("confirmed", Contract.TransferModel.CONFIRMED)
-        assertEquals("count_in_total", Contract.TransferModel.COUNT_IN_TOTAL)
+        assertEquals("model_transfer_description", Contract.TransferModel.DESCRIPTION)
+        assertEquals("model_transfer_from_wallet", Contract.TransferModel.WALLET_FROM_ID)
+        assertEquals("model_transfer_to_wallet", Contract.TransferModel.WALLET_TO_ID)
+        assertEquals("model_transfer_from_money", Contract.TransferModel.MONEY_FROM)
+        assertEquals("model_transfer_to_money", Contract.TransferModel.MONEY_TO)
+        assertEquals("model_transfer_tax_money", Contract.TransferModel.MONEY_TAX)
+        assertEquals("model_transfer_confirmed", Contract.TransferModel.CONFIRMED)
+        assertEquals("model_transfer_count_in_total", Contract.TransferModel.COUNT_IN_TOTAL)
     }
 }
