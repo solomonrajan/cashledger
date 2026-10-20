@@ -295,6 +295,31 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>e8d2386</code></b> — <b>fix(model): resolve unresolved references and detekt issues in model activities</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`e8d2386`](https://github.com/solomonrajan/cashledger/commit/e8d2386)
+* **Author**: Solomon Rajan • **Date**: 2026-10-20
+* **Description / Scope**:
+
+  > - Correct save button string resource reference from R.string.action_save_changes
+  >   to R.string.menu_action_save_changes in both NewEditTransactionModelActivity and
+  >   NewEditTransferModelActivity.
+  > - Replace unresolved wallet.icon references with native Compose
+  >   Icons.Default.AccountBalanceWallet within circular background containers.
+  > - Fix MoneyPicker and WalletPicker method calls in NewEditTransferModelActivity:
+  >   - Replace non-existent taxPicker.setCurrentMoney() with taxPicker.setMoney().
+  >   - Streamline wallet swap action by updating state and picker currencies directly
+  >     without non-existent setCurrentWallet calls.
+  > - Resolve Detekt static analysis issues:
+  >   - Extract parsePlaceFromCursor and parseEventFromCursor helper functions to flatten
+  >     cursor reading logic and satisfy NestedBlockDepth limits.
+  >   - Consolidate validation guard statements in saveTransactionModel and
+  >     saveTransferModel to satisfy ReturnCount constraints.
+  >   - Add NestedBlockDepth and ReturnCount to @file:Suppress annotations.
+
+</details>
+
+<details open>
 <summary><b><code>19e3d65</code></b> — <b>feat(model): migrate transaction and transfer model activities to Kotlin and Jetpack Compose</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`19e3d65`](https://github.com/solomonrajan/cashledger/commit/19e3d65)
@@ -451,18 +476,5 @@ gantt
   >   - Refine Section 8 (Chronicles of the Crusade) to highlight substantial engineering commits with full scopes and descriptions.
   > - Update scripts/update_kotlin_report.py:
   >   - Filter out automated [skip ci] bot commits in get_recent_commits() to ensure high-value engineering dispatches in future automated runs.
-
-</details>
-
-<details open>
-<summary><b><code>3dd4435</code></b> — <b>test(transfer): fix CurrencyUnit constructor parameters in unit tests</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`3dd4435`](https://github.com/solomonrajan/cashledger/commit/3dd4435)
-* **Author**: Solomon Rajan • **Date**: 2026-10-13
-* **Description / Scope**:
-
-  > - Correct CurrencyUnit initialization in NewEditTransferActivityTest.kt
-  >   from 5 arguments to the expected 4 arguments (iso, name, symbol, decimals).
-  > - Resolves the :app:compileFlossOsmDebugUnitTestKotlin build failure on CI.
 
 </details>
