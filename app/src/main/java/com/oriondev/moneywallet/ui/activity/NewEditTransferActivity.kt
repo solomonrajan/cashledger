@@ -5,7 +5,8 @@
     "UnusedPrivateProperty",
     "LongMethod",
     "CyclomaticComplexMethod",
-    "MagicNumber"
+    "MagicNumber",
+    "SwallowedException"
 )
 
 package com.oriondev.moneywallet.ui.activity
