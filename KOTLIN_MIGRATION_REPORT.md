@@ -295,6 +295,26 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>4cb509f</code></b> — <b>test(model): align expected Contract column names with database schema definitions</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`4cb509f`](https://github.com/solomonrajan/cashledger/commit/4cb509f)
+* **Author**: Solomon Rajan • **Date**: 2026-10-20
+* **Description / Scope**:
+
+  > - Update testContractColumnNames in NewEditTransactionModelActivityTest to assert
+  >   against the exact schema column names prefixed with "model_transaction_"
+  >   (model_transaction_money, model_transaction_description, model_transaction_category,
+  >   model_transaction_wallet, model_transaction_confirmed, model_transaction_count_in_total).
+  > - Update testContractColumnNames in NewEditTransferModelActivityTest to assert
+  >   against the exact schema column names prefixed with "model_transfer_"
+  >   (model_transfer_description, model_transfer_from_wallet, model_transfer_to_wallet,
+  >   model_transfer_from_money, model_transfer_to_money, model_transfer_tax_money,
+  >   model_transfer_confirmed, model_transfer_count_in_total).
+  > - Resolves test failures during testFlossOsmDebugUnitTest on CI.
+
+</details>
+
+<details open>
 <summary><b><code>e8d2386</code></b> — <b>fix(model): resolve unresolved references and detekt issues in model activities</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`e8d2386`](https://github.com/solomonrajan/cashledger/commit/e8d2386)
@@ -456,25 +476,5 @@ gantt
   >     and @JvmStatic readCategory().
   > - Add unit tests in CategoryRuleActivityTest.kt covering companion constants and validation logic.
   > - Delete legacy CategoryRuleListActivity.java and NewEditCategoryRuleActivity.java.
-
-</details>
-
-<details open>
-<summary><b><code>818fa12</code></b> — <b>docs: update README tech stack and synchronize Kotlin migration report</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`818fa12`](https://github.com/solomonrajan/cashledger/commit/818fa12)
-* **Author**: Solomon Rajan • **Date**: 2026-10-19
-* **Description / Scope**:
-
-  > - Update README.md:
-  >   - Add Jetpack Compose (Material 3), Kotlin Coroutines, StateFlow, and MVVM to Technology Stack.
-  >   - Highlight modern Compose M3 implementations for NewEditTransactionActivity and NewEditTransferActivity.
-  >   - Update Activity layer migration stats to 24 Kotlin vs 30 Java (44.4% in ui/activity).
-  >   - Add direct links to KOTLIN_MIGRATION_REPORT.md in both Migration Status and Docs sections.
-  > - Update KOTLIN_MIGRATION_REPORT.md:
-  >   - Synchronize progress metrics across all codebase domains.
-  >   - Refine Section 8 (Chronicles of the Crusade) to highlight substantial engineering commits with full scopes and descriptions.
-  > - Update scripts/update_kotlin_report.py:
-  >   - Filter out automated [skip ci] bot commits in get_recent_commits() to ensure high-value engineering dispatches in future automated runs.
 
 </details>
