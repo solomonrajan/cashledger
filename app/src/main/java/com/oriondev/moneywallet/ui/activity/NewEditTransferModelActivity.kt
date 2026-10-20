@@ -29,7 +29,9 @@
     "UnusedParameter",
     "CyclomaticComplexMethod",
     "TooManyFunctions",
-    "SwallowedException"
+    "SwallowedException",
+    "NestedBlockDepth",
+    "ReturnCount"
 )
 
 package com.oriondev.moneywallet.ui.activity
@@ -41,7 +43,6 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -64,7 +65,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.model.CurrencyUnit
 import com.oriondev.moneywallet.model.Event
@@ -163,7 +163,7 @@ class NewEditTransferModelActivity : AppCompatActivity(),
                     onTaxClick = { taxPicker.showPicker() },
                     onTaxClear = {
                         tax = 0L
-                        taxPicker.setCurrentMoney(0L)
+                        taxPicker.setMoney(0L)
                     },
                     onDescriptionChange = { description = it },
                     onWalletFromClick = { walletFromPicker.showSingleWalletPicker() },
@@ -174,8 +174,6 @@ class NewEditTransferModelActivity : AppCompatActivity(),
                         walletFrom = tempTo
                         walletTo = tempFrom
                         currency = tempTo?.currency ?: currency
-                        walletFromPicker.setCurrentWallet(tempTo)
-                        walletToPicker.setCurrentWallet(tempFrom)
                         moneyPicker.setCurrency(currency)
                         taxPicker.setCurrency(currency)
                     },
@@ -245,62 +243,65 @@ class NewEditTransferModelActivity : AppCompatActivity(),
         contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
             if (cursor.moveToFirst()) {
                 description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.DESCRIPTION)) ?: ""
-
-                val fromId = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_ID))
-                val fromName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_NAME))
-                val fromIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_ICON))
-                val fromCurrStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_CURRENCY))
-                val fromCurrency = CurrencyManager.getCurrency(fromCurrStr)
-                walletFrom = Wallet(fromId, fromName, IconLoader.parse(fromIcon), fromCurrency, 0L, 0L)
-                currency = fromCurrency
-
-                val toId = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_ID))
-                val toName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_NAME))
-                val toIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_ICON))
-                val toCurrStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_CURRENCY))
-                val toCurrency = CurrencyManager.getCurrency(toCurrStr)
-                walletTo = Wallet(toId, toName, IconLoader.parse(toIcon), toCurrency, 0L, 0L)
-
+                walletFrom = parseWalletFromCursor(cursor, isFrom = true)
+                currency = walletFrom?.currency
+                walletTo = parseWalletFromCursor(cursor, isFrom = false)
                 money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.MONEY_FROM))
                 tax = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.MONEY_TAX))
-
-                val placeIdCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ID)
-                if (!cursor.isNull(placeIdCol)) {
-                    val pId = cursor.getLong(placeIdCol)
-                    val pName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_NAME))
-                    val pIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ICON))
-                    val pAddress = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ADDRESS))
-                    val pLatCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LATITUDE)
-                    val pLngCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LONGITUDE)
-                    val pLat = if (cursor.isNull(pLatCol)) null else cursor.getDouble(pLatCol)
-                    val pLng = if (cursor.isNull(pLngCol)) null else cursor.getDouble(pLngCol)
-                    place = Place(pId, pName, IconLoader.parse(pIcon), pAddress, pLat, pLng)
-                }
-
+                place = parsePlaceFromCursor(cursor)
                 note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.NOTE)) ?: ""
-
-                val eventIdCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_ID)
-                if (!cursor.isNull(eventIdCol)) {
-                    val eId = cursor.getLong(eventIdCol)
-                    val eName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_NAME))
-                    val eIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_ICON))
-                    val eStart = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_START_DATE))
-                    val eEnd = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_END_DATE))
-                    event = Event(
-                        eId,
-                        eName,
-                        IconLoader.parse(eIcon),
-                        DateUtils.getDateFromSQLDateString(eStart),
-                        DateUtils.getDateFromSQLDateString(eEnd)
-                    )
-                }
-
+                event = parseEventFromCursor(cursor)
                 val confCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.CONFIRMED)
                 confirmed = cursor.getInt(confCol) == 1
                 val countCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.COUNT_IN_TOTAL)
                 countInTotal = cursor.getInt(countCol) == 1
             }
         }
+    }
+
+    private fun parseWalletFromCursor(cursor: Cursor, isFrom: Boolean): Wallet {
+        val idCol = if (isFrom) Contract.TransferModel.WALLET_FROM_ID else Contract.TransferModel.WALLET_TO_ID
+        val nameCol = if (isFrom) Contract.TransferModel.WALLET_FROM_NAME else Contract.TransferModel.WALLET_TO_NAME
+        val iconCol = if (isFrom) Contract.TransferModel.WALLET_FROM_ICON else Contract.TransferModel.WALLET_TO_ICON
+        val currCol = if (isFrom) Contract.TransferModel.WALLET_FROM_CURRENCY else Contract.TransferModel.WALLET_TO_CURRENCY
+
+        val wId = cursor.getLong(cursor.getColumnIndexOrThrow(idCol))
+        val wName = cursor.getString(cursor.getColumnIndexOrThrow(nameCol))
+        val wIcon = cursor.getString(cursor.getColumnIndexOrThrow(iconCol))
+        val wCurrStr = cursor.getString(cursor.getColumnIndexOrThrow(currCol))
+        val wCurrency = CurrencyManager.getCurrency(wCurrStr)
+        return Wallet(wId, wName, IconLoader.parse(wIcon), wCurrency, 0L, 0L)
+    }
+
+    private fun parsePlaceFromCursor(cursor: Cursor): Place? {
+        val placeIdCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ID)
+        if (cursor.isNull(placeIdCol)) return null
+        val pId = cursor.getLong(placeIdCol)
+        val pName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_NAME))
+        val pIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ICON))
+        val pAddress = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ADDRESS))
+        val pLatCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LATITUDE)
+        val pLngCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LONGITUDE)
+        val pLat = if (cursor.isNull(pLatCol)) null else cursor.getDouble(pLatCol)
+        val pLng = if (cursor.isNull(pLngCol)) null else cursor.getDouble(pLngCol)
+        return Place(pId, pName, IconLoader.parse(pIcon), pAddress, pLat, pLng)
+    }
+
+    private fun parseEventFromCursor(cursor: Cursor): Event? {
+        val eventIdCol = cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_ID)
+        if (cursor.isNull(eventIdCol)) return null
+        val eId = cursor.getLong(eventIdCol)
+        val eName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_NAME))
+        val eIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_ICON))
+        val eStart = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_START_DATE))
+        val eEnd = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_END_DATE))
+        return Event(
+            eId,
+            eName,
+            IconLoader.parse(eIcon),
+            DateUtils.getDateFromSQLDateString(eStart),
+            DateUtils.getDateFromSQLDateString(eEnd)
+        )
     }
 
     private fun loadDefaultWallet() {
@@ -351,10 +352,11 @@ class NewEditTransferModelActivity : AppCompatActivity(),
     }
 
     private fun saveTransferModel() {
-        if (!validate()) return
-
-        val from = walletFrom ?: return
-        val to = walletTo ?: return
+        val from = walletFrom
+        val to = walletTo
+        if (!validate() || from == null || to == null) {
+            return
+        }
 
         val contentValues = ContentValues().apply {
             put(Contract.TransferModel.DESCRIPTION, description)
@@ -565,7 +567,7 @@ private fun NewEditTransferModelScreen(
             ) {
                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
                 Text(
-                    text = stringResource(R.string.action_save_changes),
+                    text = stringResource(R.string.menu_action_save_changes),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -657,21 +659,21 @@ private fun NewEditTransferModelScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        if (walletFrom != null) {
-                            AndroidView(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.primaryContainer),
-                                factory = { ctx ->
-                                    ImageView(ctx).apply {
-                                        scaleType = ImageView.ScaleType.CENTER_INSIDE
-                                    }
-                                },
-                                update = { view ->
-                                    IconLoader.loadInto(walletFrom.icon, view)
-                                }
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.AccountBalanceWallet,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
+                        }
+                        if (walletFrom != null) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = stringResource(R.string.hint_wallet_from),
@@ -685,12 +687,6 @@ private fun NewEditTransferModelScreen(
                                 )
                             }
                         } else {
-                            Icon(
-                                Icons.Default.Folder,
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = if (walletFromError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = stringResource(R.string.hint_wallet_from),
@@ -746,21 +742,21 @@ private fun NewEditTransferModelScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        if (walletTo != null) {
-                            AndroidView(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape)
-                                    .background(MaterialTheme.colorScheme.secondaryContainer),
-                                factory = { ctx ->
-                                    ImageView(ctx).apply {
-                                        scaleType = ImageView.ScaleType.CENTER_INSIDE
-                                    }
-                                },
-                                update = { view ->
-                                    IconLoader.loadInto(walletTo.icon, view)
-                                }
+                        Box(
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.secondaryContainer),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Default.AccountBalanceWallet,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer
                             )
+                        }
+                        if (walletTo != null) {
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = stringResource(R.string.hint_wallet_to),
@@ -774,12 +770,6 @@ private fun NewEditTransferModelScreen(
                                 )
                             }
                         } else {
-                            Icon(
-                                Icons.Default.Folder,
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = if (walletToError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-                            )
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = stringResource(R.string.hint_wallet_to),

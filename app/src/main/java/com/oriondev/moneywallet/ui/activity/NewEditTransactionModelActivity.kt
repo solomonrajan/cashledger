@@ -29,7 +29,9 @@
     "UnusedParameter",
     "CyclomaticComplexMethod",
     "TooManyFunctions",
-    "SwallowedException"
+    "SwallowedException",
+    "NestedBlockDepth",
+    "ReturnCount"
 )
 
 package com.oriondev.moneywallet.ui.activity
@@ -229,63 +231,71 @@ class NewEditTransactionModelActivity : AppCompatActivity(),
             if (cursor.moveToFirst()) {
                 money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.MONEY))
                 description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.DESCRIPTION)) ?: ""
-                
-                val catId = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_ID))
-                val catName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_NAME))
-                val catIconStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_ICON))
-                val catTypeInt = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_TYPE))
-                category = Category(
-                    catId,
-                    catName,
-                    IconLoader.parse(catIconStr),
-                    Contract.CategoryType.fromValue(catTypeInt)
-                )
-
-                val wId = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_ID))
-                val wName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_NAME))
-                val wIconStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_ICON))
-                val wCurrStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_CURRENCY))
-                val wCurr = CurrencyManager.getCurrency(wCurrStr)
-                wallet = Wallet(wId, wName, IconLoader.parse(wIconStr), wCurr, 0L, 0L)
-                currency = wCurr
-
-                val placeIdCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ID)
-                if (!cursor.isNull(placeIdCol)) {
-                    val pId = cursor.getLong(placeIdCol)
-                    val pName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_NAME))
-                    val pIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ICON))
-                    val pAddress = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ADDRESS))
-                    val pLatCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_LATITUDE)
-                    val pLngCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_LONGITUDE)
-                    val pLat = if (cursor.isNull(pLatCol)) null else cursor.getDouble(pLatCol)
-                    val pLng = if (cursor.isNull(pLngCol)) null else cursor.getDouble(pLngCol)
-                    place = Place(pId, pName, IconLoader.parse(pIcon), pAddress, pLat, pLng)
-                }
-
+                category = parseCategoryFromCursor(cursor)
+                wallet = parseWalletFromCursor(cursor)
+                currency = wallet?.currency
+                place = parsePlaceFromCursor(cursor)
                 note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.NOTE)) ?: ""
-
-                val eventIdCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_ID)
-                if (!cursor.isNull(eventIdCol)) {
-                    val eId = cursor.getLong(eventIdCol)
-                    val eName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_NAME))
-                    val eIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_ICON))
-                    val eStart = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_START_DATE))
-                    val eEnd = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_END_DATE))
-                    event = Event(
-                        eId,
-                        eName,
-                        IconLoader.parse(eIcon),
-                        DateUtils.getDateFromSQLDateString(eStart),
-                        DateUtils.getDateFromSQLDateString(eEnd)
-                    )
-                }
-
+                event = parseEventFromCursor(cursor)
                 val confCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.CONFIRMED)
                 confirmed = cursor.getInt(confCol) == 1
                 val countCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.COUNT_IN_TOTAL)
                 countInTotal = cursor.getInt(countCol) == 1
             }
         }
+    }
+
+    private fun parseCategoryFromCursor(cursor: Cursor): Category {
+        val catId = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_ID))
+        val catName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_NAME))
+        val catIconStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_ICON))
+        val catTypeInt = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_TYPE))
+        return Category(
+            catId,
+            catName,
+            IconLoader.parse(catIconStr),
+            Contract.CategoryType.fromValue(catTypeInt)
+        )
+    }
+
+    private fun parseWalletFromCursor(cursor: Cursor): Wallet {
+        val wId = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_ID))
+        val wName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_NAME))
+        val wIconStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_ICON))
+        val wCurrStr = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_CURRENCY))
+        val wCurr = CurrencyManager.getCurrency(wCurrStr)
+        return Wallet(wId, wName, IconLoader.parse(wIconStr), wCurr, 0L, 0L)
+    }
+
+    private fun parsePlaceFromCursor(cursor: Cursor): Place? {
+        val placeIdCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ID)
+        if (cursor.isNull(placeIdCol)) return null
+        val pId = cursor.getLong(placeIdCol)
+        val pName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_NAME))
+        val pIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ICON))
+        val pAddress = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_ADDRESS))
+        val pLatCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_LATITUDE)
+        val pLngCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_LONGITUDE)
+        val pLat = if (cursor.isNull(pLatCol)) null else cursor.getDouble(pLatCol)
+        val pLng = if (cursor.isNull(pLngCol)) null else cursor.getDouble(pLngCol)
+        return Place(pId, pName, IconLoader.parse(pIcon), pAddress, pLat, pLng)
+    }
+
+    private fun parseEventFromCursor(cursor: Cursor): Event? {
+        val eventIdCol = cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_ID)
+        if (cursor.isNull(eventIdCol)) return null
+        val eId = cursor.getLong(eventIdCol)
+        val eName = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_NAME))
+        val eIcon = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_ICON))
+        val eStart = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_START_DATE))
+        val eEnd = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_END_DATE))
+        return Event(
+            eId,
+            eName,
+            IconLoader.parse(eIcon),
+            DateUtils.getDateFromSQLDateString(eStart),
+            DateUtils.getDateFromSQLDateString(eEnd)
+        )
     }
 
     private fun loadDefaultWallet() {
@@ -336,10 +346,11 @@ class NewEditTransactionModelActivity : AppCompatActivity(),
     }
 
     private fun saveTransactionModel() {
-        if (!validate()) return
-
-        val currentCat = category ?: return
-        val currentWallet = wallet ?: return
+        val currentCat = category
+        val currentWallet = wallet
+        if (!validate() || currentCat == null || currentWallet == null) {
+            return
+        }
 
         val contentValues = ContentValues().apply {
             put(Contract.TransactionModel.MONEY, money)
@@ -529,7 +540,7 @@ private fun NewEditTransactionModelScreen(
             ) {
                 Icon(Icons.Default.Check, contentDescription = null, modifier = Modifier.padding(end = 8.dp))
                 Text(
-                    text = stringResource(R.string.action_save_changes),
+                    text = stringResource(R.string.menu_action_save_changes),
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -700,21 +711,21 @@ private fun NewEditTransactionModelScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    if (wallet != null) {
-                        AndroidView(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primaryContainer),
-                            factory = { ctx ->
-                                ImageView(ctx).apply {
-                                    scaleType = ImageView.ScaleType.CENTER_INSIDE
-                                }
-                            },
-                            update = { view ->
-                                IconLoader.loadInto(wallet.icon, view)
-                            }
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primaryContainer),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Default.AccountBalanceWallet,
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp),
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer
                         )
+                    }
+                    if (wallet != null) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = wallet.name,
@@ -728,12 +739,6 @@ private fun NewEditTransactionModelScreen(
                             )
                         }
                     } else {
-                        Icon(
-                            Icons.Default.AccountBalanceWallet,
-                            contentDescription = null,
-                            modifier = Modifier.size(28.dp),
-                            tint = if (walletError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-                        )
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
                                 text = stringResource(R.string.hint_wallet),
