@@ -41,7 +41,7 @@ flowchart TD
 
     subgraph Castle["🏰 Realm I: The Citadel of Activities"]
         direction TB
-        A_Won["🏆 28 Bastions Liberated<br/><i>About, Calc, Models, etc.</i>"]:::liberated
+        A_Won["🏆 28 Bastions Liberated<br/><i>About, Calc, Search, etc.</i>"]:::liberated
         A_Siege["⚔️ 26 Bastions Under Siege<br/><i>Boss: MainActivity.java</i>"]:::siege
         A_Won -.-> A_Siege
     end
@@ -67,8 +67,8 @@ flowchart TD
 ### ⚔️ Realm Status Log & Boss Encounters
 
 #### 🏰 Realm I: The Citadel of Activities (UI Frontline)
-* **Liberation Progress**: `[███████████░░░░░░░░░]` **51.9%**
-* **Status**: ⚔️ **HEATED SIEGE (CROSSING 50% MILESTONE!)**
+* **Liberation Progress**: `[██████████░░░░░░░░░░]` **51.9%**
+* **Status**: ⚔️ **HEATED SIEGE**
 * **Garrison**: `28` Kotlin Knights vs `26` Java Defenders
 * **Current Boss Fight**: `MainActivity.java` *(HP: 950 Lines | Special Attack: Intent Spam)*
 * **Loot Upon Victory**: `+50 Null Safety`, `-420 Semicolons`
@@ -89,7 +89,7 @@ flowchart TD
 #### 🧪 Realm IV: The Proving Grounds (Test Suite)
 * **Liberation Progress**: `[█░░░░░░░░░░░░░░░░░░░]` **5.6%**
 * **Status**: ⏳ **PEACEFUL STALEMATE**
-* **Roster**: `4` Kotlin Tests + `67` Unit Tests + `2` Android Instrumented Tests
+* **Roster**: `67` Unit Tests + `4` Android Instrumented Tests
 * **Strategy**: Deploy modern Kotlin DSL assertions & coroutine test scopes once the battle moves deeper
 
 ---
@@ -100,7 +100,7 @@ Visual progress status across different modules:
 
 | Module / Package | Kotlin | Java | Progress | Risk Level | Status Heatmap |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **`ui/activity`** | 28 | 26 | **51.9%** | 🟡 Medium | `🟩🟩🟩🟩🟩🟨🟥🟥🟥🟥` *Majority Kotlin Liberated!* 🏆 |
+| **`ui/activity`** | 28 | 26 | **51.9%** | 🟡 Medium | `🟩🟩🟩🟩🟩🟨🟥🟥🟥🟥` *Civil War in Progress* |
 | **`ui/fragment`** | 4 | 82 | **4.7%** | 🟠 High | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Reconnaissance Mission* |
 | **`updater`** | 2 | 0 | **100.0%** | 🟢 Safe | `🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩` *Liberated Territory* 🏆 |
 | **`model`** | 1 | 60 | **1.6%** | 🔴 Extreme | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Getters & Setters Everywhere* |
@@ -276,14 +276,14 @@ gantt
     title Kotlin Conquest Timeline
     dateFormat  YYYY-MM
     section UI Layer
-    Finish Activities (28 remaining) :active, act1, 2026-10, 2026-11
+    Finish Activities (26 remaining) :active, act1, 2026-10, 2026-11
     Convert Primary Fragments        :crit, act2, 2026-11, 2026-12
     section Data & Core
     Convert Models to Data Classes   :act3, 2026-12, 2027-01
     Database DAOs & Repository Room  :act4, 2027-01, 2027-02
     section Utilities & Tests
     Utils to Kotlin Extensions       :act5, 2027-02, 2027-03
-    Migrate 69 Test Suites           :act6, 2027-03, 2027-04
+    Migrate 71 Test Suites           :act6, 2027-03, 2027-04
 ```
 
 > **Pro-tip:** Every converted Java file eliminates an average of 42 semicolons and reduces line count by 35%. Long live `val` and `?.`! 🚀
@@ -293,6 +293,38 @@ gantt
 ## 📜 8. Chronicles of the Crusade (Recent Commits & Dispatches)
 
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
+
+<details open>
+<summary><b><code>19e3d65</code></b> — <b>feat(model): migrate transaction and transfer model activities to Kotlin and Jetpack Compose</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`19e3d65`](https://github.com/solomonrajan/cashledger/commit/19e3d65)
+* **Author**: Solomon Rajan • **Date**: 2026-10-20
+* **Description / Scope**:
+
+  > - Convert NewEditTransactionModelActivity to Kotlin and Jetpack Compose (Material 3):
+  >   - Implement edge-to-edge layout with TopAppBar, save action, and edit-mode delete confirmation dialog.
+  >   - Interactive amount card displaying formatted money and currency symbol with MoneyPicker integration.
+  >   - Category and wallet selection cards with AndroidView IconLoader integration and validation error styling.
+  >   - Event, place, description, note inputs, and checkboxes for confirmed and countInTotal state.
+  >   - Maintain backward compatibility for Intent extras (MODE, ID) and nested Mode object.
+  >   - Delete legacy NewEditTransactionModelActivity.java.
+  >
+  > - Convert NewEditTransferModelActivity to Kotlin and Jetpack Compose (Material 3):
+  >   - Transfer amount header with source wallet currency resolution.
+  >   - Dual wallet cards for source and destination with 1-tap swap action.
+  >   - Optional tax amount picker, event/place cards, description, note, and checkboxes.
+  >   - Validate that both source and destination wallets are selected before saving.
+  >   - Delete legacy NewEditTransferModelActivity.java.
+  >
+  > - Add Robolectric unit test suites:
+  >   - Add NewEditTransactionModelActivityTest.kt covering companion constants, mode mappings, model entity assignment, and contract column definitions.
+  >   - Add NewEditTransferModelActivityTest.kt covering companion constants, wallet swapping logic, and database column mappings.
+  >
+  > - Update KOTLIN_MIGRATION_REPORT.md:
+  >   - Cross 50% milestone in Realm I: Citadel of Activities (28 Kotlin vs 26 Java, 51.9%).
+  >   - Update codebase totals to 41 Kotlin files (7.7%).
+
+</details>
 
 <details open>
 <summary><b><code>2c9350b</code></b> — <b>fix(test): configure Robolectric runner for activity tests and suppress SwallowedException</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
@@ -432,20 +464,5 @@ gantt
   > - Correct CurrencyUnit initialization in NewEditTransferActivityTest.kt
   >   from 5 arguments to the expected 4 arguments (iso, name, symbol, decimals).
   > - Resolves the :app:compileFlossOsmDebugUnitTestKotlin build failure on CI.
-
-</details>
-
-<details open>
-<summary><b><code>edd7bff</code></b> — <b>fix(transfer): resolve duplicate GoogleSansCode declaration</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`edd7bff`](https://github.com/solomonrajan/cashledger/commit/edd7bff)
-* **Author**: Solomon Rajan • **Date**: 2026-10-13
-* **Description / Scope**:
-
-  > - Remove redundant top-level GoogleSansCode FontFamily definition from
-  >   NewEditTransferScreen.kt.
-  > - Use the existing package-level GoogleSansCode defined in
-  >   NewEditTransactionScreen.kt to resolve CI Kotlin compiler failures
-  >   (conflicting declarations and overload resolution ambiguity).
 
 </details>
