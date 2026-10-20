@@ -293,6 +293,73 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>2c9350b</code></b> — <b>fix(test): configure Robolectric runner for activity tests and suppress SwallowedException</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`2c9350b`](https://github.com/solomonrajan/cashledger/commit/2c9350b)
+* **Author**: Solomon Rajan • **Date**: 2026-10-20
+* **Description / Scope**:
+
+  > - Annotate CategoryRuleActivityTest and NewEditTransferActivityTest with @RunWith(RobolectricTestRunner::class) to provide Android Uri/framework stubs during unit tests.
+  > - Add SwallowedException to @file:Suppress in NewEditTransferActivity.kt to resolve Detekt static analysis error.
+  > - Fixes CI test and Detekt failures to restore automated pre-release generation.
+
+</details>
+
+<details open>
+<summary><b><code>fd251c1</code></b> — <b>perf(ci): optimize GitHub Actions build and streamline workflow execution</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`fd251c1`](https://github.com/solomonrajan/cashledger/commit/fd251c1)
+* **Author**: Solomon Rajan • **Date**: 2026-10-20
+* **Description / Scope**:
+
+  > - Increase Gradle JVM heap to 4GB (-Xmx4096m) with parallel GC and
+  >   MaxMetaspaceSize=1g in gradle.properties to resolve Kotlin 2.x and Compose
+  >   compiler GC memory starvation.
+  > - Enable org.gradle.parallel=true and org.gradle.caching=true in gradle.properties
+  >   for multi-core task parallelism and build output reuse.
+  > - Tune Kotlin daemon with kotlin.daemon.jvmargs=-Xmx2048m and enable incremental
+  >   compilation.
+  > - Consolidate Build, Detekt, and Lint in build.yml into a single Gradle invocation
+  >   with --continue, reducing Gradle daemon startup and configuration overhead.
+  > - Drop redundant clean and assembleFlossOsmDebugAndroidTest from build.yml to avoid
+  >   unnecessary APK dexing/packaging and cache invalidation.
+  > - Enable cache-read-only: false on gradle/actions/setup-gradle to persist build
+  >   cache entries across pushes on feature branches.
+  > - Fix branch concurrency grouping in build.yml to cancel superseded in-progress
+  >   builds and prevent CI queue pile-ups.
+  > - Remove redundant and flaky connected.yml scheduled emulator workflow to save
+  >   runner quota and eliminate false-positive failure alerts.
+
+</details>
+
+<details open>
+<summary><b><code>2bf6748</code></b> — <b>perf(ci): optimize GitHub Actions build and streamline workflow execution</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`2bf6748`](https://github.com/solomonrajan/cashledger/commit/2bf6748)
+* **Author**: Solomon Rajan • **Date**: 2026-10-20
+* **Description / Scope**:
+
+  > - Increase Gradle JVM heap to 4GB (-Xmx4096m) with parallel GC and
+  >   MaxMetaspaceSize=1g in gradle.properties to resolve Kotlin 2.x and Compose
+  >   compiler GC memory starvation.
+  > - Enable org.gradle.parallel=true and org.gradle.caching=true in gradle.properties
+  >   for multi-core task parallelism and build output reuse.
+  > - Tune Kotlin daemon with kotlin.daemon.jvmargs=-Xmx2048m and enable incremental
+  >   compilation.
+  > - Consolidate Build, Detekt, and Lint in build.yml into a single Gradle invocation
+  >   with --continue, reducing Gradle daemon startup and configuration overhead.
+  > - Drop redundant clean and assembleFlossOsmDebugAndroidTest from build.yml to avoid
+  >   unnecessary APK dexing/packaging and cache invalidation.
+  > - Enable cache-read-only: false on gradle/actions/setup-gradle to persist build
+  >   cache entries across pushes on feature branches.
+  > - Fix branch concurrency grouping in build.yml to cancel superseded in-progress
+  >   builds and prevent CI queue pile-ups.
+  > - Remove redundant and flaky connected.yml scheduled emulator workflow to save
+  >   runner quota and eliminate false-positive failure alerts.
+
+</details>
+
+<details open>
 <summary><b><code>b42f590</code></b> — <b>fix(category): resolve Mode declaration and IconLoader call in NewEditCategoryRuleActivity</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`b42f590`](https://github.com/solomonrajan/cashledger/commit/b42f590)
@@ -378,53 +445,5 @@ gantt
   > - Use the existing package-level GoogleSansCode defined in
   >   NewEditTransactionScreen.kt to resolve CI Kotlin compiler failures
   >   (conflicting declarations and overload resolution ambiguity).
-
-</details>
-
-<details open>
-<summary><b><code>58441b7</code></b> — <b>feat(transfer): migrate NewEditTransferActivity to Kotlin and Jetpack Compose</b> <i>(2026-10-13 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`58441b7`](https://github.com/solomonrajan/cashledger/commit/58441b7)
-* **Author**: Solomon Rajan • **Date**: 2026-10-13
-* **Description / Scope**:
-
-  > - Convert legacy 824-line NewEditTransferActivity.java into a modern,
-  >   modular Kotlin implementation following the NewEditTransaction architecture.
-  > - Rebuild UI using Jetpack Compose and Material 3 (NewEditTransferScreen.kt):
-  >   - Amount header styled with GoogleSansCode, locale formatting, and calculator trigger.
-  >   - Interactive source and destination wallet cards featuring Material 3 FilterChip
-  >     carousels, "+ All Wallets" picker integration, and a quick-swap action.
-  >   - Dedicated transfer fee / tax input with instant clear support.
-  >   - Material 3 DatePicker and TimePicker dialogs with date-ahead notifications.
-  >   - FlowRow contextual tag chips (Event, People, Place) with clearable actions.
-  >   - M3 switch controls for "Confirmed" and "Count in Total" state flags.
-  > - Offload database operations to coroutine-based extensions (NewEditTransferExt.kt):
-  >   - loadTransferData(): queries active wallets, transfer models, and linked relations.
-  >   - saveTransferData(): validates distinct wallets, populates TransferContentValuesBuilder,
-  >     and handles post-save attachment cleanup.
-  > - Preserve full backward compatibility for companion constants and static methods:
-  >   - Expose TYPE, MODEL_ID, TYPE_STANDARD, TYPE_MODEL, and @JvmStatic insertTransferFromModel.
-  > - Add unit tests (NewEditTransferActivityTest.kt) verifying constants, defaults, and wallet swapping.
-
-</details>
-
-<details open>
-<summary><b><code>97d4d8c</code></b> — <b>fix: add missing Contract import in NewEditTransactionScreen and remove deprecated package in manifest</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`97d4d8c`](https://github.com/solomonrajan/cashledger/commit/97d4d8c)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description / Scope**:
-
-  > - Import Contract to resolve unresolved reference in NewEditTransactionScreen
-  > - Remove deprecated package attribute from AndroidManifest.xml in favor of namespace in build.gradle
-
-</details>
-
-<details open>
-<summary><b><code>2e3639b</code></b> — <b>Merge branch 'javatokotlin' of https://github.com/solomonrajan/cashledger into javatokotlin</b> <i>(2026-10-12 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`2e3639b`](https://github.com/solomonrajan/cashledger/commit/2e3639b)
-* **Author**: Solomon Rajan • **Date**: 2026-10-12
-* **Description**: *(Single-line commit)*
 
 </details>
