@@ -9,17 +9,17 @@
 We ran the scouters over the codebase, and here is the pulse check of our crusade against semicolon tyranny:
 
 ```
-Total Files Analyzed : 535
-Java Holdouts (☕)    : 486 files (90.8%)
-Kotlin Chads  (🟣)   :  49 files  (9.2%)
+Total Files Analyzed : 537
+Java Holdouts (☕)    : 484 files (90.1%)
+Kotlin Chads  (🟣)   :  53 files  (9.9%)
 ```
 
 ### 🥧 The Codebase Pie Chart
 
 ```mermaid
 pie title Java vs Kotlin Territory Breakdown
-    "Java (Boilerplate Kingdom)" : 486
-    "Kotlin (Concise & Null-Safe)" : 49
+    "Java (Boilerplate Kingdom)" : 484
+    "Kotlin (Concise & Null-Safe)" : 53
 ```
 
 ---
@@ -41,8 +41,8 @@ flowchart TD
 
     subgraph Castle["🏰 Realm I: The Citadel of Activities"]
         direction TB
-        A_Won["🏆 32 Bastions Liberated<br/><i>About, Calc, Search, etc.</i>"]:::liberated
-        A_Siege["⚔️ 22 Bastions Under Siege<br/><i>Boss: MainActivity.java</i>"]:::siege
+        A_Won["🏆 34 Bastions Liberated<br/><i>About, Calc, Search, etc.</i>"]:::liberated
+        A_Siege["⚔️ 20 Bastions Under Siege<br/><i>Boss: MainActivity.java</i>"]:::siege
         A_Won -.-> A_Siege
     end
 
@@ -60,16 +60,16 @@ flowchart TD
 
     subgraph Arena["🧪 Realm IV: The Proving Grounds"]
         direction TB
-        T_Trial["🛡️ 75 Untamed Test Suites<br/><i>Awaiting Kotest & MockK Reinforcements</i>"]:::occupied
+        T_Trial["🛡️ 77 Untamed Test Suites<br/><i>Awaiting Kotest & MockK Reinforcements</i>"]:::occupied
     end
 ```
 
 ### ⚔️ Realm Status Log & Boss Encounters
 
 #### 🏰 Realm I: The Citadel of Activities (UI Frontline)
-* **Liberation Progress**: `[████████████░░░░░░░░]` **59.3%**
+* **Liberation Progress**: `[█████████████░░░░░░░]` **63.0%**
 * **Status**: ⚔️ **HEATED SIEGE**
-* **Garrison**: `32` Kotlin Knights vs `22` Java Defenders
+* **Garrison**: `34` Kotlin Knights vs `20` Java Defenders
 * **Current Boss Fight**: `MainActivity.java` *(HP: 950 Lines | Special Attack: Intent Spam)*
 * **Loot Upon Victory**: `+50 Null Safety`, `-420 Semicolons`
 
@@ -87,9 +87,9 @@ flowchart TD
 * **Debuff**: Every query incurs +5 verbose cursors and manual index mappings
 
 #### 🧪 Realm IV: The Proving Grounds (Test Suite)
-* **Liberation Progress**: `[██░░░░░░░░░░░░░░░░░░]` **10.7%**
+* **Liberation Progress**: `[███░░░░░░░░░░░░░░░░░]` **13.0%**
 * **Status**: ⏳ **PEACEFUL STALEMATE**
-* **Roster**: `67` Unit Tests + `8` Android Instrumented Tests
+* **Roster**: `67` Unit Tests + `10` Android Instrumented Tests
 * **Strategy**: Deploy modern Kotlin DSL assertions & coroutine test scopes once the battle moves deeper
 
 ---
@@ -100,20 +100,20 @@ Visual progress status across different modules:
 
 | Module / Package | Kotlin | Java | Progress | Risk Level | Status Heatmap |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **`ui/activity`** | 32 | 22 | **59.3%** | 🟡 Medium | `🟩🟩🟩🟩🟩🟨🟥🟥🟥🟥` *Civil War in Progress* |
+| **`ui/activity`** | 34 | 20 | **63.0%** | 🟡 Medium | `🟩🟩🟩🟩🟩🟩🟨🟥🟥🟥` *Civil War in Progress* |
 | **`ui/fragment`** | 4 | 82 | **4.7%** | 🟠 High | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Reconnaissance Mission* |
 | **`updater`** | 2 | 0 | **100.0%** | 🟢 Safe | `🟩🟩🟩🟩🟩🟩🟩🟩🟩🟩` *Liberated Territory* 🏆 |
 | **`model`** | 1 | 60 | **1.6%** | 🔴 Extreme | `🟨🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Getters & Setters Everywhere* |
 | **`storage/database`**| 0 | 77 | **0.0%** | 💀 Critical | `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥` *The Semicolon Citadel* |
 | **`utils`** | 0 | 11 | **0.0%** | 🔴 High | `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Static Class Graveyard* |
 | **`service & background`**| 0 | 18 | **0.0%** | 🟠 High | `🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥` *Background Boilerplate* |
-| **`tests (src/test)`** | 8 | 67 | **10.7%** | 🟡 Medium | `🟩🟨🟥🟥🟥🟥🟥🟥🟥🟥` *Legacy Assertions* |
+| **`tests (src/test)`** | 10 | 67 | **13.0%** | 🟡 Medium | `🟩🟨🟥🟥🟥🟥🟥🟥🟥🟥` *Legacy Assertions* |
 
 ---
 
 ## 🏆 4. Hall of Fame (Converted Kotlin Files)
 
-These brave `49` files threw away the Java syntax baggage:
+These brave `53` files threw away the Java syntax baggage:
 
 ### 👑 Activities
 * [AboutActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/AboutActivity.kt)
@@ -130,8 +130,10 @@ These brave `49` files threw away the Java syntax baggage:
 * [MapActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/MapActivity.kt)
 * [NewEditCategoryActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditCategoryActivity.kt)
 * [NewEditCategoryRuleActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditCategoryRuleActivity.kt)
+* [NewEditCurrencyActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditCurrencyActivity.kt)
 * [NewEditEventActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditEventActivity.kt)
 * [NewEditPersonActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditPersonActivity.kt)
+* [NewEditPlaceActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditPlaceActivity.kt)
 * [NewEditRecurrentTransactionActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditRecurrentTransactionActivity.kt)
 * [NewEditRecurrentTransferActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditRecurrentTransferActivity.kt)
 * [NewEditTransactionActivity.kt](https://github.com/solomonrajan/cashledger/blob/javatokotlin/app/src/main/java/com/oriondev/moneywallet/ui/activity/NewEditTransactionActivity.kt)
@@ -280,14 +282,14 @@ gantt
     title Kotlin Conquest Timeline
     dateFormat  YYYY-MM
     section UI Layer
-    Finish Activities (22 remaining) :active, act1, 2026-10, 2026-11
+    Finish Activities (20 remaining) :active, act1, 2026-10, 2026-11
     Convert Primary Fragments        :crit, act2, 2026-11, 2026-12
     section Data & Core
     Convert Models to Data Classes   :act3, 2026-12, 2027-01
     Database DAOs & Repository Room  :act4, 2027-01, 2027-02
     section Utilities & Tests
     Utils to Kotlin Extensions       :act5, 2027-02, 2027-03
-    Migrate 75 Test Suites           :act6, 2027-03, 2027-04
+    Migrate 77 Test Suites           :act6, 2027-03, 2027-04
 ```
 
 > **Pro-tip:** Every converted Java file eliminates an average of 42 semicolons and reduces line count by 35%. Long live `val` and `?.`! 🚀
@@ -297,6 +299,21 @@ gantt
 ## 📜 8. Chronicles of the Crusade (Recent Commits & Dispatches)
 
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
+
+<details open>
+<summary><b><code>6bb39b3</code></b> — <b>feat(geo-currency): migrate place and currency activities to Kotlin and Jetpack Compose</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`6bb39b3`](https://github.com/solomonrajan/cashledger/commit/6bb39b3)
+* **Author**: Solomon Rajan • **Date**: 2026-10-22
+* **Description / Scope**:
+
+  > - Converted NewEditPlaceActivity to Kotlin and Jetpack Compose Material 3 with embedded MapView integration
+  > - Converted NewEditCurrencyActivity to Kotlin and Jetpack Compose Material 3 with precision and rescale dialogs
+  > - Removed legacy NewEditPlaceActivity.java and NewEditCurrencyActivity.java
+  > - Added unit test suites NewEditPlaceActivityTest and NewEditCurrencyActivityTest with schema-aligned contract assertions
+  > - Preserved legacy intent contract constants, Mode definitions, and database column contracts
+
+</details>
 
 <details open>
 <summary><b><code>5bbefe8</code></b> — <b>feat(metadata): migrate person and event activities to Kotlin and Jetpack Compose</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
@@ -449,18 +466,5 @@ gantt
   > - Update KOTLIN_MIGRATION_REPORT.md:
   >   - Cross 50% milestone in Realm I: Citadel of Activities (28 Kotlin vs 26 Java, 51.9%).
   >   - Update codebase totals to 41 Kotlin files (7.7%).
-
-</details>
-
-<details open>
-<summary><b><code>2c9350b</code></b> — <b>fix(test): configure Robolectric runner for activity tests and suppress SwallowedException</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`2c9350b`](https://github.com/solomonrajan/cashledger/commit/2c9350b)
-* **Author**: Solomon Rajan • **Date**: 2026-10-20
-* **Description / Scope**:
-
-  > - Annotate CategoryRuleActivityTest and NewEditTransferActivityTest with @RunWith(RobolectricTestRunner::class) to provide Android Uri/framework stubs during unit tests.
-  > - Add SwallowedException to @file:Suppress in NewEditTransferActivity.kt to resolve Detekt static analysis error.
-  > - Fixes CI test and Detekt failures to restore automated pre-release generation.
 
 </details>
