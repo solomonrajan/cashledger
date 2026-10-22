@@ -297,6 +297,19 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>19acd96</code></b> — <b>fix(recurrence): resolve unresolved references and detekt issues in recurrent activities</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`19acd96`](https://github.com/solomonrajan/cashledger/commit/19acd96)
+* **Author**: Solomon Rajan • **Date**: 2026-10-22
+* **Description / Scope**:
+
+  > - Change taxPicker.setCurrentMoney(0L) to taxPicker.setMoney(0L) in NewEditRecurrentTransferActivity.
+  > - Simplify save condition checks in both recurrent activities to prevent ComplexCondition detekt failures.
+  > - Add ComplexCondition to @file:Suppress annotations.
+
+</details>
+
+<details open>
 <summary><b><code>d8debea</code></b> — <b>feat(recurrence): migrate recurrent transaction and transfer activities to Kotlin and Jetpack Compose</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`d8debea`](https://github.com/solomonrajan/cashledger/commit/d8debea)
@@ -471,22 +484,5 @@ gantt
   >   builds and prevent CI queue pile-ups.
   > - Remove redundant and flaky connected.yml scheduled emulator workflow to save
   >   runner quota and eliminate false-positive failure alerts.
-
-</details>
-
-<details open>
-<summary><b><code>b42f590</code></b> — <b>fix(category): resolve Mode declaration and IconLoader call in NewEditCategoryRuleActivity</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`b42f590`](https://github.com/solomonrajan/cashledger/commit/b42f590)
-* **Author**: Solomon Rajan • **Date**: 2026-10-19
-* **Description / Scope**:
-
-  > - Replace invalid nested typealias inside companion object with a nested
-  >   object Mode declaring @JvmField properties for NEW_ITEM and EDIT_ITEM.
-  > - Fix unresolved reference in CategoryRuleListActivity and CategoryRuleActivityTest
-  >   by ensuring NewEditCategoryRuleActivity.Mode resolves correctly.
-  > - Replace non-existent IconLoader.loadIcon() with IconLoader.loadInto() when
-  >   rendering category icon in Jetpack Compose AndroidView.
-  > - Resolves :app:compileFlossOsmDebugKotlin compilation failures on CI.
 
 </details>
