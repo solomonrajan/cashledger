@@ -72,13 +72,13 @@ class NewEditRecurrentTransactionActivityTest {
 
     @Test
     fun testContractColumnNames() {
-        assertEquals("money", Contract.RecurrentTransaction.MONEY)
-        assertEquals("description", Contract.RecurrentTransaction.DESCRIPTION)
-        assertEquals("category", Contract.RecurrentTransaction.CATEGORY_ID)
-        assertEquals("wallet", Contract.RecurrentTransaction.WALLET_ID)
-        assertEquals("start_date", Contract.RecurrentTransaction.START_DATE)
-        assertEquals("rule", Contract.RecurrentTransaction.RULE)
-        assertEquals("confirmed", Contract.RecurrentTransaction.CONFIRMED)
-        assertEquals("count_in_total", Contract.RecurrentTransaction.COUNT_IN_TOTAL)
+        assertEquals("recurrent_transaction_money", Contract.RecurrentTransaction.MONEY)
+        assertEquals("recurrent_transaction_description", Contract.RecurrentTransaction.DESCRIPTION)
+        assertEquals("recurrent_transaction_category", Contract.RecurrentTransaction.CATEGORY_ID)
+        assertEquals("recurrent_transaction_wallet", Contract.RecurrentTransaction.WALLET_ID)
+        assertEquals("recurrent_transaction_start_date", Contract.RecurrentTransaction.START_DATE)
+        assertEquals("recurrent_transaction_rule", Contract.RecurrentTransaction.RULE)
+        assertEquals("recurrent_transaction_confirmed", Contract.RecurrentTransaction.CONFIRMED)
+        assertEquals("recurrent_transaction_count_in_total", Contract.RecurrentTransaction.COUNT_IN_TOTAL)
     }
 }

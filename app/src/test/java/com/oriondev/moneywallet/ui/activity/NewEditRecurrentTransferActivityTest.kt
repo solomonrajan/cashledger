@@ -57,15 +57,15 @@ class NewEditRecurrentTransferActivityTest {
 
     @Test
     fun testContractColumnNames() {
-        assertEquals("description", Contract.RecurrentTransfer.DESCRIPTION)
-        assertEquals("from_wallet", Contract.RecurrentTransfer.WALLET_FROM_ID)
-        assertEquals("to_wallet", Contract.RecurrentTransfer.WALLET_TO_ID)
-        assertEquals("from_money", Contract.RecurrentTransfer.MONEY_FROM)
-        assertEquals("to_money", Contract.RecurrentTransfer.MONEY_TO)
-        assertEquals("tax_money", Contract.RecurrentTransfer.MONEY_TAX)
-        assertEquals("start_date", Contract.RecurrentTransfer.START_DATE)
-        assertEquals("rule", Contract.RecurrentTransfer.RULE)
-        assertEquals("confirmed", Contract.RecurrentTransfer.CONFIRMED)
-        assertEquals("count_in_total", Contract.RecurrentTransfer.COUNT_IN_TOTAL)
+        assertEquals("recurrent_transfer_description", Contract.RecurrentTransfer.DESCRIPTION)
+        assertEquals("recurrent_transfer_from_wallet", Contract.RecurrentTransfer.WALLET_FROM_ID)
+        assertEquals("recurrent_transfer_to_wallet", Contract.RecurrentTransfer.WALLET_TO_ID)
+        assertEquals("recurrent_transfer_from_money", Contract.RecurrentTransfer.MONEY_FROM)
+        assertEquals("recurrent_transfer_to_money", Contract.RecurrentTransfer.MONEY_TO)
+        assertEquals("recurrent_transfer_tax_money", Contract.RecurrentTransfer.MONEY_TAX)
+        assertEquals("recurrent_transfer_start_date", Contract.RecurrentTransfer.START_DATE)
+        assertEquals("recurrent_transfer_rule", Contract.RecurrentTransfer.RULE)
+        assertEquals("recurrent_transfer_confirmed", Contract.RecurrentTransfer.CONFIRMED)
+        assertEquals("recurrent_transfer_count_in_total", Contract.RecurrentTransfer.COUNT_IN_TOTAL)
     }
 }
