@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   build-and-release:
-    if: !github.event.release.prerelease
+    if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     
@@ -24,12 +24,14 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Build Release APK
-        run: ./gradlew assembleFlossOsmRelease
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleFlossOsmRelease
 
       - name: Rename APKs
         run: |
           cd app/build/outputs/apk/flossOsm/release/
-          VERSION=${{ github.ref_name }}
+          VERSION="${{ github.event.release.tag_name || github.ref_name }}"
           # Ensure version starts with 'v' if it doesn't already
           if [[ $VERSION != v* ]]; then
             VERSION="v$VERSION"
@@ -40,4 +42,5 @@ jobs:
       - name: Upload APK to Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.event.release.tag_name }}
           files: app/build/outputs/apk/flossOsm/release/cashledger-*.apk
