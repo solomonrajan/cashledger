@@ -41,7 +41,7 @@ flowchart TD
 
     subgraph Castle["🏰 Realm I: The Citadel of Activities"]
         direction TB
-        A_Won["🏆 30 Bastions Liberated<br/><i>About, Calc, Recurrence, etc.</i>"]:::liberated
+        A_Won["🏆 30 Bastions Liberated<br/><i>About, Calc, Search, etc.</i>"]:::liberated
         A_Siege["⚔️ 24 Bastions Under Siege<br/><i>Boss: MainActivity.java</i>"]:::siege
         A_Won -.-> A_Siege
     end
@@ -87,9 +87,9 @@ flowchart TD
 * **Debuff**: Every query incurs +5 verbose cursors and manual index mappings
 
 #### 🧪 Realm IV: The Proving Grounds (Test Suite)
-* **Liberation Progress**: `[█░░░░░░░░░░░░░░░░░░░]` **8.2%**
+* **Liberation Progress**: `[██░░░░░░░░░░░░░░░░░░]` **8.2%**
 * **Status**: ⏳ **PEACEFUL STALEMATE**
-* **Roster**: `67` Unit Tests + `6` Kotlin Test Suites
+* **Roster**: `67` Unit Tests + `6` Android Instrumented Tests
 * **Strategy**: Deploy modern Kotlin DSL assertions & coroutine test scopes once the battle moves deeper
 
 ---
@@ -278,14 +278,14 @@ gantt
     title Kotlin Conquest Timeline
     dateFormat  YYYY-MM
     section UI Layer
-    Finish Activities (26 remaining) :active, act1, 2026-10, 2026-11
+    Finish Activities (24 remaining) :active, act1, 2026-10, 2026-11
     Convert Primary Fragments        :crit, act2, 2026-11, 2026-12
     section Data & Core
     Convert Models to Data Classes   :act3, 2026-12, 2027-01
     Database DAOs & Repository Room  :act4, 2027-01, 2027-02
     section Utilities & Tests
     Utils to Kotlin Extensions       :act5, 2027-02, 2027-03
-    Migrate 71 Test Suites           :act6, 2027-03, 2027-04
+    Migrate 73 Test Suites           :act6, 2027-03, 2027-04
 ```
 
 > **Pro-tip:** Every converted Java file eliminates an average of 42 semicolons and reduces line count by 35%. Long live `val` and `?.`! 🚀
@@ -295,6 +295,40 @@ gantt
 ## 📜 8. Chronicles of the Crusade (Recent Commits & Dispatches)
 
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
+
+<details open>
+<summary><b><code>d8debea</code></b> — <b>feat(recurrence): migrate recurrent transaction and transfer activities to Kotlin and Jetpack Compose</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`d8debea`](https://github.com/solomonrajan/cashledger/commit/d8debea)
+* **Author**: Solomon Rajan • **Date**: 2026-10-22
+* **Description / Scope**:
+
+  > - Convert NewEditRecurrentTransactionActivity to Kotlin and Jetpack Compose (Material 3):
+  >   - Implement edge-to-edge layout with TopAppBar, save action, and edit-mode delete confirmation dialog.
+  >   - Interactive amount card displaying formatted money and currency symbol with MoneyPicker integration.
+  >   - Category, wallet, and recurrence schedule picker cards with IconLoader and RecurrencePicker integrations.
+  >   - Optional place/event cards, note inputs, and checkboxes for confirmed and countInTotal state.
+  >   - Trigger RecurrenceBroadcastReceiver.scheduleRecurrenceTask upon save and delete.
+  >   - Delete legacy NewEditRecurrentTransactionActivity.java.
+  >
+  > - Convert NewEditRecurrentTransferActivity to Kotlin and Jetpack Compose (Material 3):
+  >   - Transfer amount header with source wallet currency resolution.
+  >   - Dual wallet cards for source and destination with 1-tap swap action.
+  >   - Tax amount picker card with clear action.
+  >   - Recurrence schedule card with RecurrencePicker integration.
+  >   - Optional place/event cards, note input, and checkboxes.
+  >   - Trigger RecurrenceBroadcastReceiver.scheduleRecurrenceTask upon save and delete.
+  >   - Delete legacy NewEditRecurrentTransferActivity.java.
+  >
+  > - Add Robolectric unit test suites:
+  >   - Add NewEditRecurrentTransactionActivityTest.kt covering companion constants, category/wallet/recurrence assignment, and contract column definitions.
+  >   - Add NewEditRecurrentTransferActivityTest.kt covering companion constants, wallet swapping logic, recurrence settings, and database column mappings.
+  >
+  > - Update KOTLIN_MIGRATION_REPORT.md:
+  >   - Advance Realm I: Citadel of Activities liberation progress to 55.6% (30 Kotlin vs 24 Java).
+  >   - Update codebase totals to 45 Kotlin files (8.4%).
+
+</details>
 
 <details open>
 <summary><b><code>4cb509f</code></b> — <b>test(model): align expected Contract column names with database schema definitions</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
@@ -454,29 +488,5 @@ gantt
   > - Replace non-existent IconLoader.loadIcon() with IconLoader.loadInto() when
   >   rendering category icon in Jetpack Compose AndroidView.
   > - Resolves :app:compileFlossOsmDebugKotlin compilation failures on CI.
-
-</details>
-
-<details open>
-<summary><b><code>163e47e</code></b> — <b>feat(category): migrate category rule activities to Kotlin and Jetpack Compose</b> <i>(2026-10-19 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`163e47e`](https://github.com/solomonrajan/cashledger/commit/163e47e)
-* **Author**: Solomon Rajan • **Date**: 2026-10-19
-* **Description / Scope**:
-
-  > - Convert CategoryRuleListActivity to idiomatic Kotlin:
-  >   - Extend SinglePanelSimpleListActivity and implement CategoryRuleCursorAdapter.ActionListener.
-  >   - Wire up FAB (create rule), item click (edit rule), item long-click (material delete dialog),
-  >     and menu sort action launching CategoryRuleSortActivity.
-  > - Convert NewEditCategoryRuleActivity to Kotlin and Jetpack Compose (Material 3):
-  >   - Implement edge-to-edge NewEditCategoryRuleScreen with TopAppBar, save action, and
-  >     edit-mode delete confirmation dialog.
-  >   - Pattern input card featuring OutlinedTextField, clear button, and non-empty validation.
-  >   - Target category card featuring AndroidView IconLoader integration, type chip, and
-  >     CategoryPicker launch callback.
-  >   - Maintain full backward compatibility for companion constants (MODE, ID, Mode)
-  >     and @JvmStatic readCategory().
-  > - Add unit tests in CategoryRuleActivityTest.kt covering companion constants and validation logic.
-  > - Delete legacy CategoryRuleListActivity.java and NewEditCategoryRuleActivity.java.
 
 </details>
