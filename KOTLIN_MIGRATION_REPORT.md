@@ -301,6 +301,21 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>d75e33e</code></b> — <b>ci(workflow): fix runner queuing delays, restrict dev release to master, and fix compile references</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`d75e33e`](https://github.com/solomonrajan/cashledger/commit/d75e33e)
+* **Author**: Solomon Rajan • **Date**: 2026-10-22
+* **Description / Scope**:
+
+  > - Switched runner images from pinned ubuntu-24.04 to ubuntu-latest across build, release, and report workflows to resolve queue bottlenecks
+  > - Restricted dev prerelease creation in build.yml to push events on master branch to prevent cascading builds on feature branches
+  > - Prevented release.yml from triggering on prereleases
+  > - Fixed unresolved string references in NewEditCurrencyActivity and NewEditEventActivity
+  > - Fixed Detekt TooGenericExceptionThrown issue by throwing IllegalArgumentException
+
+</details>
+
+<details open>
 <summary><b><code>6bb39b3</code></b> — <b>feat(geo-currency): migrate place and currency activities to Kotlin and Jetpack Compose</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`6bb39b3`](https://github.com/solomonrajan/cashledger/commit/6bb39b3)
@@ -434,37 +449,5 @@ gantt
   >   - Consolidate validation guard statements in saveTransactionModel and
   >     saveTransferModel to satisfy ReturnCount constraints.
   >   - Add NestedBlockDepth and ReturnCount to @file:Suppress annotations.
-
-</details>
-
-<details open>
-<summary><b><code>19e3d65</code></b> — <b>feat(model): migrate transaction and transfer model activities to Kotlin and Jetpack Compose</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`19e3d65`](https://github.com/solomonrajan/cashledger/commit/19e3d65)
-* **Author**: Solomon Rajan • **Date**: 2026-10-20
-* **Description / Scope**:
-
-  > - Convert NewEditTransactionModelActivity to Kotlin and Jetpack Compose (Material 3):
-  >   - Implement edge-to-edge layout with TopAppBar, save action, and edit-mode delete confirmation dialog.
-  >   - Interactive amount card displaying formatted money and currency symbol with MoneyPicker integration.
-  >   - Category and wallet selection cards with AndroidView IconLoader integration and validation error styling.
-  >   - Event, place, description, note inputs, and checkboxes for confirmed and countInTotal state.
-  >   - Maintain backward compatibility for Intent extras (MODE, ID) and nested Mode object.
-  >   - Delete legacy NewEditTransactionModelActivity.java.
-  >
-  > - Convert NewEditTransferModelActivity to Kotlin and Jetpack Compose (Material 3):
-  >   - Transfer amount header with source wallet currency resolution.
-  >   - Dual wallet cards for source and destination with 1-tap swap action.
-  >   - Optional tax amount picker, event/place cards, description, note, and checkboxes.
-  >   - Validate that both source and destination wallets are selected before saving.
-  >   - Delete legacy NewEditTransferModelActivity.java.
-  >
-  > - Add Robolectric unit test suites:
-  >   - Add NewEditTransactionModelActivityTest.kt covering companion constants, mode mappings, model entity assignment, and contract column definitions.
-  >   - Add NewEditTransferModelActivityTest.kt covering companion constants, wallet swapping logic, and database column mappings.
-  >
-  > - Update KOTLIN_MIGRATION_REPORT.md:
-  >   - Cross 50% milestone in Realm I: Citadel of Activities (28 Kotlin vs 26 Java, 51.9%).
-  >   - Update codebase totals to 41 Kotlin files (7.7%).
 
 </details>
