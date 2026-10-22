@@ -32,7 +32,8 @@
     "SwallowedException",
     "NestedBlockDepth",
     "ReturnCount",
-    "ComplexCondition"
+    "ComplexCondition",
+    "TooGenericExceptionThrown"
 )
 
 package com.oriondev.moneywallet.ui.activity
@@ -112,7 +113,7 @@ class NewEditCurrencyActivity : AppCompatActivity() {
         isoParam = intent?.getStringExtra(ISO)
 
         if (mode == Mode.EDIT_ITEM && isoParam.isNullOrEmpty()) {
-            throw RuntimeException("Trying to edit a currency with an invalid iso")
+            throw IllegalArgumentException("Trying to edit a currency with an invalid iso")
         }
 
         if (savedInstanceState == null && mode == Mode.EDIT_ITEM) {
@@ -437,7 +438,7 @@ private fun NewEditCurrencyScreen(
                     OutlinedTextField(
                         value = iso,
                         onValueChange = onIsoChange,
-                        label = { Text(stringResource(R.string.hint_iso)) },
+                        label = { Text(stringResource(R.string.hint_iso_code)) },
                         leadingIcon = {
                             Icon(Icons.Default.Paid, contentDescription = null)
                         },

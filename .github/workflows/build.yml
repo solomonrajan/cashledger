@@ -8,14 +8,13 @@ on:
 permissions:
   contents: write
 
-# Cancel obsolete in-progress builds when a new commit is pushed to the same branch or PR
 concurrency:
-  group: build-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: build-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -81,7 +80,7 @@ jobs:
           path: staging
 
       - name: Prepare Dev Release
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         run: |
           git fetch --tags --force
           VERSION_NAME=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
@@ -117,7 +116,7 @@ jobs:
           echo "DATE=$DATE" >> $GITHUB_ENV
 
       - name: Create Dev Release
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG_NAME }}

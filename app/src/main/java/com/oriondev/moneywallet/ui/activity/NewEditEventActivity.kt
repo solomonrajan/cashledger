@@ -445,7 +445,7 @@ private fun NewEditEventScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = stringResource(R.string.title_dialog_date_picker),
+                        text = stringResource(R.string.title_activity_calendar),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold),
                         color = MaterialTheme.colorScheme.primary
                     )
