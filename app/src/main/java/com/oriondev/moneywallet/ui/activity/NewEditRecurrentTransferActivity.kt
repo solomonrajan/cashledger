@@ -31,7 +31,8 @@
     "TooManyFunctions",
     "SwallowedException",
     "NestedBlockDepth",
-    "ReturnCount"
+    "ReturnCount",
+    "ComplexCondition"
 )
 
 package com.oriondev.moneywallet.ui.activity
@@ -170,7 +171,7 @@ class NewEditRecurrentTransferActivity : AppCompatActivity(),
                     onTaxClick = { taxPicker.showPicker() },
                     onTaxClear = {
                         tax = 0L
-                        taxPicker.setCurrentMoney(0L)
+                        taxPicker.setMoney(0L)
                     },
                     onDescriptionChange = { description = it },
                     onWalletFromClick = { walletFromPicker.showSingleWalletPicker() },
@@ -373,12 +374,10 @@ class NewEditRecurrentTransferActivity : AppCompatActivity(),
     }
 
     private fun saveRecurrentTransfer() {
-        val wFrom = walletFrom
-        val wTo = walletTo
-        val currentRecurrence = recurrenceSetting
-        if (!validate() || wFrom == null || wTo == null || currentRecurrence == null) {
-            return
-        }
+        if (!validate()) return
+        val wFrom = walletFrom ?: return
+        val wTo = walletTo ?: return
+        val currentRecurrence = recurrenceSetting ?: return
 
         val contentValues = ContentValues().apply {
             put(Contract.RecurrentTransfer.DESCRIPTION, description)

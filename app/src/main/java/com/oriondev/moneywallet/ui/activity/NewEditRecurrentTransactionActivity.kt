@@ -31,7 +31,8 @@
     "TooManyFunctions",
     "SwallowedException",
     "NestedBlockDepth",
-    "ReturnCount"
+    "ReturnCount",
+    "ComplexCondition"
 )
 
 package com.oriondev.moneywallet.ui.activity
@@ -360,12 +361,10 @@ class NewEditRecurrentTransactionActivity : AppCompatActivity(),
     }
 
     private fun saveRecurrentTransaction() {
-        val currentCat = category
-        val currentWallet = wallet
-        val currentRecurrence = recurrenceSetting
-        if (!validate() || currentCat == null || currentWallet == null || currentRecurrence == null) {
-            return
-        }
+        if (!validate()) return
+        val currentCat = category ?: return
+        val currentWallet = wallet ?: return
+        val currentRecurrence = recurrenceSetting ?: return
 
         val contentValues = ContentValues().apply {
             put(Contract.RecurrentTransaction.MONEY, money)
