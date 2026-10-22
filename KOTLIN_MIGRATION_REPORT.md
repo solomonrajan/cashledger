@@ -297,6 +297,21 @@ gantt
 > *A live dispatch of recent engineering battles, architecture refactors, and UI modernization:*
 
 <details open>
+<summary><b><code>95144f2</code></b> — <b>test(recurrence): align expected Contract column names with database schema definitions</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
+
+* **Commit Link**: [`95144f2`](https://github.com/solomonrajan/cashledger/commit/95144f2)
+* **Author**: Solomon Rajan • **Date**: 2026-10-22
+* **Description / Scope**:
+
+  > - Update testContractColumnNames in NewEditRecurrentTransactionActivityTest to assert
+  >   against the exact schema column names prefixed with 'recurrent_transaction_'.
+  > - Update testContractColumnNames in NewEditRecurrentTransferActivityTest to assert
+  >   against the exact schema column names prefixed with 'recurrent_transfer_'.
+  > - Resolves test failures during testFlossOsmDebugUnitTest on CI.
+
+</details>
+
+<details open>
 <summary><b><code>19acd96</code></b> — <b>fix(recurrence): resolve unresolved references and detekt issues in recurrent activities</b> <i>(2026-10-22 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`19acd96`](https://github.com/solomonrajan/cashledger/commit/19acd96)
@@ -437,33 +452,6 @@ gantt
 <summary><b><code>fd251c1</code></b> — <b>perf(ci): optimize GitHub Actions build and streamline workflow execution</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
 
 * **Commit Link**: [`fd251c1`](https://github.com/solomonrajan/cashledger/commit/fd251c1)
-* **Author**: Solomon Rajan • **Date**: 2026-10-20
-* **Description / Scope**:
-
-  > - Increase Gradle JVM heap to 4GB (-Xmx4096m) with parallel GC and
-  >   MaxMetaspaceSize=1g in gradle.properties to resolve Kotlin 2.x and Compose
-  >   compiler GC memory starvation.
-  > - Enable org.gradle.parallel=true and org.gradle.caching=true in gradle.properties
-  >   for multi-core task parallelism and build output reuse.
-  > - Tune Kotlin daemon with kotlin.daemon.jvmargs=-Xmx2048m and enable incremental
-  >   compilation.
-  > - Consolidate Build, Detekt, and Lint in build.yml into a single Gradle invocation
-  >   with --continue, reducing Gradle daemon startup and configuration overhead.
-  > - Drop redundant clean and assembleFlossOsmDebugAndroidTest from build.yml to avoid
-  >   unnecessary APK dexing/packaging and cache invalidation.
-  > - Enable cache-read-only: false on gradle/actions/setup-gradle to persist build
-  >   cache entries across pushes on feature branches.
-  > - Fix branch concurrency grouping in build.yml to cancel superseded in-progress
-  >   builds and prevent CI queue pile-ups.
-  > - Remove redundant and flaky connected.yml scheduled emulator workflow to save
-  >   runner quota and eliminate false-positive failure alerts.
-
-</details>
-
-<details open>
-<summary><b><code>2bf6748</code></b> — <b>perf(ci): optimize GitHub Actions build and streamline workflow execution</b> <i>(2026-10-20 by Solomon Rajan)</i></summary>
-
-* **Commit Link**: [`2bf6748`](https://github.com/solomonrajan/cashledger/commit/2bf6748)
 * **Author**: Solomon Rajan • **Date**: 2026-10-20
 * **Description / Scope**:
 
