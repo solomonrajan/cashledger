@@ -45,3 +45,14 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+
+tasks.register("updateMigrationTracker", Exec) {
+    group = "documentation"
+    description = "Updates KOTLIN_MIGRATION.mdx based on current Java and Kotlin files in the repo."
+    if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)) {
+        commandLine 'powershell', '-ExecutionPolicy', 'Bypass', '-File', "${rootDir}/scripts/Update-MigrationTracker.ps1"
+    } else {
+        commandLine 'pwsh', '-ExecutionPolicy', 'Bypass', '-File', "${rootDir}/scripts/Update-MigrationTracker.ps1"
+    }
+}

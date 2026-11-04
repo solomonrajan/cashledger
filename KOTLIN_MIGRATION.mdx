@@ -11,7 +11,7 @@ overall_progress: "2.3%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-12%20%2F%20516%20Files%20(2.3%25)-blue?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-12%20%2F%20517%20Files%20(2.3%25)-blue?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,7 +24,7 @@ overall_progress: "2.3%"
 > **How to update this dashboard:** When a PR lands that converts files, update the counts in the table below and bump the progress badges above.
 
 ```
-Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2.3% (12 / 516)
+Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2.3% (12 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
@@ -34,10 +34,10 @@ Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░
 | **Phase 2: Domain Models** | `com...moneywallet.model` | 34 | 0 | 34 | 0% | 🟡 Ready to Start | Sprint 2–3 |
 | **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 77 | 0 | 77 | 0% | ⚪ Pending | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 38 | 0 | 38 | 0% | ⚪ Pending | Sprint 6–7 |
-| **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | ~100 | 0 | ~100 | 0% | ⚪ Pending | Sprint 8–9 |
-| **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | ~184 | 1 | 185 | 0.5% | 🟡 In Progress | Sprint 10–12 |
+| **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | 151 | 0 | 151 | 0% | ⚪ Pending | Sprint 8–9 |
+| **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 134 | 1 | 135 | 0.7% | 🟡 In Progress | Sprint 10–12 |
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **504** | **12** | **516** | **2.3%** | **🟡 Active** | **~13 Sprints** |
+| **TOTALS** | **Entire Codebase** | **505** | **12** | **517** | **2.3%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: `TutorialActivity.kt` + 11 `utils/` files are now pure Kotlin).*
 
@@ -66,7 +66,7 @@ flowchart TD
     P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::pending
     P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/)</i>"]:::pending
     P5["Phase 5: Reusable UI, Pickers & Adapters<br/><i>(~100 files in picker/, ui/adapter/)</i>"]:::pending
-    P6["Phase 6: Top-Level Screens & App Core<br/><i>(~184 files in ui/activity/, ui/fragment/, App.java)</i>"]:::pending
+    P6["Phase 6: Top-Level Screens & App Core<br/><i>(~184 files in ui/activity/, ui/fragment/, App.java)</i>"]:::inprog
     P7["Phase 7: Test Suite & Gradle KTS<br/><i>(71 test files & build.gradle.kts)</i>"]:::pending
 
     P0 --> P1
@@ -165,24 +165,24 @@ gantt
 ---
 
 ### Phase 1: Leaf Utilities & Core Helpers
-**Dates:** Nov 09, 2026 – Nov 15, 2026 &bull; **Deadline:** Nov 15, 2026 (1 Week) &bull; **Files:** 11 Kotlin Files &bull; **Status:** 🟢 Completed  
+**Dates:** Nov 09, 2026 – Nov 15, 2026 &bull; **Deadline:** Nov 15, 2026 (1 Week) &bull; **Files:** 11 Kotlin Files &bull; **Status:** 🟢 Completed
 **Path:** `app/src/main/java/com/oriondev/moneywallet/utils/`
 
 #### Why First?
 These classes have no dependencies on the app's business domain or database. Converting them establishes Kotlin extension patterns used throughout the rest of the project.
 
 #### Checklist:
-- [x] `CurrencyManager.java` $\rightarrow$ `CurrencyManager.kt`
-- [x] `DateFormatter.java` $\rightarrow$ `DateFormatter.kt`
-- [x] `DateUtils.java` $\rightarrow$ `DateUtils.kt`
-- [x] `EquationSolver.java` $\rightarrow$ `EquationSolver.kt`
-- [x] `IconLoader.java` $\rightarrow$ `IconLoader.kt`
-- [x] `MoneyFormatter.java` $\rightarrow$ `MoneyFormatter.kt`
-- [x] `ProgressInputStream.java` $\rightarrow$ `ProgressInputStream.kt`
-- [x] `ProgressOutputStream.java` $\rightarrow$ `ProgressOutputStream.kt`
-- [x] `SystemBars.java` $\rightarrow$ `SystemBars.kt`
-- [x] `Urls.java` $\rightarrow$ `Urls.kt` (Converted to singleton object with clean parser)
-- [x] `Utils.java` $\rightarrow$ `Utils.kt` (Color palettes, permissions, view finders)
+- [x] `CurrencyManager.kt`
+- [x] `DateFormatter.kt`
+- [x] `DateUtils.kt`
+- [x] `EquationSolver.kt`
+- [x] `IconLoader.kt`
+- [x] `MoneyFormatter.kt`
+- [x] `ProgressInputStream.kt`
+- [x] `ProgressOutputStream.kt`
+- [x] `SystemBars.kt`
+- [x] `Urls.kt` (Converted to singleton object with clean parser)
+- [x] `Utils.kt` (Color palettes, permissions, view finders)
 
 #### How We Do It:
 Replace static helper methods with idiomatic Kotlin extension functions:
@@ -199,7 +199,7 @@ timestamp.toFormattedDate(context)
 ---
 
 ### Phase 2: Domain Models & Value Objects
-**Dates:** Nov 16, 2026 – Nov 27, 2026 &bull; **Deadline:** Nov 27, 2026 (1.5 Weeks) &bull; **Files:** 34 Java Files &bull; **Status:** 🟡 Ready to Start  
+**Dates:** Nov 16, 2026 – Nov 27, 2026 &bull; **Deadline:** Nov 27, 2026 (1.5 Weeks) &bull; **Files:** 34 Java Files &bull; **Status:** 🟡 Ready to Start
 **Path:** `app/src/main/java/com/oriondev/moneywallet/model/`
 
 #### Why Second?
@@ -259,7 +259,7 @@ data class Category(
 ---
 
 ### Phase 3: Storage, Database & Cache Layer
-**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Java Files &bull; **Status:** ⚪ Pending  
+**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Java Files &bull; **Status:** ⚪ Pending
 **Path:** `app/src/main/java/com/oriondev/moneywallet/storage/`
 
 #### Why Third?
@@ -292,7 +292,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 4: Remote API, Background Tasks & Services
-**Dates:** Jan 04, 2027 – Jan 17, 2027 &bull; **Deadline:** Jan 17, 2027 (2 Weeks) &bull; **Files:** 38 Java Files &bull; **Status:** ⚪ Pending  
+**Dates:** Jan 04, 2027 – Jan 17, 2027 &bull; **Deadline:** Jan 17, 2027 (2 Weeks) &bull; **Files:** 38 Java Files &bull; **Status:** ⚪ Pending
 **Path:** `api/`, `background/`, `service/`, `broadcast/`
 
 #### Key Components:
@@ -308,7 +308,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 5: Reusable UI, Pickers & Adapters
-**Dates:** Jan 18, 2027 – Feb 05, 2027 &bull; **Deadline:** Feb 05, 2027 (2.5 Weeks) &bull; **Files:** ~100 Java Files &bull; **Status:** ⚪ Pending  
+**Dates:** Jan 18, 2027 – Feb 05, 2027 &bull; **Deadline:** Feb 05, 2027 (2.5 Weeks) &bull; **Files:** ~100 Java Files &bull; **Status:** ⚪ Pending
 **Path:** `picker/`, `ui/adapter/`, `ui/view/`
 
 #### Key Components:
@@ -328,7 +328,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 6: Top-Level Screens & Application Core
-**Dates:** Feb 08, 2027 – Mar 05, 2027 &bull; **Deadline:** Mar 05, 2027 (3.5 Weeks) &bull; **Files:** ~184 Java Files &bull; **Status:** 🟡 In Progress (1 / 185)  
+**Dates:** Feb 08, 2027 – Mar 05, 2027 &bull; **Deadline:** Mar 05, 2027 (3.5 Weeks) &bull; **Files:** ~184 Java Files &bull; **Status:** 🟡 In Progress
 **Path:** `ui/activity/`, `ui/fragment/`, `App.java`
 
 #### Status:
@@ -369,7 +369,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 - [ ] `BackendExplorerActivity.java`
 - [ ] `AboutActivity.java`
 - [ ] All Fragments under `ui/fragment/`
-- [ ] `App.java` $\rightarrow$ `App.kt`
+- [ ] `App.java`
 
 #### How We Do It:
 - Convert Activities and Fragments in logical pairs with their dialogs.

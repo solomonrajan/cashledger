@@ -107,4 +107,11 @@ foreach ($Activity in $ActivitiesToMigrate) {
     }
 }
 
+# Automatically update KOTLIN_MIGRATION.mdx dashboard
+$TrackerScript = Join-Path $PSScriptRoot "scripts\Update-MigrationTracker.ps1"
+if (Test-Path $TrackerScript) {
+    Write-Host "Updating KOTLIN_MIGRATION.mdx tracker..." -ForegroundColor Cyan
+    & $TrackerScript
+}
+
 Write-Host "Migration script completed." -ForegroundColor Green

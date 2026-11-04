@@ -34,6 +34,19 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify and Sync Kotlin Migration Tracker
+        if: github.event_name == 'push'
+        run: |
+          pwsh -ExecutionPolicy Bypass -File ./scripts/Update-MigrationTracker.ps1
+          if [ -n "$(git status --porcelain KOTLIN_MIGRATION.mdx)" ]; then
+            echo "KOTLIN_MIGRATION.mdx was out of sync. Committing updated tracker..."
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add KOTLIN_MIGRATION.mdx
+            git commit -m "docs: auto-update KOTLIN_MIGRATION.mdx tracking dashboard [skip ci]" || true
+            git push origin HEAD:${{ github.ref_name }} || true
+          fi
+
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
