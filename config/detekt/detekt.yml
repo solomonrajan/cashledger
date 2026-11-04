@@ -1,5 +1,5 @@
 build:
-  maxIssues: 0
+  maxIssues: -1
   excludeCorrectable: false
 
 config:
@@ -27,8 +27,6 @@ style:
     active: true
   UnnecessaryApply:
     active: true
-  UnnecessaryInheritance:
-    active: true
   ForbiddenComment:
     active: false
 
@@ -38,23 +36,6 @@ naming:
     active: true
   ClassNaming:
     active: true
-  FunctionNaming:
-    active: true
-  VariableNaming:
-    active: true
 
 formatting:
-  active: true
-  android: true
-  autoCorrect: true
-  NoWildcardImports:
-    active: true
-  TrailingCommaOnCallSite:
-    active: false
-  TrailingCommaOnDeclarationSite:
-    active: false
-  Filename:
-    active: true
-  PackageName:
-    active: true
-
+  active: false

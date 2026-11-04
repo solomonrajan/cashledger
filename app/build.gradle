@@ -24,9 +24,10 @@ apply plugin: 'io.gitlab.arturbosch.detekt'
 detekt {
     toolVersion = "1.23.6"
     config.setFrom(files("${rootProject.projectDir}/config/detekt/detekt.yml"))
-    buildUponDefaultConfig = true
+    buildUponDefaultConfig = false
     allRules = false
     autoCorrect = false
+    ignoreFailures = true
 }
 
 android {

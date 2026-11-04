@@ -6,6 +6,9 @@ on:
       - kotlin
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   migrate:
     runs-on: windows-latest

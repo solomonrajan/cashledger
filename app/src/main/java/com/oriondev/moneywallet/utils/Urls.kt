@@ -20,7 +20,7 @@
 package com.oriondev.moneywallet.utils
 
 import com.oriondev.moneywallet.BuildConfig
-import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import java.util.Locale
 
 /**
@@ -101,8 +101,8 @@ object Urls {
             // address twice over gives the plausible looking host "https"
             return false
         }
-        val parsed = HttpUrl.parse(HTTPS + authority + "/")
-        return parsed != null && parsed.username().isEmpty() && parsed.password().isEmpty()
+        val parsed = (HTTPS + authority + "/").toHttpUrlOrNull()
+        return parsed != null && parsed.username.isEmpty() && parsed.password.isEmpty()
     }
 
     /**

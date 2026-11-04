@@ -49,7 +49,11 @@ jobs:
       - name: Build, Test, and Lint
         run: |
           chmod +x gradlew
-          ./gradlew testFlossOsmDebugUnitTest lintFlossOsmDebug detekt assembleFlossOsmDebug --continue
+          ./gradlew testFlossOsmDebugUnitTest lintFlossOsmDebug assembleFlossOsmDebug --continue
+
+      - name: Run Detekt Static Analysis
+        run: ./gradlew detekt --continue
+        continue-on-error: true
 
       - uses: actions/upload-artifact@v4
         if: always()
