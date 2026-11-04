@@ -49,13 +49,19 @@ jobs:
       - name: Build, Test, and Lint
         run: |
           chmod +x gradlew
-          ./gradlew testFlossOsmDebugUnitTest lintFlossOsmDebug assembleFlossOsmDebug --continue
+          ./gradlew testFlossOsmDebugUnitTest lintFlossOsmDebug detekt assembleFlossOsmDebug --continue
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: lint-report
           path: app/build/reports/lint-results-flossOsmDebug.html
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: detekt-report
+          path: app/build/reports/detekt/
 
       # The unit tests run before lint, so a failing test is the most common red
       # run and the one with no lint report to upload. Keep its own report.

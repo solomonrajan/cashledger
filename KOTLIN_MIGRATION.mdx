@@ -29,7 +29,7 @@ Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Phase 0: Tooling & Guardrails** | CI checks, detekt/ktlint, pre-annotations | — | — | — | 0% | 🟡 In Planning | Sprint 1 |
+| **Phase 0: Tooling & Guardrails** | CI checks, detekt/ktlint, PR guidelines | — | — | — | 100% | 🟢 Completed | Sprint 1 |
 | **Phase 1: Leaf Utilities** | `com...moneywallet.utils` | 0 | 11 | 11 | 100% | 🟢 Completed | Sprint 1–2 |
 | **Phase 2: Domain Models** | `com...moneywallet.model` | 34 | 0 | 34 | 0% | ⚪ Pending | Sprint 2–3 |
 | **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 77 | 0 | 77 | 0% | ⚪ Pending | Sprint 4–5 |
@@ -53,7 +53,7 @@ flowchart TD
     classDef inprog fill:#D69E2E,stroke:#B7791F,color:#FFFFFF
     classDef complete fill:#38A169,stroke:#2F855A,color:#FFFFFF
 
-    P0["Phase 0: Tooling & Safety Guardrails<br/><i>(Detekt / Ktlint / Tests Baseline)</i>"]:::inprog
+    P0["Phase 0: Tooling & Safety Guardrails<br/><i>(Detekt / Ktlint / Tests Baseline)</i>"]:::complete
     P1["Phase 1: Foundation & Utils<br/><i>(11 files in utils/)</i>"]:::complete
     P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::pending
     P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::pending
@@ -143,17 +143,17 @@ gantt
 ---
 
 ### Phase 0: Groundwork, Tooling & Safety Guardrails
-**Dates:** Nov 05, 2026 – Nov 08, 2026 &bull; **Deadline:** Nov 08, 2026 (3 Days) &bull; **Status:** 🟡 In Planning
+**Dates:** Nov 05, 2026 – Nov 08, 2026 &bull; **Deadline:** Nov 08, 2026 (3 Days) &bull; **Status:** 🟢 Completed
 
 #### Objectives:
 - Configure Kotlin static analysis to prevent bad habits from entering the codebase.
 - Ensure the 63 Robolectric/JUnit tests run cleanly in CI and locally.
 
 #### Action Items:
-- [ ] Add `detekt` and `ktlint` to [`build.gradle`](build.gradle).
-- [ ] Configure lint rules to flag forbidden patterns (e.g., forbidding `!!` double-bang operators).
-- [ ] Establish baseline test execution: `./gradlew test` and `./gradlew lint`.
-- [ ] Document developer PR guidelines for Kotlin contributions.
+- [x] Add `detekt` and `detekt-formatting` (ktlint) to [`build.gradle`](build.gradle) and [`app/build.gradle`](app/build.gradle).
+- [x] Configure lint rules to flag forbidden patterns (forbidding `!!` double-bang operators in [`config/detekt/detekt.yml`](config/detekt/detekt.yml)).
+- [x] Establish automated test & detekt execution in [`.github/workflows/build.yml`](.github/workflows/build.yml).
+- [x] Document developer PR guidelines for Kotlin contributions in [`docs/KOTLIN_GUIDELINES.md`](docs/KOTLIN_GUIDELINES.md).
 
 ---
 

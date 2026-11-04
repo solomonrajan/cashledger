@@ -19,6 +19,15 @@
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
+detekt {
+    toolVersion = "1.23.6"
+    config.setFrom(files("${rootProject.projectDir}/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+    allRules = false
+    autoCorrect = false
+}
 
 android {
     namespace "com.oriondev.moneywallet"
@@ -135,6 +144,7 @@ configurations {
 }
 
 dependencies {
+    detektPlugins libs.detekt.formatting
     implementation libs.androidx.activity
     implementation libs.androidx.annotation
     implementation libs.androidx.appcompat

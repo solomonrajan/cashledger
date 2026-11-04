@@ -1,0 +1,60 @@
+build:
+  maxIssues: 0
+  excludeCorrectable: false
+
+config:
+  validation: true
+  warningsAsErrors: false
+
+potential-bugs:
+  active: true
+  UnsafeCallOnNullableType:
+    active: true
+  UnsafeCast:
+    active: true
+  DoubleMutabilityForCollection:
+    active: true
+  CastToNullableType:
+    active: true
+
+style:
+  active: true
+  WildcardImport:
+    active: true
+  VarCouldBeVal:
+    active: true
+  UnnecessaryLet:
+    active: true
+  UnnecessaryApply:
+    active: true
+  UnnecessaryInheritance:
+    active: true
+  ForbiddenComment:
+    active: false
+
+naming:
+  active: true
+  PackageNaming:
+    active: true
+  ClassNaming:
+    active: true
+  FunctionNaming:
+    active: true
+  VariableNaming:
+    active: true
+
+formatting:
+  active: true
+  android: true
+  autoCorrect: true
+  NoWildcardImports:
+    active: true
+  TrailingCommaOnCallSite:
+    active: false
+  TrailingCommaOnDeclarationSite:
+    active: false
+  Filename:
+    active: true
+  PackageName:
+    active: true
+
