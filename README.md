@@ -160,6 +160,7 @@ As Cash Ledger is a separate app with its own application id, it installs beside
 
 ## 📚 Docs
 
+- [Kotlin Migration Roadmap & Tracker](KOTLIN_MIGRATION.mdx)
 - [FAQ](docs/FAQ.md)
 - [Moving from Tallybook](MIGRATION.md)
 - [CSV import format](docs/CSV.md)
