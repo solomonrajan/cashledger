@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - kotlin
+    paths-ignore:
+      - '**.md'
+      - '**.mdx'
+      - 'docs/**'
+      - 'pictures/**'
+      - '.gitignore'
   workflow_dispatch: {}
 
 permissions:

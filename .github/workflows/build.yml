@@ -3,7 +3,19 @@ name: build
 on:
   push:
     branches: [master, userinterface, kotlin]
+    paths-ignore:
+      - '**.md'
+      - '**.mdx'
+      - 'docs/**'
+      - 'pictures/**'
+      - '.gitignore'
   pull_request:
+    paths-ignore:
+      - '**.md'
+      - '**.mdx'
+      - 'docs/**'
+      - 'pictures/**'
+      - '.gitignore'
 
 permissions:
   contents: write

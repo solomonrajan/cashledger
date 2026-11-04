@@ -31,7 +31,7 @@ Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Phase 0: Tooling & Guardrails** | CI checks, detekt/ktlint, PR guidelines | — | — | — | 100% | 🟢 Completed | Sprint 1 |
 | **Phase 1: Leaf Utilities** | `com...moneywallet.utils` | 0 | 11 | 11 | 100% | 🟢 Completed | Sprint 1–2 |
-| **Phase 2: Domain Models** | `com...moneywallet.model` | 34 | 0 | 34 | 0% | ⚪ Pending | Sprint 2–3 |
+| **Phase 2: Domain Models** | `com...moneywallet.model` | 34 | 0 | 34 | 0% | 🟡 Ready to Start | Sprint 2–3 |
 | **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 77 | 0 | 77 | 0% | ⚪ Pending | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 38 | 0 | 38 | 0% | ⚪ Pending | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | ~100 | 0 | ~100 | 0% | ⚪ Pending | Sprint 8–9 |
@@ -40,6 +40,13 @@ Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░
 | **TOTALS** | **Entire Codebase** | **504** | **12** | **516** | **2.3%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: `TutorialActivity.kt` + 11 `utils/` files are now pure Kotlin).*
+
+### 📢 Recent Activity & Milestones
+
+- **2026-11-04 (Phase 0 Completed):** ✅ Configured Detekt 1.23.6 and detekt-formatting (Ktlint) in Gradle and CI. Enabled static check forbidding `!!` double-bang operators. Published [`docs/KOTLIN_GUIDELINES.md`](docs/KOTLIN_GUIDELINES.md).
+- **2026-11-04 (Phase 1 Completed):** ✅ Migrated all 11 utility classes in `com.oriondev.moneywallet.utils` to idiomatic Kotlin (`Urls.kt`, `SystemBars.kt`, `DateUtils.kt`, `MoneyFormatter.kt`, `CurrencyManager.kt`, etc.).
+- **2026-11-04 (Hotfixes):** ✅ Upgraded OkHttp 4 Kotlin extension syntax in `Urls.kt` (`toHttpUrlOrNull()`), isolated Detekt step in CI workflow, and fixed PowerShell backtick escaping in `Migrate-JavaToKotlin.ps1`.
+- **Current Target:** 🎯 **Phase 2: Domain Models & Entities** (34 POJOs in `app/src/main/java/com/oriondev/moneywallet/model/`).
 
 ---
 
@@ -55,7 +62,7 @@ flowchart TD
 
     P0["Phase 0: Tooling & Safety Guardrails<br/><i>(Detekt / Ktlint / Tests Baseline)</i>"]:::complete
     P1["Phase 1: Foundation & Utils<br/><i>(11 files in utils/)</i>"]:::complete
-    P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::pending
+    P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::inprog
     P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::pending
     P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/)</i>"]:::pending
     P5["Phase 5: Reusable UI, Pickers & Adapters<br/><i>(~100 files in picker/, ui/adapter/)</i>"]:::pending
@@ -192,7 +199,7 @@ timestamp.toFormattedDate(context)
 ---
 
 ### Phase 2: Domain Models & Value Objects
-**Dates:** Nov 16, 2026 – Nov 27, 2026 &bull; **Deadline:** Nov 27, 2026 (1.5 Weeks) &bull; **Files:** 34 Java Files &bull; **Status:** ⚪ Pending  
+**Dates:** Nov 16, 2026 – Nov 27, 2026 &bull; **Deadline:** Nov 27, 2026 (1.5 Weeks) &bull; **Files:** 34 Java Files &bull; **Status:** 🟡 Ready to Start  
 **Path:** `app/src/main/java/com/oriondev/moneywallet/model/`
 
 #### Why Second?
