@@ -3,7 +3,7 @@ title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
 last_updated: "2026-11-04"
 status: "In Progress"
-overall_progress: "0.2%"
+overall_progress: "2.3%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "0.2%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-1%20%2F%20517%20Files%20(0.2%25)-critical?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-12%20%2F%20516%20Files%20(2.3%25)-blue?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,22 +24,22 @@ overall_progress: "0.2%"
 > **How to update this dashboard:** When a PR lands that converts files, update the counts in the table below and bump the progress badges above.
 
 ```
-Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0.2% (1 / 517)
+Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2.3% (12 / 516)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Phase 0: Tooling & Guardrails** | CI checks, detekt/ktlint, pre-annotations | — | — | — | 0% | 🟡 In Planning | Sprint 1 |
-| **Phase 1: Leaf Utilities** | `com...moneywallet.utils` | 11 | 0 | 11 | 0% | ⚪ Pending | Sprint 1–2 |
+| **Phase 1: Leaf Utilities** | `com...moneywallet.utils` | 0 | 11 | 11 | 100% | 🟢 Completed | Sprint 1–2 |
 | **Phase 2: Domain Models** | `com...moneywallet.model` | 34 | 0 | 34 | 0% | ⚪ Pending | Sprint 2–3 |
 | **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 77 | 0 | 77 | 0% | ⚪ Pending | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 38 | 0 | 38 | 0% | ⚪ Pending | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | ~100 | 0 | ~100 | 0% | ⚪ Pending | Sprint 8–9 |
 | **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | ~184 | 1 | 185 | 0.5% | 🟡 In Progress | Sprint 10–12 |
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **515** | **1** | **516** | **0.2%** | **🟡 Active** | **~13 Sprints** |
+| **TOTALS** | **Entire Codebase** | **504** | **12** | **516** | **2.3%** | **🟡 Active** | **~13 Sprints** |
 
-*(Note: `TutorialActivity.kt` is currently the only Kotlin file in the codebase).*
+*(Note: `TutorialActivity.kt` + 11 `utils/` files are now pure Kotlin).*
 
 ---
 
@@ -54,7 +54,7 @@ flowchart TD
     classDef complete fill:#38A169,stroke:#2F855A,color:#FFFFFF
 
     P0["Phase 0: Tooling & Safety Guardrails<br/><i>(Detekt / Ktlint / Tests Baseline)</i>"]:::inprog
-    P1["Phase 1: Foundation & Utils<br/><i>(11 files in utils/)</i>"]:::pending
+    P1["Phase 1: Foundation & Utils<br/><i>(11 files in utils/)</i>"]:::complete
     P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::pending
     P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::pending
     P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/)</i>"]:::pending
@@ -158,24 +158,24 @@ gantt
 ---
 
 ### Phase 1: Leaf Utilities & Core Helpers
-**Dates:** Nov 09, 2026 – Nov 15, 2026 &bull; **Deadline:** Nov 15, 2026 (1 Week) &bull; **Files:** 11 Java Files &bull; **Status:** ⚪ Pending  
+**Dates:** Nov 09, 2026 – Nov 15, 2026 &bull; **Deadline:** Nov 15, 2026 (1 Week) &bull; **Files:** 11 Kotlin Files &bull; **Status:** 🟢 Completed  
 **Path:** `app/src/main/java/com/oriondev/moneywallet/utils/`
 
 #### Why First?
 These classes have no dependencies on the app's business domain or database. Converting them establishes Kotlin extension patterns used throughout the rest of the project.
 
 #### Checklist:
-- [ ] `CurrencyManager.java` $\rightarrow$ `CurrencyManager.kt`
-- [ ] `DateFormatter.java` $\rightarrow$ `DateFormatter.kt`
-- [ ] `DateUtils.java` $\rightarrow$ `DateUtils.kt`
-- [ ] `EquationSolver.java` $\rightarrow$ `EquationSolver.kt`
-- [ ] `IconLoader.java` $\rightarrow$ `IconLoader.kt`
-- [ ] `MoneyFormatter.java` $\rightarrow$ `MoneyFormatter.kt`
-- [ ] `ProgressInputStream.java` $\rightarrow$ `ProgressInputStream.kt`
-- [ ] `ProgressOutputStream.java` $\rightarrow$ `ProgressOutputStream.kt`
-- [ ] `SystemBars.java` $\rightarrow$ `SystemBars.kt`
-- [ ] `Urls.java` $\rightarrow$ `Urls.kt` (Convert to top-level constants / object)
-- [ ] `Utils.java` $\rightarrow$ `Utils.kt` (Deconstruct into focused top-level extension functions)
+- [x] `CurrencyManager.java` $\rightarrow$ `CurrencyManager.kt`
+- [x] `DateFormatter.java` $\rightarrow$ `DateFormatter.kt`
+- [x] `DateUtils.java` $\rightarrow$ `DateUtils.kt`
+- [x] `EquationSolver.java` $\rightarrow$ `EquationSolver.kt`
+- [x] `IconLoader.java` $\rightarrow$ `IconLoader.kt`
+- [x] `MoneyFormatter.java` $\rightarrow$ `MoneyFormatter.kt`
+- [x] `ProgressInputStream.java` $\rightarrow$ `ProgressInputStream.kt`
+- [x] `ProgressOutputStream.java` $\rightarrow$ `ProgressOutputStream.kt`
+- [x] `SystemBars.java` $\rightarrow$ `SystemBars.kt`
+- [x] `Urls.java` $\rightarrow$ `Urls.kt` (Converted to singleton object with clean parser)
+- [x] `Utils.java` $\rightarrow$ `Utils.kt` (Color palettes, permissions, view finders)
 
 #### How We Do It:
 Replace static helper methods with idiomatic Kotlin extension functions:

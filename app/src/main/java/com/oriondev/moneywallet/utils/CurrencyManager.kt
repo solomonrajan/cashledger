@@ -1,0 +1,351 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * This file is part of MoneyWallet.
+ *
+ * MoneyWallet is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MoneyWallet is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.oriondev.moneywallet.utils
+
+import android.content.ContentResolver
+import android.content.ContentValues
+import android.content.Context
+import android.database.Cursor
+import android.os.LocaleList
+import com.oriondev.moneywallet.model.CurrencyUnit
+import com.oriondev.moneywallet.storage.database.Contract
+import com.oriondev.moneywallet.storage.database.DataContentProvider
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.util.Collections
+import java.util.Currency
+import java.util.Locale
+import java.util.concurrent.Callable
+
+/**
+ * This class act as a proxy on the top of the content provider.
+ * It is responsible to cache the currency list for a faster access at runtime and manage all
+ * the related operations (like handle currency rates).
+ */
+class CurrencyManager private constructor(context: Context) {
+
+    /**
+     * Built whole and never written to again once it is published, so a reader takes no lock and
+     * a reload is never seen half done. The map is wrapped unmodifiable to keep it that way. That
+     * is a guard and not a requirement of the memory model, since the volatile write already
+     * carries everything the loading thread put in the map, but a later write to a published map
+     * would take that away and the wrapper is what stops one being added.
+     */
+    @Volatile
+    private var mCurrencyCache: Map<String, CurrencyUnit> = loadCurrencies(context)
+
+    companion object {
+
+        /**
+         * Volatile so that a thread which reads this field and finds it set also sees the map the
+         * constructor built. The field it holds used to be final, and a final field carries that
+         * guarantee on its own even when the reference to its holder is published in a race. A
+         * volatile field does not, so the guarantee has to come from here instead.
+         */
+        @Volatile
+        private var mInstance: CurrencyManager? = null
+
+        /**
+         * Held for the whole of one load, so two of them cannot interleave their read and their
+         * publish and leave the cache holding the older of the two. Both loaders take it, initialize
+         * and invalidateCache.
+         *
+         * This is a lock held across a database read, which is what the monitor it replaced did and
+         * what deadlocked. It is safe here for one reason, and that reason has to stay true: only
+         * those two take it, and neither is called from inside a database transaction, so no thread
+         * holding the one connection the app shares can be made to wait on it. The readers below take
+         * nothing at all. CurrencyManagerSourceTest pins the first half and refuseIfInsideATransaction
+         * refuses the second at runtime.
+         */
+        private val RELOAD_LOCK = Any()
+
+        /**
+         * A thread inside a transaction holds the one database connection until it returns, and both
+         * loaders below take RELOAD_LOCK across a read that needs it, so one calling either of them
+         * is the deadlock this class was rewritten to remove. Refused here and not deadlocked later.
+         *
+         * The refusal is raised inside the caller's transaction, so it rolls that whole transaction
+         * back. For an importer that would mean losing the import, which is the right outcome for a
+         * call that could not have completed anyway.
+         */
+        private fun refuseIfInsideATransaction() {
+            if (DataContentProvider.isInsideOneTransaction()) {
+                throw IllegalStateException("CurrencyManager loaded from inside a transaction")
+            }
+        }
+
+        /**
+         * Under the same lock as a reload, because building the instance reads the currency table and
+         * writes the default set into an empty one, which is the work a reload does. That makes the
+         * check and the assignment one step, and it stops this and a reload both loading at once.
+         *
+         * App.onCreate is the only caller. That is Application.onCreate, which Android runs after
+         * every content provider's onCreate, so the providers are already serving by the time this
+         * runs and the lock is not decoration.
+         *
+         * @throws IllegalStateException if called from inside a database transaction. See
+         *         [refuseIfInsideATransaction].
+         */
+        @JvmStatic
+        fun initialize(context: Context) {
+            refuseIfInsideATransaction()
+            synchronized(RELOAD_LOCK) {
+                if (mInstance == null) {
+                    mInstance = CurrencyManager(context)
+                }
+            }
+        }
+
+        private fun loadCurrencies(context: Context): Map<String, CurrencyUnit> {
+            var currencies = loadUserCurrencies(context)
+            if (currencies.isEmpty()) {
+                println("[CurrencyManager] No currency found. Loading default currencies from the assets...")
+                currencies = loadDefaultCurrencies(context)
+            }
+            return Collections.unmodifiableMap(currencies)
+        }
+
+        /**
+         * Reads every currency again and swaps the new map in.
+         *
+         * The load holds nothing that a reader of the cache can take, and it has to. An importer runs
+         * a whole import inside one transaction, and the database is opened without write ahead
+         * logging, so that transaction holds the single connection the whole app shares. The importer
+         * asks this class for the currency named on every row it reads. A lock held here across the
+         * load and taken again by [getCurrency] put those two in opposite orders, the
+         * importer waiting on the lock and this method waiting on the connection, which is what this
+         * method used to do. The readers take nothing now, which is what makes the lock below safe.
+         *
+         * The load is usually a read, and on a currency table that is empty it also inserts the whole
+         * default set, which a restore from a legacy backup leaves behind since that format carries no
+         * currencies.
+         *
+         * The whole reload runs under RELOAD_LOCK so that two of them cannot interleave. Ordering them
+         * by something cheaper than a lock was tried and does not work, because a reload reads over an
+         * interval and not at an instant, so no single number taken at its start or at its end says
+         * whose read saw more. A reload that seeds the table writes rows another may or may not have
+         * seen, and a reload whose own caller has just inserted one currency reads a table that is not
+         * empty and so seeds nothing and holds only that one. Running them one at a time is what makes
+         * all of those come out right.
+         *
+         * The cost is that one reload waits for another, and the currency editor calls this on the
+         * main thread. What it waits for is one read of the currency table, or on an empty table the
+         * write of the default set.
+         *
+         * @param context of the application.
+         * @throws IllegalStateException if called from inside a database transaction. See
+         *         [refuseIfInsideATransaction].
+         */
+        @JvmStatic
+        fun invalidateCache(context: Context) {
+            refuseIfInsideATransaction()
+            println("[CurrencyManager] Invalidating cache...")
+            synchronized(RELOAD_LOCK) {
+                mInstance?.let { instance ->
+                    instance.mCurrencyCache = loadCurrencies(context)
+                }
+            }
+        }
+
+        /**
+         * Reads the currencies this installation has into a new map. A call to this method is very
+         * expensive because it is an I/O operation, and invalidateCache reaches it from the main
+         * thread.
+         * @param context of the application.
+         * @return what the currency table holds, which is empty on a first run.
+         */
+        private fun loadUserCurrencies(context: Context): Map<String, CurrencyUnit> {
+            val currencies = HashMap<String, CurrencyUnit>()
+            val contentResolver = context.contentResolver
+            val projections = arrayOf(
+                Contract.Currency.ISO,
+                Contract.Currency.NAME,
+                Contract.Currency.SYMBOL,
+                Contract.Currency.DECIMALS
+            )
+            val cursor: Cursor? = contentResolver.query(
+                DataContentProvider.CONTENT_CURRENCIES,
+                projections,
+                null,
+                null,
+                null
+            )
+            cursor?.use { c ->
+                val indexIso = c.getColumnIndex(Contract.Currency.ISO)
+                val indexName = c.getColumnIndex(Contract.Currency.NAME)
+                val indexSymbol = c.getColumnIndex(Contract.Currency.SYMBOL)
+                val indexDecimals = c.getColumnIndex(Contract.Currency.DECIMALS)
+                while (c.moveToNext()) {
+                    val currencyUnit = CurrencyUnit(
+                        c.getString(indexIso),
+                        c.getString(indexName),
+                        c.getString(indexSymbol),
+                        c.getInt(indexDecimals)
+                    )
+                    currencies[currencyUnit.iso] = currencyUnit
+                }
+            }
+            return currencies
+        }
+
+        /**
+         * Seeds the currency table from the asset file and answers what the table holds
+         * afterwards, which is not always what was written. An insert that collides on the ISO
+         * primary key is refused, and a refused insert returns a null uri and raises nothing, so
+         * a table holding every currency already but with all of them deleted reads empty here and
+         * used to publish the whole file anyway, naming currencies the provider answers nothing for.
+         * insertCurrency brings such a row back now, and this answers with what the table holds
+         * afterwards so the two cannot disagree. It costs one more query every time a seed runs,
+         * which invalidateCache above reaches from the main thread.
+         */
+        private fun loadDefaultCurrencies(context: Context): Map<String, CurrencyUnit> {
+            val rows = ArrayList<ContentValues>()
+            try {
+                // open assets file and load all the default currencies into a JSONArray
+                val jsonBuilder = StringBuilder()
+                val inputStream = context.assets.open("resources/currencies.json")
+                val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+                var line: String?
+                while (bufferedReader.readLine().also { line = it } != null) {
+                    jsonBuilder.append(line)
+                }
+                val array = JSONArray(jsonBuilder.toString())
+                // every row is read and turned into a currency out here, so the transaction below
+                // holds the one database connection for the writes and for nothing else
+                for (i in 0 until array.length()) {
+                    val currency = array.getJSONObject(i)
+                    val contentValues = ContentValues()
+                    contentValues.put(Contract.Currency.ISO, currency.getString("code"))
+                    contentValues.put(Contract.Currency.NAME, currency.getString("name"))
+                    contentValues.put(Contract.Currency.SYMBOL, currency.optString("symbol", null))
+                    contentValues.put(Contract.Currency.DECIMALS, currency.optInt("decimals", 2))
+                    // bring back a row this installation holds and does not serve, which is the state
+                    // that made this seed land nothing at all. The currency editor inserts without
+                    // this and a collision stays a refusal for it
+                    contentValues.put(Contract.Currency.REVIVE_IF_DELETED, true)
+                    rows.add(contentValues)
+                }
+            } catch (e: Exception) {
+                when (e) {
+                    is IOException, is JSONException -> {
+                        throw RuntimeException("Exception while reading currencies file from assets: " + e.message, e)
+                    }
+                    else -> throw e
+                }
+            }
+            try {
+                // one transaction for the whole set, so the table is never seen part way through it.
+                // RELOAD_LOCK already keeps the other loader out, so the reader this protects is
+                // everything else that queries the currency table, the currency list loader among
+                // them. It also turns one announcement per currency into one for the set
+                DataContentProvider.runInOneTransaction(context, Callable<Void?> {
+                    val contentResolver = context.contentResolver
+                    for (row in rows) {
+                        contentResolver.insert(DataContentProvider.CONTENT_CURRENCIES, row)
+                    }
+                    null
+                })
+            } catch (e: Exception) {
+                throw RuntimeException("Exception while storing the default currencies: " + e.message, e)
+            }
+            // read back rather than answering with the file, so the cache holds what the
+            // provider will serve and never more than it
+            return loadUserCurrencies(context)
+        }
+
+        /**
+         * Obtain the currency object from the iso code.
+         * @param iso of the currency to obtain.
+         * @return the currency object if the iso code is found.
+         */
+        @JvmStatic
+        fun getCurrency(iso: String?): CurrencyUnit? {
+            return mInstance?.mCurrencyCache?.get(iso)
+        }
+
+        /**
+         * @return every currency this installation has. The collection is a view of a map that is
+         *         never written to, so a reload replaces the map the next caller reads and leaves a
+         *         walk already under way to finish over the whole of the old one.
+         */
+        @JvmStatic
+        fun getCurrencies(): Collection<CurrencyUnit> {
+            return mInstance?.mCurrencyCache?.values ?: emptyList()
+        }
+
+        /**
+         * @return the number of decimals of the currency, or 2 when the currency is null because
+         *         [getCurrency] did not know the iso code stored on the row. Two is
+         *         what MoneyFormatter divides the same row by when it cannot resolve the currency
+         *         either, and a chart drawn beside a figure that formatter wrote has to agree with
+         *         it. It used to answer 0, from a caller that refuses to save a row it cannot
+         *         resolve and so never rendered the answer.
+         */
+        @JvmStatic
+        fun getDecimals(currency: CurrencyUnit?): Int {
+            return currency?.decimals ?: 2
+        }
+
+        /**
+         * Obtain the currency the user's language settings imply.
+         * If for example the user is using the it-IT locale, the EUR currency will be returned.
+         * A locale that carries no country implies no currency at all, so those are skipped and
+         * the first preferred locale that does imply one decides. Whether this installation still
+         * has that currency is a separate question, and a deleted one still answers null rather
+         * than moving on to the next locale.
+         * @return the current currency, or null if no preferred locale implies one, or the user
+         *         has deleted the one it implies.
+         */
+        @JvmStatic
+        fun getDefaultCurrency(): CurrencyUnit? {
+            val preferredLocales = LocaleList.getAdjustedDefault()
+            for (index in 0 until preferredLocales.size()) {
+                val currency = currencyOf(preferredLocales.get(index))
+                if (currency != null) {
+                    val currencyUnit = getCurrency(currency.currencyCode)
+                    if (currencyUnit == null) {
+                        println("[CurrencyManager] The locale implies ${currency.currencyCode}, which is not installed")
+                    }
+                    return currencyUnit
+                }
+            }
+            println("[CurrencyManager] No preferred locale implies a currency: ${preferredLocales.toLanguageTags()}")
+            return null
+        }
+
+        /**
+         * @return the currency the locale implies, or null if it implies none. getInstance throws
+         *         when the locale has no ISO 3166 country and returns null for a territory that has
+         *         no currency of its own, and here those mean the same thing.
+         */
+        private fun currencyOf(locale: Locale): Currency? {
+            return try {
+                Currency.getInstance(locale)
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }
+    }
+}
+
