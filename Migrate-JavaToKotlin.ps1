@@ -80,13 +80,13 @@ foreach ($Activity in $ActivitiesToMigrate) {
             $KotlinCode = $Response.candidates[0].content.parts[0].text
             
             # Clean up potential markdown formatting if the model still outputs it
-            if ($KotlinCode.StartsWith("```kotlin")) {
+            if ($KotlinCode.StartsWith('```kotlin')) {
                 $KotlinCode = $KotlinCode.Substring(9)
             }
-            if ($KotlinCode.StartsWith("```")) {
+            if ($KotlinCode.StartsWith('```')) {
                 $KotlinCode = $KotlinCode.Substring(3)
             }
-            if ($KotlinCode.EndsWith("```")) {
+            if ($KotlinCode.EndsWith('```')) {
                 $KotlinCode = $KotlinCode.Substring(0, $KotlinCode.Length - 3)
             }
             $KotlinCode = $KotlinCode.Trim()
