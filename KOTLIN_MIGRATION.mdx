@@ -39,14 +39,14 @@ Total Files Migrated: [▓▓▓▓░░░░░░░░░░░░░░░
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
 | **TOTALS** | **Entire Codebase** | **471** | **46** | **517** | **8.9%** | **🟡 Active** | **~13 Sprints** |
 
-*(Note: `TutorialActivity.kt` + 11 `utils/` files are now pure Kotlin).*
+*(Note: `TutorialActivity.kt` + 11 `utils/` files + 34 `model/` domain files are now pure Kotlin).*
 
 ### 📢 Recent Activity & Milestones
 
 - **2026-11-04 (Phase 0 Completed):** ✅ Configured Detekt 1.23.6 and detekt-formatting (Ktlint) in Gradle and CI. Enabled static check forbidding `!!` double-bang operators. Published [`docs/KOTLIN_GUIDELINES.md`](docs/KOTLIN_GUIDELINES.md).
 - **2026-11-04 (Phase 1 Completed):** ✅ Migrated all 11 utility classes in `com.oriondev.moneywallet.utils` to idiomatic Kotlin (`Urls.kt`, `SystemBars.kt`, `DateUtils.kt`, `MoneyFormatter.kt`, `CurrencyManager.kt`, etc.).
-- **2026-11-04 (Hotfixes):** ✅ Upgraded OkHttp 4 Kotlin extension syntax in `Urls.kt` (`toHttpUrlOrNull()`), isolated Detekt step in CI workflow, and fixed PowerShell backtick escaping in `Migrate-JavaToKotlin.ps1`.
-- **Current Target:** 🎯 **Phase 2: Domain Models & Entities** (34 POJOs in `app/src/main/java/com/oriondev/moneywallet/model/`).
+- **2026-11-05 (Phase 2 Completed):** ✅ Migrated all 34 domain model and entity classes in `com.oriondev.moneywallet.model` to idiomatic Kotlin. Resolved JVM bytecode platform clashes, interface property overrides (`Identifiable.id`), `toString()` contracts, and database entity schema nullability. Verified 100% green in CI (662/662 tests passed, zero Detekt warnings, APK assembled).
+- **Next Target:** 🎯 **Phase 3: Storage, Database & Cache** (77 classes in `app/src/main/java/com/oriondev/moneywallet/storage/`).
 
 ---
 
