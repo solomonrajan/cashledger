@@ -52,7 +52,7 @@ abstract class Icon internal constructor() : Parcelable {
         }
     }
 
-    abstract fun getType(): Type
+    abstract val type: Type
 
     @Throws(JSONException::class)
     protected abstract fun writeJSON(jsonObject: JSONObject)
@@ -61,14 +61,14 @@ abstract class Icon internal constructor() : Parcelable {
 
     abstract fun apply(imageView: ImageView): Boolean
 
-    final override fun toString(): String? {
+    final override fun toString(): String {
         return try {
             val jsonObject = JSONObject()
-            jsonObject.put(TYPE, getType().toString())
+            jsonObject.put(TYPE, type.toString())
             writeJSON(jsonObject)
             jsonObject.toString()
         } catch (e: JSONException) {
-            null
+            super.toString()
         }
     }
 

@@ -58,7 +58,7 @@ class VectorIcon : Icon {
 
     fun getResourceName(): String = mResourceName
 
-    override fun getType(): Type = Type.RESOURCE
+    override val type: Type = Type.RESOURCE
 
     @Throws(JSONException::class)
     override fun writeJSON(jsonObject: JSONObject) {

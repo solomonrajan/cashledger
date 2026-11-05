@@ -55,11 +55,12 @@ data class Place(
 
     fun hasCoordinates(): Boolean = latitude != null && longitude != null
 
-    fun getCoordinates(): Coordinates? {
-        val lat = latitude
-        val lon = longitude
-        return if (lat != null && lon != null) Coordinates(lat, lon) else null
-    }
+    val coordinates: Coordinates?
+        get() {
+            val lat = latitude
+            val lon = longitude
+            return if (lat != null && lon != null) Coordinates(lat, lon) else null
+        }
 
     override fun describeContents(): Int = 0
 

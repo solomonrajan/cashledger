@@ -34,7 +34,8 @@ class CategoryMoney(
 
     private val mChildren: MutableList<CategoryMoney> = ArrayList()
 
-    fun getChildren(): List<CategoryMoney> = mChildren
+    val children: List<CategoryMoney>
+        get() = mChildren
 
     fun addChild(child: CategoryMoney) {
         mChildren.add(child)

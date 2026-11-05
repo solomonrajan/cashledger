@@ -51,25 +51,26 @@ data class Category(
         parcel.readString()
     )
 
-    fun getDirection(): Int {
-        when (type) {
-            Contract.CategoryType.INCOME -> return 1
-            Contract.CategoryType.EXPENSE -> return 0
-            Contract.CategoryType.SYSTEM -> if (tag != null) {
-                when (tag) {
-                    Contract.CategoryTag.CREDIT,
-                    Contract.CategoryTag.PAID_DEBT,
-                    Contract.CategoryTag.SAVING_DEPOSIT,
-                    Contract.CategoryTag.TAX,
-                    Contract.CategoryTag.TRANSFER_TAX -> return 0
-                    Contract.CategoryTag.DEBT,
-                    Contract.CategoryTag.PAID_CREDIT,
-                    Contract.CategoryTag.SAVING_WITHDRAW -> return 1
+    val direction: Int
+        get() {
+            when (type) {
+                Contract.CategoryType.INCOME -> return 1
+                Contract.CategoryType.EXPENSE -> return 0
+                Contract.CategoryType.SYSTEM -> if (tag != null) {
+                    when (tag) {
+                        Contract.CategoryTag.CREDIT,
+                        Contract.CategoryTag.PAID_DEBT,
+                        Contract.CategoryTag.SAVING_DEPOSIT,
+                        Contract.CategoryTag.TAX,
+                        Contract.CategoryTag.TRANSFER_TAX -> return 0
+                        Contract.CategoryTag.DEBT,
+                        Contract.CategoryTag.PAID_CREDIT,
+                        Contract.CategoryTag.SAVING_WITHDRAW -> return 1
+                    }
                 }
             }
+            return 0
         }
-        return 0
-    }
 
     override fun describeContents(): Int = 0
 

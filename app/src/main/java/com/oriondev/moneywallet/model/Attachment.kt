@@ -38,88 +38,72 @@ import java.util.UUID
  */
 class Attachment : Parcelable, Identifiable {
 
-    private var mId: Long
-    private val mFile: String
-    private val mName: String
-    private val mType: String
-    private val mSize: Long
-    private var mStatus: Status
+    override var id: Long
+    val file: String
+    val name: String
+    val type: String
+    val size: Long
+    var status: Status
 
     constructor(id: Long, file: String, name: String, type: String, size: Long) {
-        mId = id
-        mFile = file
-        mName = name
-        mType = type
-        mSize = size
-        mStatus = Status.READY
+        this.id = id
+        this.file = file
+        this.name = name
+        this.type = type
+        this.size = size
+        this.status = Status.READY
     }
 
     constructor(id: Long, file: String, name: String, type: String, size: Long, status: Status) {
-        mId = id
-        mFile = file
-        mName = name
-        mType = type
-        mSize = size
-        mStatus = status
+        this.id = id
+        this.file = file
+        this.name = name
+        this.type = type
+        this.size = size
+        this.status = status
     }
 
     private constructor(parcel: Parcel) {
-        mId = parcel.readLong()
-        mFile = parcel.readString() ?: ""
-        mName = parcel.readString() ?: ""
-        mType = parcel.readString() ?: ""
-        mSize = parcel.readLong()
-        mStatus = (parcel.readSerializable() as? Status) ?: Status.READY
+        id = parcel.readLong()
+        file = parcel.readString() ?: ""
+        name = parcel.readString() ?: ""
+        type = parcel.readString() ?: ""
+        size = parcel.readLong()
+        status = (parcel.readSerializable() as? Status) ?: Status.READY
     }
-
-    override fun getId(): Long = mId
-
-    fun setId(id: Long) {
-        mId = id
-    }
-
-    fun getFile(): String = mFile
-
-    fun getName(): String = mName
-
-    fun getType(): String = mType
-
-    fun getSize(): Long = mSize
-
-    fun getStatus(): Status = mStatus
 
     fun setStatus(status: Status, error: String? = null) {
-        mStatus = status
+        this.status = status
         // TODO handle error
     }
 
     override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(mId)
-        dest.writeString(mFile)
-        dest.writeString(mName)
-        dest.writeString(mType)
-        dest.writeLong(mSize)
-        dest.writeSerializable(mStatus)
+        dest.writeLong(id)
+        dest.writeString(file)
+        dest.writeString(name)
+        dest.writeString(type)
+        dest.writeLong(size)
+        dest.writeSerializable(status)
     }
 
     override fun equals(other: Any?): Boolean {
-        return other is Attachment && mFile == other.mFile
+        return other is Attachment && file == other.file
     }
 
-    override fun hashCode(): Int = mFile.hashCode()
+    override fun hashCode(): Int = file.hashCode()
 
     fun getUri(context: Context): Uri {
         val authority = context.packageName + ".storage.file"
         val folder = File(context.getExternalFilesDir(null), FOLDER_NAME)
-        val attachment = File(folder, mFile)
+        val attachment = File(folder, file)
         return FileProvider.getUriForFile(context, authority, attachment)
     }
 
     fun getActionViewIntent(context: Context): Intent {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.setDataAndType(getUri(context), mType)
+        intent.setDataAndType(getUri(context), type)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         return intent
@@ -177,4 +161,3 @@ class Attachment : Parcelable, Identifiable {
         }
     }
 }
-

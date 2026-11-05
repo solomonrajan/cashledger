@@ -78,11 +78,14 @@ class Money {
         return mCurrencies[currency] ?: 0L
     }
 
-    fun getCurrencyMoneys(): Map<String, Long> = mCurrencies
+    val currencyMoneys: Map<String, Long>
+        get() = mCurrencies
 
-    fun getCurrencies(): Set<String> = mCurrencies.keys
+    val currencies: Set<String>
+        get() = mCurrencies.keys
 
-    fun getNumberOfCurrencies(): Int = mCurrencies.size
+    val numberOfCurrencies: Int
+        get() = mCurrencies.size
 
     override fun toString(): String {
         val builder = StringBuilder()

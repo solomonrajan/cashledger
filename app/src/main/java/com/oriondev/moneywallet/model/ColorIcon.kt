@@ -66,7 +66,7 @@ class ColorIcon : Icon {
         mName = source.readString() ?: ""
     }
 
-    override fun getType(): Type = Type.COLOR
+    override val type: Type = Type.COLOR
 
     @Throws(JSONException::class)
     override fun writeJSON(jsonObject: JSONObject) {
