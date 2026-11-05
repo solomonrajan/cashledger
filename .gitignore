@@ -1,8 +1,25 @@
+# Gradle
+.gradle/
+build/
+app/build/
+
+# Local configuration
+local.properties
+
+# Android Studio / IntelliJ IDEA
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea
+*.ipr
+*.iws
+.idea_modules/
+
+# OS specific files
 .DS_Store
-/build
-/captures
-.externalNativeBuild
+Thumbs.db
+
+# Android build outputs & captures
+captures/
+.externalNativeBuild/
+.cxx/
+*.hprof
+*.log

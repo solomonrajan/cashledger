@@ -1,12 +1,21 @@
 param (
     [string]$ApiKey = "",
-    [string]$SearchPath = "app\src\main\java\com\oriondev\moneywallet\ui"
+    [string]$SearchPath = ""
 )
 
 if ([string]::IsNullOrWhiteSpace($ApiKey)) {
     Write-Host "Please provide your Gemini API key." -ForegroundColor Red
-    Write-Host "Usage: .\Migrate-JavaToKotlin.ps1 -ApiKey 'YOUR_API_KEY'" -ForegroundColor Yellow
+    Write-Host "Usage: .\scripts\Migrate-JavaToKotlin.ps1 -ApiKey 'YOUR_API_KEY'" -ForegroundColor Yellow
     exit 1
+}
+
+$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$RepoRoot = if (Test-Path (Join-Path $ScriptDir "..\app")) { (Resolve-Path (Join-Path $ScriptDir "..")).Path } else { (Get-Location).Path }
+
+if ([string]::IsNullOrWhiteSpace($SearchPath)) {
+    $SearchPath = Join-Path $RepoRoot "app\src\main\java\com\oriondev\moneywallet\ui"
+} elseif (-not [System.IO.Path]::IsPathRooted($SearchPath)) {
+    $SearchPath = Join-Path $RepoRoot $SearchPath
 }
 
 $Endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=$ApiKey"
@@ -108,7 +117,7 @@ foreach ($Activity in $ActivitiesToMigrate) {
 }
 
 # Automatically update KOTLIN_MIGRATION.mdx dashboard
-$TrackerScript = Join-Path $PSScriptRoot "scripts\Update-MigrationTracker.ps1"
+$TrackerScript = Join-Path $ScriptDir "Update-MigrationTracker.ps1"
 if (Test-Path $TrackerScript) {
     Write-Host "Updating KOTLIN_MIGRATION.mdx tracker..." -ForegroundColor Cyan
     & $TrackerScript
