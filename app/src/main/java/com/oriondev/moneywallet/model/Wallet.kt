@@ -28,7 +28,7 @@ import android.os.Parcelable
  */
 data class Wallet(
     override val id: Long,
-    val name: String,
+    val name: String?,
     val icon: Icon?,
     val currency: CurrencyUnit?,
     val startMoney: Long,
@@ -37,7 +37,7 @@ data class Wallet(
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
-        parcel.readString() ?: "",
+        parcel.readString(),
         parcel.readParcelable(Icon::class.java.classLoader),
         parcel.readParcelable(CurrencyUnit::class.java.classLoader),
         parcel.readLong(),

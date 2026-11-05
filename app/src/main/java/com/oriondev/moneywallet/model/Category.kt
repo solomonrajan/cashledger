@@ -29,13 +29,13 @@ import com.oriondev.moneywallet.storage.database.Contract
  */
 data class Category(
     override val id: Long,
-    val name: String,
+    val name: String?,
     val icon: Icon?,
     val type: Contract.CategoryType,
     val tag: String? = null
 ) : Parcelable, Identifiable {
 
-    constructor(id: Long, name: String, icon: Icon?, type: Contract.CategoryType) : this(
+    constructor(id: Long, name: String?, icon: Icon?, type: Contract.CategoryType) : this(
         id,
         name,
         icon,
@@ -45,7 +45,7 @@ data class Category(
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
-        parcel.readString() ?: "",
+        parcel.readString(),
         parcel.readParcelable(Icon::class.java.classLoader),
         (parcel.readSerializable() as? Contract.CategoryType) ?: Contract.CategoryType.EXPENSE,
         parcel.readString()

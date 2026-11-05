@@ -28,13 +28,13 @@ import android.os.Parcelable
  */
 data class Person(
     override val id: Long,
-    val name: String,
+    val name: String?,
     val icon: Icon?
 ) : Identifiable, Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
-        parcel.readString() ?: "",
+        parcel.readString(),
         parcel.readParcelable(Icon::class.java.classLoader)
     )
 

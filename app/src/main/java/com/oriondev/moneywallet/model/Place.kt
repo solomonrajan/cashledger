@@ -28,14 +28,14 @@ import android.os.Parcelable
  */
 data class Place(
     override val id: Long,
-    val name: String,
+    val name: String?,
     val icon: Icon?,
     val address: String?,
     val latitude: Double?,
     val longitude: Double?
 ) : Identifiable, Parcelable {
 
-    constructor(id: Long, name: String, icon: Icon?, address: String?, coordinates: Coordinates?) : this(
+    constructor(id: Long, name: String?, icon: Icon?, address: String?, coordinates: Coordinates?) : this(
         id,
         name,
         icon,
@@ -46,7 +46,7 @@ data class Place(
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
-        parcel.readString() ?: "",
+        parcel.readString(),
         parcel.readParcelable(Icon::class.java.classLoader),
         parcel.readString(),
         if (parcel.readByte().toInt() == 0) null else parcel.readDouble(),

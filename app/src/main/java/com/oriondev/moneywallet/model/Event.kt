@@ -29,7 +29,7 @@ import java.util.Date
  */
 data class Event(
     override val id: Long,
-    val name: String,
+    val name: String?,
     val icon: Icon?,
     val startDate: Date?,
     val endDate: Date?
@@ -37,7 +37,7 @@ data class Event(
 
     constructor(parcel: Parcel) : this(
         parcel.readLong(),
-        parcel.readString() ?: "",
+        parcel.readString(),
         parcel.readParcelable(Icon::class.java.classLoader),
         Date(parcel.readLong()),
         Date(parcel.readLong())

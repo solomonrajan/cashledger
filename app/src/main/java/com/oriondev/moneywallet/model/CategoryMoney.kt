@@ -27,7 +27,7 @@ import java.util.ArrayList
  */
 class CategoryMoney(
     val id: Long,
-    val name: String,
+    val name: String?,
     val icon: Icon?,
     val money: Money
 ) {
