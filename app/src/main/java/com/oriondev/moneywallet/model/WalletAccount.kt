@@ -25,18 +25,35 @@ import com.oriondev.moneywallet.utils.IconLoader
 /**
  * One entry of the wallet switcher in the navigation drawer: a wallet, or the total of them.
  */
-data class WalletAccount(
+class WalletAccount(
     val id: Long,
     val name: String,
-    val icon: Icon,
+    icon: Icon?,
     val money: Money
 ) {
+    val icon: Icon = icon ?: IconLoader.UNKNOWN
 
-    constructor(id: Long, name: String, icon: Icon?, money: Money) : this(
-        id,
-        name,
-        icon ?: IconLoader.UNKNOWN,
-        money
-    )
+    operator fun component1(): Long = id
+    operator fun component2(): String = name
+    operator fun component3(): Icon = icon
+    operator fun component4(): Money = money
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is WalletAccount) return false
+        return id == other.id && name == other.name && icon == other.icon && money == other.money
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + icon.hashCode()
+        result = 31 * result + money.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "WalletAccount(id=$id, name=$name, icon=$icon, money=$money)"
+    }
 }
 
