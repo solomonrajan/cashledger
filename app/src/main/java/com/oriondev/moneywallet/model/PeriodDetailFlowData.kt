@@ -39,3 +39,4 @@ class PeriodDetailFlowData(
 
     fun getCategoryCount(): Int = mCategoryMoneyList.size
 }
+

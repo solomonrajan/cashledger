@@ -37,3 +37,4 @@ interface IFile : Parcelable {
 
     fun encodeToString(): String?
 }
+

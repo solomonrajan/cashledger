@@ -38,3 +38,4 @@ class OverviewData(
 
     fun getPeriodCount(): Int = mPeriodMoneyList.size
 }
+

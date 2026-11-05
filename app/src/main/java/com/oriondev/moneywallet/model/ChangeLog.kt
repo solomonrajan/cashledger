@@ -75,3 +75,4 @@ class ChangeLog {
         const val TYPE_ITEM: Int = 1
     }
 }
+

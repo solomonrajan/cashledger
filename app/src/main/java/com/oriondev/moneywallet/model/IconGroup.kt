@@ -30,3 +30,4 @@ class IconGroup(
 
     fun size(): Int = groupIcons.size
 }
+

@@ -39,3 +39,4 @@ data class WalletAccount(
         money
     )
 }
+

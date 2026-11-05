@@ -42,3 +42,4 @@ enum class Group(val type: Int) {
         }
     }
 }
+

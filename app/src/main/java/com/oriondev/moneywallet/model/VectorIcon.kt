@@ -137,3 +137,4 @@ class VectorIcon : Icon {
         }
     }
 }
+

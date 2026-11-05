@@ -42,3 +42,4 @@ class PeriodDetailSummaryData(
 
     fun getPeriodCount(): Int = mPeriodList.size
 }
+

@@ -132,3 +132,4 @@ object MoneyScale {
         return toMinorUnits.toDouble() / fromMinorUnits * 10.0.pow((fromDecimals - toDecimals).toDouble())
     }
 }
+

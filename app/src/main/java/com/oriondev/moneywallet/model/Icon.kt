@@ -89,3 +89,4 @@ abstract class Icon internal constructor() : Parcelable {
         }
     }
 }
+

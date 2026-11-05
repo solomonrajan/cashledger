@@ -26,3 +26,4 @@ package com.oriondev.moneywallet.model
 interface Identifiable {
     val id: Long
 }
+

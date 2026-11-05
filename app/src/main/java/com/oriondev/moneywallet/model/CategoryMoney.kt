@@ -40,3 +40,4 @@ class CategoryMoney(
         mChildren.add(child)
     }
 }
+
