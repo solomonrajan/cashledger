@@ -36,14 +36,14 @@ import java.util.Locale
 data class CurrencyUnit(
     val iso: String,
     val name: String,
-    val symbol: String,
+    val symbol: String?,
     val decimals: Int
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readString() ?: "",
+        parcel.readString(),
         parcel.readInt()
     )
 

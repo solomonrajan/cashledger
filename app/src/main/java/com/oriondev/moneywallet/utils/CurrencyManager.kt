@@ -198,8 +198,8 @@ class CurrencyManager private constructor(context: Context) {
                 val indexDecimals = c.getColumnIndex(Contract.Currency.DECIMALS)
                 while (c.moveToNext()) {
                     val currencyUnit = CurrencyUnit(
-                        c.getString(indexIso),
-                        c.getString(indexName),
+                        c.getString(indexIso) ?: "",
+                        c.getString(indexName) ?: "",
                         c.getString(indexSymbol),
                         c.getInt(indexDecimals)
                     )
