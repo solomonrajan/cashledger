@@ -1,9 +1,9 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-04"
+last_updated: "2026-11-05"
 status: "In Progress"
-overall_progress: "2.3%"
+overall_progress: "8.9%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "2.3%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-12%20%2F%20517%20Files%20(2.3%25)-blue?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-46%20%2F%20517%20Files%20(8.9%25)-blue?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,20 +24,20 @@ overall_progress: "2.3%"
 > **How to update this dashboard:** When a PR lands that converts files, update the counts in the table below and bump the progress badges above.
 
 ```
-Total Files Migrated: [▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 2.3% (12 / 517)
+Total Files Migrated: [▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 8.9% (46 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Phase 0: Tooling & Guardrails** | CI checks, detekt/ktlint, PR guidelines | — | — | — | 100% | 🟢 Completed | Sprint 1 |
 | **Phase 1: Leaf Utilities** | `com...moneywallet.utils` | 0 | 11 | 11 | 100% | 🟢 Completed | Sprint 1–2 |
-| **Phase 2: Domain Models** | `com...moneywallet.model` | 34 | 0 | 34 | 0% | 🟡 Ready to Start | Sprint 2–3 |
-| **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 77 | 0 | 77 | 0% | ⚪ Pending | Sprint 4–5 |
+| **Phase 2: Domain Models** | `com...moneywallet.model` | 0 | 34 | 34 | 100% | 🟢 Completed | Sprint 2–3 |
+| **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 77 | 0 | 77 | 0% | 🟡 Ready to Start | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 38 | 0 | 38 | 0% | ⚪ Pending | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | 151 | 0 | 151 | 0% | ⚪ Pending | Sprint 8–9 |
 | **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 134 | 1 | 135 | 0.7% | 🟡 In Progress | Sprint 10–12 |
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **505** | **12** | **517** | **2.3%** | **🟡 Active** | **~13 Sprints** |
+| **TOTALS** | **Entire Codebase** | **471** | **46** | **517** | **8.9%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: `TutorialActivity.kt` + 11 `utils/` files are now pure Kotlin).*
 
@@ -62,8 +62,8 @@ flowchart TD
 
     P0["Phase 0: Tooling & Safety Guardrails<br/><i>(Detekt / Ktlint / Tests Baseline)</i>"]:::complete
     P1["Phase 1: Foundation & Utils<br/><i>(11 files in utils/)</i>"]:::complete
-    P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::inprog
-    P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::pending
+    P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::complete
+    P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::inprog
     P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/)</i>"]:::pending
     P5["Phase 5: Reusable UI, Pickers & Adapters<br/><i>(~100 files in picker/, ui/adapter/)</i>"]:::pending
     P6["Phase 6: Top-Level Screens & App Core<br/><i>(~184 files in ui/activity/, ui/fragment/, App.java)</i>"]:::inprog
@@ -199,47 +199,47 @@ timestamp.toFormattedDate(context)
 ---
 
 ### Phase 2: Domain Models & Value Objects
-**Dates:** Nov 16, 2026 – Nov 27, 2026 &bull; **Deadline:** Nov 27, 2026 (1.5 Weeks) &bull; **Files:** 34 Java Files &bull; **Status:** 🟡 Ready to Start
+**Dates:** Nov 16, 2026 – Nov 27, 2026 &bull; **Deadline:** Nov 27, 2026 (1.5 Weeks) &bull; **Files:** 34 Java Files &bull; **Status:** 🟢 Completed
 **Path:** `app/src/main/java/com/oriondev/moneywallet/model/`
 
 #### Why Second?
 Models define the data contracts that the database, services, and UI exchange. Having clean Kotlin `data class`es with non-nullable fields drastically eliminates nullability ambiguity across the entire app.
 
 #### Checklist:
-- [ ] `Attachment.java`
-- [ ] `BackupService.java`
-- [ ] `Category.java`
-- [ ] `CategoryMoney.java`
-- [ ] `ChangeLog.java`
-- [ ] `ColorIcon.java`
-- [ ] `Coordinates.java`
-- [ ] `CurrencyUnit.java`
-- [ ] `DataFormat.java`
-- [ ] `Event.java`
-- [ ] `Group.java`
-- [ ] `Icon.java`
-- [ ] `IconGroup.java`
-- [ ] `Identifiable.java` (Interface)
-- [ ] `IFile.java` (Interface)
-- [ ] `License.java`
-- [ ] `LocalFile.java`
-- [ ] `LockMode.java`
-- [ ] `Money.java`
-- [ ] `MoneyScale.java`
-- [ ] `OverviewData.java`
-- [ ] `OverviewSetting.java`
-- [ ] `Pair.java` (Replace with Kotlin's built-in `Pair<A, B>`)
-- [ ] `PeriodDetailFlowData.java`
-- [ ] `PeriodDetailSummaryData.java`
-- [ ] `PeriodMoney.java`
-- [ ] `Person.java`
-- [ ] `Place.java`
-- [ ] `RecurrenceSetting.java`
-- [ ] `SAFFile.java`
-- [ ] `VectorIcon.java`
-- [ ] `Wallet.java`
-- [ ] `WalletAccount.java`
-- [ ] `WebDAVFile.java`
+- [x] `Attachment.kt`
+- [x] `BackupService.kt`
+- [x] `Category.kt`
+- [x] `CategoryMoney.kt`
+- [x] `ChangeLog.kt`
+- [x] `ColorIcon.kt`
+- [x] `Coordinates.kt`
+- [x] `CurrencyUnit.kt`
+- [x] `DataFormat.kt`
+- [x] `Event.kt`
+- [x] `Group.kt`
+- [x] `Icon.kt`
+- [x] `IconGroup.kt`
+- [x] `Identifiable.kt` (Interface)
+- [x] `IFile.kt` (Interface)
+- [x] `License.kt`
+- [x] `LocalFile.kt`
+- [x] `LockMode.kt`
+- [x] `Money.kt`
+- [x] `MoneyScale.kt`
+- [x] `OverviewData.kt`
+- [x] `OverviewSetting.kt`
+- [x] `Pair.kt` (Replace with Kotlin's built-in `Pair<A, B>`)
+- [x] `PeriodDetailFlowData.kt`
+- [x] `PeriodDetailSummaryData.kt`
+- [x] `PeriodMoney.kt`
+- [x] `Person.kt`
+- [x] `Place.kt`
+- [x] `RecurrenceSetting.kt`
+- [x] `SAFFile.kt`
+- [x] `VectorIcon.kt`
+- [x] `Wallet.kt`
+- [x] `WalletAccount.kt`
+- [x] `WebDAVFile.kt`
 
 #### How We Do It:
 Transform verbose Java POJOs into concise immutable Kotlin data classes:
@@ -259,7 +259,7 @@ data class Category(
 ---
 
 ### Phase 3: Storage, Database & Cache Layer
-**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Java Files &bull; **Status:** ⚪ Pending
+**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Java Files &bull; **Status:** 🟡 Ready to Start
 **Path:** `app/src/main/java/com/oriondev/moneywallet/storage/`
 
 #### Why Third?
