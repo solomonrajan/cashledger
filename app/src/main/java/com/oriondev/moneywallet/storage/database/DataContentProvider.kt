@@ -39,10 +39,10 @@ import java.util.concurrent.Callable
 /**
  * Created by andrea on 17/01/18.
  */
-class DataContentProvider : ContentProvider() {
+open class DataContentProvider : ContentProvider() {
 
     companion object {
-        internal const val AUTHORITY: String = "${BuildConfig.APPLICATION_ID}.storage.data"
+        const val AUTHORITY: String = "${BuildConfig.APPLICATION_ID}.storage.data"
 
         @JvmField
         val CONTENT_CURRENCIES: Uri = Uri.parse("content://$AUTHORITY/currencies")
