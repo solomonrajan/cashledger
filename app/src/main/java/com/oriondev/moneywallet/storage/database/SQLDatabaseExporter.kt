@@ -20,6 +20,7 @@
 
 package com.oriondev.moneywallet.storage.database
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.database.Cursor
 import com.oriondev.moneywallet.storage.database.model.Attachment
@@ -51,6 +52,7 @@ import com.oriondev.moneywallet.storage.database.model.Wallet
 /**
  * Created by andrea on 28/10/18.
  */
+@SuppressLint("Range")
 object SQLDatabaseExporter {
 
     @JvmStatic
