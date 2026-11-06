@@ -172,20 +172,18 @@ class CsvImportMapping : Serializable {
             BufferedReader(CSVDataImporter.openFile(file)).use { reader ->
                 val line = reader.readLine()
                 val separator = detectSeparator(line)
-                val cells: Array<String>?
-                try {
-                    cells = parser(separator).parseLine(line)
+                val cells: Array<String>? = try {
+                    parser(separator).parseLine(line)
                 } catch (e: IOException) {
                     throw IOException(
                         "Line 1: a quote in this row is not closed on the same line, and every row has to fit on one line",
                         e
                     )
                 }
-                val nativeHeader: Boolean
-                try {
-                    nativeHeader = isNativeHeader(line)
+                val nativeHeader: Boolean = try {
+                    isNativeHeader(line)
                 } catch (notReadableThatWay: IOException) {
-                    nativeHeader = false
+                    false
                 }
                 return Header(separator, cells, nativeHeader)
             }

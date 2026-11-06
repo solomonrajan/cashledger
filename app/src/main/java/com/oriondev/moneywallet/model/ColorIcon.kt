@@ -87,10 +87,12 @@ class ColorIcon : Icon {
         dest.writeString(mName)
     }
 
-    @ColorInt
-    fun getColor(): Int = Color.parseColor(mColor)
+    val color: Int
+        @ColorInt
+        get() = Color.parseColor(mColor)
 
-    fun getName(): String = mName
+    val name: String
+        get() = mName
 
     override fun getDrawable(context: Context): Drawable = getDrawable()
 
