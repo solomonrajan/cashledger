@@ -153,15 +153,15 @@ class LegacyDatabaseImporter @Throws(ImportException::class) constructor(legacyD
         if (cursor != null) {
             // populate map to easily detect a system category
             val systemCategoryMap = LongSparseArray<String>().apply {
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_CREDIT, Contract.CategoryTag.CREDIT)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_CREDIT_PAID, Contract.CategoryTag.PAID_CREDIT)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_DEBT, Contract.CategoryTag.DEBT)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_DEBT_PAID, Contract.CategoryTag.PAID_DEBT)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_TRANSFER, Contract.CategoryTag.TRANSFER)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_TRANSFER_TAX, Contract.CategoryTag.TRANSFER_TAX)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_OPERATION_TAX, Contract.CategoryTag.TAX)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_SAVING_IN, Contract.CategoryTag.SAVING_DEPOSIT)
-                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_SAVING_OUT, Contract.CategoryTag.SAVING_WITHDRAW)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_CREDIT.toLong(), Contract.CategoryTag.CREDIT)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_CREDIT_PAID.toLong(), Contract.CategoryTag.PAID_CREDIT)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_DEBT.toLong(), Contract.CategoryTag.DEBT)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_DEBT_PAID.toLong(), Contract.CategoryTag.PAID_DEBT)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_TRANSFER.toLong(), Contract.CategoryTag.TRANSFER)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_TRANSFER_TAX.toLong(), Contract.CategoryTag.TRANSFER_TAX)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_OPERATION_TAX.toLong(), Contract.CategoryTag.TAX)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_SAVING_IN.toLong(), Contract.CategoryTag.SAVING_DEPOSIT)
+                put(LegacyDatabaseSchema.INDEX_HIDDEN_CATEGORY_SAVING_OUT.toLong(), Contract.CategoryTag.SAVING_WITHDRAW)
             }
             // iterate between the rows returned by the query
             while (cursor.moveToNext()) {
@@ -543,11 +543,12 @@ class LegacyDatabaseImporter @Throws(ImportException::class) constructor(legacyD
                 transaction.mCountInTotal = true
                 val encodedInfo = getStringSafely(cursor, LegacyDatabaseSchema.Recurrence.ENCODED_INFO)
                 val recurrenceSetting = parseRecurrenceSetting(encodedInfo)
-                transaction.mStartDate = DateUtils.getSQLDateString(recurrenceSetting.startDate)
+                transaction.mStartDate = DateUtils.getSQLDateString(recurrenceSetting.getStartDate())
                 transaction.mLastOccurrence = getRecurrenceLastOccurrence(legacyId, transaction.mStartDate)
-                val nextOccurrence = recurrenceSetting.getNextOccurrence(DateUtils.getDateFromSQLDateString(transaction.mLastOccurrence))
+                val lastDate = transaction.mLastOccurrence?.let { DateUtils.getDateFromSQLDateString(it) }
+                val nextOccurrence = if (lastDate != null) recurrenceSetting.getNextOccurrence(lastDate) else null
                 transaction.mNextOccurrence = if (nextOccurrence != null) DateUtils.getSQLDateString(nextOccurrence) else null
-                transaction.mRule = recurrenceSetting.rule
+                transaction.mRule = recurrenceSetting.getRule()
                 transaction.mUUID = getStringSafely(cursor, LegacyDatabaseSchema.Recurrence.UUID)
                 transaction.mDeleted = getBooleanSafely(cursor, LegacyDatabaseSchema.Recurrence.DELETED)
                 transaction.mLastEdit = getLongSafely(cursor, LegacyDatabaseSchema.Recurrence.LAST_EDIT)
@@ -594,8 +595,8 @@ class LegacyDatabaseImporter @Throws(ImportException::class) constructor(legacyD
             }
         }
         val occurrences = if (rules.size > 5) rules[5].toIntOrNull() ?: 0 else 0
-        val startDate = if (rules.size > 6) DateUtils.getDateFromSQLDateString(rules[6]) else null
-        val endDate = if (rules.size > 7) DateUtils.getDateFromSQLDateString(rules[7]) else null
+        val startDate = if (rules.size > 6 && rules[6].isNotEmpty()) DateUtils.getDateFromSQLDateString(rules[6]) else Date()
+        val endDate = if (rules.size > 7 && rules[7].isNotEmpty()) DateUtils.getDateFromSQLDateString(rules[7]) else null
 
         // reconstruct the rule object
         val builder = RecurrenceSetting.Builder(startDate, recurrenceType)
@@ -606,7 +607,11 @@ class LegacyDatabaseImporter @Throws(ImportException::class) constructor(legacyD
             builder.setRepeatSameMonthDay()
         }
         when (endType) {
-            RecurrenceSetting.END_UNTIL -> builder.setEndUntil(endDate)
+            RecurrenceSetting.END_UNTIL -> {
+                if (endDate != null) {
+                    builder.setEndUntil(endDate)
+                }
+            }
             RecurrenceSetting.END_FOR -> builder.setEndFor(occurrences)
         }
         return builder.build()
