@@ -149,17 +149,17 @@ class LegacyEditionImporter @Throws(ImportException::class) constructor(context:
     @Throws(ImportException::class)
     fun importPreferences() {
         val legacyUserPreferences = LegacyUserPreferences(mContext)
-        val dateFormat = legacyUserPreferences.dateFormat
-        val colorIncomes = legacyUserPreferences.colorIn
-        val colorExpenses = legacyUserPreferences.colorOut
-        val groupType = legacyUserPreferences.groupType
-        val firstDayOfMonth = legacyUserPreferences.firstDayOfMonth
-        val firstDayOfWeek = legacyUserPreferences.firstDayOfWeek
-        val reminderEnabled = legacyUserPreferences.isReminderEnabled
-        val reminderHour = legacyUserPreferences.reminderHour
-        val currencyEnabled = legacyUserPreferences.isCurrencySymbolEnabled
-        val groupDigitsEnabled = legacyUserPreferences.isGroupDigitsEnabled
-        val roundDecimalsEnabled = legacyUserPreferences.isRoundDecimalsEnabled
+        val dateFormat = legacyUserPreferences.getDateFormat()
+        val colorIncomes = legacyUserPreferences.getColorIn()
+        val colorExpenses = legacyUserPreferences.getColorOut()
+        val groupType = legacyUserPreferences.getGroupType()
+        val firstDayOfMonth = legacyUserPreferences.getFirstDayOfMonth()
+        val firstDayOfWeek = legacyUserPreferences.getFirstDayOfWeek()
+        val reminderEnabled = legacyUserPreferences.isReminderEnabled()
+        val reminderHour = legacyUserPreferences.getReminderHour()
+        val currencyEnabled = legacyUserPreferences.isCurrencySymbolEnabled()
+        val groupDigitsEnabled = legacyUserPreferences.isGroupDigitsEnabled()
+        val roundDecimalsEnabled = legacyUserPreferences.isRoundDecimalsEnabled()
 
         legacyUserPreferences.destroy()
 
