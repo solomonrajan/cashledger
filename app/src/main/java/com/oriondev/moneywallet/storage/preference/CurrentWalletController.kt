@@ -22,6 +22,7 @@ package com.oriondev.moneywallet.storage.preference
 /**
  * Created by andrea on 04/09/18.
  */
+@JvmDefaultWithCompatibility
 interface CurrentWalletController {
 
     fun onCurrentWalletChanged(walletId: Long)
