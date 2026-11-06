@@ -158,10 +158,6 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
      */
     abstract fun getRoundedAmounts(): Int
 
-    fun getAlreadySavedRows(): Int {
-        return alreadySavedRows
-    }
-
     /**
      * @return false when the row was skipped because the wallet already held it.
      */
