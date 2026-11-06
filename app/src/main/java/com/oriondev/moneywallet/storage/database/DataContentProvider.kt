@@ -302,7 +302,7 @@ open class DataContentProvider : ContentProvider() {
                 cursor = MultiUriCursorWrapper(db().getCurrencies(proj, selection, selArgs, sortOrder))
             }
             CURRENCY_ITEM -> {
-                cursor = MultiUriCursorWrapper(db().getCurrency(uri.lastPathSegment, proj))
+                cursor = MultiUriCursorWrapper(db().getCurrency(uri.lastPathSegment ?: "", proj))
             }
             WALLET_LIST -> {
                 cursor = MultiUriCursorWrapper(db().getWallets(proj, selection, selArgs, sortOrder))
@@ -419,7 +419,7 @@ open class DataContentProvider : ContentProvider() {
                 cursor = MultiUriCursorWrapper(db().getCategoryRule(ContentUris.parseId(uri), proj))
             }
             CATEGORY_RULE_MATCH -> {
-                cursor = MultiUriCursorWrapper(db().getCategoryRuleMatch(uri.lastPathSegment))
+                cursor = MultiUriCursorWrapper(db().getCategoryRuleMatch(uri.lastPathSegment ?: ""))
             }
             PLACE_LIST -> {
                 cursor = MultiUriCursorWrapper(db().getPlaces(proj, selection, selArgs, sortOrder))
@@ -573,7 +573,7 @@ open class DataContentProvider : ContentProvider() {
         when (mUriMatcher.match(uri)) {
             CURRENCY_ITEM -> {
                 notifyUri[0] = CONTENT_CURRENCIES
-                result = database.deleteCurrency(uri.lastPathSegment)
+                result = database.deleteCurrency(uri.lastPathSegment ?: "")
             }
             WALLET_ITEM -> {
                 notifyUri[0] = CONTENT_WALLETS
