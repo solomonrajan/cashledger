@@ -1,7 +1,7 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-06"
+last_updated: "2026-11-07"
 status: "In Progress"
 overall_progress: "23.8%"
 ---
@@ -39,14 +39,15 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
 | **TOTALS** | **Entire Codebase** | **394** | **123** | **517** | **23.8%** | **🟡 Active** | **~13 Sprints** |
 
-*(Note: `TutorialActivity.kt` + 11 `utils/` files + 34 `model/` domain files are now pure Kotlin).*
+*(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + `TutorialActivity.kt` are now pure Kotlin — 123 total).*
 
 ### 📢 Recent Activity & Milestones
 
 - **2026-11-04 (Phase 0 Completed):** ✅ Configured Detekt 1.23.6 and detekt-formatting (Ktlint) in Gradle and CI. Enabled static check forbidding `!!` double-bang operators. Published [`docs/KOTLIN_GUIDELINES.md`](docs/KOTLIN_GUIDELINES.md).
 - **2026-11-04 (Phase 1 Completed):** ✅ Migrated all 11 utility classes in `com.oriondev.moneywallet.utils` to idiomatic Kotlin (`Urls.kt`, `SystemBars.kt`, `DateUtils.kt`, `MoneyFormatter.kt`, `CurrencyManager.kt`, etc.).
-- **2026-11-05 (Phase 2 Completed):** ✅ Migrated all 34 domain model and entity classes in `com.oriondev.moneywallet.model` to idiomatic Kotlin. Resolved JVM bytecode platform clashes, interface property overrides (`Identifiable.id`), `toString()` contracts, and database entity schema nullability. Verified 100% green in CI (662/662 tests passed, zero Detekt warnings, APK assembled).
-- **Next Target:** 🎯 **Phase 3: Storage, Database & Cache** (77 classes in `app/src/main/java/com/oriondev/moneywallet/storage/`).
+- **2026-11-05 (Phase 2 Completed):** ✅ Migrated all 34 domain model and entity classes in `com.oriondev.moneywallet.model` to idiomatic Kotlin. Resolved JVM bytecode platform clashes, interface property overrides (`Identifiable.id`), `toString()` contracts, and database entity schema nullability.
+- **2026-11-07 (Phase 3 Completed):** ✅ Migrated all 77 storage, database, preference, and cache classes in `com.oriondev.moneywallet.storage.*` to idiomatic Kotlin (`SQLDatabase.kt`, `DataContentProvider.kt`, `SyncContentProvider.kt`, preference managers, database serializers, etc.). Refactored query builders to `buildString` to eliminate compiler AST depth stack overflow bottlenecks, verified strict 0 double-bang (`!!`) compliance across the codebase, and verified 100% green in CI (all 662 unit tests passed, zero Detekt warnings, APK assembled).
+- **Next Target:** 🎯 **Phase 4: Remote API, Background Tasks & Services** (38 classes in `api/`, `background/`, `service/`, `broadcast/`).
 
 ---
 
@@ -259,21 +260,23 @@ data class Category(
 ---
 
 ### Phase 3: Storage, Database & Cache Layer
-**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Java Files &bull; **Status:** 🟢 Completed
+**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Kotlin Files &bull; **Status:** 🟢 Completed
 **Path:** `app/src/main/java/com/oriondev/moneywallet/storage/`
 
 #### Why Third?
 Storage is the heart of Cash Ledger's offline-first architecture. It interfaces with SQLite, ContentProviders, Preferences, and Backup engines.
 
-#### Sub-packages:
-1. `storage/preference/`: Preference managers and setting wrappers.
-2. `storage/cache/`: Memory and disk cache helpers.
-3. `storage/database/`:
-   - `Contract.java`: Table and column definitions.
-   - `Schema.java` & `SQLDatabase.java`: Database helper and migration scripts.
-   - `DataContentProvider.java`: ContentProvider implementation.
-   - `TransactionContentValuesBuilder.java`, `TransferContentValuesBuilder.java`.
-4. `storage/database/backup/`, `legacy/`, `json/`: Importers and exporters (WebDAV, ZIP, JSON).
+#### Sub-packages & Deliverables:
+- [x] `storage/preference/` (9 files: `PreferenceManager.kt`, `BackendManager.kt`, `NotificationPreferenceManager.kt`, etc.)
+- [x] `storage/cache/` (3 files: `IconCache.kt`, `ImageLoader.kt`, `PaletteCache.kt`)
+- [x] `storage/database/` (52 files: `SQLDatabase.kt`, `DataContentProvider.kt`, `SyncContentProvider.kt`, `Contract.kt`, `Schema.kt`, builder classes, migration scripts)
+- [x] `storage/database/backup/`, `legacy/`, `json/`, `qif/`, `csv/` (13 files: Importers, exporters, and backup serializers)
+
+#### Highlights & Quality Criteria Achieved:
+- **Zero Force-Unwraps:** Strictly 0 `!!` double-bang operators across all 77 classes, fully compliant with Detekt static rules.
+- **Query Optimization:** Converted complex query builders in `SQLDatabase.kt` to `buildString { append(...) }`, avoiding Kotlin compiler frontend AST recursion depth limits.
+- **Java Interoperability:** Retained full SAM and Java interop using functional interfaces (`Supplier<T>`, `Function<SQLDatabase, T>`) and `@JvmField` / `@JvmStatic` annotations.
+- **Verified in CI:** 100% green test execution across all 662 unit tests, zero Detekt warnings, and successful APK assembly.
 
 #### How We Do It:
 - **Cursor Utilities:** Introduce extension functions to eliminate repetitive `cursor.getColumnIndex()` boilerplate and safely close resources:
