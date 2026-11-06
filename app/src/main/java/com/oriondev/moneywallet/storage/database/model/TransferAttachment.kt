@@ -17,19 +17,15 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database.model;
+package com.oriondev.moneywallet.storage.database.model
 
 /**
  * Created by andrea on 27/10/18.
  */
-public class Category extends BaseItem {
+class TransferAttachment : BaseItem() {
+    @JvmField
+    var mTransfer: Long? = null
 
-    public Long mId;
-    public String mName;
-    public String mIcon;
-    public int mType;
-    public Long mParent;
-    public String mTag;
-    public boolean mShowReport;
-    public int mIndex;
+    @JvmField
+    var mAttachment: Long? = null
 }

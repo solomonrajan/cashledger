@@ -17,16 +17,15 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database.model;
+package com.oriondev.moneywallet.storage.database.model
 
 /**
  * Created by andrea on 27/10/18.
  */
-public class Person extends BaseItem {
+class TransactionAttachment : BaseItem() {
+    @JvmField
+    var mTransaction: Long? = null
 
-    public Long mId;
-    public String mName;
-    public String mIcon;
-    public String mNote;
-    public String mTag;
+    @JvmField
+    var mAttachment: Long? = null
 }

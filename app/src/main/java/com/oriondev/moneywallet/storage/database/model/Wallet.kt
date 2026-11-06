@@ -17,14 +17,40 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database.model;
+package com.oriondev.moneywallet.storage.database.model
 
 /**
- * Created by andrea on 27/10/18.
+ * This class acts as a Contract between the Schema of the SQLDatabase and the structure
+ * of the exported item.
  */
-/*package-local*/ class BaseItem {
+class Wallet : BaseItem() {
+    @JvmField
+    var mId: Long? = null
 
-    public String mUUID;
-    public long mLastEdit;
-    public boolean mDeleted;
+    @JvmField
+    var mName: String? = null
+
+    @JvmField
+    var mIcon: String? = null
+
+    @JvmField
+    var mCurrency: String? = null
+
+    @JvmField
+    var mStartMoney: Long = 0L
+
+    @JvmField
+    var mCountInTotal: Boolean = false
+
+    @JvmField
+    var mArchived: Boolean = false
+
+    @JvmField
+    var mNote: String? = null
+
+    @JvmField
+    var mTag: String? = null
+
+    @JvmField
+    var mIndex: Int = 0
 }

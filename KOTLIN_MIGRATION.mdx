@@ -3,7 +3,7 @@ title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
 last_updated: "2026-11-06"
 status: "In Progress"
-overall_progress: "11%"
+overall_progress: "16.1%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "11%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-57%20%2F%20517%20Files%20(11%25)-blue?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-83%20%2F%20517%20Files%20(16.1%25)-blue?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,7 +24,7 @@ overall_progress: "11%"
 > **How to update this dashboard:** When a PR lands that converts files, update the counts in the table below and bump the progress badges above.
 
 ```
-Total Files Migrated: [▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 11% (57 / 517)
+Total Files Migrated: [▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 16.1% (83 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
@@ -32,12 +32,12 @@ Total Files Migrated: [▓▓▓▓▓▓░░░░░░░░░░░░░
 | **Phase 0: Tooling & Guardrails** | CI checks, detekt/ktlint, PR guidelines | — | — | — | 100% | 🟢 Completed | Sprint 1 |
 | **Phase 1: Leaf Utilities** | `com...moneywallet.utils` | 0 | 11 | 11 | 100% | 🟢 Completed | Sprint 1–2 |
 | **Phase 2: Domain Models** | `com...moneywallet.model` | 0 | 34 | 34 | 100% | 🟢 Completed | Sprint 2–3 |
-| **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 66 | 11 | 77 | 14.3% | 🟡 In Progress | Sprint 4–5 |
+| **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 40 | 37 | 77 | 48.1% | 🟡 In Progress | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 38 | 0 | 38 | 0% | ⚪ Pending | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | 151 | 0 | 151 | 0% | ⚪ Pending | Sprint 8–9 |
 | **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 134 | 1 | 135 | 0.7% | 🟡 In Progress | Sprint 10–12 |
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **460** | **57** | **517** | **11%** | **🟡 Active** | **~13 Sprints** |
+| **TOTALS** | **Entire Codebase** | **434** | **83** | **517** | **16.1%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: `TutorialActivity.kt` + 11 `utils/` files + 34 `model/` domain files are now pure Kotlin).*
 

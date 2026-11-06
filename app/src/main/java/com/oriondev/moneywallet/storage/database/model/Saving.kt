@@ -17,21 +17,39 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database.model;
+package com.oriondev.moneywallet.storage.database.model
 
 /**
  * Created by andrea on 27/10/18.
  */
-public class Saving extends BaseItem {
+class Saving : BaseItem() {
+    @JvmField
+    var mId: Long? = null
 
-    public Long mId;
-    public String mDescription;
-    public String mIcon;
-    public long mStartMoney;
-    public long mEndMoney;
-    public Long mWallet;
-    public String mEndDate;
-    public boolean mComplete;
-    public String mNote;
-    public String mTag;
+    @JvmField
+    var mDescription: String? = null
+
+    @JvmField
+    var mIcon: String? = null
+
+    @JvmField
+    var mStartMoney: Long = 0L
+
+    @JvmField
+    var mEndMoney: Long = 0L
+
+    @JvmField
+    var mWallet: Long? = null
+
+    @JvmField
+    var mEndDate: String? = null
+
+    @JvmField
+    var mComplete: Boolean = false
+
+    @JvmField
+    var mNote: String? = null
+
+    @JvmField
+    var mTag: String? = null
 }

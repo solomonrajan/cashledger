@@ -17,28 +17,18 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database.model;
+package com.oriondev.moneywallet.storage.database.model
 
-/**
- * Created by andrea on 27/10/18.
- */
-public class RecurrentTransfer extends BaseItem {
+class CategoryRule : BaseItem() {
+    @JvmField
+    var mId: Long? = null
 
-    public Long mId;
-    public String mDescription;
-    public Long mFromWallet;
-    public Long mToWallet;
-    public long mFromMoney;
-    public long mToMoney;
-    public long mTaxMoney;
-    public String mNote;
-    public Long mEvent;
-    public Long mPlace;
-    public boolean mConfirmed;
-    public boolean mCountInTotal;
-    public String mStartDate;
-    public String mLastOccurrence;
-    public String mNextOccurrence;
-    public String mRule;
-    public String mTag;
+    @JvmField
+    var mPattern: String? = null
+
+    @JvmField
+    var mCategory: Long? = null
+
+    @JvmField
+    var mIndex: Int = 0
 }

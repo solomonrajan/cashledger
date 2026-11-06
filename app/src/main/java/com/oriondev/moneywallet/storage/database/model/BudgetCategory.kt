@@ -17,12 +17,15 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database.model;
+package com.oriondev.moneywallet.storage.database.model
 
-public class CategoryRule extends BaseItem {
+/**
+ * Created by andrea on 27/10/18.
+ */
+class BudgetCategory : BaseItem() {
+    @JvmField
+    var mBudget: Long? = null
 
-    public Long mId;
-    public String mPattern;
-    public Long mCategory;
-    public int mIndex;
+    @JvmField
+    var mCategory: Long? = null
 }

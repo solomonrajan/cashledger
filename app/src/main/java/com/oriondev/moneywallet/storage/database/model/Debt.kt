@@ -17,27 +17,45 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database.model;
+package com.oriondev.moneywallet.storage.database.model
 
 /**
  * Created by andrea on 27/10/18.
  */
-public class RecurrentTransaction extends BaseItem {
+class Debt : BaseItem() {
+    @JvmField
+    var mId: Long? = null
 
-    public Long mId;
-    public long mMoney;
-    public String mDescription;
-    public Long mCategory;
-    public int mDirection;
-    public Long mWallet;
-    public Long mPlace;
-    public String mNote;
-    public Long mEvent;
-    public boolean mConfirmed;
-    public boolean mCountInTotal;
-    public String mStartDate;
-    public String mLastOccurrence;
-    public String mNextOccurrence;
-    public String mRule;
-    public String mTag;
+    @JvmField
+    var mType: Int = 0
+
+    @JvmField
+    var mIcon: String? = null
+
+    @JvmField
+    var mDescription: String? = null
+
+    @JvmField
+    var mDate: String? = null
+
+    @JvmField
+    var mExpirationDate: String? = null
+
+    @JvmField
+    var mWallet: Long? = null
+
+    @JvmField
+    var mNote: String? = null
+
+    @JvmField
+    var mPlace: Long? = null
+
+    @JvmField
+    var mMoney: Long = 0L
+
+    @JvmField
+    var mArchived: Boolean = false
+
+    @JvmField
+    var mTag: String? = null
 }
