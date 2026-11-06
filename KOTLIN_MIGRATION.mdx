@@ -83,49 +83,42 @@ flowchart TD
 
 ## ⏱️ Master Timeline & Hard Deadlines
 
-> **Baseline Date:** November 5, 2026  
-> **Target Completion Date:** March 26, 2027  
-> **Total Effort:** ~14 Weeks (including QA, testing, and buffer)
+> **Baseline Date:** November 04, 2026  
+> **Accelerated Completion Target:** January 29, 2027 *(Accelerated by ~8 Weeks ahead of original March 26 schedule)*  
+> **Total Effort:** ~12 Weeks (including verification and holiday buffer)
 
 ```mermaid
-gantt
-    title Cash Ledger - Pure Kotlin Migration Schedule
-    dateFormat  YYYY-MM-DD
-    axisFormat  %b %d
+flowchart LR
+    classDef done fill:#38A169,stroke:#2F855A,color:#FFFFFF
+    classDef next fill:#D69E2E,stroke:#B7791F,color:#FFFFFF
+    classDef future fill:#2D3748,stroke:#4A5568,color:#CBD5E0
 
-    section Foundation
-    Phase 0 - Tooling & Guardrails       :p0, 2026-11-05, 2026-11-08
-    Phase 1 - Leaf Utilities             :p1, 2026-11-09, 2026-11-15
-    Phase 2 - Domain Models & Entities   :p2, 2026-11-16, 2026-11-27
+    P0["<b>Phase 0: Guardrails</b><br/>Nov 04 (Completed)"]:::done
+    P1["<b>Phase 1: Leaf Utils</b><br/>Nov 04 (Completed)"]:::done
+    P2["<b>Phase 2: Domain Models</b><br/>Nov 05 (Completed)"]:::done
+    P3["<b>Phase 3: Storage & DB</b><br/>Nov 07 (Completed)"]:::done
+    P4["<b>Phase 4: API & Services</b><br/>Nov 09 – Nov 20"]:::next
+    P5["<b>Phase 5: Reusable UI</b><br/>Nov 23 – Dec 11"]:::future
+    P6["<b>Phase 6: Screens & App</b><br/>Dec 14 – Jan 08"]:::future
+    P7["<b>Phase 7: Tests & KTS</b><br/>Jan 11 – Jan 22"]:::future
+    REL["<b>v2.2.0 RC Release</b><br/>Jan 25 – Jan 29"]:::future
 
-    section Core Architecture
-    Phase 3 - Storage & SQLite Engine    :p3, 2026-11-30, 2026-12-18
-    Holiday / Year-End Buffer            :milestone, 2026-12-19, 2027-01-03
-    Phase 4 - API, Background & Services :p4, 2027-01-04, 2027-01-17
-
-    section UI & Presentation
-    Phase 5 - Pickers, Adapters & Views  :p5, 2027-01-18, 2027-02-05
-    Phase 6 - Activities, Fragments & App:p6, 2027-02-08, 2027-03-05
-
-    section Finalization & Release
-    Phase 7 - Test Suite & Gradle KTS    :p7, 2027-03-08, 2027-03-19
-    Final QA, Smoke Test & Release       :crit, 2027-03-22, 2027-03-26
+    P0 --> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> REL
 ```
 
 ### 📅 Milestone Schedule Table
 
-| Phase | Scope / Focus | File Count | Duration | Start Date | Hard Deadline | Exit Criteria / Deliverables |
+| Phase | Scope / Focus | File Count | Duration | Start Date | Hard Deadline | Exit Criteria / Status |
 | :--- | :--- | :---: | :---: | :---: | :---: | :--- |
-| **Phase 0** | Tooling, Detekt, CI Baseline | — | 3 Days | Nov 05, 2026 | **Nov 08, 2026** | Detekt & ktlint enforced; `./gradlew test` green. |
-| **Phase 1** | Foundation & Leaf Utilities (`utils/`) | 11 | 1 Week | Nov 09, 2026 | **Nov 15, 2026** | All 11 utility classes pure Kotlin; extension functions standardized. |
-| **Phase 2** | Domain Models & Entities (`model/`) | 34 | 1.5 Weeks | Nov 16, 2026 | **Nov 27, 2026** | 34 POJOs $\rightarrow$ immutable `data class`es with default arguments. |
-| **Phase 3** | Storage, SQLite & ContentProvider | 77 | 3 Weeks | Nov 30, 2026 | **Dec 18, 2026** | SQLite schemas, Cursor extensions, preference delegates complete. |
-| *Break* | *Year-End Buffer / Stabilization* | — | 2 Weeks | Dec 19, 2026 | **Jan 03, 2027** | Regressions checked; no open blocker issues. |
-| **Phase 4** | Remote API, Services & Background | 38 | 2 Weeks | Jan 04, 2027 | **Jan 17, 2027** | Handlers/AsyncTasks $\rightarrow$ Coroutines (`suspend fun`); OkHttp clean. |
-| **Phase 5** | Reusable UI, Pickers & Adapters | ~100 | 2.5 Weeks | Jan 18, 2027 | **Feb 05, 2027** | All RecyclerView Adapters, ViewHolders, and Pickers pure Kotlin. |
-| **Phase 6** | Top Screens, Fragments & App Core | ~184 | 3.5 Weeks | Feb 08, 2027 | **Mar 05, 2027** | All Activities, Fragments, and `App.kt` converted (Zero Java in main). |
-| **Phase 7** | Tests & Gradle DSL (`.kts`) | 71 | 1.5 Weeks | Mar 08, 2027 | **Mar 19, 2027** | 63 tests converted; root and app `build.gradle.kts` in Kotlin DSL. |
-| **Final** | **Release Verification & Smoke Test** | — | 1 Week | Mar 22, 2027 | **Mar 26, 2027** | **100% Pure Kotlin v2.2.0 Release Candidate tagged.** |
+| **Phase 0** | Tooling, Detekt, CI Baseline | — | 1 Day | Nov 04, 2026 | **Nov 04, 2026** | 🟢 **Completed:** Detekt & ktlint enforced; CI safety baseline established. |
+| **Phase 1** | Foundation & Leaf Utilities (`utils/`) | 11 | 1 Day | Nov 04, 2026 | **Nov 04, 2026** | 🟢 **Completed:** All 11 utility classes pure Kotlin; extension functions standardized. |
+| **Phase 2** | Domain Models & Entities (`model/`) | 34 | 1 Day | Nov 05, 2026 | **Nov 05, 2026** | 🟢 **Completed:** 34 POJOs $\rightarrow$ immutable data classes; zero `!!`. |
+| **Phase 3** | Storage, SQLite & ContentProvider (`storage/`) | 77 | 2 Days | Nov 06, 2026 | **Nov 07, 2026** | 🟢 **Completed:** SQLDatabase, DataContentProvider, Preferences, Caches (100% green CI). |
+| **Phase 4** | Remote API, Services & Background | 38 | 2 Weeks | Nov 09, 2026 | **Nov 20, 2026** | 🟡 **Ready to Start:** OkHttp, Coroutines, Workers, Broadcast Receivers. |
+| **Phase 5** | Reusable UI, Pickers & Adapters | 151 | 3 Weeks | Nov 23, 2026 | **Dec 11, 2026** | ⚪ **Pending:** Custom views, Pickers, RecyclerView Adapters & ViewHolders. |
+| **Phase 6** | Top Screens, Fragments & App Core | 135 | 3.5 Weeks | Dec 14, 2026 | **Jan 08, 2027** | ⚪ **Pending:** Activities, Fragments, and `App.kt` (includes year-end stabilization buffer). |
+| **Phase 7** | Tests & Gradle Modernization (`.kts`) | 71 | 2 Weeks | Jan 11, 2027 | **Jan 22, 2027** | ⚪ **Pending:** 63 tests converted; root and app `build.gradle.kts` in Kotlin DSL. |
+| **Final** | **Release Verification & Smoke Test** | — | 1 Week | Jan 25, 2027 | **Jan 29, 2027** | ⚪ **Milestone:** **100% Pure Kotlin v2.2.0 Release Candidate tagged.** |
 
 ---
 
@@ -151,7 +144,7 @@ gantt
 ---
 
 ### Phase 0: Groundwork, Tooling & Safety Guardrails
-**Dates:** Nov 05, 2026 – Nov 08, 2026 &bull; **Deadline:** Nov 08, 2026 (3 Days) &bull; **Status:** 🟢 Completed
+**Dates:** Nov 04, 2026 &bull; **Deadline:** Nov 04, 2026 (1 Day) &bull; **Status:** 🟢 Completed
 
 #### Objectives:
 - Configure Kotlin static analysis to prevent bad habits from entering the codebase.
@@ -166,7 +159,7 @@ gantt
 ---
 
 ### Phase 1: Leaf Utilities & Core Helpers
-**Dates:** Nov 09, 2026 – Nov 15, 2026 &bull; **Deadline:** Nov 15, 2026 (1 Week) &bull; **Files:** 11 Kotlin Files &bull; **Status:** 🟢 Completed
+**Dates:** Nov 04, 2026 &bull; **Deadline:** Nov 04, 2026 (1 Day) &bull; **Files:** 11 Kotlin Files &bull; **Status:** 🟢 Completed
 **Path:** `app/src/main/java/com/oriondev/moneywallet/utils/`
 
 #### Why First?
@@ -200,7 +193,7 @@ timestamp.toFormattedDate(context)
 ---
 
 ### Phase 2: Domain Models & Value Objects
-**Dates:** Nov 16, 2026 – Nov 27, 2026 &bull; **Deadline:** Nov 27, 2026 (1.5 Weeks) &bull; **Files:** 34 Java Files &bull; **Status:** 🟢 Completed
+**Dates:** Nov 05, 2026 &bull; **Deadline:** Nov 05, 2026 (1 Day) &bull; **Files:** 34 Kotlin Files &bull; **Status:** 🟢 Completed
 **Path:** `app/src/main/java/com/oriondev/moneywallet/model/`
 
 #### Why Second?
@@ -260,7 +253,7 @@ data class Category(
 ---
 
 ### Phase 3: Storage, Database & Cache Layer
-**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Kotlin Files &bull; **Status:** 🟢 Completed
+**Dates:** Nov 06, 2026 – Nov 07, 2026 &bull; **Deadline:** Nov 07, 2026 (2 Days) &bull; **Files:** 77 Kotlin Files &bull; **Status:** 🟢 Completed
 **Path:** `app/src/main/java/com/oriondev/moneywallet/storage/`
 
 #### Why Third?
@@ -295,7 +288,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 4: Remote API, Background Tasks & Services
-**Dates:** Jan 04, 2027 – Jan 17, 2027 &bull; **Deadline:** Jan 17, 2027 (2 Weeks) &bull; **Files:** 38 Java Files &bull; **Status:** 🟡 Ready to Start
+**Dates:** Nov 09, 2026 – Nov 20, 2026 &bull; **Deadline:** Nov 20, 2026 (2 Weeks) &bull; **Files:** 38 Java Files &bull; **Status:** 🟡 Ready to Start
 **Path:** `api/`, `background/`, `service/`, `broadcast/`
 
 #### Key Components:
@@ -311,7 +304,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 5: Reusable UI, Pickers & Adapters
-**Dates:** Jan 18, 2027 – Feb 05, 2027 &bull; **Deadline:** Feb 05, 2027 (2.5 Weeks) &bull; **Files:** ~100 Java Files &bull; **Status:** ⚪ Pending
+**Dates:** Nov 23, 2026 – Dec 11, 2026 &bull; **Deadline:** Dec 11, 2026 (3 Weeks) &bull; **Files:** 151 Java Files &bull; **Status:** ⚪ Pending
 **Path:** `picker/`, `ui/adapter/`, `ui/view/`
 
 #### Key Components:
@@ -331,7 +324,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 6: Top-Level Screens & Application Core
-**Dates:** Feb 08, 2027 – Mar 05, 2027 &bull; **Deadline:** Mar 05, 2027 (3.5 Weeks) &bull; **Files:** ~184 Java Files &bull; **Status:** 🟡 In Progress
+**Dates:** Dec 14, 2026 – Jan 08, 2027 &bull; **Deadline:** Jan 08, 2027 (3.5 Weeks) &bull; **Files:** 135 Files &bull; **Status:** 🟡 In Progress
 **Path:** `ui/activity/`, `ui/fragment/`, `App.java`
 
 #### Status:
@@ -381,7 +374,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 7: Test Suite & Gradle Modernization
-**Dates:** Mar 08, 2027 – Mar 19, 2027 &bull; **Deadline:** Mar 19, 2027 (1.5 Weeks) &bull; **Files:** 71 Java Files &bull; **Status:** ⚪ Pending
+**Dates:** Jan 11, 2027 – Jan 22, 2027 &bull; **Deadline:** Jan 22, 2027 (2 Weeks) &bull; **Files:** 71 Java Files &bull; **Status:** ⚪ Pending
 
 #### Objectives:
 - Convert all 63 unit tests in `app/src/test/` to pure Kotlin.
