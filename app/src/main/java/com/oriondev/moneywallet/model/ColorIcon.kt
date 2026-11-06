@@ -97,13 +97,13 @@ class ColorIcon : Icon {
     override fun getDrawable(context: Context): Drawable = getDrawable()
 
     fun getDrawable(): Drawable {
-        val color = getColor()
-        val backgroundColor = Color.argb(26, Color.red(color), Color.green(color), Color.blue(color))
+        val iconColor = color
+        val backgroundColor = Color.argb(26, Color.red(iconColor), Color.green(iconColor), Color.blue(iconColor))
         return TextDrawable.builder()
             .beginConfig()
             .width(60)
             .height(60)
-            .textColor(color)
+            .textColor(iconColor)
             .bold()
             .endConfig()
             .buildRound(mName, backgroundColor)
