@@ -17,14 +17,9 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database;
+package com.oriondev.moneywallet.storage.database
 
 /**
  * Created by andrea on 25/10/18.
  */
-public class ImportException extends Exception {
-
-    public ImportException(String message) {
-        super(message);
-    }
-}
+class ImportException(message: String?) : Exception(message)

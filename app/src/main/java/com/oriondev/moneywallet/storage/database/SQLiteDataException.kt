@@ -17,27 +17,14 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.storage.database;
+package com.oriondev.moneywallet.storage.database
 
-import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteException
 
 /**
  * Created by andrea on 20/07/18.
  */
-public class SQLiteDataException extends SQLiteException {
-
-    private final int mErrorCode;
-
-    /*package-local*/ SQLiteDataException(int code) {
-        mErrorCode = code;
-    }
-
-    /*package-local*/ SQLiteDataException(int code, String error) {
-        super(error);
-        mErrorCode = code;
-    }
-
-    public int getErrorCode() {
-        return mErrorCode;
-    }
-}
+class SQLiteDataException @JvmOverloads constructor(
+    val errorCode: Int,
+    error: String? = null
+) : SQLiteException(error)
