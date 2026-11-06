@@ -179,7 +179,7 @@ class CSVDataImporter @Throws(IOException::class) @JvmOverloads constructor(
         }
     }
 
-    private val headerCells: Int = if (mapping == null) 0 else CsvImportMapping.readHeader(file).cells.size
+    private val headerCells: Int = if (mapping == null) 0 else (CsvImportMapping.readHeader(file).cells?.size ?: 0)
     private val reader: CSVReader = openReader()
     private var mappedCurrency: CurrencyUnit? = null
     private var roundedAmounts: Int = 0
@@ -322,7 +322,8 @@ class CSVDataImporter @Throws(IOException::class) @JvmOverloads constructor(
         if (map.spendingPositive) {
             amount = amount.negate()
         }
-        val datetime = CsvImportMapping.parseDate(dateString, map.datePattern)
+        val datePattern = map.datePattern ?: throw IllegalArgumentException("unknown date format null")
+        val datetime = CsvImportMapping.parseDate(dateString, datePattern)
         val currentMappedCurrency = mappedCurrency
             ?: throw RuntimeException("the wallet picked for this import no longer exists")
         val money = toMinorUnits(amount, amountString, currentMappedCurrency.decimals)

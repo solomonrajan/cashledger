@@ -85,7 +85,7 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
         private fun keepsDirection(cursor: Cursor, direction: Int): Boolean {
             val typeIndex = cursor.getColumnIndex(Contract.Category.TYPE)
             val typeVal = if (typeIndex != -1) cursor.getInt(typeIndex) else -1
-            val type = Contract.CategoryType.fromValue(typeVal)
+            val type = Contract.CategoryType.fromValue(typeVal) ?: return false
             val tagIndex = cursor.getColumnIndex(Contract.Category.TAG)
             val tag = if (tagIndex != -1) cursor.getString(tagIndex) else null
             if (type == Contract.CategoryType.SYSTEM && (tag == null || !TAGS_WITH_A_KNOWN_DIRECTION.contains(tag))) {
