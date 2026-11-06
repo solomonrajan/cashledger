@@ -1,9 +1,9 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-06"
+last_updated: "2026-11-07"
 status: "In Progress"
-overall_progress: "23.6%"
+overall_progress: "23.8%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "23.6%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-122%20%2F%20517%20Files%20(23.6%25)-blue?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-123%20%2F%20517%20Files%20(23.8%25)-blue?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,7 +24,7 @@ overall_progress: "23.6%"
 > **How to update this dashboard:** When a PR lands that converts files, update the counts in the table below and bump the progress badges above.
 
 ```
-Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23.6% (122 / 517)
+Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 23.8% (123 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
@@ -32,12 +32,12 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░
 | **Phase 0: Tooling & Guardrails** | CI checks, detekt/ktlint, PR guidelines | — | — | — | 100% | 🟢 Completed | Sprint 1 |
 | **Phase 1: Leaf Utilities** | `com...moneywallet.utils` | 0 | 11 | 11 | 100% | 🟢 Completed | Sprint 1–2 |
 | **Phase 2: Domain Models** | `com...moneywallet.model` | 0 | 34 | 34 | 100% | 🟢 Completed | Sprint 2–3 |
-| **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 1 | 76 | 77 | 98.7% | 🟡 In Progress | Sprint 4–5 |
-| **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 38 | 0 | 38 | 0% | ⚪ Pending | Sprint 6–7 |
+| **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 0 | 77 | 77 | 100% | 🟢 Completed | Sprint 4–5 |
+| **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 38 | 0 | 38 | 0% | 🟡 Ready to Start | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | 151 | 0 | 151 | 0% | ⚪ Pending | Sprint 8–9 |
 | **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 134 | 1 | 135 | 0.7% | 🟡 In Progress | Sprint 10–12 |
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **395** | **122** | **517** | **23.6%** | **🟡 Active** | **~13 Sprints** |
+| **TOTALS** | **Entire Codebase** | **394** | **123** | **517** | **23.8%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: `TutorialActivity.kt` + 11 `utils/` files + 34 `model/` domain files are now pure Kotlin).*
 
@@ -63,8 +63,8 @@ flowchart TD
     P0["Phase 0: Tooling & Safety Guardrails<br/><i>(Detekt / Ktlint / Tests Baseline)</i>"]:::complete
     P1["Phase 1: Foundation & Utils<br/><i>(11 files in utils/)</i>"]:::complete
     P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::complete
-    P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::inprog
-    P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/)</i>"]:::pending
+    P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::complete
+    P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/)</i>"]:::inprog
     P5["Phase 5: Reusable UI, Pickers & Adapters<br/><i>(~100 files in picker/, ui/adapter/)</i>"]:::pending
     P6["Phase 6: Top-Level Screens & App Core<br/><i>(~184 files in ui/activity/, ui/fragment/, App.java)</i>"]:::inprog
     P7["Phase 7: Test Suite & Gradle KTS<br/><i>(71 test files & build.gradle.kts)</i>"]:::pending
@@ -259,7 +259,7 @@ data class Category(
 ---
 
 ### Phase 3: Storage, Database & Cache Layer
-**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Java Files &bull; **Status:** 🟡 In Progress
+**Dates:** Nov 30, 2026 – Dec 18, 2026 &bull; **Deadline:** Dec 18, 2026 (3 Weeks) &bull; **Files:** 77 Java Files &bull; **Status:** 🟢 Completed
 **Path:** `app/src/main/java/com/oriondev/moneywallet/storage/`
 
 #### Why Third?
@@ -292,7 +292,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 4: Remote API, Background Tasks & Services
-**Dates:** Jan 04, 2027 – Jan 17, 2027 &bull; **Deadline:** Jan 17, 2027 (2 Weeks) &bull; **Files:** 38 Java Files &bull; **Status:** ⚪ Pending
+**Dates:** Jan 04, 2027 – Jan 17, 2027 &bull; **Deadline:** Jan 17, 2027 (2 Weeks) &bull; **Files:** 38 Java Files &bull; **Status:** 🟡 Ready to Start
 **Path:** `api/`, `background/`, `service/`, `broadcast/`
 
 #### Key Components:
