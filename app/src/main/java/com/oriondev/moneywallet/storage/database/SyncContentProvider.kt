@@ -254,3 +254,4 @@ class SyncContentProvider : ContentProvider() {
         }
     }
 }
+

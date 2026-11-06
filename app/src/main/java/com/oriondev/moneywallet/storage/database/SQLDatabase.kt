@@ -2401,8 +2401,8 @@ open class SQLDatabase(
                 "AND bw2." + Schema.BudgetWallet.WALLET + " != b._wallet_id " +
                 ") " +
 
-                "GROUP BY b."
-                + Schema.Budget.ID + ", _wallet_id UNION " +
+                "GROUP BY b." +
+                Schema.Budget.ID + ", _wallet_id UNION " +
                 // query all budgets of type category
                 "SELECT b.*, SUM(((t." + Schema.Transaction.DIRECTION + " * 2) - 1) * t." +
                 Schema.Transaction.MONEY + ") AS _progress FROM(SELECT b.*, w." + Schema.Wallet.ID +
@@ -2420,8 +2420,8 @@ open class SQLDatabase(
                 Schema.Transaction.WALLET + " AND DATETIME(t." + Schema.Transaction.DATE +
                 ") <= DATETIME('now', 'localtime') AND DATE(t." + Schema.Transaction.DATE +
                 ") >= DATE(b." + Schema.Budget.START_DATE + ") AND DATE(t." +
-                Schema.Transaction.DATE + ") <=  DATE(b." + Schema.Budget.END_DATE + ") AND (t."
-                + Schema.Transaction.CATEGORY + " IN " + budgetCategoriesOf("b") +
+                Schema.Transaction.DATE + ") <=  DATE(b." + Schema.Budget.END_DATE + ") AND (t." +
+                Schema.Transaction.CATEGORY + " IN " + budgetCategoriesOf("b") +
                 " OR t._parent_category IN " + budgetCategoriesOf("b") + ")) GROUP BY b." + Schema.Budget.ID +
                 ", _wallet_id) AS b LEFT JOIN " + Schema.Category.TABLE + " AS c ON b." +
                 Schema.Budget.CATEGORY + " = c." + Schema.Category.ID + " AND c." +
@@ -2571,8 +2571,8 @@ open class SQLDatabase(
                 Schema.Transaction.DIRECTION + " = 1 AND DATETIME(t." + Schema.Transaction.DATE +
                 ") <= DATETIME('now', 'localtime') AND DATE(t." + Schema.Transaction.DATE +
                 ") >= DATE(b." + Schema.Budget.START_DATE + ") AND DATE(t." +
-                Schema.Transaction.DATE + ") <= DATE(b." + Schema.Budget.END_DATE + ") WHERE b."
-                + Schema.Budget.ID + " = " + budgetId + " " +
+                Schema.Transaction.DATE + ") <= DATE(b." + Schema.Budget.END_DATE + ") WHERE b." +
+                Schema.Budget.ID + " = " + budgetId + " " +
                 // exclude transfers within the budget
                 "AND t." + Schema.Transaction.ID + " NOT IN ( " +
                 "SELECT tf." + Schema.Transfer.TRANSACTION_TO + " " +

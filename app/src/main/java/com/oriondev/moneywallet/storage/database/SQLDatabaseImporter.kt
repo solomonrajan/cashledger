@@ -535,3 +535,4 @@ object SQLDatabaseImporter {
         return uri?.let { ContentUris.parseId(it) } ?: -1L
     }
 }
+

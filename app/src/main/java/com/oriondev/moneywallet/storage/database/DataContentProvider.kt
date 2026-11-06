@@ -644,8 +644,9 @@ open class DataContentProvider : ContentProvider() {
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<out String>?): Int {
+        val cv = values ?: return 0
         val result = SQLDatabase.inSharedTransaction(context) { database ->
-            updateInTransaction(database, uri, values)
+            updateInTransaction(database, uri, cv)
         }
         if (result > 0) {
             notifyObservers(uri, uri)
@@ -653,10 +654,10 @@ open class DataContentProvider : ContentProvider() {
         return result
     }
 
-    private fun updateInTransaction(database: SQLDatabase, uri: Uri, values: ContentValues?): Int {
+    private fun updateInTransaction(database: SQLDatabase, uri: Uri, values: ContentValues): Int {
         var result = 0
         when (mUriMatcher.match(uri)) {
-            CURRENCY_ITEM -> result = database.updateCurrency(uri.lastPathSegment, values)
+            CURRENCY_ITEM -> result = database.updateCurrency(uri.lastPathSegment ?: "", values)
             WALLET_ITEM -> result = database.updateWallet(ContentUris.parseId(uri), values)
             TRANSACTION_ITEM -> result = database.updateTransaction(ContentUris.parseId(uri), values)
             TRANSFER_ITEM -> result = database.updateTransfer(ContentUris.parseId(uri), values)
