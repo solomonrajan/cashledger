@@ -69,13 +69,15 @@ class DebtHeaderCursor(
                 // if current header than sum the remaining money
                 if (!settled) {
                     val currency = cursor.getString(indexDebtCurrency)
-                    val money = cursor.getLong(indexDebtMoney)
-                    val progress = cursor.getLong(indexDebtProgress)
-                    // clamped, not merely expected to be positive: a debt saved for no money is
-                    // treated as unsettled and can still have payments against it, and paying more
-                    // than is owed must not subtract from what is owed on everything else
-                    val modulus = max(0L, abs(money) - abs(progress))
-                    header.addMoney(currency, modulus)
+                    if (currency != null) {
+                        val money = cursor.getLong(indexDebtMoney)
+                        val progress = cursor.getLong(indexDebtProgress)
+                        // clamped, not merely expected to be positive: a debt saved for no money is
+                        // treated as unsettled and can still have payments against it, and paying more
+                        // than is owed must not subtract from what is owed on everything else
+                        val modulus = max(0L, abs(money) - abs(progress))
+                        header.addMoney(currency, modulus)
+                    }
                 }
             } while (cursor.moveToNext())
         }
@@ -129,7 +131,7 @@ class DebtHeaderCursor(
     class Header(val type: Int) {
         val money: Money = Money()
 
-        fun addMoney(currency: String?, money: Long) {
+        fun addMoney(currency: String, money: Long) {
             this.money.addMoney(currency, money)
         }
     }

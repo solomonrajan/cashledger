@@ -69,9 +69,11 @@ class TransactionHeaderCursor(
                 addItem(cursor.position)
                 if (cursor.getInt(indexTransactionConfirmed) == 1 && cursor.getInt(indexTransactionCountInTotal) == 1) {
                     val currency = cursor.getString(indexCurrency)
-                    val money = cursor.getLong(indexTransactionMoney)
-                    val direction = cursor.getInt(indexTransactionDirection)
-                    header.add(currency, money, direction)
+                    if (currency != null) {
+                        val money = cursor.getLong(indexTransactionMoney)
+                        val direction = cursor.getInt(indexTransactionDirection)
+                        header.add(currency, money, direction)
+                    }
                 }
             } while (cursor.moveToNext())
         }
@@ -145,7 +147,7 @@ class TransactionHeaderCursor(
          * both. It counts fewer rows than this does, since it drops a category kept out of the
          * reports and a header counts every row on the list under it.
          */
-        fun add(currency: String?, money: Long, direction: Int) {
+        fun add(currency: String, money: Long, direction: Int) {
             if (direction == Contract.Direction.INCOME) {
                 income.addMoney(currency, money)
                 this.money.addMoney(currency, money)
