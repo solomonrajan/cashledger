@@ -219,7 +219,12 @@ class EquationSolver(savedInstanceState: Bundle?, private val mController: Contr
                 atOperator = true
             }
         } else {
-            number = number!!.substring(0, offset - 1) + number.substring(offset)
+            val num = number ?: ""
+            number = if (offset <= num.length) {
+                num.substring(0, offset - 1) + num.substring(offset)
+            } else {
+                num
+            }
             offset--
             if (target.mFirst && number.isEmpty()) {
                 number = "0"

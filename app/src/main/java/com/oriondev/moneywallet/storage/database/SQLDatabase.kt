@@ -647,65 +647,67 @@ open class SQLDatabase(
     }
 
     open fun getTransactions(projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
-        val subQuery = "SELECT " +
-                "t." + Schema.Transaction.ID + " AS " + Contract.Transaction.ID + ", " +
-                "t." + Schema.Transaction.MONEY + " AS " + Contract.Transaction.MONEY + ", " +
-                "t." + Schema.Transaction.DATE + " AS " + Contract.Transaction.DATE + ", " +
-                "t." + Schema.Transaction.DESCRIPTION + " AS " + Contract.Transaction.DESCRIPTION + ", " +
-                "t." + Schema.Transaction.CATEGORY + " AS " + Contract.Transaction.CATEGORY_ID + ", " +
-                "c." + Schema.Category.NAME + " AS " + Contract.Transaction.CATEGORY_NAME + ", " +
-                "c." + Schema.Category.ICON + " AS " + Contract.Transaction.CATEGORY_ICON + ", " +
-                "c." + Schema.Category.PARENT + " AS " + Contract.Transaction.CATEGORY_PARENT_ID + ", " +
-                "c." + Schema.Category.TYPE + " AS " + Contract.Transaction.CATEGORY_TYPE + ", " +
-                "c." + Schema.Category.TAG + " AS " + Contract.Transaction.CATEGORY_TAG + ", " +
-                "c." + Schema.Category.SHOW_REPORT + " AS " + Contract.Transaction.CATEGORY_SHOW_REPORT + ", " +
-                "pc." + Schema.Category.SHOW_REPORT + " AS " + Contract.Transaction.CATEGORY_PARENT_SHOW_REPORT + ", " +
-                "t." + Schema.Transaction.DIRECTION + " AS " + Contract.Transaction.DIRECTION + ", " +
-                "t." + Schema.Transaction.TYPE + " AS " + Contract.Transaction.TYPE + ", " +
-                "t." + Schema.Transaction.WALLET + " AS " + Contract.Transaction.WALLET_ID + ", " +
-                "w." + Schema.Wallet.NAME + " AS " + Contract.Transaction.WALLET_NAME + ", " +
-                "w." + Schema.Wallet.ICON + " AS " + Contract.Transaction.WALLET_ICON + ", " +
-                "w." + Schema.Wallet.CURRENCY + " AS " + Contract.Transaction.WALLET_CURRENCY + ", " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.Transaction.WALLET_COUNT_IN_TOTAL + ", " +
-                "w." + Schema.Wallet.ARCHIVED + " AS " + Contract.Transaction.WALLET_ARCHIVED + ", " +
-                "w." + Schema.Wallet.TAG + " AS " + Contract.Transaction.WALLET_TAG + ", " +
-                "t." + Schema.Transaction.PLACE + " AS " + Contract.Transaction.PLACE_ID + ", " +
-                "p." + Schema.Place.NAME + " AS " + Contract.Transaction.PLACE_NAME + ", " +
-                "p." + Schema.Place.ICON + " AS " + Contract.Transaction.PLACE_ICON + ", " +
-                "p." + Schema.Place.ADDRESS + " AS " + Contract.Transaction.PLACE_ADDRESS + ", " +
-                "p." + Schema.Place.LATITUDE + " AS " + Contract.Transaction.PLACE_LATITUDE + ", " +
-                "p." + Schema.Place.LONGITUDE + " AS " + Contract.Transaction.PLACE_LONGITUDE + ", " +
-                "p." + Schema.Place.TAG + " AS " + Contract.Transaction.PLACE_TAG + ", " +
-                "t." + Schema.Transaction.EVENT + " AS " + Contract.Transaction.EVENT_ID + ", " +
-                "e." + Schema.Event.NAME + " AS " + Contract.Transaction.EVENT_NAME + ", " +
-                "e." + Schema.Event.ICON + " AS " + Contract.Transaction.EVENT_ICON + ", " +
-                "e." + Schema.Event.NOTE + " AS " + Contract.Transaction.EVENT_NOTE + ", " +
-                "e." + Schema.Event.START_DATE + " AS " + Contract.Transaction.EVENT_START_DATE + ", " +
-                "e." + Schema.Event.END_DATE + " AS " + Contract.Transaction.EVENT_END_DATE + ", " +
-                "e." + Schema.Event.TAG + " AS " + Contract.Transaction.EVENT_TAG + ", " +
-                "t." + Schema.Transaction.NOTE + " AS " + Contract.Transaction.NOTE + ", " +
-                "t." + Schema.Transaction.DEBT + " AS " + Contract.Transaction.DEBT_ID + ", " +
-                "t." + Schema.Transaction.SAVING + " AS " + Contract.Transaction.SAVING_ID + ", " +
-                "t." + Schema.Transaction.RECURRENCE + " AS " + Contract.Transaction.RECURRENCE_ID + ", " +
-                "t." + Schema.Transaction.CONFIRMED + " AS " + Contract.Transaction.CONFIRMED + ", " +
-                "t." + Schema.Transaction.COUNT_IN_TOTAL + " AS " + Contract.Transaction.COUNT_IN_TOTAL + ", " +
-                "t." + Schema.Transaction.TAG + " AS " + Contract.Transaction.TAG + ", " +
-                "GROUP_CONCAT('<' || pe." + Schema.Person.ID + " || '>') AS " + Contract.Transaction.PEOPLE_IDS + " " +
-                "FROM " + Schema.Transaction.TABLE + " AS t LEFT JOIN " + Schema.Category.TABLE +
-                " AS c ON t." + Schema.Transaction.CATEGORY + " = c." + Schema.Category.ID + " AND c." +
-                Schema.Category.DELETED + " = 0 LEFT JOIN " + Schema.Category.TABLE + " AS pc ON c." +
-                Schema.Category.PARENT + " = pc." + Schema.Category.ID + " AND pc." +
-                Schema.Category.DELETED + " = 0 JOIN " + Schema.Wallet.TABLE + " AS w ON t." +
-                Schema.Transaction.WALLET + " = w." + Schema.Wallet.ID + " AND w." +
-                Schema.Wallet.DELETED + " = 0 LEFT JOIN " + Schema.TransactionPeople.TABLE + " AS tp ON t." +
-                Schema.Transaction.ID + " = tp." + Schema.TransactionPeople.TRANSACTION + " AND tp." +
-                Schema.TransactionPeople.DELETED + " = 0 LEFT JOIN " + Schema.Person.TABLE + " AS pe ON tp." +
-                Schema.TransactionPeople.PERSON + " = pe." + Schema.Person.ID + " AND pe." +
-                Schema.Person.DELETED + " = 0 LEFT JOIN " + Schema.Place.TABLE + " AS p ON t." +
-                Schema.Transaction.PLACE + " = " + Schema.Place.ID + " AND p." + Schema.Place.DELETED +
-                " = 0 LEFT JOIN " + Schema.Event.TABLE + " AS e ON t." + Schema.Transaction.EVENT +
-                " = e." + Schema.Event.ID + " AND e." + Schema.Event.DELETED + " = 0 WHERE t." +
-                Schema.Transaction.DELETED + " = 0 GROUP BY t." + Schema.Transaction.ID
+        val subQuery = buildString {
+            append("SELECT ")
+            append("t.").append(Schema.Transaction.ID).append(" AS ").append(Contract.Transaction.ID).append(", ")
+            append("t.").append(Schema.Transaction.MONEY).append(" AS ").append(Contract.Transaction.MONEY).append(", ")
+            append("t.").append(Schema.Transaction.DATE).append(" AS ").append(Contract.Transaction.DATE).append(", ")
+            append("t.").append(Schema.Transaction.DESCRIPTION).append(" AS ").append(Contract.Transaction.DESCRIPTION).append(", ")
+            append("t.").append(Schema.Transaction.CATEGORY).append(" AS ").append(Contract.Transaction.CATEGORY_ID).append(", ")
+            append("c.").append(Schema.Category.NAME).append(" AS ").append(Contract.Transaction.CATEGORY_NAME).append(", ")
+            append("c.").append(Schema.Category.ICON).append(" AS ").append(Contract.Transaction.CATEGORY_ICON).append(", ")
+            append("c.").append(Schema.Category.PARENT).append(" AS ").append(Contract.Transaction.CATEGORY_PARENT_ID).append(", ")
+            append("c.").append(Schema.Category.TYPE).append(" AS ").append(Contract.Transaction.CATEGORY_TYPE).append(", ")
+            append("c.").append(Schema.Category.TAG).append(" AS ").append(Contract.Transaction.CATEGORY_TAG).append(", ")
+            append("c.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.Transaction.CATEGORY_SHOW_REPORT).append(", ")
+            append("pc.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.Transaction.CATEGORY_PARENT_SHOW_REPORT).append(", ")
+            append("t.").append(Schema.Transaction.DIRECTION).append(" AS ").append(Contract.Transaction.DIRECTION).append(", ")
+            append("t.").append(Schema.Transaction.TYPE).append(" AS ").append(Contract.Transaction.TYPE).append(", ")
+            append("t.").append(Schema.Transaction.WALLET).append(" AS ").append(Contract.Transaction.WALLET_ID).append(", ")
+            append("w.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.Transaction.WALLET_NAME).append(", ")
+            append("w.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.Transaction.WALLET_ICON).append(", ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.Transaction.WALLET_CURRENCY).append(", ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transaction.WALLET_COUNT_IN_TOTAL).append(", ")
+            append("w.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.Transaction.WALLET_ARCHIVED).append(", ")
+            append("w.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.Transaction.WALLET_TAG).append(", ")
+            append("t.").append(Schema.Transaction.PLACE).append(" AS ").append(Contract.Transaction.PLACE_ID).append(", ")
+            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.Transaction.PLACE_NAME).append(", ")
+            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.Transaction.PLACE_ICON).append(", ")
+            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.Transaction.PLACE_ADDRESS).append(", ")
+            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.Transaction.PLACE_LATITUDE).append(", ")
+            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.Transaction.PLACE_LONGITUDE).append(", ")
+            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.Transaction.PLACE_TAG).append(", ")
+            append("t.").append(Schema.Transaction.EVENT).append(" AS ").append(Contract.Transaction.EVENT_ID).append(", ")
+            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.Transaction.EVENT_NAME).append(", ")
+            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.Transaction.EVENT_ICON).append(", ")
+            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.Transaction.EVENT_NOTE).append(", ")
+            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.Transaction.EVENT_START_DATE).append(", ")
+            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.Transaction.EVENT_END_DATE).append(", ")
+            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.Transaction.EVENT_TAG).append(", ")
+            append("t.").append(Schema.Transaction.NOTE).append(" AS ").append(Contract.Transaction.NOTE).append(", ")
+            append("t.").append(Schema.Transaction.DEBT).append(" AS ").append(Contract.Transaction.DEBT_ID).append(", ")
+            append("t.").append(Schema.Transaction.SAVING).append(" AS ").append(Contract.Transaction.SAVING_ID).append(", ")
+            append("t.").append(Schema.Transaction.RECURRENCE).append(" AS ").append(Contract.Transaction.RECURRENCE_ID).append(", ")
+            append("t.").append(Schema.Transaction.CONFIRMED).append(" AS ").append(Contract.Transaction.CONFIRMED).append(", ")
+            append("t.").append(Schema.Transaction.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transaction.COUNT_IN_TOTAL).append(", ")
+            append("t.").append(Schema.Transaction.TAG).append(" AS ").append(Contract.Transaction.TAG).append(", ")
+            append("GROUP_CONCAT('<' || pe.").append(Schema.Person.ID).append(" || '>') AS ").append(Contract.Transaction.PEOPLE_IDS).append(" ")
+            append("FROM ").append(Schema.Transaction.TABLE).append(" AS t LEFT JOIN ").append(Schema.Category.TABLE)
+            append(" AS c ON t.").append(Schema.Transaction.CATEGORY).append(" = c.").append(Schema.Category.ID).append(" AND c.")
+            append(Schema.Category.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Category.TABLE).append(" AS pc ON c.")
+            append(Schema.Category.PARENT).append(" = pc.").append(Schema.Category.ID).append(" AND pc.")
+            append(Schema.Category.DELETED).append(" = 0 JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON t.")
+            append(Schema.Transaction.WALLET).append(" = w.").append(Schema.Wallet.ID).append(" AND w.")
+            append(Schema.Wallet.DELETED).append(" = 0 LEFT JOIN ").append(Schema.TransactionPeople.TABLE).append(" AS tp ON t.")
+            append(Schema.Transaction.ID).append(" = tp.").append(Schema.TransactionPeople.TRANSACTION).append(" AND tp.")
+            append(Schema.TransactionPeople.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Person.TABLE).append(" AS pe ON tp.")
+            append(Schema.TransactionPeople.PERSON).append(" = pe.").append(Schema.Person.ID).append(" AND pe.")
+            append(Schema.Person.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Place.TABLE).append(" AS p ON t.")
+            append(Schema.Transaction.PLACE).append(" = ").append(Schema.Place.ID).append(" AND p.").append(Schema.Place.DELETED)
+            append(" = 0 LEFT JOIN ").append(Schema.Event.TABLE).append(" AS e ON t.").append(Schema.Transaction.EVENT)
+            append(" = e.").append(Schema.Event.ID).append(" AND e.").append(Schema.Event.DELETED).append(" = 0 WHERE t.")
+            append(Schema.Transaction.DELETED).append(" = 0 GROUP BY t.").append(Schema.Transaction.ID)
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
@@ -1010,72 +1012,74 @@ open class SQLDatabase(
     }
 
     open fun getTransfers(projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
-        val subQuery = "SELECT " +
-                "t." + Schema.Transfer.ID + " AS " + Contract.Transfer.ID + ", " +
-                "t." + Schema.Transfer.DESCRIPTION + " AS " + Contract.Transfer.DESCRIPTION + ", " +
-                "t." + Schema.Transfer.DATE + " AS " + Contract.Transfer.DATE + ", " +
-                "t." + Schema.Transfer.TRANSACTION_FROM + " AS " + Contract.Transfer.TRANSACTION_FROM_ID + ", " +
-                "t1." + Schema.Transaction.MONEY + " AS " + Contract.Transfer.TRANSACTION_FROM_MONEY + ", " +
-                "w1." + Schema.Wallet.ID + " AS " + Contract.Transfer.TRANSACTION_FROM_WALLET_ID + ", " +
-                "w1." + Schema.Wallet.NAME + " AS " + Contract.Transfer.TRANSACTION_FROM_WALLET_NAME + ", " +
-                "w1." + Schema.Wallet.ICON + " AS " + Contract.Transfer.TRANSACTION_FROM_WALLET_ICON + ", " +
-                "w1." + Schema.Wallet.CURRENCY + " AS " + Contract.Transfer.TRANSACTION_FROM_WALLET_CURRENCY + ", " +
-                "w1." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.Transfer.TRANSACTION_FROM_WALLET_COUNT_IN_TOTAL + ", " +
-                "w1." + Schema.Wallet.ARCHIVED + " AS " + Contract.Transfer.TRANSACTION_FROM_WALLET_ARCHIVED + ", " +
-                "w1." + Schema.Wallet.TAG + " AS " + Contract.Transfer.TRANSACTION_FROM_WALLET_TAG + ", " +
-                "t1." + Schema.Transaction.TAG + " AS " + Contract.Transfer.TRANSACTION_FROM_TAG + ", " +
-                "t." + Schema.Transfer.TRANSACTION_TO + " AS " + Contract.Transfer.TRANSACTION_TO_ID + ", " +
-                "t2." + Schema.Transaction.MONEY + " AS " + Contract.Transfer.TRANSACTION_TO_MONEY + ", " +
-                "w2." + Schema.Wallet.ID + " AS " + Contract.Transfer.TRANSACTION_TO_WALLET_ID + ", " +
-                "w2." + Schema.Wallet.NAME + " AS " + Contract.Transfer.TRANSACTION_TO_WALLET_NAME + ", " +
-                "w2." + Schema.Wallet.ICON + " AS " + Contract.Transfer.TRANSACTION_TO_WALLET_ICON + ", " +
-                "w2." + Schema.Wallet.CURRENCY + " AS " + Contract.Transfer.TRANSACTION_TO_WALLET_CURRENCY + ", " +
-                "w2." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.Transfer.TRANSACTION_TO_WALLET_COUNT_IN_TOTAL + ", " +
-                "w2." + Schema.Wallet.ARCHIVED + " AS " + Contract.Transfer.TRANSACTION_TO_WALLET_ARCHIVED + ", " +
-                "w2." + Schema.Wallet.TAG + " AS " + Contract.Transfer.TRANSACTION_TO_WALLET_TAG + ", " +
-                "t2." + Schema.Transaction.TAG + " AS " + Contract.Transfer.TRANSACTION_TO_TAG + ", " +
-                "t." + Schema.Transfer.TRANSACTION_TAX + " AS " + Contract.Transfer.TRANSACTION_TAX_ID + ", " +
-                "t3." + Schema.Transaction.MONEY + " AS " + Contract.Transfer.TRANSACTION_TAX_MONEY + ", " +
-                "w3." + Schema.Wallet.ID + " AS " + Contract.Transfer.TRANSACTION_TAX_WALLET_ID + ", " +
-                "w3." + Schema.Wallet.NAME + " AS " + Contract.Transfer.TRANSACTION_TAX_WALLET_NAME + ", " +
-                "w3." + Schema.Wallet.CURRENCY + " AS " + Contract.Transfer.TRANSACTION_TAX_WALLET_CURRENCY + ", " +
-                "w3." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.Transfer.TRANSACTION_TAX_WALLET_COUNT_IN_TOTAL + ", " +
-                "w3." + Schema.Wallet.ARCHIVED + " AS " + Contract.Transfer.TRANSACTION_TAX_WALLET_ARCHIVED + ", " +
-                "w3." + Schema.Wallet.TAG + " AS " + Contract.Transfer.TRANSACTION_TAX_WALLET_TAG + ", " +
-                "t3." + Schema.Transaction.TAG + " AS " + Contract.Transfer.TRANSACTION_TAX_TAG + ", " +
-                "t." + Schema.Transfer.NOTE + " AS " + Contract.Transfer.NOTE + ", " +
-                "t." + Schema.Transfer.PLACE + " AS " + Contract.Transfer.PLACE_ID + ", " +
-                "p." + Schema.Place.NAME + " AS " + Contract.Transfer.PLACE_NAME + ", " +
-                "p." + Schema.Place.ICON + " AS " + Contract.Transfer.PLACE_ICON + ", " +
-                "p." + Schema.Place.ADDRESS + " AS " + Contract.Transfer.PLACE_ADDRESS + ", " +
-                "p." + Schema.Place.LATITUDE + " AS " + Contract.Transfer.PLACE_LATITUDE + ", " +
-                "p." + Schema.Place.LONGITUDE + " AS " + Contract.Transfer.PLACE_LONGITUDE + ", " +
-                "p." + Schema.Place.TAG + " AS " + Contract.Transfer.PLACE_TAG + ", " +
-                "t." + Schema.Transfer.EVENT + " AS " + Contract.Transfer.EVENT_ID + ", " +
-                "e." + Schema.Event.NAME + " AS " + Contract.Transfer.EVENT_NAME + ", " +
-                "e." + Schema.Event.ICON + " AS " + Contract.Transfer.EVENT_ICON + ", " +
-                "e." + Schema.Event.NOTE + " AS " + Contract.Transfer.EVENT_NOTE + ", " +
-                "e." + Schema.Event.START_DATE + " AS " + Contract.Transfer.EVENT_START_DATE + ", " +
-                "e." + Schema.Event.END_DATE + " AS " + Contract.Transfer.EVENT_END_DATE + ", " +
-                "e." + Schema.Event.TAG + " AS " + Contract.Transfer.EVENT_TAG + ", " +
-                "t." + Schema.Transfer.RECURRENCE + " AS " + Contract.Transfer.RECURRENCE_ID + ", " +
-                "t." + Schema.Transfer.CONFIRMED + " AS " + Contract.Transfer.CONFIRMED + ", " +
-                "t." + Schema.Transfer.COUNT_IN_TOTAL + " AS " + Contract.Transfer.COUNT_IN_TOTAL + ", " +
-                "t." + Schema.Transfer.TAG + " AS " + Contract.Transfer.TAG + ", " +
-                "GROUP_CONCAT('<' || pe." + Schema.Person.ID + " || '>') AS " + Contract.Transfer.PEOPLE_IDS + " " +
-                "FROM transfers AS t \n" +
-                "JOIN transactions AS t1 ON transfer_transaction_from = t1.transaction_id AND t1.deleted = 0 \n" +
-                "JOIN wallets AS w1 ON t1.transaction_wallet = w1.wallet_id AND w1.deleted = 0\n" +
-                "JOIN transactions AS t2 ON transfer_transaction_to = t2.transaction_id AND t2.deleted = 0\n" +
-                "JOIN wallets AS w2 ON t2.transaction_wallet = w2.wallet_id AND w2.deleted = 0\n" +
-                "LEFT JOIN transactions AS t3 ON transfer_transaction_tax = t3.transaction_id AND t3.deleted = 0\n" +
-                "LEFT JOIN wallets AS w3 ON t3.transaction_wallet = w3.wallet_id AND w3.deleted = 0\n" +
-                "LEFT JOIN transfer_people AS tp ON t.transfer_id = tp._transfer AND tp.deleted = 0\n" +
-                "LEFT JOIN people AS pe ON tp._person = pe.person_id AND pe.deleted = 0\n" +
-                "LEFT JOIN places AS p ON transfer_place = place_id AND p.deleted = 0 \n" +
-                "LEFT JOIN events AS e ON transfer_event = event_id AND e.deleted = 0 \n" +
-                "WHERE t.deleted = 0\n" +
-                "GROUP BY t.transfer_id"
+        val subQuery = buildString {
+            append("SELECT ")
+            append("t.").append(Schema.Transfer.ID).append(" AS ").append(Contract.Transfer.ID).append(", ")
+            append("t.").append(Schema.Transfer.DESCRIPTION).append(" AS ").append(Contract.Transfer.DESCRIPTION).append(", ")
+            append("t.").append(Schema.Transfer.DATE).append(" AS ").append(Contract.Transfer.DATE).append(", ")
+            append("t.").append(Schema.Transfer.TRANSACTION_FROM).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_ID).append(", ")
+            append("t1.").append(Schema.Transaction.MONEY).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_MONEY).append(", ")
+            append("w1.").append(Schema.Wallet.ID).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_WALLET_ID).append(", ")
+            append("w1.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_WALLET_NAME).append(", ")
+            append("w1.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_WALLET_ICON).append(", ")
+            append("w1.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_WALLET_CURRENCY).append(", ")
+            append("w1.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_WALLET_COUNT_IN_TOTAL).append(", ")
+            append("w1.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_WALLET_ARCHIVED).append(", ")
+            append("w1.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_WALLET_TAG).append(", ")
+            append("t1.").append(Schema.Transaction.TAG).append(" AS ").append(Contract.Transfer.TRANSACTION_FROM_TAG).append(", ")
+            append("t.").append(Schema.Transfer.TRANSACTION_TO).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_ID).append(", ")
+            append("t2.").append(Schema.Transaction.MONEY).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_MONEY).append(", ")
+            append("w2.").append(Schema.Wallet.ID).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_WALLET_ID).append(", ")
+            append("w2.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_WALLET_NAME).append(", ")
+            append("w2.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_WALLET_ICON).append(", ")
+            append("w2.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_WALLET_CURRENCY).append(", ")
+            append("w2.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_WALLET_COUNT_IN_TOTAL).append(", ")
+            append("w2.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_WALLET_ARCHIVED).append(", ")
+            append("w2.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_WALLET_TAG).append(", ")
+            append("t2.").append(Schema.Transaction.TAG).append(" AS ").append(Contract.Transfer.TRANSACTION_TO_TAG).append(", ")
+            append("t.").append(Schema.Transfer.TRANSACTION_TAX).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_ID).append(", ")
+            append("t3.").append(Schema.Transaction.MONEY).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_MONEY).append(", ")
+            append("w3.").append(Schema.Wallet.ID).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_WALLET_ID).append(", ")
+            append("w3.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_WALLET_NAME).append(", ")
+            append("w3.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_WALLET_CURRENCY).append(", ")
+            append("w3.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_WALLET_COUNT_IN_TOTAL).append(", ")
+            append("w3.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_WALLET_ARCHIVED).append(", ")
+            append("w3.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_WALLET_TAG).append(", ")
+            append("t3.").append(Schema.Transaction.TAG).append(" AS ").append(Contract.Transfer.TRANSACTION_TAX_TAG).append(", ")
+            append("t.").append(Schema.Transfer.NOTE).append(" AS ").append(Contract.Transfer.NOTE).append(", ")
+            append("t.").append(Schema.Transfer.PLACE).append(" AS ").append(Contract.Transfer.PLACE_ID).append(", ")
+            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.Transfer.PLACE_NAME).append(", ")
+            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.Transfer.PLACE_ICON).append(", ")
+            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.Transfer.PLACE_ADDRESS).append(", ")
+            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.Transfer.PLACE_LATITUDE).append(", ")
+            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.Transfer.PLACE_LONGITUDE).append(", ")
+            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.Transfer.PLACE_TAG).append(", ")
+            append("t.").append(Schema.Transfer.EVENT).append(" AS ").append(Contract.Transfer.EVENT_ID).append(", ")
+            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.Transfer.EVENT_NAME).append(", ")
+            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.Transfer.EVENT_ICON).append(", ")
+            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.Transfer.EVENT_NOTE).append(", ")
+            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.Transfer.EVENT_START_DATE).append(", ")
+            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.Transfer.EVENT_END_DATE).append(", ")
+            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.Transfer.EVENT_TAG).append(", ")
+            append("t.").append(Schema.Transfer.RECURRENCE).append(" AS ").append(Contract.Transfer.RECURRENCE_ID).append(", ")
+            append("t.").append(Schema.Transfer.CONFIRMED).append(" AS ").append(Contract.Transfer.CONFIRMED).append(", ")
+            append("t.").append(Schema.Transfer.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transfer.COUNT_IN_TOTAL).append(", ")
+            append("t.").append(Schema.Transfer.TAG).append(" AS ").append(Contract.Transfer.TAG).append(", ")
+            append("GROUP_CONCAT('<' || pe.").append(Schema.Person.ID).append(" || '>') AS ").append(Contract.Transfer.PEOPLE_IDS).append(" ")
+            append("FROM transfers AS t \n")
+            append("JOIN transactions AS t1 ON transfer_transaction_from = t1.transaction_id AND t1.deleted = 0 \n")
+            append("JOIN wallets AS w1 ON t1.transaction_wallet = w1.wallet_id AND w1.deleted = 0\n")
+            append("JOIN transactions AS t2 ON transfer_transaction_to = t2.transaction_id AND t2.deleted = 0\n")
+            append("JOIN wallets AS w2 ON t2.transaction_wallet = w2.wallet_id AND w2.deleted = 0\n")
+            append("LEFT JOIN transactions AS t3 ON transfer_transaction_tax = t3.transaction_id AND t3.deleted = 0\n")
+            append("LEFT JOIN wallets AS w3 ON t3.transaction_wallet = w3.wallet_id AND w3.deleted = 0\n")
+            append("LEFT JOIN transfer_people AS tp ON t.transfer_id = tp._transfer AND tp.deleted = 0\n")
+            append("LEFT JOIN people AS pe ON tp._person = pe.person_id AND pe.deleted = 0\n")
+            append("LEFT JOIN places AS p ON transfer_place = place_id AND p.deleted = 0 \n")
+            append("LEFT JOIN events AS e ON transfer_event = event_id AND e.deleted = 0 \n")
+            append("WHERE t.deleted = 0\n")
+            append("GROUP BY t.transfer_id")
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
@@ -2308,124 +2312,126 @@ open class SQLDatabase(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor? {
-        val subQuery = "SELECT " +
-                "b." + Schema.Budget.ID + " AS " + Contract.Budget.ID + ", " +
-                "b." + Schema.Budget.TYPE + " AS " + Contract.Budget.TYPE + ", " +
-                "b." + Schema.Budget.CATEGORY + " AS " + Contract.Budget.CATEGORY_ID + ", " +
-                "(SELECT GROUP_CONCAT(n, ', ') FROM (SELECT c2." + Schema.Category.NAME +
-                " AS n FROM " + Schema.BudgetCategory.TABLE + " AS bc2 JOIN " +
-                Schema.Category.TABLE + " AS c2 ON bc2." + Schema.BudgetCategory.CATEGORY +
-                " = c2." + Schema.Category.ID + " AND c2." + Schema.Category.DELETED +
-                " = 0 WHERE bc2." + Schema.BudgetCategory.BUDGET + " = b." + Schema.Budget.ID +
-                " AND bc2." + Schema.BudgetCategory.DELETED + " = 0 ORDER BY c2." +
-                Schema.Category.NAME + ")) AS " + Contract.Budget.CATEGORY_NAME + ", " +
-                "(SELECT GROUP_CONCAT(i) FROM (SELECT '<' || bc3." + Schema.BudgetCategory.CATEGORY +
-                " || '>' AS i FROM " + Schema.BudgetCategory.TABLE + " AS bc3 JOIN " +
-                Schema.Category.TABLE + " AS c3 ON bc3." + Schema.BudgetCategory.CATEGORY +
-                " = c3." + Schema.Category.ID + " AND c3." + Schema.Category.DELETED +
-                " = 0 WHERE bc3." + Schema.BudgetCategory.BUDGET + " = b." + Schema.Budget.ID +
-                " AND bc3." + Schema.BudgetCategory.DELETED + " = 0 ORDER BY bc3." +
-                Schema.BudgetCategory.CATEGORY + ")) AS " + Contract.Budget.CATEGORY_IDS + ", " +
-                "c." + Schema.Category.ICON + " AS " + Contract.Budget.CATEGORY_ICON + ", " +
-                "c." + Schema.Category.TYPE + " AS " + Contract.Budget.CATEGORY_TYPE + ", " +
-                "c." + Schema.Category.SHOW_REPORT + " AS " + Contract.Budget.CATEGORY_SHOW_REPORT + ", " +
-                "c." + Schema.Category.TAG + " AS " + Contract.Budget.CATEGORY_TAG + ", " +
-                "b." + Schema.Budget.START_DATE + " AS " + Contract.Budget.START_DATE + ", " +
-                "b." + Schema.Budget.END_DATE + " AS " + Contract.Budget.END_DATE + ", " +
-                "b." + Schema.Budget.MONEY + " AS " + Contract.Budget.MONEY + ", " +
-                "b." + Schema.Budget.CURRENCY + " AS " + Contract.Budget.CURRENCY + ", " +
-                "b." + Schema.Budget.RULE + " AS " + Contract.Budget.RULE + ", " +
-                "b." + Schema.Budget.RULE_START + " AS " + Contract.Budget.RULE_START + ", " +
-                "b." + Schema.Budget.TAG + " AS " + Contract.Budget.TAG + ", " +
-                "SUM(_progress) AS " + Contract.Budget.PROGRESS + "," +
-                "GROUP_CONCAT('<' || _wallet_id || '>') AS " + Contract.Budget.WALLET_IDS + "," +
-                "MAX(_wallet_total) AS " + Contract.Budget.HAS_WALLET_IN_TOTAL + " FROM(" +
+        val categoriesSubquery = budgetCategoriesOf("b")
+        val subQuery = buildString {
+            append("SELECT ")
+            append("b.").append(Schema.Budget.ID).append(" AS ").append(Contract.Budget.ID).append(", ")
+            append("b.").append(Schema.Budget.TYPE).append(" AS ").append(Contract.Budget.TYPE).append(", ")
+            append("b.").append(Schema.Budget.CATEGORY).append(" AS ").append(Contract.Budget.CATEGORY_ID).append(", ")
+            append("(SELECT GROUP_CONCAT(n, ', ') FROM (SELECT c2.").append(Schema.Category.NAME)
+            append(" AS n FROM ").append(Schema.BudgetCategory.TABLE).append(" AS bc2 JOIN ")
+            append(Schema.Category.TABLE).append(" AS c2 ON bc2.").append(Schema.BudgetCategory.CATEGORY)
+            append(" = c2.").append(Schema.Category.ID).append(" AND c2.").append(Schema.Category.DELETED)
+            append(" = 0 WHERE bc2.").append(Schema.BudgetCategory.BUDGET).append(" = b.").append(Schema.Budget.ID)
+            append(" AND bc2.").append(Schema.BudgetCategory.DELETED).append(" = 0 ORDER BY c2.")
+            append(Schema.Category.NAME).append(")) AS ").append(Contract.Budget.CATEGORY_NAME).append(", ")
+            append("(SELECT GROUP_CONCAT(i) FROM (SELECT '<' || bc3.").append(Schema.BudgetCategory.CATEGORY)
+            append(" || '>' AS i FROM ").append(Schema.BudgetCategory.TABLE).append(" AS bc3 JOIN ")
+            append(Schema.Category.TABLE).append(" AS c3 ON bc3.").append(Schema.BudgetCategory.CATEGORY)
+            append(" = c3.").append(Schema.Category.ID).append(" AND c3.").append(Schema.Category.DELETED)
+            append(" = 0 WHERE bc3.").append(Schema.BudgetCategory.BUDGET).append(" = b.").append(Schema.Budget.ID)
+            append(" AND bc3.").append(Schema.BudgetCategory.DELETED).append(" = 0 ORDER BY bc3.")
+            append(Schema.BudgetCategory.CATEGORY).append(")) AS ").append(Contract.Budget.CATEGORY_IDS).append(", ")
+            append("c.").append(Schema.Category.ICON).append(" AS ").append(Contract.Budget.CATEGORY_ICON).append(", ")
+            append("c.").append(Schema.Category.TYPE).append(" AS ").append(Contract.Budget.CATEGORY_TYPE).append(", ")
+            append("c.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.Budget.CATEGORY_SHOW_REPORT).append(", ")
+            append("c.").append(Schema.Category.TAG).append(" AS ").append(Contract.Budget.CATEGORY_TAG).append(", ")
+            append("b.").append(Schema.Budget.START_DATE).append(" AS ").append(Contract.Budget.START_DATE).append(", ")
+            append("b.").append(Schema.Budget.END_DATE).append(" AS ").append(Contract.Budget.END_DATE).append(", ")
+            append("b.").append(Schema.Budget.MONEY).append(" AS ").append(Contract.Budget.MONEY).append(", ")
+            append("b.").append(Schema.Budget.CURRENCY).append(" AS ").append(Contract.Budget.CURRENCY).append(", ")
+            append("b.").append(Schema.Budget.RULE).append(" AS ").append(Contract.Budget.RULE).append(", ")
+            append("b.").append(Schema.Budget.RULE_START).append(" AS ").append(Contract.Budget.RULE_START).append(", ")
+            append("b.").append(Schema.Budget.TAG).append(" AS ").append(Contract.Budget.TAG).append(", ")
+            append("SUM(_progress) AS ").append(Contract.Budget.PROGRESS).append(",")
+            append("GROUP_CONCAT('<' || _wallet_id || '>') AS ").append(Contract.Budget.WALLET_IDS).append(",")
+            append("MAX(_wallet_total) AS ").append(Contract.Budget.HAS_WALLET_IN_TOTAL).append(" FROM(")
 
-                // query all budgets of type expenses
-                "SELECT b.*, SUM(t." + Schema.Transaction.MONEY + ") AS _progress " +
-                "FROM(SELECT b.*, w." + Schema.Wallet.ID + " AS _wallet_id, " +
-                "w." + Schema.Wallet.CURRENCY + " AS _wallet_currency, " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS _wallet_total FROM " +
-                Schema.BudgetWallet.TABLE + " AS bw JOIN " + Schema.Budget.TABLE + " AS b ON " +
-                "bw._budget = b." + Schema.Budget.ID + " JOIN " + Schema.Wallet.TABLE + " AS w ON " +
-                "bw._wallet = w." + Schema.Wallet.ID + " WHERE bw. " + Schema.BudgetWallet.DELETED +
-                " = 0 AND b." + Schema.Budget.DELETED + " = 0 AND w." + Schema.Wallet.DELETED +
-                " = 0 AND b." + Schema.Budget.TYPE + " = " + Schema.BudgetType.EXPENSES +
-                " ) AS b LEFT JOIN " + Schema.Transaction.TABLE + " AS t ON b._wallet_id = t." +
-                Schema.Transaction.WALLET + " AND t." + Schema.Transaction.DELETED + " = 0 AND t." +
-                Schema.Transaction.DIRECTION + " = 0 AND DATETIME(t." + Schema.Transaction.DATE +
-                ") <= DATETIME('now', 'localtime') AND DATE(t." + Schema.Transaction.DATE +
-                ") >= DATE(b." + Schema.Budget.START_DATE + ") AND DATE(t." + Schema.Transaction.DATE +
-                ") <=  DATE(b." + Schema.Budget.END_DATE + ") " +
-                // exclude transfers within the budget
-                "AND t." + Schema.Transaction.ID + " NOT IN ( " +
-                "SELECT tf." + Schema.Transfer.TRANSACTION_FROM + " " +
-                "FROM " + Schema.Transfer.TABLE + " AS tf " +
-                "LEFT JOIN " + Schema.Transaction.TABLE + " AS t2 " +
-                "ON tf." + Schema.Transfer.TRANSACTION_TO + " = t2." + Schema.Transaction.ID + " " +
-                "LEFT JOIN " + Schema.BudgetWallet.TABLE + " AS bw2 " +
-                "ON t2." + Schema.Transaction.WALLET + " = bw2." + Schema.BudgetWallet.WALLET + " " +
-                "WHERE bw2." + Schema.BudgetWallet.BUDGET + " = b." + Schema.Budget.ID + " " +
-                "AND bw2." + Schema.BudgetWallet.DELETED + " = 0 " +
-                "AND bw2." + Schema.BudgetWallet.WALLET + " != b._wallet_id " +
-                ") " +
-                "GROUP BY b." + Schema.Budget.ID + ",b._wallet_id " +
-                "UNION " +
+            // query all budgets of type expenses
+            append("SELECT b.*, SUM(t.").append(Schema.Transaction.MONEY).append(") AS _progress ")
+            append("FROM(SELECT b.*, w.").append(Schema.Wallet.ID).append(" AS _wallet_id, ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS _wallet_currency, ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS _wallet_total FROM ")
+            append(Schema.BudgetWallet.TABLE).append(" AS bw JOIN ").append(Schema.Budget.TABLE).append(" AS b ON ")
+            append("bw._budget = b.").append(Schema.Budget.ID).append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON ")
+            append("bw._wallet = w.").append(Schema.Wallet.ID).append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.DELETED).append(" = 0 AND w.").append(Schema.Wallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ").append(Schema.BudgetType.EXPENSES)
+            append(" ) AS b LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t ON b._wallet_id = t.")
+            append(Schema.Transaction.WALLET).append(" AND t.").append(Schema.Transaction.DELETED).append(" = 0 AND t.")
+            append(Schema.Transaction.DIRECTION).append(" = 0 AND DATETIME(t.").append(Schema.Transaction.DATE)
+            append(") <= DATETIME('now', 'localtime') AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") >= DATE(b.").append(Schema.Budget.START_DATE).append(") AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") <=  DATE(b.").append(Schema.Budget.END_DATE).append(") ")
+            // exclude transfers within the budget
+            append("AND t.").append(Schema.Transaction.ID).append(" NOT IN ( ")
+            append("SELECT tf.").append(Schema.Transfer.TRANSACTION_FROM).append(" ")
+            append("FROM ").append(Schema.Transfer.TABLE).append(" AS tf ")
+            append("LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t2 ")
+            append("ON tf.").append(Schema.Transfer.TRANSACTION_TO).append(" = t2.").append(Schema.Transaction.ID).append(" ")
+            append("LEFT JOIN ").append(Schema.BudgetWallet.TABLE).append(" AS bw2 ")
+            append("ON t2.").append(Schema.Transaction.WALLET).append(" = bw2.").append(Schema.BudgetWallet.WALLET).append(" ")
+            append("WHERE bw2.").append(Schema.BudgetWallet.BUDGET).append(" = b.").append(Schema.Budget.ID).append(" ")
+            append("AND bw2.").append(Schema.BudgetWallet.DELETED).append(" = 0 ")
+            append("AND bw2.").append(Schema.BudgetWallet.WALLET).append(" != b._wallet_id ")
+            append(") ")
+            append("GROUP BY b.").append(Schema.Budget.ID).append(",b._wallet_id ")
+            append("UNION ")
 
-                // query all budgets of type incomes
-                "SELECT b.*, SUM(t." + Schema.Transaction.MONEY + ") AS _progress " +
-                "FROM(SELECT b.*, w." + Schema.Wallet.ID + " AS _wallet_id, " +
-                "w." + Schema.Wallet.CURRENCY + " AS _wallet_currency, " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS _wallet_total FROM " +
-                Schema.BudgetWallet.TABLE + " AS bw JOIN " + Schema.Budget.TABLE + " AS b ON " +
-                "bw._budget = b." + Schema.Budget.ID + " JOIN " + Schema.Wallet.TABLE + " AS w ON " +
-                "bw._wallet = w." + Schema.Wallet.ID + " WHERE bw. " + Schema.BudgetWallet.DELETED +
-                " = 0 AND b." + Schema.Budget.DELETED + " = 0 AND w." + Schema.Wallet.DELETED +
-                " = 0 AND b." + Schema.Budget.TYPE + " = " + Schema.BudgetType.INCOMES +
-                " ) AS b LEFT JOIN " + Schema.Transaction.TABLE + " AS t ON b._wallet_id = t." +
-                Schema.Transaction.WALLET + " AND t." + Schema.Transaction.DELETED + " = 0 AND t." +
-                Schema.Transaction.DIRECTION + " = 1 AND DATETIME(t." + Schema.Transaction.DATE +
-                ") <= DATETIME('now', 'localtime') AND DATE(t." + Schema.Transaction.DATE +
-                ") >= DATE(b." + Schema.Budget.START_DATE + ") AND DATE(t." +
-                Schema.Transaction.DATE + ") <= DATE(b." + Schema.Budget.END_DATE + ") " +
-                // exclude transfers within the budget
-                "AND t." + Schema.Transaction.ID + " NOT IN ( " +
-                "SELECT tf." + Schema.Transfer.TRANSACTION_TO + " " +
-                "FROM " + Schema.Transfer.TABLE + " AS tf " +
-                "LEFT JOIN " + Schema.Transaction.TABLE + " AS t2 " +
-                "ON tf." + Schema.Transfer.TRANSACTION_FROM + " = t2." + Schema.Transaction.ID + " " +
-                "LEFT JOIN " + Schema.BudgetWallet.TABLE + " AS bw2 " +
-                "ON t2." + Schema.Transaction.WALLET + " = bw2." + Schema.BudgetWallet.WALLET + " " +
-                "WHERE bw2." + Schema.BudgetWallet.BUDGET + " = b." + Schema.Budget.ID + " " +
-                "AND bw2." + Schema.BudgetWallet.DELETED + " = 0 " +
-                "AND bw2." + Schema.BudgetWallet.WALLET + " != b._wallet_id " +
-                ") " +
+            // query all budgets of type incomes
+            append("SELECT b.*, SUM(t.").append(Schema.Transaction.MONEY).append(") AS _progress ")
+            append("FROM(SELECT b.*, w.").append(Schema.Wallet.ID).append(" AS _wallet_id, ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS _wallet_currency, ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS _wallet_total FROM ")
+            append(Schema.BudgetWallet.TABLE).append(" AS bw JOIN ").append(Schema.Budget.TABLE).append(" AS b ON ")
+            append("bw._budget = b.").append(Schema.Budget.ID).append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON ")
+            append("bw._wallet = w.").append(Schema.Wallet.ID).append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.DELETED).append(" = 0 AND w.").append(Schema.Wallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ").append(Schema.BudgetType.INCOMES)
+            append(" ) AS b LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t ON b._wallet_id = t.")
+            append(Schema.Transaction.WALLET).append(" AND t.").append(Schema.Transaction.DELETED).append(" = 0 AND t.")
+            append(Schema.Transaction.DIRECTION).append(" = 1 AND DATETIME(t.").append(Schema.Transaction.DATE)
+            append(") <= DATETIME('now', 'localtime') AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") >= DATE(b.").append(Schema.Budget.START_DATE).append(") AND DATE(t.")
+            append(Schema.Transaction.DATE).append(") <= DATE(b.").append(Schema.Budget.END_DATE).append(") ")
+            // exclude transfers within the budget
+            append("AND t.").append(Schema.Transaction.ID).append(" NOT IN ( ")
+            append("SELECT tf.").append(Schema.Transfer.TRANSACTION_TO).append(" ")
+            append("FROM ").append(Schema.Transfer.TABLE).append(" AS tf ")
+            append("LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t2 ")
+            append("ON tf.").append(Schema.Transfer.TRANSACTION_FROM).append(" = t2.").append(Schema.Transaction.ID).append(" ")
+            append("LEFT JOIN ").append(Schema.BudgetWallet.TABLE).append(" AS bw2 ")
+            append("ON t2.").append(Schema.Transaction.WALLET).append(" = bw2.").append(Schema.BudgetWallet.WALLET).append(" ")
+            append("WHERE bw2.").append(Schema.BudgetWallet.BUDGET).append(" = b.").append(Schema.Budget.ID).append(" ")
+            append("AND bw2.").append(Schema.BudgetWallet.DELETED).append(" = 0 ")
+            append("AND bw2.").append(Schema.BudgetWallet.WALLET).append(" != b._wallet_id ")
+            append(") ")
+            append("GROUP BY b.").append(Schema.Budget.ID).append(", _wallet_id UNION ")
 
-                "GROUP BY b." +
-                Schema.Budget.ID + ", _wallet_id UNION " +
-                // query all budgets of type category
-                "SELECT b.*, SUM(((t." + Schema.Transaction.DIRECTION + " * 2) - 1) * t." +
-                Schema.Transaction.MONEY + ") AS _progress FROM(SELECT b.*, w." + Schema.Wallet.ID +
-                " AS _wallet_id, w." + Schema.Wallet.CURRENCY + " AS _wallet_currency, w." +
-                Schema.Wallet.COUNT_IN_TOTAL + " AS _wallet_total FROM " + Schema.BudgetWallet.TABLE +
-                " AS bw JOIN " + Schema.Budget.TABLE + " AS b ON bw._budget = b." + Schema.Budget.ID +
-                " JOIN " + Schema.Wallet.TABLE + " AS w ON bw._wallet = w." + Schema.Wallet.ID +
-                " WHERE bw. " + Schema.BudgetWallet.DELETED + " = 0 AND b." + Schema.Budget.DELETED +
-                " = 0 AND w." + Schema.Wallet.DELETED + " = 0 AND b." + Schema.Budget.TYPE + " = " +
-                Schema.BudgetType.CATEGORY + ") AS b LEFT JOIN (SELECT tr.*, tc." +
-                Schema.Category.PARENT + " AS _parent_category FROM " + Schema.Transaction.TABLE +
-                " AS tr JOIN " + Schema.Category.TABLE + " AS tc ON tr." + Schema.Transaction.CATEGORY +
-                " = tc." + Schema.Category.ID + " WHERE tr." + Schema.Transaction.DELETED + " = 0 " +
-                " AND tc." + Schema.Category.DELETED + " = 0) AS t ON (b._wallet_id = t." +
-                Schema.Transaction.WALLET + " AND DATETIME(t." + Schema.Transaction.DATE +
-                ") <= DATETIME('now', 'localtime') AND DATE(t." + Schema.Transaction.DATE +
-                ") >= DATE(b." + Schema.Budget.START_DATE + ") AND DATE(t." +
-                Schema.Transaction.DATE + ") <=  DATE(b." + Schema.Budget.END_DATE + ") AND (t." +
-                Schema.Transaction.CATEGORY + " IN " + budgetCategoriesOf("b") +
-                " OR t._parent_category IN " + budgetCategoriesOf("b") + ")) GROUP BY b." + Schema.Budget.ID +
-                ", _wallet_id) AS b LEFT JOIN " + Schema.Category.TABLE + " AS c ON b." +
-                Schema.Budget.CATEGORY + " = c." + Schema.Category.ID + " AND c." +
-                Schema.Category.DELETED + " = 0 GROUP BY b." + Schema.Budget.ID
+            // query all budgets of type category
+            append("SELECT b.*, SUM(((t.").append(Schema.Transaction.DIRECTION).append(" * 2) - 1) * t.")
+            append(Schema.Transaction.MONEY).append(") AS _progress FROM(SELECT b.*, w.").append(Schema.Wallet.ID)
+            append(" AS _wallet_id, w.").append(Schema.Wallet.CURRENCY).append(" AS _wallet_currency, w.")
+            append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS _wallet_total FROM ").append(Schema.BudgetWallet.TABLE)
+            append(" AS bw JOIN ").append(Schema.Budget.TABLE).append(" AS b ON bw._budget = b.").append(Schema.Budget.ID)
+            append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON bw._wallet = w.").append(Schema.Wallet.ID)
+            append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED).append(" = 0 AND b.").append(Schema.Budget.DELETED)
+            append(" = 0 AND w.").append(Schema.Wallet.DELETED).append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ")
+            append(Schema.BudgetType.CATEGORY).append(") AS b LEFT JOIN (SELECT tr.*, tc.")
+            append(Schema.Category.PARENT).append(" AS _parent_category FROM ").append(Schema.Transaction.TABLE)
+            append(" AS tr JOIN ").append(Schema.Category.TABLE).append(" AS tc ON tr.").append(Schema.Transaction.CATEGORY)
+            append(" = tc.").append(Schema.Category.ID).append(" WHERE tr.").append(Schema.Transaction.DELETED).append(" = 0 ")
+            append(" AND tc.").append(Schema.Category.DELETED).append(" = 0) AS t ON (b._wallet_id = t.")
+            append(Schema.Transaction.WALLET).append(" AND DATETIME(t.").append(Schema.Transaction.DATE)
+            append(") <= DATETIME('now', 'localtime') AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") >= DATE(b.").append(Schema.Budget.START_DATE).append(") AND DATE(t.")
+            append(Schema.Transaction.DATE).append(") <=  DATE(b.").append(Schema.Budget.END_DATE).append(") AND (t.")
+            append(Schema.Transaction.CATEGORY).append(" IN ").append(categoriesSubquery)
+            append(" OR t._parent_category IN ").append(categoriesSubquery).append(")) GROUP BY b.").append(Schema.Budget.ID)
+            append(", _wallet_id) AS b LEFT JOIN ").append(Schema.Category.TABLE).append(" AS c ON b.")
+            append(Schema.Budget.CATEGORY).append(" = c.").append(Schema.Category.ID).append(" AND c.")
+            append(Schema.Category.DELETED).append(" = 0 GROUP BY b.").append(Schema.Budget.ID)
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
@@ -2483,152 +2489,154 @@ open class SQLDatabase(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor? {
-        val subQuery = "SELECT " +
-                "t." + Schema.Transaction.ID + " AS " + Contract.Transaction.ID + ", " +
-                "t." + Schema.Transaction.MONEY + " AS " + Contract.Transaction.MONEY + ", " +
-                "t." + Schema.Transaction.DATE + " AS " + Contract.Transaction.DATE + ", " +
-                "t." + Schema.Transaction.DESCRIPTION + " AS " + Contract.Transaction.DESCRIPTION + ", " +
-                "t." + Schema.Transaction.CATEGORY + " AS " + Contract.Transaction.CATEGORY_ID + ", " +
-                "c." + Schema.Category.NAME + " AS " + Contract.Transaction.CATEGORY_NAME + ", " +
-                "c." + Schema.Category.ICON + " AS " + Contract.Transaction.CATEGORY_ICON + ", " +
-                "c." + Schema.Category.PARENT + " AS " + Contract.Transaction.CATEGORY_PARENT_ID + ", " +
-                "c." + Schema.Category.TYPE + " AS " + Contract.Transaction.CATEGORY_TYPE + ", " +
-                "c." + Schema.Category.TAG + " AS " + Contract.Transaction.CATEGORY_TAG + ", " +
-                "c." + Schema.Category.SHOW_REPORT + " AS " + Contract.Transaction.CATEGORY_SHOW_REPORT + ", " +
-                "t." + Schema.Transaction.DIRECTION + " AS " + Contract.Transaction.DIRECTION + ", " +
-                "t." + Schema.Transaction.TYPE + " AS " + Contract.Transaction.TYPE + ", " +
-                "t." + Schema.Transaction.WALLET + " AS " + Contract.Transaction.WALLET_ID + ", " +
-                "w." + Schema.Wallet.NAME + " AS " + Contract.Transaction.WALLET_NAME + ", " +
-                "w." + Schema.Wallet.ICON + " AS " + Contract.Transaction.WALLET_ICON + ", " +
-                "w." + Schema.Wallet.CURRENCY + " AS " + Contract.Transaction.WALLET_CURRENCY + ", " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.Transaction.WALLET_COUNT_IN_TOTAL + ", " +
-                "w." + Schema.Wallet.ARCHIVED + " AS " + Contract.Transaction.WALLET_ARCHIVED + ", " +
-                "w." + Schema.Wallet.TAG + " AS " + Contract.Transaction.WALLET_TAG + ", " +
-                "t." + Schema.Transaction.PLACE + " AS " + Contract.Transaction.PLACE_ID + ", " +
-                "p." + Schema.Place.NAME + " AS " + Contract.Transaction.PLACE_NAME + ", " +
-                "p." + Schema.Place.ICON + " AS " + Contract.Transaction.PLACE_ICON + ", " +
-                "p." + Schema.Place.ADDRESS + " AS " + Contract.Transaction.PLACE_ADDRESS + ", " +
-                "p." + Schema.Place.LATITUDE + " AS " + Contract.Transaction.PLACE_LATITUDE + ", " +
-                "p." + Schema.Place.LONGITUDE + " AS " + Contract.Transaction.PLACE_LONGITUDE + ", " +
-                "p." + Schema.Place.TAG + " AS " + Contract.Transaction.PLACE_TAG + ", " +
-                "t." + Schema.Transaction.EVENT + " AS " + Contract.Transaction.EVENT_ID + ", " +
-                "e." + Schema.Event.NAME + " AS " + Contract.Transaction.EVENT_NAME + ", " +
-                "e." + Schema.Event.ICON + " AS " + Contract.Transaction.EVENT_ICON + ", " +
-                "e." + Schema.Event.NOTE + " AS " + Contract.Transaction.EVENT_NOTE + ", " +
-                "e." + Schema.Event.START_DATE + " AS " + Contract.Transaction.EVENT_START_DATE + ", " +
-                "e." + Schema.Event.END_DATE + " AS " + Contract.Transaction.EVENT_END_DATE + ", " +
-                "e." + Schema.Event.TAG + " AS " + Contract.Transaction.EVENT_TAG + ", " +
-                "t." + Schema.Transaction.NOTE + " AS " + Contract.Transaction.NOTE + ", " +
-                "t." + Schema.Transaction.DEBT + " AS " + Contract.Transaction.DEBT_ID + ", " +
-                "t." + Schema.Transaction.SAVING + " AS " + Contract.Transaction.SAVING_ID + ", " +
-                "t." + Schema.Transaction.CONFIRMED + " AS " + Contract.Transaction.CONFIRMED + ", " +
-                "t." + Schema.Transaction.COUNT_IN_TOTAL + " AS " + Contract.Transaction.COUNT_IN_TOTAL + ", " +
-                "t." + Schema.Transaction.TAG + " AS " + Contract.Transaction.TAG + ", " +
-                "GROUP_CONCAT('<' || pe." + Schema.Person.ID + " || '>') AS " + Contract.Transaction.PEOPLE_IDS + " " +
-                "FROM (" +
+        val categoriesSubquery = budgetCategoriesOf("b")
+        val subQuery = buildString {
+            append("SELECT ")
+            append("t.").append(Schema.Transaction.ID).append(" AS ").append(Contract.Transaction.ID).append(", ")
+            append("t.").append(Schema.Transaction.MONEY).append(" AS ").append(Contract.Transaction.MONEY).append(", ")
+            append("t.").append(Schema.Transaction.DATE).append(" AS ").append(Contract.Transaction.DATE).append(", ")
+            append("t.").append(Schema.Transaction.DESCRIPTION).append(" AS ").append(Contract.Transaction.DESCRIPTION).append(", ")
+            append("t.").append(Schema.Transaction.CATEGORY).append(" AS ").append(Contract.Transaction.CATEGORY_ID).append(", ")
+            append("c.").append(Schema.Category.NAME).append(" AS ").append(Contract.Transaction.CATEGORY_NAME).append(", ")
+            append("c.").append(Schema.Category.ICON).append(" AS ").append(Contract.Transaction.CATEGORY_ICON).append(", ")
+            append("c.").append(Schema.Category.PARENT).append(" AS ").append(Contract.Transaction.CATEGORY_PARENT_ID).append(", ")
+            append("c.").append(Schema.Category.TYPE).append(" AS ").append(Contract.Transaction.CATEGORY_TYPE).append(", ")
+            append("c.").append(Schema.Category.TAG).append(" AS ").append(Contract.Transaction.CATEGORY_TAG).append(", ")
+            append("c.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.Transaction.CATEGORY_SHOW_REPORT).append(", ")
+            append("t.").append(Schema.Transaction.DIRECTION).append(" AS ").append(Contract.Transaction.DIRECTION).append(", ")
+            append("t.").append(Schema.Transaction.TYPE).append(" AS ").append(Contract.Transaction.TYPE).append(", ")
+            append("t.").append(Schema.Transaction.WALLET).append(" AS ").append(Contract.Transaction.WALLET_ID).append(", ")
+            append("w.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.Transaction.WALLET_NAME).append(", ")
+            append("w.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.Transaction.WALLET_ICON).append(", ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.Transaction.WALLET_CURRENCY).append(", ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transaction.WALLET_COUNT_IN_TOTAL).append(", ")
+            append("w.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.Transaction.WALLET_ARCHIVED).append(", ")
+            append("w.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.Transaction.WALLET_TAG).append(", ")
+            append("t.").append(Schema.Transaction.PLACE).append(" AS ").append(Contract.Transaction.PLACE_ID).append(", ")
+            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.Transaction.PLACE_NAME).append(", ")
+            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.Transaction.PLACE_ICON).append(", ")
+            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.Transaction.PLACE_ADDRESS).append(", ")
+            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.Transaction.PLACE_LATITUDE).append(", ")
+            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.Transaction.PLACE_LONGITUDE).append(", ")
+            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.Transaction.PLACE_TAG).append(", ")
+            append("t.").append(Schema.Transaction.EVENT).append(" AS ").append(Contract.Transaction.EVENT_ID).append(", ")
+            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.Transaction.EVENT_NAME).append(", ")
+            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.Transaction.EVENT_ICON).append(", ")
+            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.Transaction.EVENT_NOTE).append(", ")
+            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.Transaction.EVENT_START_DATE).append(", ")
+            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.Transaction.EVENT_END_DATE).append(", ")
+            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.Transaction.EVENT_TAG).append(", ")
+            append("t.").append(Schema.Transaction.NOTE).append(" AS ").append(Contract.Transaction.NOTE).append(", ")
+            append("t.").append(Schema.Transaction.DEBT).append(" AS ").append(Contract.Transaction.DEBT_ID).append(", ")
+            append("t.").append(Schema.Transaction.SAVING).append(" AS ").append(Contract.Transaction.SAVING_ID).append(", ")
+            append("t.").append(Schema.Transaction.CONFIRMED).append(" AS ").append(Contract.Transaction.CONFIRMED).append(", ")
+            append("t.").append(Schema.Transaction.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transaction.COUNT_IN_TOTAL).append(", ")
+            append("t.").append(Schema.Transaction.TAG).append(" AS ").append(Contract.Transaction.TAG).append(", ")
+            append("GROUP_CONCAT('<' || pe.").append(Schema.Person.ID).append(" || '>') AS ").append(Contract.Transaction.PEOPLE_IDS).append(" ")
+            append("FROM (")
 
-                // case budget of type expense
-                "SELECT t.* FROM(SELECT b.*, w." + Schema.Wallet.ID + " AS _wallet_id, " +
-                "w." + Schema.Wallet.CURRENCY + " AS _wallet_currency, " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS _wallet_total FROM " +
-                Schema.BudgetWallet.TABLE + " AS bw JOIN " + Schema.Budget.TABLE + " AS b ON " +
-                "bw._budget = b." + Schema.Budget.ID + " JOIN " + Schema.Wallet.TABLE + " AS w ON " +
-                "bw._wallet = w." + Schema.Wallet.ID + " WHERE bw. " + Schema.BudgetWallet.DELETED +
-                " = 0 AND b." + Schema.Budget.DELETED + " = 0 AND w." + Schema.Wallet.DELETED +
-                " = 0 AND b." + Schema.Budget.TYPE + " = " + Schema.BudgetType.EXPENSES +
-                " ) AS b LEFT JOIN " + Schema.Transaction.TABLE + " AS t ON b._wallet_id = t." +
-                Schema.Transaction.WALLET + " AND t." + Schema.Transaction.DELETED + " = 0 AND t." +
-                Schema.Transaction.DIRECTION + " = 0 AND DATETIME(t." + Schema.Transaction.DATE +
-                ") <= DATETIME('now', 'localtime') AND DATE(t." + Schema.Transaction.DATE +
-                ") >= DATE(b." + Schema.Budget.START_DATE + ") AND DATE(t." + Schema.Transaction.DATE +
-                ") <= DATE(b." + Schema.Budget.END_DATE + ") WHERE b." + Schema.Budget.ID + " = " +
-                budgetId + " " +
-                // exclude transfers within the budget
-                "AND t." + Schema.Transaction.ID + " NOT IN ( " +
-                "SELECT tf." + Schema.Transfer.TRANSACTION_FROM + " " +
-                "FROM " + Schema.Transfer.TABLE + " AS tf " +
-                "LEFT JOIN " + Schema.Transaction.TABLE + " AS t2 " +
-                "ON tf." + Schema.Transfer.TRANSACTION_TO + " = t2." + Schema.Transaction.ID + " " +
-                "LEFT JOIN " + Schema.BudgetWallet.TABLE + " AS bw2 " +
-                "ON t2." + Schema.Transaction.WALLET + " = bw2." + Schema.BudgetWallet.WALLET + " " +
-                "WHERE bw2." + Schema.BudgetWallet.BUDGET + " = b." + Schema.Budget.ID + " " +
-                "AND bw2." + Schema.BudgetWallet.DELETED + " = 0 " +
-                "AND bw2." + Schema.BudgetWallet.WALLET + " != b._wallet_id " +
-                ") " +
-                "UNION " +
+            // case budget of type expense
+            append("SELECT t.* FROM(SELECT b.*, w.").append(Schema.Wallet.ID).append(" AS _wallet_id, ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS _wallet_currency, ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS _wallet_total FROM ")
+            append(Schema.BudgetWallet.TABLE).append(" AS bw JOIN ").append(Schema.Budget.TABLE).append(" AS b ON ")
+            append("bw._budget = b.").append(Schema.Budget.ID).append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON ")
+            append("bw._wallet = w.").append(Schema.Wallet.ID).append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.DELETED).append(" = 0 AND w.").append(Schema.Wallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ").append(Schema.BudgetType.EXPENSES)
+            append(" ) AS b LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t ON b._wallet_id = t.")
+            append(Schema.Transaction.WALLET).append(" AND t.").append(Schema.Transaction.DELETED).append(" = 0 AND t.")
+            append(Schema.Transaction.DIRECTION).append(" = 0 AND DATETIME(t.").append(Schema.Transaction.DATE)
+            append(") <= DATETIME('now', 'localtime') AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") >= DATE(b.").append(Schema.Budget.START_DATE).append(") AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") <= DATE(b.").append(Schema.Budget.END_DATE).append(") WHERE b.").append(Schema.Budget.ID).append(" = ")
+            append(budgetId).append(" ")
+            // exclude transfers within the budget
+            append("AND t.").append(Schema.Transaction.ID).append(" NOT IN ( ")
+            append("SELECT tf.").append(Schema.Transfer.TRANSACTION_FROM).append(" ")
+            append("FROM ").append(Schema.Transfer.TABLE).append(" AS tf ")
+            append("LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t2 ")
+            append("ON tf.").append(Schema.Transfer.TRANSACTION_TO).append(" = t2.").append(Schema.Transaction.ID).append(" ")
+            append("LEFT JOIN ").append(Schema.BudgetWallet.TABLE).append(" AS bw2 ")
+            append("ON t2.").append(Schema.Transaction.WALLET).append(" = bw2.").append(Schema.BudgetWallet.WALLET).append(" ")
+            append("WHERE bw2.").append(Schema.BudgetWallet.BUDGET).append(" = b.").append(Schema.Budget.ID).append(" ")
+            append("AND bw2.").append(Schema.BudgetWallet.DELETED).append(" = 0 ")
+            append("AND bw2.").append(Schema.BudgetWallet.WALLET).append(" != b._wallet_id ")
+            append(") ")
+            append("UNION ")
 
-                // case budget of type income
-                "SELECT t.* FROM(SELECT b.*, w." + Schema.Wallet.ID + " AS _wallet_id, " +
-                "w." + Schema.Wallet.CURRENCY + " AS _wallet_currency, " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS _wallet_total FROM " +
-                Schema.BudgetWallet.TABLE + " AS bw JOIN " + Schema.Budget.TABLE + " AS b ON " +
-                "bw._budget = b." + Schema.Budget.ID + " JOIN " + Schema.Wallet.TABLE + " AS w ON " +
-                "bw._wallet = w." + Schema.Wallet.ID + " WHERE bw. " + Schema.BudgetWallet.DELETED +
-                " = 0 AND b." + Schema.Budget.DELETED + " = 0 AND w." + Schema.Wallet.DELETED +
-                " = 0 AND b." + Schema.Budget.TYPE + " = " + Schema.BudgetType.INCOMES +
-                " ) AS b LEFT JOIN " + Schema.Transaction.TABLE + " AS t ON b._wallet_id = t." +
-                Schema.Transaction.WALLET + " AND t." + Schema.Transaction.DELETED + " = 0 AND t." +
-                Schema.Transaction.DIRECTION + " = 1 AND DATETIME(t." + Schema.Transaction.DATE +
-                ") <= DATETIME('now', 'localtime') AND DATE(t." + Schema.Transaction.DATE +
-                ") >= DATE(b." + Schema.Budget.START_DATE + ") AND DATE(t." +
-                Schema.Transaction.DATE + ") <= DATE(b." + Schema.Budget.END_DATE + ") WHERE b." +
-                Schema.Budget.ID + " = " + budgetId + " " +
-                // exclude transfers within the budget
-                "AND t." + Schema.Transaction.ID + " NOT IN ( " +
-                "SELECT tf." + Schema.Transfer.TRANSACTION_TO + " " +
-                "FROM " + Schema.Transfer.TABLE + " AS tf " +
-                "LEFT JOIN " + Schema.Transaction.TABLE + " AS t2 " +
-                "ON tf." + Schema.Transfer.TRANSACTION_FROM + " = t2." + Schema.Transaction.ID + " " +
-                "LEFT JOIN " + Schema.BudgetWallet.TABLE + " AS bw2 " +
-                "ON t2." + Schema.Transaction.WALLET + " = bw2." + Schema.BudgetWallet.WALLET + " " +
-                "WHERE bw2." + Schema.BudgetWallet.BUDGET + " = b." + Schema.Budget.ID + " " +
-                "AND bw2." + Schema.BudgetWallet.DELETED + " = 0 " +
-                "AND bw2." + Schema.BudgetWallet.WALLET + " != b._wallet_id " +
-                ") " +
-                "UNION " +
+            // case budget of type income
+            append("SELECT t.* FROM(SELECT b.*, w.").append(Schema.Wallet.ID).append(" AS _wallet_id, ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS _wallet_currency, ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS _wallet_total FROM ")
+            append(Schema.BudgetWallet.TABLE).append(" AS bw JOIN ").append(Schema.Budget.TABLE).append(" AS b ON ")
+            append("bw._budget = b.").append(Schema.Budget.ID).append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON ")
+            append("bw._wallet = w.").append(Schema.Wallet.ID).append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.DELETED).append(" = 0 AND w.").append(Schema.Wallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ").append(Schema.BudgetType.INCOMES)
+            append(" ) AS b LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t ON b._wallet_id = t.")
+            append(Schema.Transaction.WALLET).append(" AND t.").append(Schema.Transaction.DELETED).append(" = 0 AND t.")
+            append(Schema.Transaction.DIRECTION).append(" = 1 AND DATETIME(t.").append(Schema.Transaction.DATE)
+            append(") <= DATETIME('now', 'localtime') AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") >= DATE(b.").append(Schema.Budget.START_DATE).append(") AND DATE(t.")
+            append(Schema.Transaction.DATE).append(") <= DATE(b.").append(Schema.Budget.END_DATE).append(") WHERE b.")
+            append(Schema.Budget.ID).append(" = ").append(budgetId).append(" ")
+            // exclude transfers within the budget
+            append("AND t.").append(Schema.Transaction.ID).append(" NOT IN ( ")
+            append("SELECT tf.").append(Schema.Transfer.TRANSACTION_TO).append(" ")
+            append("FROM ").append(Schema.Transfer.TABLE).append(" AS tf ")
+            append("LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t2 ")
+            append("ON tf.").append(Schema.Transfer.TRANSACTION_FROM).append(" = t2.").append(Schema.Transaction.ID).append(" ")
+            append("LEFT JOIN ").append(Schema.BudgetWallet.TABLE).append(" AS bw2 ")
+            append("ON t2.").append(Schema.Transaction.WALLET).append(" = bw2.").append(Schema.BudgetWallet.WALLET).append(" ")
+            append("WHERE bw2.").append(Schema.BudgetWallet.BUDGET).append(" = b.").append(Schema.Budget.ID).append(" ")
+            append("AND bw2.").append(Schema.BudgetWallet.DELETED).append(" = 0 ")
+            append("AND bw2.").append(Schema.BudgetWallet.WALLET).append(" != b._wallet_id ")
+            append(") ")
+            append("UNION ")
 
-                // case budget of type category
-                "SELECT t.* FROM(SELECT b.*, w." + Schema.Wallet.ID + " AS _wallet_id, " +
-                "w." + Schema.Wallet.CURRENCY + " AS _wallet_currency, " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS _wallet_total FROM " +
-                Schema.BudgetWallet.TABLE + " AS bw JOIN " + Schema.Budget.TABLE + " AS b ON " +
-                "bw._budget = b." + Schema.Budget.ID + " JOIN " + Schema.Wallet.TABLE + " AS w ON " +
-                "bw._wallet = w." + Schema.Wallet.ID + " WHERE bw. " + Schema.BudgetWallet.DELETED +
-                " = 0 AND b." + Schema.Budget.DELETED + " = 0 AND w." + Schema.Wallet.DELETED +
-                " = 0 AND b." + Schema.Budget.TYPE + " = " + Schema.BudgetType.CATEGORY +
-                ") AS b LEFT JOIN " + Schema.Transaction.TABLE + " AS t ON b._wallet_id = t." +
-                Schema.Transaction.WALLET + " AND t." + Schema.Transaction.DELETED + " = 0 JOIN " +
-                Schema.Category.TABLE + " AS tc ON t." + Schema.Transaction.CATEGORY + " = tc." +
-                Schema.Category.ID + " AND tc." + Schema.Category.DELETED + " = 0 WHERE (" +
-                Schema.Transaction.CATEGORY + " IN " + budgetCategoriesOf("b") + " OR tc." +
-                Schema.Category.PARENT + " IN " + budgetCategoriesOf("b") + ") " +
-                "AND DATETIME(t." + Schema.Transaction.DATE + ") <= DATETIME('now', 'localtime') " +
-                "AND DATE(t." + Schema.Transaction.DATE + ") >= DATE(b." +
-                Schema.Budget.START_DATE + ") AND DATE(t." + Schema.Transaction.DATE +
-                ") <=  DATE(b." + Schema.Budget.END_DATE + ") " + "AND b." + Schema.Budget.ID +
-                " = " + budgetId + " " +
-
-                ") AS t " +
-                "LEFT JOIN " + Schema.Category.TABLE + " AS c " +
-                "ON t." + Schema.Transaction.CATEGORY + " = c." + Schema.Category.ID + " " +
-                "AND c." + Schema.Category.DELETED + " = 0 " +
-                "JOIN " + Schema.Wallet.TABLE + " AS w " +
-                "ON t." + Schema.Transaction.WALLET + " = w." + Schema.Wallet.ID + " " +
-                "AND w." + Schema.Wallet.DELETED + " = 0 " +
-                "LEFT JOIN " + Schema.TransactionPeople.TABLE + " AS tp " +
-                "ON t." + Schema.Transaction.ID + " = tp." + Schema.TransactionPeople.TRANSACTION + " " +
-                "AND tp." + Schema.TransactionPeople.DELETED + " = 0 " +
-                "LEFT JOIN " + Schema.Person.TABLE + " AS pe " +
-                "ON tp." + Schema.TransactionPeople.PERSON + " = pe." + Schema.Person.ID + " " +
-                "AND pe." + Schema.Person.DELETED + " = 0 " +
-                "LEFT JOIN " + Schema.Place.TABLE + " AS p " +
-                "ON t." + Schema.Transaction.PLACE + " = " + Schema.Place.ID + " " +
-                "AND p." + Schema.Place.DELETED + " = 0 " +
-                "LEFT JOIN " + Schema.Event.TABLE + " AS e " +
-                "ON t." + Schema.Transaction.EVENT + " = e." + Schema.Event.ID + " " +
-                "AND e." + Schema.Event.DELETED + " = 0 " +
-                "WHERE t." + Schema.Transaction.DELETED + " = 0 " +
-                "GROUP BY t." + Schema.Transaction.ID
+            // case budget of type category
+            append("SELECT t.* FROM(SELECT b.*, w.").append(Schema.Wallet.ID).append(" AS _wallet_id, ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS _wallet_currency, ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS _wallet_total FROM ")
+            append(Schema.BudgetWallet.TABLE).append(" AS bw JOIN ").append(Schema.Budget.TABLE).append(" AS b ON ")
+            append("bw._budget = b.").append(Schema.Budget.ID).append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON ")
+            append("bw._wallet = w.").append(Schema.Wallet.ID).append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.DELETED).append(" = 0 AND w.").append(Schema.Wallet.DELETED)
+            append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ").append(Schema.BudgetType.CATEGORY)
+            append(") AS b LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t ON b._wallet_id = t.")
+            append(Schema.Transaction.WALLET).append(" AND t.").append(Schema.Transaction.DELETED).append(" = 0 JOIN ")
+            append(Schema.Category.TABLE).append(" AS tc ON t.").append(Schema.Transaction.CATEGORY).append(" = tc.")
+            append(Schema.Category.ID).append(" AND tc.").append(Schema.Category.DELETED).append(" = 0 WHERE (")
+            append(Schema.Transaction.CATEGORY).append(" IN ").append(categoriesSubquery).append(" OR tc.")
+            append(Schema.Category.PARENT).append(" IN ").append(categoriesSubquery).append(") ")
+            append("AND DATETIME(t.").append(Schema.Transaction.DATE).append(") <= DATETIME('now', 'localtime') ")
+            append("AND DATE(t.").append(Schema.Transaction.DATE).append(") >= DATE(b.")
+            append(Schema.Budget.START_DATE).append(") AND DATE(t.").append(Schema.Transaction.DATE)
+            append(") <=  DATE(b.").append(Schema.Budget.END_DATE).append(") AND b.").append(Schema.Budget.ID)
+            append(" = ").append(budgetId).append(" ")
+            append(") AS t ")
+            append("LEFT JOIN ").append(Schema.Category.TABLE).append(" AS c ")
+            append("ON t.").append(Schema.Transaction.CATEGORY).append(" = c.").append(Schema.Category.ID).append(" ")
+            append("AND c.").append(Schema.Category.DELETED).append(" = 0 ")
+            append("JOIN ").append(Schema.Wallet.TABLE).append(" AS w ")
+            append("ON t.").append(Schema.Transaction.WALLET).append(" = w.").append(Schema.Wallet.ID).append(" ")
+            append("AND w.").append(Schema.Wallet.DELETED).append(" = 0 ")
+            append("LEFT JOIN ").append(Schema.TransactionPeople.TABLE).append(" AS tp ")
+            append("ON t.").append(Schema.Transaction.ID).append(" = tp.").append(Schema.TransactionPeople.TRANSACTION).append(" ")
+            append("AND tp.").append(Schema.TransactionPeople.DELETED).append(" = 0 ")
+            append("LEFT JOIN ").append(Schema.Person.TABLE).append(" AS pe ")
+            append("ON tp.").append(Schema.TransactionPeople.PERSON).append(" = pe.").append(Schema.Person.ID).append(" ")
+            append("AND pe.").append(Schema.Person.DELETED).append(" = 0 ")
+            append("LEFT JOIN ").append(Schema.Place.TABLE).append(" AS p ")
+            append("ON t.").append(Schema.Transaction.PLACE).append(" = ").append(Schema.Place.ID).append(" ")
+            append("AND p.").append(Schema.Place.DELETED).append(" = 0 ")
+            append("LEFT JOIN ").append(Schema.Event.TABLE).append(" AS e ")
+            append("ON t.").append(Schema.Transaction.EVENT).append(" = e.").append(Schema.Event.ID).append(" ")
+            append("AND e.").append(Schema.Event.DELETED).append(" = 0 ")
+            append("WHERE t.").append(Schema.Transaction.DELETED).append(" = 0 ")
+            append("GROUP BY t.").append(Schema.Transaction.ID)
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
@@ -3230,55 +3238,57 @@ open class SQLDatabase(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor? {
-        val subQuery = "SELECT " +
-                "rt." + Schema.RecurrentTransaction.ID + " AS " + Contract.RecurrentTransaction.ID + ", " +
-                "rt." + Schema.RecurrentTransaction.MONEY + " AS " + Contract.RecurrentTransaction.MONEY + ", " +
-                "rt." + Schema.RecurrentTransaction.DESCRIPTION + " AS " + Contract.RecurrentTransaction.DESCRIPTION + ", " +
-                "rt." + Schema.RecurrentTransaction.CATEGORY + " AS " + Contract.RecurrentTransaction.CATEGORY_ID + ", " +
-                "c." + Schema.Category.NAME + " AS " + Contract.RecurrentTransaction.CATEGORY_NAME + ", " +
-                "c." + Schema.Category.ICON + " AS " + Contract.RecurrentTransaction.CATEGORY_ICON + ", " +
-                "c." + Schema.Category.TYPE + " AS " + Contract.RecurrentTransaction.CATEGORY_TYPE + ", " +
-                "c." + Schema.Category.SHOW_REPORT + " AS " + Contract.RecurrentTransaction.CATEGORY_SHOW_REPORT + ", " +
-                "c." + Schema.Category.TAG + " AS " + Contract.RecurrentTransaction.CATEGORY_TAG + ", " +
-                "rt." + Schema.RecurrentTransaction.DIRECTION + " AS " + Contract.RecurrentTransaction.DIRECTION + ", " +
-                "rt." + Schema.RecurrentTransaction.WALLET + " AS " + Contract.RecurrentTransaction.WALLET_ID + ", " +
-                "w." + Schema.Wallet.NAME + " AS " + Contract.RecurrentTransaction.WALLET_NAME + ", " +
-                "w." + Schema.Wallet.ICON + " AS " + Contract.RecurrentTransaction.WALLET_ICON + ", " +
-                "w." + Schema.Wallet.CURRENCY + " AS " + Contract.RecurrentTransaction.WALLET_CURRENCY + ", " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.RecurrentTransaction.WALLET_COUNT_IN_TOTAL + ", " +
-                "w." + Schema.Wallet.ARCHIVED + " AS " + Contract.RecurrentTransaction.WALLET_ARCHIVED + ", " +
-                "w." + Schema.Wallet.TAG + " AS " + Contract.RecurrentTransaction.WALLET_TAG + ", " +
-                "rt." + Schema.RecurrentTransaction.PLACE + " AS " + Contract.RecurrentTransaction.PLACE_ID + ", " +
-                "p." + Schema.Place.NAME + " AS " + Contract.RecurrentTransaction.PLACE_NAME + ", " +
-                "p." + Schema.Place.ICON + " AS " + Contract.RecurrentTransaction.PLACE_ICON + ", " +
-                "p." + Schema.Place.ADDRESS + " AS " + Contract.RecurrentTransaction.PLACE_ADDRESS + ", " +
-                "p." + Schema.Place.LATITUDE + " AS " + Contract.RecurrentTransaction.PLACE_LATITUDE + ", " +
-                "p." + Schema.Place.LONGITUDE + " AS " + Contract.RecurrentTransaction.PLACE_LONGITUDE + ", " +
-                "p." + Schema.Place.TAG + " AS " + Contract.RecurrentTransaction.PLACE_TAG + ", " +
-                "rt." + Schema.RecurrentTransaction.NOTE + " AS " + Contract.RecurrentTransaction.NOTE + ", " +
-                "rt." + Schema.RecurrentTransaction.EVENT + " AS " + Contract.RecurrentTransaction.EVENT_ID + ", " +
-                "e." + Schema.Event.NAME + " AS " + Contract.RecurrentTransaction.EVENT_NAME + ", " +
-                "e." + Schema.Event.ICON + " AS " + Contract.RecurrentTransaction.EVENT_ICON + ", " +
-                "e." + Schema.Event.NOTE + " AS " + Contract.RecurrentTransaction.EVENT_NOTE + ", " +
-                "e." + Schema.Event.START_DATE + " AS " + Contract.RecurrentTransaction.EVENT_START_DATE + ", " +
-                "e." + Schema.Event.END_DATE + " AS " + Contract.RecurrentTransaction.EVENT_END_DATE + ", " +
-                "e." + Schema.Event.TAG + " AS " + Contract.RecurrentTransaction.EVENT_TAG + ", " +
-                "rt." + Schema.RecurrentTransaction.CONFIRMED + " AS " + Contract.RecurrentTransaction.CONFIRMED + ", " +
-                "rt." + Schema.RecurrentTransaction.COUNT_IN_TOTAL + " AS " + Contract.RecurrentTransaction.COUNT_IN_TOTAL + ", " +
-                "rt." + Schema.RecurrentTransaction.START_DATE + " AS " + Contract.RecurrentTransaction.START_DATE + ", " +
-                "rt." + Schema.RecurrentTransaction.LAST_OCCURRENCE + " AS " + Contract.RecurrentTransaction.LAST_OCCURRENCE + ", " +
-                "rt." + Schema.RecurrentTransaction.NEXT_OCCURRENCE + " AS " + Contract.RecurrentTransaction.NEXT_OCCURRENCE + ", " +
-                "rt." + Schema.RecurrentTransaction.RULE + " AS " + Contract.RecurrentTransaction.RULE + ", " +
-                "rt." + Schema.RecurrentTransaction.TAG + " AS " + Contract.RecurrentTransaction.TAG + " " +
-                "FROM " + Schema.RecurrentTransaction.TABLE + " AS rt JOIN " + Schema.Wallet.TABLE +
-                " AS w ON rt." + Schema.RecurrentTransaction.WALLET + " = w." + Schema.Wallet.ID + " AND w." +
-                Schema.Wallet.DELETED + " = 0 JOIN " + Schema.Category.TABLE + " AS c ON rt." +
-                Schema.RecurrentTransaction.CATEGORY + " = c." + Schema.Category.ID + " AND c." +
-                Schema.Category.DELETED + " = 0 LEFT JOIN " + Schema.Place.TABLE + " AS p ON rt." +
-                Schema.RecurrentTransaction.PLACE + " = p." + Schema.Place.ID + " AND p." +
-                Schema.Place.ID + " = 0 LEFT JOIN " + Schema.Event.TABLE + " AS e ON rt." +
-                Schema.RecurrentTransaction.EVENT + " = e." + Schema.Event.ID + " AND e." +
-                Schema.Event.DELETED + " = 0 WHERE rt." + Schema.RecurrentTransaction.DELETED + " = 0"
+        val subQuery = buildString {
+            append("SELECT ")
+            append("rt.").append(Schema.RecurrentTransaction.ID).append(" AS ").append(Contract.RecurrentTransaction.ID).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.MONEY).append(" AS ").append(Contract.RecurrentTransaction.MONEY).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.DESCRIPTION).append(" AS ").append(Contract.RecurrentTransaction.DESCRIPTION).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.CATEGORY).append(" AS ").append(Contract.RecurrentTransaction.CATEGORY_ID).append(", ")
+            append("c.").append(Schema.Category.NAME).append(" AS ").append(Contract.RecurrentTransaction.CATEGORY_NAME).append(", ")
+            append("c.").append(Schema.Category.ICON).append(" AS ").append(Contract.RecurrentTransaction.CATEGORY_ICON).append(", ")
+            append("c.").append(Schema.Category.TYPE).append(" AS ").append(Contract.RecurrentTransaction.CATEGORY_TYPE).append(", ")
+            append("c.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.RecurrentTransaction.CATEGORY_SHOW_REPORT).append(", ")
+            append("c.").append(Schema.Category.TAG).append(" AS ").append(Contract.RecurrentTransaction.CATEGORY_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.DIRECTION).append(" AS ").append(Contract.RecurrentTransaction.DIRECTION).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.WALLET).append(" AS ").append(Contract.RecurrentTransaction.WALLET_ID).append(", ")
+            append("w.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.RecurrentTransaction.WALLET_NAME).append(", ")
+            append("w.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.RecurrentTransaction.WALLET_ICON).append(", ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.RecurrentTransaction.WALLET_CURRENCY).append(", ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.RecurrentTransaction.WALLET_COUNT_IN_TOTAL).append(", ")
+            append("w.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.RecurrentTransaction.WALLET_ARCHIVED).append(", ")
+            append("w.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.RecurrentTransaction.WALLET_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.PLACE).append(" AS ").append(Contract.RecurrentTransaction.PLACE_ID).append(", ")
+            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.RecurrentTransaction.PLACE_NAME).append(", ")
+            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.RecurrentTransaction.PLACE_ICON).append(", ")
+            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.RecurrentTransaction.PLACE_ADDRESS).append(", ")
+            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.RecurrentTransaction.PLACE_LATITUDE).append(", ")
+            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.RecurrentTransaction.PLACE_LONGITUDE).append(", ")
+            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.RecurrentTransaction.PLACE_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.NOTE).append(" AS ").append(Contract.RecurrentTransaction.NOTE).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.EVENT).append(" AS ").append(Contract.RecurrentTransaction.EVENT_ID).append(", ")
+            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.RecurrentTransaction.EVENT_NAME).append(", ")
+            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.RecurrentTransaction.EVENT_ICON).append(", ")
+            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.RecurrentTransaction.EVENT_NOTE).append(", ")
+            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.RecurrentTransaction.EVENT_START_DATE).append(", ")
+            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.RecurrentTransaction.EVENT_END_DATE).append(", ")
+            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.RecurrentTransaction.EVENT_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.CONFIRMED).append(" AS ").append(Contract.RecurrentTransaction.CONFIRMED).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.COUNT_IN_TOTAL).append(" AS ").append(Contract.RecurrentTransaction.COUNT_IN_TOTAL).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.START_DATE).append(" AS ").append(Contract.RecurrentTransaction.START_DATE).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.LAST_OCCURRENCE).append(" AS ").append(Contract.RecurrentTransaction.LAST_OCCURRENCE).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.NEXT_OCCURRENCE).append(" AS ").append(Contract.RecurrentTransaction.NEXT_OCCURRENCE).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.RULE).append(" AS ").append(Contract.RecurrentTransaction.RULE).append(", ")
+            append("rt.").append(Schema.RecurrentTransaction.TAG).append(" AS ").append(Contract.RecurrentTransaction.TAG).append(" ")
+            append("FROM ").append(Schema.RecurrentTransaction.TABLE).append(" AS rt JOIN ").append(Schema.Wallet.TABLE)
+            append(" AS w ON rt.").append(Schema.RecurrentTransaction.WALLET).append(" = w.").append(Schema.Wallet.ID).append(" AND w.")
+            append(Schema.Wallet.DELETED).append(" = 0 JOIN ").append(Schema.Category.TABLE).append(" AS c ON rt.")
+            append(Schema.RecurrentTransaction.CATEGORY).append(" = c.").append(Schema.Category.ID).append(" AND c.")
+            append(Schema.Category.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Place.TABLE).append(" AS p ON rt.")
+            append(Schema.RecurrentTransaction.PLACE).append(" = p.").append(Schema.Place.ID).append(" AND p.")
+            append(Schema.Place.ID).append(" = 0 LEFT JOIN ").append(Schema.Event.TABLE).append(" AS e ON rt.")
+            append(Schema.RecurrentTransaction.EVENT).append(" = e.").append(Schema.Event.ID).append(" AND e.")
+            append(Schema.Event.DELETED).append(" = 0 WHERE rt.").append(Schema.RecurrentTransaction.DELETED).append(" = 0")
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
@@ -3431,57 +3441,59 @@ open class SQLDatabase(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor? {
-        val subQuery = "SELECT " +
-                "rt." + Schema.RecurrentTransfer.ID + " AS " + Contract.RecurrentTransfer.ID + ", " +
-                "rt." + Schema.RecurrentTransfer.DESCRIPTION + " AS " + Contract.RecurrentTransfer.DESCRIPTION + ", " +
-                "rt." + Schema.RecurrentTransfer.WALLET_FROM + " AS " + Contract.RecurrentTransfer.WALLET_FROM_ID + ", " +
-                "wf." + Schema.Wallet.NAME + " AS " + Contract.RecurrentTransfer.WALLET_FROM_NAME + ", " +
-                "wf." + Schema.Wallet.ICON + " AS " + Contract.RecurrentTransfer.WALLET_FROM_ICON + ", " +
-                "wf." + Schema.Wallet.CURRENCY + " AS " + Contract.RecurrentTransfer.WALLET_FROM_CURRENCY + ", " +
-                "wf." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.RecurrentTransfer.WALLET_FROM_COUNT_IN_TOTAL + ", " +
-                "wf." + Schema.Wallet.ARCHIVED + " AS " + Contract.RecurrentTransfer.WALLET_FROM_ARCHIVED + ", " +
-                "wf." + Schema.Wallet.TAG + " AS " + Contract.RecurrentTransfer.WALLET_FROM_TAG + ", " +
-                "rt." + Schema.RecurrentTransfer.WALLET_TO + " AS " + Contract.RecurrentTransfer.WALLET_TO_ID + ", " +
-                "wt." + Schema.Wallet.NAME + " AS " + Contract.RecurrentTransfer.WALLET_TO_NAME + ", " +
-                "wt." + Schema.Wallet.ICON + " AS " + Contract.RecurrentTransfer.WALLET_TO_ICON + ", " +
-                "wt." + Schema.Wallet.CURRENCY + " AS " + Contract.RecurrentTransfer.WALLET_TO_CURRENCY + ", " +
-                "wt." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.RecurrentTransfer.WALLET_TO_COUNT_IN_TOTAL + ", " +
-                "wt." + Schema.Wallet.ARCHIVED + " AS " + Contract.RecurrentTransfer.WALLET_TO_ARCHIVED + ", " +
-                "wt." + Schema.Wallet.TAG + " AS " + Contract.RecurrentTransfer.WALLET_TO_TAG + ", " +
-                "rt." + Schema.RecurrentTransfer.MONEY_FROM + " AS " + Contract.RecurrentTransfer.MONEY_FROM + ", " +
-                "rt." + Schema.RecurrentTransfer.MONEY_TO + " AS " + Contract.RecurrentTransfer.MONEY_TO + ", " +
-                "rt." + Schema.RecurrentTransfer.MONEY_TAX + " AS " + Contract.RecurrentTransfer.MONEY_TAX + ", " +
-                "rt." + Schema.RecurrentTransfer.NOTE + " AS " + Contract.RecurrentTransfer.NOTE + ", " +
-                "rt." + Schema.RecurrentTransfer.EVENT + " AS " + Contract.RecurrentTransfer.EVENT_ID + ", " +
-                "e." + Schema.Event.NAME + " AS " + Contract.RecurrentTransfer.EVENT_NAME + ", " +
-                "e." + Schema.Event.ICON + " AS " + Contract.RecurrentTransfer.EVENT_ICON + ", " +
-                "e." + Schema.Event.NOTE + " AS " + Contract.RecurrentTransfer.EVENT_NOTE + ", " +
-                "e." + Schema.Event.START_DATE + " AS " + Contract.RecurrentTransfer.EVENT_START_DATE + ", " +
-                "e." + Schema.Event.END_DATE + " AS " + Contract.RecurrentTransfer.EVENT_END_DATE + ", " +
-                "e." + Schema.Event.TAG + " AS " + Contract.RecurrentTransfer.EVENT_TAG + ", " +
-                "rt." + Schema.RecurrentTransfer.PLACE + " AS " + Contract.RecurrentTransfer.PLACE_ID + ", " +
-                "p." + Schema.Place.NAME + " AS " + Contract.RecurrentTransfer.PLACE_NAME + ", " +
-                "p." + Schema.Place.ICON + " AS " + Contract.RecurrentTransfer.PLACE_ICON + ", " +
-                "p." + Schema.Place.ADDRESS + " AS " + Contract.RecurrentTransfer.PLACE_ADDRESS + ", " +
-                "p." + Schema.Place.LATITUDE + " AS " + Contract.RecurrentTransfer.PLACE_LATITUDE + ", " +
-                "p." + Schema.Place.LONGITUDE + " AS " + Contract.RecurrentTransfer.PLACE_LONGITUDE + ", " +
-                "p." + Schema.Place.TAG + " AS " + Contract.RecurrentTransfer.PLACE_TAG + ", " +
-                "rt." + Schema.RecurrentTransfer.CONFIRMED + " AS " + Contract.RecurrentTransfer.CONFIRMED + ", " +
-                "rt." + Schema.RecurrentTransfer.COUNT_IN_TOTAL + " AS " + Contract.RecurrentTransfer.COUNT_IN_TOTAL + ", " +
-                "rt." + Schema.RecurrentTransfer.START_DATE + " AS " + Contract.RecurrentTransfer.START_DATE + ", " +
-                "rt." + Schema.RecurrentTransfer.LAST_OCCURRENCE + " AS " + Contract.RecurrentTransfer.LAST_OCCURRENCE + ", " +
-                "rt." + Schema.RecurrentTransfer.NEXT_OCCURRENCE + " AS " + Contract.RecurrentTransfer.NEXT_OCCURRENCE + ", " +
-                "rt." + Schema.RecurrentTransfer.RULE + " AS " + Contract.RecurrentTransfer.RULE + ", " +
-                "rt." + Schema.RecurrentTransfer.TAG + " AS " + Contract.RecurrentTransfer.TAG + " " +
-                "FROM " + Schema.RecurrentTransfer.TABLE + " AS rt JOIN " + Schema.Wallet.TABLE + " AS " +
-                "wf ON rt." + Schema.RecurrentTransfer.WALLET_FROM + " = wf." + Schema.Wallet.ID +
-                " AND wf." + Schema.Wallet.DELETED + " = 0 JOIN " + Schema.Wallet.TABLE + " AS " +
-                "wt ON rt." + Schema.RecurrentTransfer.WALLET_TO + " = wt." + Schema.Wallet.ID +
-                " AND wt." + Schema.Wallet.DELETED + " = 0 LEFT JOIN " + Schema.Event.TABLE +
-                " AS e ON rt." + Schema.RecurrentTransfer.EVENT + " = e." + Schema.Event.ID + " AND e." +
-                Schema.Event.DELETED + " = 0 LEFT JOIN " + Schema.Place.TABLE + " AS p ON rt." +
-                Schema.RecurrentTransfer.PLACE + " = p." + Schema.Place.ID + " AND p." +
-                Schema.Place.DELETED + " = 0 WHERE rt." + Schema.RecurrentTransfer.DELETED + " = 0"
+        val subQuery = buildString {
+            append("SELECT ")
+            append("rt.").append(Schema.RecurrentTransfer.ID).append(" AS ").append(Contract.RecurrentTransfer.ID).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.DESCRIPTION).append(" AS ").append(Contract.RecurrentTransfer.DESCRIPTION).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.WALLET_FROM).append(" AS ").append(Contract.RecurrentTransfer.WALLET_FROM_ID).append(", ")
+            append("wf.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.RecurrentTransfer.WALLET_FROM_NAME).append(", ")
+            append("wf.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.RecurrentTransfer.WALLET_FROM_ICON).append(", ")
+            append("wf.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.RecurrentTransfer.WALLET_FROM_CURRENCY).append(", ")
+            append("wf.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.RecurrentTransfer.WALLET_FROM_COUNT_IN_TOTAL).append(", ")
+            append("wf.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.RecurrentTransfer.WALLET_FROM_ARCHIVED).append(", ")
+            append("wf.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.RecurrentTransfer.WALLET_FROM_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.WALLET_TO).append(" AS ").append(Contract.RecurrentTransfer.WALLET_TO_ID).append(", ")
+            append("wt.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.RecurrentTransfer.WALLET_TO_NAME).append(", ")
+            append("wt.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.RecurrentTransfer.WALLET_TO_ICON).append(", ")
+            append("wt.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.RecurrentTransfer.WALLET_TO_CURRENCY).append(", ")
+            append("wt.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.RecurrentTransfer.WALLET_TO_COUNT_IN_TOTAL).append(", ")
+            append("wt.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.RecurrentTransfer.WALLET_TO_ARCHIVED).append(", ")
+            append("wt.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.RecurrentTransfer.WALLET_TO_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.MONEY_FROM).append(" AS ").append(Contract.RecurrentTransfer.MONEY_FROM).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.MONEY_TO).append(" AS ").append(Contract.RecurrentTransfer.MONEY_TO).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.MONEY_TAX).append(" AS ").append(Contract.RecurrentTransfer.MONEY_TAX).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.NOTE).append(" AS ").append(Contract.RecurrentTransfer.NOTE).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.EVENT).append(" AS ").append(Contract.RecurrentTransfer.EVENT_ID).append(", ")
+            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.RecurrentTransfer.EVENT_NAME).append(", ")
+            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.RecurrentTransfer.EVENT_ICON).append(", ")
+            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.RecurrentTransfer.EVENT_NOTE).append(", ")
+            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.RecurrentTransfer.EVENT_START_DATE).append(", ")
+            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.RecurrentTransfer.EVENT_END_DATE).append(", ")
+            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.RecurrentTransfer.EVENT_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.PLACE).append(" AS ").append(Contract.RecurrentTransfer.PLACE_ID).append(", ")
+            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.RecurrentTransfer.PLACE_NAME).append(", ")
+            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.RecurrentTransfer.PLACE_ICON).append(", ")
+            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.RecurrentTransfer.PLACE_ADDRESS).append(", ")
+            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.RecurrentTransfer.PLACE_LATITUDE).append(", ")
+            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.RecurrentTransfer.PLACE_LONGITUDE).append(", ")
+            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.RecurrentTransfer.PLACE_TAG).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.CONFIRMED).append(" AS ").append(Contract.RecurrentTransfer.CONFIRMED).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.COUNT_IN_TOTAL).append(" AS ").append(Contract.RecurrentTransfer.COUNT_IN_TOTAL).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.START_DATE).append(" AS ").append(Contract.RecurrentTransfer.START_DATE).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.LAST_OCCURRENCE).append(" AS ").append(Contract.RecurrentTransfer.LAST_OCCURRENCE).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.NEXT_OCCURRENCE).append(" AS ").append(Contract.RecurrentTransfer.NEXT_OCCURRENCE).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.RULE).append(" AS ").append(Contract.RecurrentTransfer.RULE).append(", ")
+            append("rt.").append(Schema.RecurrentTransfer.TAG).append(" AS ").append(Contract.RecurrentTransfer.TAG).append(" ")
+            append("FROM ").append(Schema.RecurrentTransfer.TABLE).append(" AS rt JOIN ").append(Schema.Wallet.TABLE)
+            append(" AS wf ON rt.").append(Schema.RecurrentTransfer.WALLET_FROM).append(" = wf.").append(Schema.Wallet.ID)
+            append(" AND wf.").append(Schema.Wallet.DELETED).append(" = 0 JOIN ").append(Schema.Wallet.TABLE)
+            append(" AS wt ON rt.").append(Schema.RecurrentTransfer.WALLET_TO).append(" = wt.").append(Schema.Wallet.ID)
+            append(" AND wt.").append(Schema.Wallet.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Event.TABLE)
+            append(" AS e ON rt.").append(Schema.RecurrentTransfer.EVENT).append(" = e.").append(Schema.Event.ID)
+            append(" AND e.").append(Schema.Event.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Place.TABLE)
+            append(" AS p ON rt.").append(Schema.RecurrentTransfer.PLACE).append(" = p.").append(Schema.Place.ID)
+            append(" AND p.").append(Schema.Place.DELETED).append(" = 0 WHERE rt.").append(Schema.RecurrentTransfer.DELETED).append(" = 0")
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
@@ -3704,51 +3716,53 @@ open class SQLDatabase(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor? {
-        val subQuery = "SELECT " +
-                "tm." + Schema.TransactionModel.ID + " AS " + Contract.TransactionModel.ID + ", " +
-                "tm." + Schema.TransactionModel.MONEY + " AS " + Contract.TransactionModel.MONEY + ", " +
-                "tm." + Schema.TransactionModel.DESCRIPTION + " AS " + Contract.TransactionModel.DESCRIPTION + ", " +
-                "tm." + Schema.TransactionModel.CATEGORY + " AS " + Contract.TransactionModel.CATEGORY_ID + ", " +
-                "c." + Schema.Category.NAME + " AS " + Contract.TransactionModel.CATEGORY_NAME + ", " +
-                "c." + Schema.Category.ICON + " AS " + Contract.TransactionModel.CATEGORY_ICON + ", " +
-                "c." + Schema.Category.TYPE + " AS " + Contract.TransactionModel.CATEGORY_TYPE + ", " +
-                "c." + Schema.Category.SHOW_REPORT + " AS " + Contract.TransactionModel.CATEGORY_SHOW_REPORT + ", " +
-                "c." + Schema.Category.TAG + " AS " + Contract.TransactionModel.CATEGORY_TAG + ", " +
-                "tm." + Schema.TransactionModel.DIRECTION + " AS " + Contract.TransactionModel.DIRECTION + ", " +
-                "tm." + Schema.TransactionModel.WALLET + " AS " + Contract.TransactionModel.WALLET_ID + ", " +
-                "w." + Schema.Wallet.NAME + " AS " + Contract.TransactionModel.WALLET_NAME + ", " +
-                "w." + Schema.Wallet.ICON + " AS " + Contract.TransactionModel.WALLET_ICON + ", " +
-                "w." + Schema.Wallet.CURRENCY + " AS " + Contract.TransactionModel.WALLET_CURRENCY + ", " +
-                "w." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.TransactionModel.WALLET_COUNT_IN_TOTAL + ", " +
-                "w." + Schema.Wallet.ARCHIVED + " AS " + Contract.TransactionModel.WALLET_ARCHIVED + ", " +
-                "w." + Schema.Wallet.TAG + " AS " + Contract.TransactionModel.WALLET_TAG + ", " +
-                "tm." + Schema.TransactionModel.PLACE + " AS " + Contract.TransactionModel.PLACE_ID + ", " +
-                "p." + Schema.Place.NAME + " AS " + Contract.TransactionModel.PLACE_NAME + ", " +
-                "p." + Schema.Place.ICON + " AS " + Contract.TransactionModel.PLACE_ICON + ", " +
-                "p." + Schema.Place.ADDRESS + " AS " + Contract.TransactionModel.PLACE_ADDRESS + ", " +
-                "p." + Schema.Place.LATITUDE + " AS " + Contract.TransactionModel.PLACE_LATITUDE + ", " +
-                "p." + Schema.Place.LONGITUDE + " AS " + Contract.TransactionModel.PLACE_LONGITUDE + ", " +
-                "p." + Schema.Place.TAG + " AS " + Contract.TransactionModel.PLACE_TAG + ", " +
-                "tm." + Schema.TransactionModel.NOTE + " AS " + Contract.TransactionModel.NOTE + ", " +
-                "tm." + Schema.TransactionModel.EVENT + " AS " + Contract.TransactionModel.EVENT_ID + ", " +
-                "e." + Schema.Event.NAME + " AS " + Contract.TransactionModel.EVENT_NAME + ", " +
-                "e." + Schema.Event.ICON + " AS " + Contract.TransactionModel.EVENT_ICON + ", " +
-                "e." + Schema.Event.NOTE + " AS " + Contract.TransactionModel.EVENT_NOTE + ", " +
-                "e." + Schema.Event.START_DATE + " AS " + Contract.TransactionModel.EVENT_START_DATE + ", " +
-                "e." + Schema.Event.END_DATE + " AS " + Contract.TransactionModel.EVENT_END_DATE + ", " +
-                "e." + Schema.Event.TAG + " AS " + Contract.TransactionModel.EVENT_TAG + ", " +
-                "tm." + Schema.TransactionModel.CONFIRMED + " AS " + Contract.TransactionModel.CONFIRMED + ", " +
-                "tm." + Schema.TransactionModel.COUNT_IN_TOTAL + " AS " + Contract.TransactionModel.COUNT_IN_TOTAL + ", " +
-                "tm." + Schema.TransactionModel.TAG + " AS " + Contract.TransactionModel.TAG + " " +
-                "FROM " + Schema.TransactionModel.TABLE + " AS tm JOIN " + Schema.Wallet.TABLE +
-                " AS w ON tm." + Schema.TransactionModel.WALLET + " = w." + Schema.Wallet.ID + " AND w." +
-                Schema.Wallet.DELETED + " = 0 JOIN " + Schema.Category.TABLE + " AS c ON tm." +
-                Schema.TransactionModel.CATEGORY + " = c." + Schema.Category.ID + " AND c." +
-                Schema.Category.DELETED + " = 0 LEFT JOIN " + Schema.Place.TABLE + " AS p ON tm." +
-                Schema.TransactionModel.PLACE + " = p." + Schema.Place.ID + " AND p." +
-                Schema.Place.ID + " = 0 LEFT JOIN " + Schema.Event.TABLE + " AS e ON tm." +
-                Schema.TransactionModel.EVENT + " = e." + Schema.Event.ID + " AND e." +
-                Schema.Event.DELETED + " = 0 WHERE tm." + Schema.TransactionModel.DELETED + " = 0"
+        val subQuery = buildString {
+            append("SELECT ")
+            append("tm.").append(Schema.TransactionModel.ID).append(" AS ").append(Contract.TransactionModel.ID).append(", ")
+            append("tm.").append(Schema.TransactionModel.MONEY).append(" AS ").append(Contract.TransactionModel.MONEY).append(", ")
+            append("tm.").append(Schema.TransactionModel.DESCRIPTION).append(" AS ").append(Contract.TransactionModel.DESCRIPTION).append(", ")
+            append("tm.").append(Schema.TransactionModel.CATEGORY).append(" AS ").append(Contract.TransactionModel.CATEGORY_ID).append(", ")
+            append("c.").append(Schema.Category.NAME).append(" AS ").append(Contract.TransactionModel.CATEGORY_NAME).append(", ")
+            append("c.").append(Schema.Category.ICON).append(" AS ").append(Contract.TransactionModel.CATEGORY_ICON).append(", ")
+            append("c.").append(Schema.Category.TYPE).append(" AS ").append(Contract.TransactionModel.CATEGORY_TYPE).append(", ")
+            append("c.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.TransactionModel.CATEGORY_SHOW_REPORT).append(", ")
+            append("c.").append(Schema.Category.TAG).append(" AS ").append(Contract.TransactionModel.CATEGORY_TAG).append(", ")
+            append("tm.").append(Schema.TransactionModel.DIRECTION).append(" AS ").append(Contract.TransactionModel.DIRECTION).append(", ")
+            append("tm.").append(Schema.TransactionModel.WALLET).append(" AS ").append(Contract.TransactionModel.WALLET_ID).append(", ")
+            append("w.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.TransactionModel.WALLET_NAME).append(", ")
+            append("w.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.TransactionModel.WALLET_ICON).append(", ")
+            append("w.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.TransactionModel.WALLET_CURRENCY).append(", ")
+            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.TransactionModel.WALLET_COUNT_IN_TOTAL).append(", ")
+            append("w.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.TransactionModel.WALLET_ARCHIVED).append(", ")
+            append("w.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.TransactionModel.WALLET_TAG).append(", ")
+            append("tm.").append(Schema.TransactionModel.PLACE).append(" AS ").append(Contract.TransactionModel.PLACE_ID).append(", ")
+            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.TransactionModel.PLACE_NAME).append(", ")
+            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.TransactionModel.PLACE_ICON).append(", ")
+            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.TransactionModel.PLACE_ADDRESS).append(", ")
+            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.TransactionModel.PLACE_LATITUDE).append(", ")
+            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.TransactionModel.PLACE_LONGITUDE).append(", ")
+            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.TransactionModel.PLACE_TAG).append(", ")
+            append("tm.").append(Schema.TransactionModel.NOTE).append(" AS ").append(Contract.TransactionModel.NOTE).append(", ")
+            append("tm.").append(Schema.TransactionModel.EVENT).append(" AS ").append(Contract.TransactionModel.EVENT_ID).append(", ")
+            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.TransactionModel.EVENT_NAME).append(", ")
+            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.TransactionModel.EVENT_ICON).append(", ")
+            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.TransactionModel.EVENT_NOTE).append(", ")
+            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.TransactionModel.EVENT_START_DATE).append(", ")
+            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.TransactionModel.EVENT_END_DATE).append(", ")
+            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.TransactionModel.EVENT_TAG).append(", ")
+            append("tm.").append(Schema.TransactionModel.CONFIRMED).append(" AS ").append(Contract.TransactionModel.CONFIRMED).append(", ")
+            append("tm.").append(Schema.TransactionModel.COUNT_IN_TOTAL).append(" AS ").append(Contract.TransactionModel.COUNT_IN_TOTAL).append(", ")
+            append("tm.").append(Schema.TransactionModel.TAG).append(" AS ").append(Contract.TransactionModel.TAG).append(" ")
+            append("FROM ").append(Schema.TransactionModel.TABLE).append(" AS tm JOIN ").append(Schema.Wallet.TABLE)
+            append(" AS w ON tm.").append(Schema.TransactionModel.WALLET).append(" = w.").append(Schema.Wallet.ID).append(" AND w.")
+            append(Schema.Wallet.DELETED).append(" = 0 JOIN ").append(Schema.Category.TABLE).append(" AS c ON tm.")
+            append(Schema.TransactionModel.CATEGORY).append(" = c.").append(Schema.Category.ID).append(" AND c.")
+            append(Schema.Category.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Place.TABLE).append(" AS p ON tm.")
+            append(Schema.TransactionModel.PLACE).append(" = p.").append(Schema.Place.ID).append(" AND p.")
+            append(Schema.Place.ID).append(" = 0 LEFT JOIN ").append(Schema.Event.TABLE).append(" AS e ON tm.")
+            append(Schema.TransactionModel.EVENT).append(" = e.").append(Schema.Event.ID).append(" AND e.")
+            append(Schema.Event.DELETED).append(" = 0 WHERE tm.").append(Schema.TransactionModel.DELETED).append(" = 0")
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
@@ -3810,53 +3824,55 @@ open class SQLDatabase(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor? {
-        val subQuery = "SELECT " +
-                "tm." + Schema.TransferModel.ID + " AS " + Contract.TransferModel.ID + ", " +
-                "tm." + Schema.TransferModel.DESCRIPTION + " AS " + Contract.TransferModel.DESCRIPTION + ", " +
-                "tm." + Schema.TransferModel.WALLET_FROM + " AS " + Contract.TransferModel.WALLET_FROM_ID + ", " +
-                "wf." + Schema.Wallet.NAME + " AS " + Contract.TransferModel.WALLET_FROM_NAME + ", " +
-                "wf." + Schema.Wallet.ICON + " AS " + Contract.TransferModel.WALLET_FROM_ICON + ", " +
-                "wf." + Schema.Wallet.CURRENCY + " AS " + Contract.TransferModel.WALLET_FROM_CURRENCY + ", " +
-                "wf." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.TransferModel.WALLET_FROM_COUNT_IN_TOTAL + ", " +
-                "wf." + Schema.Wallet.ARCHIVED + " AS " + Contract.TransferModel.WALLET_FROM_ARCHIVED + ", " +
-                "wf." + Schema.Wallet.TAG + " AS " + Contract.TransferModel.WALLET_FROM_TAG + ", " +
-                "tm." + Schema.TransferModel.WALLET_TO + " AS " + Contract.TransferModel.WALLET_TO_ID + ", " +
-                "wt." + Schema.Wallet.NAME + " AS " + Contract.TransferModel.WALLET_TO_NAME + ", " +
-                "wt." + Schema.Wallet.ICON + " AS " + Contract.TransferModel.WALLET_TO_ICON + ", " +
-                "wt." + Schema.Wallet.CURRENCY + " AS " + Contract.TransferModel.WALLET_TO_CURRENCY + ", " +
-                "wt." + Schema.Wallet.COUNT_IN_TOTAL + " AS " + Contract.TransferModel.WALLET_TO_COUNT_IN_TOTAL + ", " +
-                "wt." + Schema.Wallet.ARCHIVED + " AS " + Contract.TransferModel.WALLET_TO_ARCHIVED + ", " +
-                "wt." + Schema.Wallet.TAG + " AS " + Contract.TransferModel.WALLET_TO_TAG + ", " +
-                "tm." + Schema.TransferModel.MONEY_FROM + " AS " + Contract.TransferModel.MONEY_FROM + ", " +
-                "tm." + Schema.TransferModel.MONEY_TO + " AS " + Contract.TransferModel.MONEY_TO + ", " +
-                "tm." + Schema.TransferModel.MONEY_TAX + " AS " + Contract.TransferModel.MONEY_TAX + ", " +
-                "tm." + Schema.TransferModel.NOTE + " AS " + Contract.TransferModel.NOTE + ", " +
-                "tm." + Schema.TransferModel.EVENT + " AS " + Contract.TransferModel.EVENT_ID + ", " +
-                "e." + Schema.Event.NAME + " AS " + Contract.TransferModel.EVENT_NAME + ", " +
-                "e." + Schema.Event.ICON + " AS " + Contract.TransferModel.EVENT_ICON + ", " +
-                "e." + Schema.Event.NOTE + " AS " + Contract.TransferModel.EVENT_NOTE + ", " +
-                "e." + Schema.Event.START_DATE + " AS " + Contract.TransferModel.EVENT_START_DATE + ", " +
-                "e." + Schema.Event.END_DATE + " AS " + Contract.TransferModel.EVENT_END_DATE + ", " +
-                "e." + Schema.Event.TAG + " AS " + Contract.TransferModel.EVENT_TAG + ", " +
-                "tm." + Schema.TransferModel.PLACE + " AS " + Contract.TransferModel.PLACE_ID + ", " +
-                "p." + Schema.Place.NAME + " AS " + Contract.TransferModel.PLACE_NAME + ", " +
-                "p." + Schema.Place.ICON + " AS " + Contract.TransferModel.PLACE_ICON + ", " +
-                "p." + Schema.Place.ADDRESS + " AS " + Contract.TransferModel.PLACE_ADDRESS + ", " +
-                "p." + Schema.Place.LATITUDE + " AS " + Contract.TransferModel.PLACE_LATITUDE + ", " +
-                "p." + Schema.Place.LONGITUDE + " AS " + Contract.TransferModel.PLACE_LONGITUDE + ", " +
-                "p." + Schema.Place.TAG + " AS " + Contract.TransferModel.PLACE_TAG + ", " +
-                "tm." + Schema.TransferModel.CONFIRMED + " AS " + Contract.TransferModel.CONFIRMED + ", " +
-                "tm." + Schema.TransferModel.COUNT_IN_TOTAL + " AS " + Contract.TransferModel.COUNT_IN_TOTAL + ", " +
-                "tm." + Schema.TransferModel.TAG + " AS " + Contract.TransferModel.TAG + " " +
-                "FROM " + Schema.TransferModel.TABLE + " AS tm JOIN " + Schema.Wallet.TABLE + " AS " +
-                "wf ON tm." + Schema.TransferModel.WALLET_FROM + " = wf." + Schema.Wallet.ID +
-                " AND wf." + Schema.Wallet.DELETED + " = 0 JOIN " + Schema.Wallet.TABLE + " AS " +
-                "wt ON tm." + Schema.TransferModel.WALLET_TO + " = wt." + Schema.Wallet.ID +
-                " AND wt." + Schema.Wallet.DELETED + " = 0 LEFT JOIN " + Schema.Event.TABLE +
-                " AS e ON tm." + Schema.TransferModel.EVENT + " = e." + Schema.Event.ID + " AND e." +
-                Schema.Event.DELETED + " = 0 LEFT JOIN " + Schema.Place.TABLE + " AS p ON tm." +
-                Schema.TransferModel.PLACE + " = p." + Schema.Place.ID + " AND p." +
-                Schema.Place.DELETED + " = 0 WHERE tm." + Schema.TransferModel.DELETED + " = 0"
+        val subQuery = buildString {
+            append("SELECT ")
+            append("tm.").append(Schema.TransferModel.ID).append(" AS ").append(Contract.TransferModel.ID).append(", ")
+            append("tm.").append(Schema.TransferModel.DESCRIPTION).append(" AS ").append(Contract.TransferModel.DESCRIPTION).append(", ")
+            append("tm.").append(Schema.TransferModel.WALLET_FROM).append(" AS ").append(Contract.TransferModel.WALLET_FROM_ID).append(", ")
+            append("wf.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.TransferModel.WALLET_FROM_NAME).append(", ")
+            append("wf.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.TransferModel.WALLET_FROM_ICON).append(", ")
+            append("wf.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.TransferModel.WALLET_FROM_CURRENCY).append(", ")
+            append("wf.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.TransferModel.WALLET_FROM_COUNT_IN_TOTAL).append(", ")
+            append("wf.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.TransferModel.WALLET_FROM_ARCHIVED).append(", ")
+            append("wf.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.TransferModel.WALLET_FROM_TAG).append(", ")
+            append("tm.").append(Schema.TransferModel.WALLET_TO).append(" AS ").append(Contract.TransferModel.WALLET_TO_ID).append(", ")
+            append("wt.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.TransferModel.WALLET_TO_NAME).append(", ")
+            append("wt.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.TransferModel.WALLET_TO_ICON).append(", ")
+            append("wt.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.TransferModel.WALLET_TO_CURRENCY).append(", ")
+            append("wt.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.TransferModel.WALLET_COUNT_IN_TOTAL).append(", ")
+            append("wt.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.TransferModel.WALLET_ARCHIVED).append(", ")
+            append("wt.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.TransferModel.WALLET_TAG).append(", ")
+            append("tm.").append(Schema.TransferModel.MONEY_FROM).append(" AS ").append(Contract.TransferModel.MONEY_FROM).append(", ")
+            append("tm.").append(Schema.TransferModel.MONEY_TO).append(" AS ").append(Contract.TransferModel.MONEY_TO).append(", ")
+            append("tm.").append(Schema.TransferModel.MONEY_TAX).append(" AS ").append(Contract.TransferModel.MONEY_TAX).append(", ")
+            append("tm.").append(Schema.TransferModel.NOTE).append(" AS ").append(Contract.TransferModel.NOTE).append(", ")
+            append("tm.").append(Schema.TransferModel.EVENT).append(" AS ").append(Contract.TransferModel.EVENT_ID).append(", ")
+            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.TransferModel.EVENT_NAME).append(", ")
+            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.TransferModel.EVENT_ICON).append(", ")
+            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.TransferModel.EVENT_NOTE).append(", ")
+            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.TransferModel.EVENT_START_DATE).append(", ")
+            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.TransferModel.EVENT_END_DATE).append(", ")
+            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.TransferModel.EVENT_TAG).append(", ")
+            append("tm.").append(Schema.TransferModel.PLACE).append(" AS ").append(Contract.TransferModel.PLACE_ID).append(", ")
+            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.TransferModel.PLACE_NAME).append(", ")
+            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.TransferModel.PLACE_ICON).append(", ")
+            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.TransferModel.PLACE_ADDRESS).append(", ")
+            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.TransferModel.PLACE_LATITUDE).append(", ")
+            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.TransferModel.PLACE_LONGITUDE).append(", ")
+            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.TransferModel.PLACE_TAG).append(", ")
+            append("tm.").append(Schema.TransferModel.CONFIRMED).append(" AS ").append(Contract.TransferModel.CONFIRMED).append(", ")
+            append("tm.").append(Schema.TransferModel.COUNT_IN_TOTAL).append(" AS ").append(Contract.TransferModel.COUNT_IN_TOTAL).append(", ")
+            append("tm.").append(Schema.TransferModel.TAG).append(" AS ").append(Contract.TransferModel.TAG).append(" ")
+            append("FROM ").append(Schema.TransferModel.TABLE).append(" AS tm JOIN ").append(Schema.Wallet.TABLE).append(" AS ")
+            append("wf ON tm.").append(Schema.TransferModel.WALLET_FROM).append(" = wf.").append(Schema.Wallet.ID)
+            append(" AND wf.").append(Schema.Wallet.DELETED).append(" = 0 JOIN ").append(Schema.Wallet.TABLE).append(" AS ")
+            append("wt ON tm.").append(Schema.TransferModel.WALLET_TO).append(" = wt.").append(Schema.Wallet.ID)
+            append(" AND wt.").append(Schema.Wallet.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Event.TABLE)
+            append(" AS e ON tm.").append(Schema.TransferModel.EVENT).append(" = e.").append(Schema.Event.ID).append(" AND e.")
+            append(Schema.Event.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Place.TABLE).append(" AS p ON tm.")
+            append(Schema.TransferModel.PLACE).append(" = p.").append(Schema.Place.ID).append(" AND p.")
+            append(Schema.Place.DELETED).append(" = 0 WHERE tm.").append(Schema.TransferModel.DELETED).append(" = 0")
+        }
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
     }
 
