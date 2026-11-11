@@ -43,9 +43,10 @@ import java.io.InputStreamReader
  * the build checks that a name in the file resolves, so run the instrumented IconGroupLoaderTest
  * on a device after adding one.
  */
-class IconGroupLoader(context: Context) : AbstractGenericLoader<List<IconGroup>>(context) {
+class IconGroupLoader(context: Context) :
+    AbstractGenericLoader<List<@JvmSuppressWildcards IconGroup>>(context) {
 
-    override fun loadInBackground(): List<IconGroup> {
+    override fun loadInBackground(): List<@JvmSuppressWildcards IconGroup> {
         val iconGroups = ArrayList<IconGroup>()
         val jsonBuilder = StringBuilder()
         try {

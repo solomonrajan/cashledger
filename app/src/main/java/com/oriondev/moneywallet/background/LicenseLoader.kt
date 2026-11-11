@@ -30,9 +30,10 @@ import java.io.InputStreamReader
 /**
  * Created by andrea on 06/04/18.
  */
-class LicenseLoader(context: Context) : AbstractGenericLoader<List<License>>(context) {
+class LicenseLoader(context: Context) :
+    AbstractGenericLoader<List<@JvmSuppressWildcards License>>(context) {
 
-    override fun loadInBackground(): List<License> {
+    override fun loadInBackground(): List<@JvmSuppressWildcards License> {
         val licenses = ArrayList<License>()
         licenses.addAll(loadLicenseFile("libraries_base.json"))
         licenses.addAll(loadLicenseFile("libraries_version.json"))

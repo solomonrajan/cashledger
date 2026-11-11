@@ -29,9 +29,10 @@ import java.io.IOException
 /**
  * Created by andrea on 06/04/18.
  */
-class ChangeLogLoader(context: Context) : AbstractGenericLoader<List<ChangeLog>>(context) {
+class ChangeLogLoader(context: Context) :
+    AbstractGenericLoader<List<@JvmSuppressWildcards ChangeLog>>(context) {
 
-    override fun loadInBackground(): List<ChangeLog> {
+    override fun loadInBackground(): List<@JvmSuppressWildcards ChangeLog> {
         val changeLogs = ArrayList<ChangeLog>()
         val parser = context.resources.getXml(R.xml.changelog)
         try {
