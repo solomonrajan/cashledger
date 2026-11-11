@@ -39,7 +39,7 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 | **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
 | **TOTALS** | **Entire Codebase** | **205** | **312** | **517** | **60.3%** | **🟡 Active** | **~13 Sprints** |
 
-*(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + 38 Phase 4 files (`api/`, `background/`, `service/`, `broadcast/`) + `TutorialActivity.kt` are now pure Kotlin — 161 total).*
+*(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + 38 Phase 4 files (`api/`, `background/`, `service/`, `broadcast/`) + 151 Phase 5 files (`picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/`) + `TutorialActivity.kt` are now pure Kotlin — 312 total).*
 
 ### 📢 Recent Activity & Milestones
 
@@ -48,7 +48,8 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 - **2026-11-05 (Phase 2 Completed):** ✅ Migrated all 34 domain model and entity classes in `com.oriondev.moneywallet.model` to idiomatic Kotlin. Resolved JVM bytecode platform clashes, interface property overrides (`Identifiable.id`), `toString()` contracts, and database entity schema nullability.
 - **2026-11-07 (Phase 3 Completed):** ✅ Migrated all 77 storage, database, preference, and cache classes in `com.oriondev.moneywallet.storage.*` to idiomatic Kotlin (`SQLDatabase.kt`, `DataContentProvider.kt`, `SyncContentProvider.kt`, preference managers, database serializers, etc.). Refactored query builders to `buildString` to eliminate compiler AST depth stack overflow bottlenecks, verified strict 0 double-bang (`!!`) compliance across the codebase, and verified 100% green in CI (all 662 unit tests passed, zero Detekt warnings, APK assembled).
 - **2026-11-11 (Phase 4 Completed):** ✅ Migrated all 38 API, service, background loader, and broadcast receiver classes across `broadcast/` (7), `background/` (8), `api/` (13), and `service/` (10) to idiomatic Kotlin (`WebDAVClient.kt`, `SAFBackendServiceAPI.kt`, `DiskBackendServiceAPI.kt`, `OverviewDataLoader.kt`, `AutoBackupJobService.kt`, `BackupHandlerIntentService.kt`, `ImportExportIntentService.kt`, `RecurrenceHandlerIntentService.kt`, etc.). Applied `@JvmSuppressWildcards` on Java-facing loader `List` APIs, exposed `@JvmStatic` WebDAV helper methods for Java tests, shared foreground notification and backup locking helpers (`ForegroundServices.kt`, `TaskReporter.kt`, `BackupOperation.kt`), maintained strict 0 double-bang (`!!`) compliance and zero Detekt warnings, and verified 100% green in CI (run `43038888396`).
-- **Next Target:** 🎯 **Phase 5: Reusable UI & Pickers** (151 classes across `picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/`).
+- **2026-11-11 (Phase 5 Completed):** ✅ Migrated all 151 reusable UI component, custom view, picker, and adapter classes across `ui/behavior/` (1), `ui/drawable/` (2), `ui/notification/` (1), `ui/widget/` (4), `ui/preference/` (6), `ui/view/` (73 across root, `calendar/`, `chart/`, `text/`, `theme/`), `picker/` (16), and `ui/adapter/` (48 across `pager/` and `recycler/`) to pure idiomatic Kotlin. Consolidated drag-sort (`AbstractSortCursorAdapter`), theme/header tinting (`applyHeaderTintBackground`), and route formatting (`formatTransferRoute`) helpers while preserving `@JvmStatic`/`@JvmOverloads` Java test and screen compatibility, strict zero `!!` compliance, zero Detekt warnings, and green CI (run `43076795512`).
+- **Next Target:** 🎯 **Phase 6: Top-Level Screens & App** (134 Java classes remaining across `ui/activity/`, `ui/fragment/`, and `App.java`; `TutorialActivity.kt` is already migrated).
 
 ---
 
@@ -86,7 +87,7 @@ flowchart TB
 
     subgraph L3["🟡 Tier 3 · Presentation Layer & App Entry · Active Frontier"]
         direction LR
-        P5["Phase 5 · Reusable UI & Pickers<br/>picker, ui/adapter, ui/view, ui/* · 0 / 151<br/>Pickers · Adapters · Charts · Widgets"]:::complete
+        P5["Phase 5 · Reusable UI & Pickers<br/>picker, ui/adapter, ui/view, ui/* · 151 / 151<br/>Pickers · Adapters · Charts · Widgets"]:::complete
         P6["Phase 6 · Top Screens & App Core<br/>ui/activity, ui/fragment, App.java · 1 / 135<br/>TutorialActivity.kt Done · Screens Next"]:::inprog
         P5 --> P6
     end
@@ -116,7 +117,7 @@ flowchart TB
     linkStyle 7,8 stroke:#64748B,stroke-width:2px
 ```
 
-> **Legend:** 🟣 Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–4`, `160` files) &bull; ⚡ Verified Engine Core &bull; 🟡 Active / Ready (`Phases 5–6`, `1` migrated, `285` remaining) &bull; ⚪ Pending (`Phase 7`, `71` files) &bull; 🏁 Target Release
+> **Legend:** 🟣 Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–5`, `311` files) &bull; ⚡ Verified Engine Core &bull; 🟡 Active (`Phase 6`, `1` migrated, `134` remaining) &bull; ⚪ Pending (`Phase 7`, `71` files) &bull; 🏁 Target Release
 
 ---
 
@@ -139,16 +140,16 @@ flowchart LR
     P2["Phase 2: Models<br/>Nov 05 · Done"]:::done
     P3["Phase 3: Storage & DB<br/>Nov 07 · Done"]:::done
     P4["Phase 4: API & Services<br/>Nov 09–11 · Done"]:::done
-    P5["Phase 5: Reusable UI<br/>Nov 23 – Dec 11 · Next"]:::next
-    P6["Phase 6: Screens & App<br/>Dec 14 – Jan 08"]:::future
+    P5["Phase 5: Reusable UI<br/>Nov 11 · Done"]:::done
+    P6["Phase 6: Screens & App<br/>Dec 14 – Jan 08 · Active"]:::next
     P7["Phase 7: Tests & KTS<br/>Jan 11 – Jan 22"]:::future
     REL(["v2.2.0 RC<br/>Jan 25 – Jan 29"]):::target
 
-    P0 ==> P1 ==> P2 ==> P3 ==> P4 --> P5 -.-> P6 -.-> P7 -.-> REL
+    P0 ==> P1 ==> P2 ==> P3 ==> P4 ==> P5 --> P6 -.-> P7 -.-> REL
 
-    linkStyle 0,1,2,3 stroke:#10B981,stroke-width:3px
-    linkStyle 4 stroke:#F59E0B,stroke-width:2.5px
-    linkStyle 5,6,7 stroke:#64748B,stroke-width:2px
+    linkStyle 0,1,2,3,4 stroke:#10B981,stroke-width:3px
+    linkStyle 5 stroke:#F59E0B,stroke-width:2.5px
+    linkStyle 6,7 stroke:#64748B,stroke-width:2px
 ```
 
 ### 📅 Milestone Schedule Table
@@ -160,7 +161,7 @@ flowchart LR
 | **Phase 2** | Domain Models & Entities (`model/`) | 34 | 1 Day | Nov 05, 2026 | **Nov 05, 2026** | 🟢 **Completed:** 34 POJOs $\rightarrow$ immutable data classes; zero `!!`. |
 | **Phase 3** | Storage, SQLite & ContentProvider (`storage/`) | 77 | 2 Days | Nov 06, 2026 | **Nov 07, 2026** | 🟢 **Completed:** SQLDatabase, DataContentProvider, Preferences, Caches (100% green CI). |
 | **Phase 4** | Remote API, Services & Background | 38 | 3 Days | Nov 09, 2026 | **Nov 20, 2026** | 🟢 **Completed:** All 38 files across `api/`, `background/`, `service/`, `broadcast/` pure Kotlin (100% green CI). |
-| **Phase 5** | Reusable UI, Pickers & Adapters | 151 | 3 Weeks | Nov 23, 2026 | **Dec 11, 2026** | 🟡 **Ready to Start:** Custom views, Pickers, RecyclerView Adapters & ViewHolders. |
+| **Phase 5** | Reusable UI, Pickers & Adapters | 151 | 1 Day | Nov 11, 2026 | **Dec 11, 2026** | 🟢 **Completed:** All 151 files across `picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/` pure Kotlin (100% green CI). |
 | **Phase 6** | Top Screens, Fragments & App Core | 135 | 3.5 Weeks | Dec 14, 2026 | **Jan 08, 2027** | 🟡 **In Progress:** `TutorialActivity.kt` migrated (`1 / 135`); remaining Activities, Fragments, and `App.kt`. |
 | **Phase 7** | Tests & Gradle Modernization (`.kts`) | 71 | 2 Weeks | Jan 11, 2027 | **Jan 22, 2027** | ⚪ **Pending:** 63 unit tests, 4 androidTests & 4 flavor sources (71 files); `.kts` DSL. |
 | **Final** | **Release Verification & Smoke Test** | — | 1 Week | Jan 25, 2027 | **Jan 29, 2027** | ⚪ **Milestone:** **100% Pure Kotlin v2.2.0 Release Candidate tagged.** |
@@ -351,23 +352,20 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 5: Reusable UI, Pickers & Adapters
-**Dates:** Nov 23, 2026 – Dec 11, 2026 &bull; **Deadline:** Dec 11, 2026 (3 Weeks) &bull; **Files:** 151 Java Files &bull; **Status:** 🟢 Completed
+**Dates:** Nov 11, 2026 &bull; **Deadline:** Dec 11, 2026 (Completed 1 Month Early) &bull; **Files:** 151 Files (0 Java Remaining) &bull; **Status:** 🟢 Completed
 **Path:** `picker/`, `ui/adapter/`, `ui/view/`, `ui/behavior/`, `ui/drawable/`, `ui/notification/`, `ui/preference/`, `ui/widget/`
 
-#### Key Components:
-- **`picker/` (16 files):** Color, Icon, Date/Time, Currency, Wallet, and Category pickers.
-- **`ui/adapter/` (48 files):** RecyclerView and ViewPager adapters for transactions, categories, wallets, currencies.
-- **`ui/view/` (73 files):** Custom charts, calendar strips, theme widgets, and custom input widgets.
-- **`ui/behavior/`, `ui/drawable/`, `ui/notification/`, `ui/preference/`, `ui/widget/` (14 files):** Scroll behavior (`1`), custom drawables (`2`), notification helper (`1`), preference controls (`6`), and app widgets (`4`).
+#### Deliverables:
+- [x] **Sub-phase 5A — Behaviors, Drawables, Notifications, Widgets & Preferences (`14` files):** `FloatingActionButtonBehavior.kt` (`ui/behavior/`, `1`), `TextDrawable.kt` & `VectorDrawable.kt` (`ui/drawable/`, `2`), `NotificationHelper.kt` (`ui/notification/`, `1`), `SummaryWidgetProvider.kt` & widget services (`ui/widget/`, `4`), and `Themed*Preference.kt` (`ui/preference/`, `6`).
+- [x] **Sub-phase 5B — Custom Views, Calendars, Charts & Text (`25` files):** Root custom views (`11`), calendar views (`5`), chart views (`3`), and animated/currency text views (`6`) across `ui/view/`.
+- [x] **Sub-phase 5C — Runtime Theme Engine (`ui/view/theme/`, `48` files):** `ThemeEngine.kt`, `ITheme.kt`, color palettes, and themed Android UI components.
+- [x] **Sub-phase 5D — Pickers (`picker/`, `16` files):** Color, Icon, Date/Time, Currency, Wallet, Place, and Category pickers (`MapPlacePicker.java` in `app/src/osm/` stays in Phase 7).
+- [x] **Sub-phases 5E & 5F — Pager & RecyclerView Adapters (`ui/adapter/`, `48` files):** All `12` ViewPager adapters (`ui/adapter/pager/`) and all `36` RecyclerView adapters (`ui/adapter/recycler/`), including `TransactionCursorAdapter.kt` and `TransferCursorAdapter.kt`.
 
-#### How We Do It:
-- Clean up RecyclerView Adapters using Kotlin property delegates and lambda click listeners:
-  ```kotlin
-  class WalletAdapter(
-      private val onWalletClicked: (Wallet) -> Unit
-  ) : ListAdapter<Wallet, WalletViewHolder>(WalletDiffCallback) { ... }
-  ```
-- Eliminate `findViewById` where possible (or adopt ViewBinding if enabled in `app/build.gradle`).
+#### Highlights & Implementation Notes:
+- **Zero `!!` & Strict Static Analysis:** All 151 files pass Detekt 1.23.6 and ktlint checks with zero `!!` double-bang operators, zero wildcard imports, and no unsafe casts.
+- **Shared Adapter Infrastructure:** Consolidated sortable cursor drag-and-drop handling into `AbstractSortCursorAdapter`, shared header background tinting via `applyHeaderTintBackground`, shared route formatting via `formatTransferRoute`, and preserved `@JvmStatic` / `@JvmOverloads` Java test and activity signatures.
+- **Verified in CI:** 100% green unit tests, Android Lint, Detekt static analysis, and debug APK build (GitHub Actions run `43076795512`).
 
 ---
 
