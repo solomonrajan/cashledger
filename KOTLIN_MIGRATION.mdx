@@ -1,7 +1,7 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-11"
+last_updated: "2026-11-12"
 status: "In Progress"
 overall_progress: "60.3%"
 ---
@@ -55,69 +55,42 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 
 ## 🗺️ Migration Architecture & Flow
 
-To avoid circular Java $\leftrightarrow$ Kotlin dependencies and runtime platform-type crashes (`T!`), the migration executes as a **Strict Bottom-Up Dependency Pipeline** — leaf utilities and immutable domain contracts lock into pure Kotlin first, forming a verified engine core before UI components, screens, and tests build on top.
+To prevent circular Java $\leftrightarrow$ Kotlin dependencies and runtime platform-type crashes (`T!`), the migration runs as a **Two-Stage Bottom-Up Pipeline** — locking leaf contracts and backend engines into pure Kotlin first, then building UI, screens, and tests cleanly on top.
 
 ```mermaid
-%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 48, "padding": 16}}}%%
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 30, "rankSpacing": 42, "padding": 14}}}%%
 flowchart TB
-    classDef guardrail fill:#312E81,stroke:#818CF8,stroke-width:2px,color:#EEF2FF
-    classDef complete fill:#065F46,stroke:#10B981,stroke-width:2px,color:#ECFDF5
-    classDef hub fill:#0F766E,stroke:#2DD4BF,stroke-width:2.5px,color:#F0FDFA
-    classDef inprog fill:#78350F,stroke:#F59E0B,stroke-width:2px,color:#FFFBEB
-    classDef pending fill:#1E293B,stroke:#64748B,stroke-width:1.5px,color:#E2E8F0
-    classDef target fill:#0F172A,stroke:#38BDF8,stroke-width:2px,color:#E0F2FE
+    classDef gate fill:#1E1B4B,stroke:#818CF8,stroke-width:2px,color:#E0E7FF
+    classDef complete fill:#064E3B,stroke:#10B981,stroke-width:2px,color:#ECFDF5
+    classDef inprog fill:#78350F,stroke:#F59E0B,stroke-width:2.5px,color:#FFFBEB
+    classDef pending fill:#0F172A,stroke:#64748B,stroke-width:1.5px,color:#CBD5E1
+    classDef release fill:#0C4A6E,stroke:#38BDF8,stroke-width:2px,color:#E0F2FE
 
-    P0(["🛡️ Phase 0 · Guardrails & CI Baseline<br/>Detekt 1.23.6 · Zero !! Policy · Auto-Tracker"]):::guardrail
+    P0(["🛡️ Phase 0 · Guardrails · Detekt 1.23.6 · Zero !! Policy"]):::gate
 
-    subgraph L1["🟢 Tier 1 · Leaf Foundation & Domain Contracts · 100% Pure Kotlin"]
+    subgraph CORE["⚡ Pure-Kotlin Engine · Phases 1–4"]
         direction LR
-        P1["Phase 1 · Leaf Utilities<br/>utils/ · 11 / 11 Files<br/>Dates · Currency · URLs · Extensions"]:::complete
-        P2["Phase 2 · Domain Models<br/>model/ · 34 / 34 Files<br/>Immutable Data Classes & Entities"]:::complete
-        P1 ==> P2
+        P1["🧩 P1 · Utils<br/>11 / 11"]:::complete ==> P2["🧱 P2 · Models<br/>34 / 34"]:::complete ==> P3["💾 P3 · Storage<br/>77 / 77"]:::complete ==> P4["🌐 P4 · API & Jobs<br/>38 / 38"]:::complete
     end
 
-    subgraph L2["🟢 Tier 2 · Persistence, Cloud I/O & Background Engines · 100% Pure Kotlin"]
+    subgraph APP["🚀 UI, Verification & Release · Phases 5–7"]
         direction LR
-        P3["Phase 3 · Storage & SQLite<br/>storage/ · 77 / 77 Files<br/>SQLDatabase · ContentProvider · Cache"]:::complete
-        P4["Phase 4 · API, Services & Broadcast<br/>api, service, background, broadcast · 38 / 38<br/>WebDAV · SAF/Disk · Workers · Receivers"]:::complete
-        P3 ==> P4
+        P5["🎨 P5 · Pickers & UI<br/>151 / 151"]:::complete --> P6["📱 P6 · Screens & App<br/>1 / 135"]:::inprog -.-> P7["🧪 P7 · Tests & KTS<br/>0 / 71"]:::pending -.-> TARGET(["🏁 v2.2.0<br/>Pure Kotlin"]):::release
     end
 
-    CORE{{"⚡ Verified Pure-Kotlin Engine Core · 160 / 160 Files<br/>Non-Null Contracts · Detekt Clean · CI Run 43038888396"}}:::hub
+    P0 -. enforces rules .-> CORE
+    CORE ==>|100% pure Kotlin backend| APP
 
-    subgraph L3["🟡 Tier 3 · Presentation Layer & App Entry · Active Frontier"]
-        direction LR
-        P5["Phase 5 · Reusable UI & Pickers<br/>picker, ui/adapter, ui/view, ui/* · 151 / 151<br/>Pickers · Adapters · Charts · Widgets"]:::complete
-        P6["Phase 6 · Top Screens & App Core<br/>ui/activity, ui/fragment, App.java · 1 / 135<br/>TutorialActivity.kt Done · Screens Next"]:::inprog
-        P5 --> P6
-    end
+    style CORE fill:none,stroke:#10B981,stroke-width:1.5px,stroke-dasharray:6 4
+    style APP fill:none,stroke:#F59E0B,stroke-width:1.5px,stroke-dasharray:6 4
 
-    subgraph L4["⚪ Tier 4 · Verification, Flavors & Build Modernization"]
-        direction LR
-        P7["Phase 7 · Tests, Flavors & Gradle KTS<br/>test, androidTest, floss, osm · 0 / 71<br/>63 Unit Tests · 4 androidTests · .kts"]:::pending
-    end
-
-    TARGET(["🏁 v2.2.0 Pure Kotlin RC · Target Jan 29, 2027"]):::target
-
-    P0 -. enforces Detekt and zero double-bang rules .-> L1
-    L1 ==>|Non-null Kotlin domain contracts| L2
-    L2 ==>|100% pure Kotlin backend stack| CORE
-    CORE -->|Typed foundation ready for UI| L3
-    L3 -. test coverage and KTS DSL .-> L4
-    L4 -. release sign-off .-> TARGET
-
-    style L1 fill:none,stroke:#10B981,stroke-width:1.5px,stroke-dasharray:6 4
-    style L2 fill:none,stroke:#10B981,stroke-width:1.5px,stroke-dasharray:6 4
-    style L3 fill:none,stroke:#F59E0B,stroke-width:1.5px,stroke-dasharray:6 4
-    style L4 fill:none,stroke:#64748B,stroke-width:1.5px,stroke-dasharray:6 4
-
-    linkStyle 0,1,4,5 stroke:#10B981,stroke-width:3px
-    linkStyle 2,6 stroke:#F59E0B,stroke-width:2.5px
-    linkStyle 3 stroke:#818CF8,stroke-width:2px
-    linkStyle 7,8 stroke:#64748B,stroke-width:2px
+    linkStyle 0,1,2,3,7 stroke:#10B981,stroke-width:2.5px
+    linkStyle 4 stroke:#F59E0B,stroke-width:2px
+    linkStyle 5 stroke:#64748B,stroke-width:2px
+    linkStyle 6 stroke:#818CF8,stroke-width:2px
 ```
 
-> **Legend:** 🟣 Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–5`, `311` files) &bull; ⚡ Verified Engine Core &bull; 🟡 Active (`Phase 6`, `1` migrated, `134` remaining) &bull; ⚪ Pending (`Phase 7`, `71` files) &bull; 🏁 Target Release
+> **Legend:** 🛡️ Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–5` · `311` files) &bull; 🟡 Active (`Phase 6` · `1 / 135`) &bull; ⚪ Queued (`Phase 7` · `0 / 71`) &bull; 🏁 Release (`v2.2.0` · Jan 29, 2027)
 
 ---
 
