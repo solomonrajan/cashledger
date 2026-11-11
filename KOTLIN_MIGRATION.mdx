@@ -54,59 +54,69 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░
 
 ## 🗺️ Migration Architecture & Flow
 
-To avoid circular Java $\leftrightarrow$ Kotlin dependencies and runtime platform-type crashes (`T!`), the migration follows a **Strict Bottom-Up (Dependency Leaves First)** layered architecture — foundational utilities and domain contracts stabilize in pure Kotlin before persistence, services, UI components, and tests adopt them.
+To avoid circular Java $\leftrightarrow$ Kotlin dependencies and runtime platform-type crashes (`T!`), the migration executes as a **Strict Bottom-Up Dependency Pipeline** — leaf utilities and immutable domain contracts lock into pure Kotlin first, forming a verified engine core before UI components, screens, and tests build on top.
 
 ```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 34, "rankSpacing": 48, "padding": 16}}}%%
 flowchart TB
     classDef guardrail fill:#312E81,stroke:#818CF8,stroke-width:2px,color:#EEF2FF
     classDef complete fill:#065F46,stroke:#10B981,stroke-width:2px,color:#ECFDF5
+    classDef hub fill:#0F766E,stroke:#2DD4BF,stroke-width:2.5px,color:#F0FDFA
     classDef inprog fill:#78350F,stroke:#F59E0B,stroke-width:2px,color:#FFFBEB
     classDef pending fill:#1E293B,stroke:#64748B,stroke-width:1.5px,color:#E2E8F0
+    classDef target fill:#0F172A,stroke:#38BDF8,stroke-width:2px,color:#E0F2FE
 
-    subgraph L0["🛡️ Tier 0 · Tooling, Guardrails & CI Automation"]
-        direction LR
-        P0["Phase 0 · Safety Baseline & Guardrails<br/>Detekt 1.23.6 · Zero !! Ban · Tracker Auto-Sync · CI Gates"]:::guardrail
-    end
+    P0(["🛡️ Phase 0 · Guardrails & CI Baseline<br/>Detekt 1.23.6 · Zero !! Policy · Auto-Tracker"]):::guardrail
 
-    subgraph L1["🟢 Tier 1 · Leaf Foundation & Domain Contracts (100% Pure Kotlin)"]
+    subgraph L1["🟢 Tier 1 · Leaf Foundation & Domain Contracts · 100% Pure Kotlin"]
         direction LR
-        P1["Phase 1 · Leaf Utilities<br/>utils/ · 11 / 11 Files<br/>Dates, Currency, URLs, Extensions"]:::complete
+        P1["Phase 1 · Leaf Utilities<br/>utils/ · 11 / 11 Files<br/>Dates · Currency · URLs · Extensions"]:::complete
         P2["Phase 2 · Domain Models<br/>model/ · 34 / 34 Files<br/>Immutable Data Classes & Entities"]:::complete
-        P1 --> P2
+        P1 ==> P2
     end
 
-    subgraph L2["🟢 Tier 2 · Persistence, Backends & Background Engines (100% Pure Kotlin)"]
+    subgraph L2["🟢 Tier 2 · Persistence, Cloud I/O & Background Engines · 100% Pure Kotlin"]
         direction LR
-        P3["Phase 3 · Storage & SQLite<br/>storage/ · 77 / 77 Files<br/>SQLDatabase, ContentProviders, Cache"]:::complete
-        P4["Phase 4 · API, Services & Broadcast<br/>api, service, background, broadcast · 38 / 38 Files<br/>WebDAV, SAF/Disk, Workers, Receivers"]:::complete
-        P3 --> P4
+        P3["Phase 3 · Storage & SQLite<br/>storage/ · 77 / 77 Files<br/>SQLDatabase · ContentProvider · Cache"]:::complete
+        P4["Phase 4 · API, Services & Broadcast<br/>api, service, background, broadcast · 38 / 38<br/>WebDAV · SAF/Disk · Workers · Receivers"]:::complete
+        P3 ==> P4
     end
 
-    subgraph L3["🟡 Tier 3 · Presentation Layer & Application Entry (Active Frontier)"]
+    CORE{{"⚡ Verified Pure-Kotlin Engine Core · 160 / 160 Files<br/>Non-Null Contracts · Detekt Clean · CI Run 43038888396"}}:::hub
+
+    subgraph L3["🟡 Tier 3 · Presentation Layer & App Entry · Active Frontier"]
         direction LR
-        P5["Phase 5 · Reusable UI & Pickers<br/>picker, ui/adapter, ui/view, ui/* · 0 / 151 Files<br/>Pickers, Adapters, Charts & Widgets"]:::inprog
-        P6["Phase 6 · Top Screens & App Core<br/>ui/activity, ui/fragment, App.java · 1 / 135 Files<br/>TutorialActivity.kt Done · Screens Next"]:::inprog
+        P5["Phase 5 · Reusable UI & Pickers<br/>picker, ui/adapter, ui/view, ui/* · 0 / 151<br/>Pickers · Adapters · Charts · Widgets"]:::inprog
+        P6["Phase 6 · Top Screens & App Core<br/>ui/activity, ui/fragment, App.java · 1 / 135<br/>TutorialActivity.kt Done · Screens Next"]:::inprog
         P5 --> P6
     end
 
     subgraph L4["⚪ Tier 4 · Verification, Flavors & Build Modernization"]
         direction LR
-        P7["Phase 7 · Tests, Flavors & Gradle KTS<br/>test, androidTest, floss, osm · 0 / 71 Files<br/>63 Unit Tests · 4 androidTests · build.gradle.kts"]:::pending
+        P7["Phase 7 · Tests, Flavors & Gradle KTS<br/>test, androidTest, floss, osm · 0 / 71<br/>63 Unit Tests · 4 androidTests · .kts"]:::pending
     end
 
-    L0 -. enforces Detekt & zero !! rules .-> L1
-    L1 -->|"Non-null Kotlin domain contracts"| L2
-    L2 -->|"Typed repositories, loaders & services"| L3
-    L3 -->|"End-to-end pure Kotlin coverage"| L4
+    TARGET(["🏁 v2.2.0 Pure Kotlin RC · Target Jan 29, 2027"]):::target
 
-    style L0 fill:none,stroke:#818CF8,stroke-width:1.5px,stroke-dasharray:6 4
+    P0 -. enforces Detekt and zero double-bang rules .-> L1
+    L1 ==>|Non-null Kotlin domain contracts| L2
+    L2 ==>|100% pure Kotlin backend stack| CORE
+    CORE -->|Typed foundation ready for UI| L3
+    L3 -. test coverage and KTS DSL .-> L4
+    L4 -. release sign-off .-> TARGET
+
     style L1 fill:none,stroke:#10B981,stroke-width:1.5px,stroke-dasharray:6 4
     style L2 fill:none,stroke:#10B981,stroke-width:1.5px,stroke-dasharray:6 4
     style L3 fill:none,stroke:#F59E0B,stroke-width:1.5px,stroke-dasharray:6 4
     style L4 fill:none,stroke:#64748B,stroke-width:1.5px,stroke-dasharray:6 4
+
+    linkStyle 0,1,4,5 stroke:#10B981,stroke-width:3px
+    linkStyle 2,6 stroke:#F59E0B,stroke-width:2.5px
+    linkStyle 3 stroke:#818CF8,stroke-width:2px
+    linkStyle 7,8 stroke:#64748B,stroke-width:2px
 ```
 
-> **Legend:** 🟣 Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–4`, `160` files) &bull; 🟡 Active / Ready (`Phases 5–6`, `1` migrated, `285` remaining) &bull; ⚪ Pending (`Phase 7`, `71` files)
+> **Legend:** 🟣 Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–4`, `160` files) &bull; ⚡ Verified Engine Core &bull; 🟡 Active / Ready (`Phases 5–6`, `1` migrated, `285` remaining) &bull; ⚪ Pending (`Phase 7`, `71` files) &bull; 🏁 Target Release
 
 ---
 
@@ -117,22 +127,28 @@ flowchart TB
 > **Total Effort:** ~12 Weeks (including verification and holiday buffer)
 
 ```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 28, "rankSpacing": 42}}}%%
 flowchart LR
     classDef done fill:#065F46,stroke:#10B981,stroke-width:2px,color:#ECFDF5
     classDef next fill:#78350F,stroke:#F59E0B,stroke-width:2px,color:#FFFBEB
     classDef future fill:#1E293B,stroke:#64748B,stroke-width:1.5px,color:#E2E8F0
+    classDef target fill:#0F172A,stroke:#38BDF8,stroke-width:2px,color:#E0F2FE
 
-    P0["Phase 0: Guardrails<br/>Nov 04 · Completed"]:::done
-    P1["Phase 1: Leaf Utils<br/>Nov 04 · Completed"]:::done
-    P2["Phase 2: Domain Models<br/>Nov 05 · Completed"]:::done
-    P3["Phase 3: Storage & DB<br/>Nov 07 · Completed"]:::done
-    P4["Phase 4: API & Services<br/>Nov 09 – Nov 11 · Completed"]:::done
+    P0(["Phase 0: Guardrails<br/>Nov 04 · Done"]):::done
+    P1["Phase 1: Leaf Utils<br/>Nov 04 · Done"]:::done
+    P2["Phase 2: Models<br/>Nov 05 · Done"]:::done
+    P3["Phase 3: Storage & DB<br/>Nov 07 · Done"]:::done
+    P4["Phase 4: API & Services<br/>Nov 09–11 · Done"]:::done
     P5["Phase 5: Reusable UI<br/>Nov 23 – Dec 11 · Next"]:::next
     P6["Phase 6: Screens & App<br/>Dec 14 – Jan 08"]:::future
     P7["Phase 7: Tests & KTS<br/>Jan 11 – Jan 22"]:::future
-    REL["v2.2.0 RC Release<br/>Jan 25 – Jan 29"]:::future
+    REL(["v2.2.0 RC<br/>Jan 25 – Jan 29"]):::target
 
-    P0 --> P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> REL
+    P0 ==> P1 ==> P2 ==> P3 ==> P4 --> P5 -.-> P6 -.-> P7 -.-> REL
+
+    linkStyle 0,1,2,3 stroke:#10B981,stroke-width:3px
+    linkStyle 4 stroke:#F59E0B,stroke-width:2.5px
+    linkStyle 5,6,7 stroke:#64748B,stroke-width:2px
 ```
 
 ### 📅 Milestone Schedule Table
