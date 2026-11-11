@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018.
+ * Copyright (c) 2026 solomonrajan.
  *
  * This file is part of MoneyWallet.
  *
@@ -17,19 +18,30 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.ui.view.text;
-
-import androidx.annotation.NonNull;
+package com.oriondev.moneywallet.ui.view.chart
 
 /**
- * Created by andrea on 30/01/18.
+ * Created by andrea on 14/08/18.
  */
-public interface Validator {
+class PieData {
 
-    @NonNull
-    String getErrorMessage();
+    private val mPieSlices: MutableList<PieSlice>
 
-    boolean isValid(@NonNull CharSequence charSequence);
+    constructor() {
+        mPieSlices = ArrayList()
+    }
 
-    boolean autoValidate();
+    constructor(sliceList: List<PieSlice>) {
+        mPieSlices = ArrayList(sliceList)
+    }
+
+    operator fun get(index: Int): PieSlice = mPieSlices[index]
+
+    fun add(slice: PieSlice): Boolean = mPieSlices.add(slice)
+
+    fun remove(index: Int): PieSlice = mPieSlices.removeAt(index)
+
+    fun getAllSlices(): List<PieSlice> = mPieSlices
+
+    fun size(): Int = mPieSlices.size
 }

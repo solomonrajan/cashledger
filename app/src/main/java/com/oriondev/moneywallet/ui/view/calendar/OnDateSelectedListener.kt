@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018.
+ * Copyright (c) 2026 solomonrajan.
  *
  * This file is part of MoneyWallet.
  *
@@ -17,12 +18,11 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.ui.view.calendar;
+package com.oriondev.moneywallet.ui.view.calendar
 
 /**
  * Created by andrea on 13/04/18.
  */
-public interface OnDateSelectedListener {
-
-    void onDateSelected(int year, int month, int day, int index);
+interface OnDateSelectedListener {
+    fun onDateSelected(year: Int, month: Int, day: Int, index: Int)
 }
