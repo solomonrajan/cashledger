@@ -57,34 +57,49 @@ public class ReportLoaderSourceTest {
             "PeriodDetailSummaryLoader"
     };
 
-    private static final String APPEND =
+    private static final String APPEND_JAVA =
             "selection += \" AND \" + Contract.Transaction.REPORT_FILTER;";
+    private static final String APPEND_KOTLIN =
+            "selection += \" AND \" + Contract.Transaction.REPORT_FILTER";
 
     @Test
     public void everyReportLoaderAppliesTheReportFilter() {
         for (String loader : LOADERS) {
+            boolean kotlin = isKotlin(loader);
+            String expected = kotlin ? APPEND_KOTLIN : APPEND_JAVA;
             assertTrue("a report screen that stops filtering on REPORT_FILTER counts a category "
                     + "kept out of the reports again, and disagrees with the other two: " + loader,
-                    readSource(loader).contains(APPEND));
+                    readSource(loader).contains(expected));
         }
     }
 
-    private String readSource(String loader) {
-        String path = "src/main/java/com/oriondev/moneywallet/background/" + loader + ".java";
-        File file = new File(path);
+    private static File findSourceFile(String relativePath) {
+        File file = new File(relativePath);
         if (!file.exists()) {
             // a runner rooted at the repo root instead of the module, which the precedent
             // handles the same way
-            file = new File("app/" + path);
+            file = new File("app/" + relativePath);
+        }
+        return file;
+    }
+
+    private boolean isKotlin(String loader) {
+        return findSourceFile("src/main/java/com/oriondev/moneywallet/background/" + loader + ".kt").exists();
+    }
+
+    private String readSource(String loader) {
+        File file = findSourceFile("src/main/java/com/oriondev/moneywallet/background/" + loader + ".kt");
+        if (!file.exists()) {
+            file = findSourceFile("src/main/java/com/oriondev/moneywallet/background/" + loader + ".java");
         }
         if (!file.exists()) {
-            fail("Cannot find " + loader + ".java at " + file.getAbsolutePath());
+            fail("Cannot find " + loader + " at " + file.getAbsolutePath());
         }
         try {
             String source = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
             return COMMENTS.matcher(source).replaceAll(" ").replaceAll("\\s+", " ");
         } catch (IOException e) {
-            fail("Cannot read " + loader + ".java: " + e.getMessage());
+            fail("Cannot read " + loader + ": " + e.getMessage());
             return null;
         }
     }
