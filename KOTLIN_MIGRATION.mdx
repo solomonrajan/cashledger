@@ -21,7 +21,7 @@ overall_progress: "31.1%"
 
 ## 📊 Live Progress Dashboard
 
-> **How to update this dashboard:** When a PR lands that converts files, update the counts in the table below and bump the progress badges above.
+> **How to update this dashboard:** Run `./gradlew updateMigrationTracker` (or [`scripts/Update-MigrationTracker.ps1`](scripts/Update-MigrationTracker.ps1)) to automatically recalculate counts, progress badges, statuses, Mermaid nodes, and file checklists from the codebase. CI also validates this in [`.github/workflows/build.yml`](.github/workflows/build.yml).
 
 ```
 Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 31.1% (161 / 517)
@@ -34,9 +34,9 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░
 | **Phase 2: Domain Models** | `com...moneywallet.model` | 0 | 34 | 34 | 100% | 🟢 Completed | Sprint 2–3 |
 | **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 0 | 77 | 77 | 100% | 🟢 Completed | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 0 | 38 | 38 | 100% | 🟢 Completed | Sprint 6–7 |
-| **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view` | 151 | 0 | 151 | 0% | 🟡 Ready to Start | Sprint 8–9 |
+| **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view`, `ui/*` | 151 | 0 | 151 | 0% | 🟡 Ready to Start | Sprint 8–9 |
 | **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 134 | 1 | 135 | 0.7% | 🟡 In Progress | Sprint 10–12 |
-| **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
+| **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
 | **TOTALS** | **Entire Codebase** | **356** | **161** | **517** | **31.1%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + 38 Phase 4 files (`api/`, `background/`, `service/`, `broadcast/`) + `TutorialActivity.kt` are now pure Kotlin — 161 total).*
@@ -48,7 +48,7 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░
 - **2026-11-05 (Phase 2 Completed):** ✅ Migrated all 34 domain model and entity classes in `com.oriondev.moneywallet.model` to idiomatic Kotlin. Resolved JVM bytecode platform clashes, interface property overrides (`Identifiable.id`), `toString()` contracts, and database entity schema nullability.
 - **2026-11-07 (Phase 3 Completed):** ✅ Migrated all 77 storage, database, preference, and cache classes in `com.oriondev.moneywallet.storage.*` to idiomatic Kotlin (`SQLDatabase.kt`, `DataContentProvider.kt`, `SyncContentProvider.kt`, preference managers, database serializers, etc.). Refactored query builders to `buildString` to eliminate compiler AST depth stack overflow bottlenecks, verified strict 0 double-bang (`!!`) compliance across the codebase, and verified 100% green in CI (all 662 unit tests passed, zero Detekt warnings, APK assembled).
 - **2026-11-11 (Phase 4 Completed):** ✅ Migrated all 38 API, service, background loader, and broadcast receiver classes across `broadcast/` (7), `background/` (8), `api/` (13), and `service/` (10) to idiomatic Kotlin (`WebDAVClient.kt`, `SAFBackendServiceAPI.kt`, `DiskBackendServiceAPI.kt`, `OverviewDataLoader.kt`, `AutoBackupJobService.kt`, `BackupHandlerIntentService.kt`, `ImportExportIntentService.kt`, `RecurrenceHandlerIntentService.kt`, etc.). Applied `@JvmSuppressWildcards` on Java-facing loader `List` APIs, exposed `@JvmStatic` WebDAV helper methods for Java tests, shared foreground notification and backup locking helpers (`ForegroundServices.kt`, `TaskReporter.kt`, `BackupOperation.kt`), maintained strict 0 double-bang (`!!`) compliance and zero Detekt warnings, and verified 100% green in CI (run `43038888396`).
-- **Next Target:** 🎯 **Phase 5: Reusable UI & Pickers** (151 classes in `picker/`, `ui/adapter/`, `ui/view/`).
+- **Next Target:** 🎯 **Phase 5: Reusable UI & Pickers** (151 classes across `picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/`).
 
 ---
 
@@ -66,10 +66,10 @@ flowchart TD
     P1["Phase 1: Foundation & Utils<br/><i>(11 files in utils/)</i>"]:::complete
     P2["Phase 2: Domain Models & Entities<br/><i>(34 files in model/)</i>"]:::complete
     P3["Phase 3: Storage, Database & Cache<br/><i>(77 files in storage/)</i>"]:::complete
-    P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/)</i>"]:::complete
-    P5["Phase 5: Reusable UI, Pickers & Adapters<br/><i>(~100 files in picker/, ui/adapter/)</i>"]:::inprog
-    P6["Phase 6: Top-Level Screens & App Core<br/><i>(~184 files in ui/activity/, ui/fragment/, App.java)</i>"]:::inprog
-    P7["Phase 7: Test Suite & Gradle KTS<br/><i>(71 test files & build.gradle.kts)</i>"]:::pending
+    P4["Phase 4: API, Services & Background Tasks<br/><i>(38 files in api/, service/, background/, broadcast/)</i>"]:::complete
+    P5["Phase 5: Reusable UI, Pickers & Adapters<br/><i>(151 files in picker/, ui/adapter/, ui/view/, ui/*)</i>"]:::inprog
+    P6["Phase 6: Top-Level Screens & App Core<br/><i>(135 files in ui/activity/, ui/fragment/, App.java)</i>"]:::inprog
+    P7["Phase 7: Test Suite & Gradle KTS<br/><i>(71 test/flavor files & build.gradle.kts)</i>"]:::pending
 
     P0 --> P1
     P1 --> P2
@@ -117,8 +117,8 @@ flowchart LR
 | **Phase 3** | Storage, SQLite & ContentProvider (`storage/`) | 77 | 2 Days | Nov 06, 2026 | **Nov 07, 2026** | 🟢 **Completed:** SQLDatabase, DataContentProvider, Preferences, Caches (100% green CI). |
 | **Phase 4** | Remote API, Services & Background | 38 | 3 Days | Nov 09, 2026 | **Nov 20, 2026** | 🟢 **Completed:** All 38 files across `api/`, `background/`, `service/`, `broadcast/` pure Kotlin (100% green CI). |
 | **Phase 5** | Reusable UI, Pickers & Adapters | 151 | 3 Weeks | Nov 23, 2026 | **Dec 11, 2026** | 🟡 **Ready to Start:** Custom views, Pickers, RecyclerView Adapters & ViewHolders. |
-| **Phase 6** | Top Screens, Fragments & App Core | 135 | 3.5 Weeks | Dec 14, 2026 | **Jan 08, 2027** | ⚪ **Pending:** Activities, Fragments, and `App.kt` (includes year-end stabilization buffer). |
-| **Phase 7** | Tests & Gradle Modernization (`.kts`) | 71 | 2 Weeks | Jan 11, 2027 | **Jan 22, 2027** | ⚪ **Pending:** 63 tests converted; root and app `build.gradle.kts` in Kotlin DSL. |
+| **Phase 6** | Top Screens, Fragments & App Core | 135 | 3.5 Weeks | Dec 14, 2026 | **Jan 08, 2027** | 🟡 **In Progress:** `TutorialActivity.kt` migrated (`1 / 135`); remaining Activities, Fragments, and `App.kt`. |
+| **Phase 7** | Tests & Gradle Modernization (`.kts`) | 71 | 2 Weeks | Jan 11, 2027 | **Jan 22, 2027** | ⚪ **Pending:** 63 unit tests, 4 androidTests & 4 flavor sources (71 files); `.kts` DSL. |
 | **Final** | **Release Verification & Smoke Test** | — | 1 Week | Jan 25, 2027 | **Jan 29, 2027** | ⚪ **Milestone:** **100% Pure Kotlin v2.2.0 Release Candidate tagged.** |
 
 ---
@@ -134,7 +134,7 @@ flowchart LR
 3. **Pre-annotate Java:**
    - Before converting a Java class that interacts with other Java code, ensure public methods carry `@NonNull` / `@Nullable` annotations.
 4. **Test-Driven Safety Net:**
-   - Run `./gradlew test` before touching any package and verify all 63 unit tests pass after conversion.
+   - Run `./gradlew testFlossOsmDebugUnitTest` before touching any package and verify all 63 unit test files pass after conversion.
 5. **Preserve Headers & Attributions:**
    - Keep the original GPLv3 headers and author copyright comments intact on all converted files.
 
@@ -149,12 +149,13 @@ flowchart LR
 
 #### Objectives:
 - Configure Kotlin static analysis to prevent bad habits from entering the codebase.
-- Ensure the 63 Robolectric/JUnit tests run cleanly in CI and locally.
+- Ensure all 63 Robolectric/JUnit unit test files run cleanly in CI and locally.
 
 #### Action Items:
 - [x] Add `detekt` and `detekt-formatting` (ktlint) to [`build.gradle`](build.gradle) and [`app/build.gradle`](app/build.gradle).
 - [x] Configure lint rules to flag forbidden patterns (forbidding `!!` double-bang operators in [`config/detekt/detekt.yml`](config/detekt/detekt.yml)).
 - [x] Establish automated test & detekt execution in [`.github/workflows/build.yml`](.github/workflows/build.yml).
+- [x] Add automated tracker synchronization via [`scripts/Update-MigrationTracker.ps1`](scripts/Update-MigrationTracker.ps1) and `./gradlew updateMigrationTracker`.
 - [x] Document developer PR guidelines for Kotlin contributions in [`docs/KOTLIN_GUIDELINES.md`](docs/KOTLIN_GUIDELINES.md).
 
 ---
@@ -223,7 +224,7 @@ Models define the data contracts that the database, services, and UI exchange. H
 - [x] `MoneyScale.kt`
 - [x] `OverviewData.kt`
 - [x] `OverviewSetting.kt`
-- [x] `Pair.kt` (Replace with Kotlin's built-in `Pair<A, B>`)
+- [x] `Pair.kt` (Immutable data class `Pair<L, R>`)
 - [x] `PeriodDetailFlowData.kt`
 - [x] `PeriodDetailSummaryData.kt`
 - [x] `PeriodMoney.kt`
@@ -307,12 +308,13 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 
 ### Phase 5: Reusable UI, Pickers & Adapters
 **Dates:** Nov 23, 2026 – Dec 11, 2026 &bull; **Deadline:** Dec 11, 2026 (3 Weeks) &bull; **Files:** 151 Java Files &bull; **Status:** 🟡 Ready to Start
-**Path:** `picker/`, `ui/adapter/`, `ui/view/`
+**Path:** `picker/`, `ui/adapter/`, `ui/view/`, `ui/behavior/`, `ui/drawable/`, `ui/notification/`, `ui/preference/`, `ui/widget/`
 
 #### Key Components:
-- **`picker/` (16 files):** Color picker, Icon picker, Date/Time pickers.
-- **`ui/adapter/` (~40 files):** RecyclerView adapters for transactions, categories, wallets, currencies.
-- **`ui/view/` (~40 files):** Custom charts, graph wrappers, custom input widgets.
+- **`picker/` (16 files):** Color, Icon, Date/Time, Currency, Wallet, and Category pickers.
+- **`ui/adapter/` (48 files):** RecyclerView and ViewPager adapters for transactions, categories, wallets, currencies.
+- **`ui/view/` (73 files):** Custom charts, calendar strips, theme widgets, and custom input widgets.
+- **`ui/behavior/`, `ui/drawable/`, `ui/notification/`, `ui/preference/`, `ui/widget/` (14 files):** Scroll behavior (`1`), custom drawables (`2`), notification helper (`1`), preference controls (`6`), and app widgets (`4`).
 
 #### How We Do It:
 - Clean up RecyclerView Adapters using Kotlin property delegates and lambda click listeners:
@@ -321,13 +323,13 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
       private val onWalletClicked: (Wallet) -> Unit
   ) : ListAdapter<Wallet, WalletViewHolder>(WalletDiffCallback) { ... }
   ```
-- Eliminate `findViewById` where possible by adopting Android **ViewBinding**.
+- Eliminate `findViewById` where possible (or adopt ViewBinding if enabled in `app/build.gradle`).
 
 ---
 
 ### Phase 6: Top-Level Screens & Application Core
-**Dates:** Dec 14, 2026 – Jan 08, 2027 &bull; **Deadline:** Jan 08, 2027 (3.5 Weeks) &bull; **Files:** 135 Files &bull; **Status:** 🟡 In Progress
-**Path:** `ui/activity/`, `ui/fragment/`, `App.java`
+**Dates:** Dec 14, 2026 – Jan 08, 2027 &bull; **Deadline:** Jan 08, 2027 (3.5 Weeks) &bull; **Files:** 135 Files (`1` Kotlin, `134` Java) &bull; **Status:** 🟡 In Progress
+**Path:** `ui/activity/` (`50`), `ui/fragment/` (`84`), `App.java` (`1`)
 
 #### Status:
 - [x] `TutorialActivity.kt` *(Already converted)*
@@ -340,19 +342,23 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 - [ ] `MapActivity.java`
 - [ ] `PeriodDetailActivity.java`
 - [ ] `CurrencyListActivity.java`
+- [ ] `CalculatorActivity.java`
 - [ ] `NewEditTransactionActivity.java`
 - [ ] `NewEditTransferActivity.java`
 - [ ] `NewEditWalletActivity.java`
 - [ ] `NewEditCategoryActivity.java`
 - [ ] `NewEditBudgetActivity.java`
+- [ ] `NewEditCurrencyActivity.java`
 - [ ] `NewEditDebtActivity.java`
 - [ ] `NewEditSavingActivity.java`
 - [ ] `NewEditEventActivity.java`
+- [ ] `NewEditItemActivity.java`
 - [ ] `NewEditPlaceActivity.java`
 - [ ] `NewEditPersonActivity.java`
 - [ ] `NewEditRecurrentTransactionActivity.java`
+- [ ] `NewEditRecurrentTransferActivity.java`
 - [ ] `NewEditTransactionModelActivity.java`
-- [ ] `SettingsActivity.java`
+- [ ] `NewEditTransferModelActivity.java`
 - [ ] `CategoryPickerActivity.java`
 - [ ] `CategorySortActivity.java`
 - [ ] `CategoryRuleListActivity.java`
@@ -360,17 +366,27 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 - [ ] `CategoryRuleSortActivity.java`
 - [ ] `WalletSortActivity.java`
 - [ ] `IconListActivity.java`
-- [ ] `PlacePickerActivity.java`
 - [ ] `SearchActivity.java`
 - [ ] `ImportExportActivity.java`
 - [ ] `BackupListActivity.java`
 - [ ] `BackendExplorerActivity.java`
 - [ ] `AboutActivity.java`
-- [ ] All Fragments under `ui/fragment/`
+- [ ] `DrawerController.java`
+- [ ] `ToolbarController.java`
+- [ ] `TransactionEditorRules.java`
+- [ ] `BaseActivity.java` *(in `ui/activity/base/`)*
+- [ ] `ThemedActivity.java` *(in `ui/activity/base/`)*
+- [ ] `SinglePanelActivity.java` *(in `ui/activity/base/`)*
+- [ ] `SinglePanelAppBarActivity.java` *(in `ui/activity/base/`)*
+- [ ] `SinglePanelScrollActivity.java` *(in `ui/activity/base/`)*
+- [ ] `SinglePanelSimpleListActivity.java` *(in `ui/activity/base/`)*
+- [ ] `SinglePanelViewPagerActivity.java` *(in `ui/activity/base/`)*
+- [ ] `MultiPanelActivity.java` *(in `ui/activity/base/`)*
+- [ ] All `84` files under `ui/fragment/`
 - [ ] `App.java`
 
 #### How We Do It:
-- Convert Activities and Fragments in logical pairs with their dialogs.
+- Convert base activities (`ui/activity/base/`), screen activities, and fragments (`ui/fragment/`) in logical pairs with their dialogs.
 - `App.java` converts last in this phase once all underlying singletons and dependencies are in Kotlin.
 
 ---
@@ -379,14 +395,16 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 **Dates:** Jan 11, 2027 – Jan 22, 2027 &bull; **Deadline:** Jan 22, 2027 (2 Weeks) &bull; **Files:** 71 Java Files &bull; **Status:** ⚪ Pending
 
 #### Objectives:
-- Convert all 63 unit tests in `app/src/test/` to pure Kotlin.
+- Convert all `63` unit tests in `app/src/test/`, `4` instrumentation tests in `app/src/androidTest/`, `1` `floss` flavor file (`app/src/floss/`), and `3` `osm` flavor files (`app/src/osm/`) to pure Kotlin.
 - Migrate root [`build.gradle`](build.gradle) and [`app/build.gradle`](app/build.gradle) from Groovy to Kotlin DSL (`build.gradle.kts`).
-- Enable strict Kotlin compiler flags:
+- Retain strict Kotlin compiler flags (`-Xjvm-default=all` and `-Xskip-metadata-version-check` are already active in [`app/build.gradle`](app/build.gradle)):
   ```kotlin
-  freeCompilerArgs += listOf(
-      "-Xjvm-default=all",
-      "-opt-in=kotlin.RequiresOptIn"
-  )
+  compilerOptions {
+      freeCompilerArgs.addAll(
+          "-Xjvm-default=all",
+          "-opt-in=kotlin.RequiresOptIn"
+      )
+  }
   ```
 
 ---
@@ -396,23 +414,23 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 1. **Pick a file or package** from the lowest unfinished phase in the dashboard.
 2. **Create a feature branch:**
    ```bash
-   git checkout -b migrate/phase-1-utils
+   git checkout -b migrate/phase-5-pickers
    ```
 3. **Run existing tests to establish a clean baseline:**
    ```bash
-   ./gradlew test
+   ./gradlew testFlossOsmDebugUnitTest
    ```
 4. **Convert following the 2-commit rule:**
    - Commit 1: Mechanical conversion (syntax & compilation only).
    - Commit 2: Idiomatic Kotlin refactoring (clean nullability, data classes, expressions).
 5. **Verify:**
    ```bash
-   ./gradlew test
-   ./gradlew lint
+   ./gradlew testFlossOsmDebugUnitTest lintFlossOsmDebug assembleFlossOsmDebug
+   ./gradlew detekt
    ```
 6. **Update this document (`KOTLIN_MIGRATION.mdx`):**
-   - Check the boxes `[x]` for your converted files.
-   - Increment the file count and update the progress percentage.
+   - Run `./gradlew updateMigrationTracker` (or [`scripts/Update-MigrationTracker.ps1`](scripts/Update-MigrationTracker.ps1)) to sync table metrics, progress bars, statuses, and checklists automatically.
+   - Add milestone notes where appropriate.
 7. **Open PR:** Title as `[Kotlin Migration] Migrate <Package/Files> (Phase X)`.
 
 ---
