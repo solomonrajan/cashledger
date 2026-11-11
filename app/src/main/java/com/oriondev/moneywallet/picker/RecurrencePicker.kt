@@ -44,7 +44,7 @@ class RecurrencePicker : Fragment(), RecurrencePickerDialog.Callback {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mController = findController(context, checkParent = true)
+        mController = findController(Controller::class.java, context, checkParent = true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -64,7 +64,7 @@ class DateTimePicker : Fragment() {
         // the activity, not to its parent, so a dialog that owns date pickers of its own would
         // otherwise lose them to an activity that happens to be a Controller too, and the dialog
         // would never hear the date it asked for.
-        mController = findController(context, checkParent = true, parentFirst = true)
+        mController = findController(Controller::class.java, context, checkParent = true, parentFirst = true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -288,3 +288,4 @@ class DateTimePicker : Fragment() {
         private fun utcCalendar(): Calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
     }
 }
+

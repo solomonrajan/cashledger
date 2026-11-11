@@ -125,7 +125,7 @@ class AttachmentPicker : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mController = findController(context)
+        mController = findController(Controller::class.java, context)
         val intentFilter = IntentFilter()
         intentFilter.addAction(LocalAction.ACTION_ATTACHMENT_OP_STARTED)
         intentFilter.addAction(LocalAction.ACTION_ATTACHMENT_OP_FINISHED)

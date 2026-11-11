@@ -52,8 +52,8 @@ class CategoryPicker :
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mController = findController(context, checkParent = true)
-        mMultiCategoryController = findController(context, checkParent = true)
+        mController = findController(Controller::class.java, context, checkParent = true)
+        mMultiCategoryController = findController(MultiCategoryController::class.java, context, checkParent = true)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -45,8 +45,8 @@ class WalletPicker : Fragment(), WalletPickerDialog.Callback {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mSingleWalletController = findController(context, checkParent = true)
-        mMultiWalletController = findController(context)
+        mSingleWalletController = findController(SingleWalletController::class.java, context, checkParent = true)
+        mMultiWalletController = findController(MultiWalletController::class.java, context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -194,33 +194,30 @@ internal inline fun <reified T : Fragment> FragmentManager.findOrCreatePicker(
     create: () -> T
 ): T {
     val existing = findFragmentByTag(tag)
-    if (existing is T) {
-        return existing
+    return if (existing is T) {
+        existing
+    } else {
+        val picker = create()
+        beginTransaction().add(picker, tag).commit()
+        picker
     }
-    val picker = create()
-    beginTransaction().add(picker, tag).commit()
-    return picker
 }
 
-internal inline fun <reified T> Fragment.findController(
+internal fun <T> Fragment.findController(
+    controllerClass: Class<T>,
     context: Context,
     checkParent: Boolean = false,
     parentFirst: Boolean = false
 ): T? {
-    if (parentFirst) {
-        val parent = parentFragment
-        if (parent is T) {
-            return parent
-        }
+    val parent = parentFragment
+    if (parentFirst && controllerClass.isInstance(parent)) {
+        return controllerClass.cast(parent)
     }
-    if (context is T) {
-        return context
+    if (controllerClass.isInstance(context)) {
+        return controllerClass.cast(context)
     }
-    if (checkParent && !parentFirst) {
-        val parent = parentFragment
-        if (parent is T) {
-            return parent
-        }
+    if (checkParent && !parentFirst && controllerClass.isInstance(parent)) {
+        return controllerClass.cast(parent)
     }
     return null
 }

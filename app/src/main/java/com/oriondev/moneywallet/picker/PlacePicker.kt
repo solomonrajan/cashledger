@@ -40,7 +40,7 @@ class PlacePicker : Fragment(), PlacePickerDialog.Callback {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mController = findController(context)
+        mController = findController(Controller::class.java, context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
