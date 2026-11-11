@@ -64,7 +64,9 @@ class RecurrencePicker : Fragment(), RecurrencePickerDialog.Callback {
                 )
             }
         }
-        mRecurrencePickerDialog = findOrCreateDialog { RecurrencePickerDialog.newInstance() }
+        mRecurrencePickerDialog = findOrCreateDialog(RecurrencePickerDialog::class.java) {
+            RecurrencePickerDialog.newInstance()
+        }
         mRecurrencePickerDialog?.setCallback(this)
     }
 

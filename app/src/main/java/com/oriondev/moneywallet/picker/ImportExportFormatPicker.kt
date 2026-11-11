@@ -46,7 +46,9 @@ class ImportExportFormatPicker : Fragment(), DataFormatPickerDialog.Callback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mCurrentFormat = savedInstanceState.readSerializable(SS_CURRENT_FORMAT)
-        mDataFormatPickerDialog = findOrCreateDialog { DataFormatPickerDialog.newInstance() }
+        mDataFormatPickerDialog = findOrCreateDialog(DataFormatPickerDialog::class.java) {
+            DataFormatPickerDialog.newInstance()
+        }
         mDataFormatPickerDialog?.setCallback(this)
     }
 

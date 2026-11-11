@@ -109,7 +109,9 @@ class OverviewSettingPicker : Fragment(), OverviewSettingDialog.Callback {
                 OverviewSetting.CashFlow.NET_INCOMES
             )
         }
-        mOverviewSettingDialog = findOrCreateDialog { OverviewSettingDialog.newInstance() }
+        mOverviewSettingDialog = findOrCreateDialog(OverviewSettingDialog::class.java) {
+            OverviewSettingDialog.newInstance()
+        }
         mOverviewSettingDialog?.setCallback(this)
     }
 

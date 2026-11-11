@@ -77,7 +77,7 @@ class WalletPicker : Fragment(), WalletPickerDialog.Callback {
                 mCurrentWallets = null
             }
         }
-        mWalletPickerDialog = findOrCreateDialog { WalletPickerDialog.newInstance() }
+        mWalletPickerDialog = findOrCreateDialog(WalletPickerDialog::class.java) { WalletPickerDialog.newInstance() }
         mWalletPickerDialog?.setCallback(this)
     }
 
@@ -227,12 +227,17 @@ internal inline fun <reified T> Fragment.findController(
 
 internal fun Fragment.getDefaultDialogTag(): String = "${tag}::DialogFragment"
 
-internal inline fun <reified D : DialogFragment> Fragment.findOrCreateDialog(
+internal fun <D : DialogFragment> Fragment.findOrCreateDialog(
+    dialogClass: Class<D>,
     dialogTag: String = getDefaultDialogTag(),
     create: () -> D
 ): D {
     val existing = childFragmentManager.findFragmentByTag(dialogTag)
-    return if (existing is D) existing else create()
+    return if (dialogClass.isInstance(existing)) {
+        dialogClass.cast(existing) ?: create()
+    } else {
+        create()
+    }
 }
 
 internal inline fun <reified T : Parcelable> Array<Parcelable>?.toTypedParcelableArray(): Array<T>? {

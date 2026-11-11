@@ -51,7 +51,9 @@ class ExportColumnsPicker : Fragment(), ExportColumnsDialogFragment.Callback {
         } else {
             mCurrentIndices = emptyArray()
         }
-        mColumnsPickerDialog = findOrCreateDialog { ExportColumnsDialogFragment.newInstance() }
+        mColumnsPickerDialog = findOrCreateDialog(ExportColumnsDialogFragment::class.java) {
+            ExportColumnsDialogFragment.newInstance()
+        }
         mColumnsPickerDialog?.setCallback(this)
     }
 

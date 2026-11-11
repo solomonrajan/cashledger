@@ -53,7 +53,7 @@ class PersonPicker : Fragment(), PeoplePickerDialog.Callback {
                 arguments?.getParcelableArray(ARG_DEFAULT_PEOPLE).toTypedParcelableArray()
             else -> null
         }
-        mPeoplePickerDialog = findOrCreateDialog { PeoplePickerDialog.newInstance() }
+        mPeoplePickerDialog = findOrCreateDialog(PeoplePickerDialog::class.java) { PeoplePickerDialog.newInstance() }
         mPeoplePickerDialog?.setCallback(this)
     }
 

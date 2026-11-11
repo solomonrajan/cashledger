@@ -77,9 +77,14 @@ class CategoryPicker :
                 mCurrentCategories = null
             }
         }
-        mParentCategoryPickerDialog = findOrCreateDialog { ParentCategoryPickerDialog.newInstance() }
+        mParentCategoryPickerDialog = findOrCreateDialog(ParentCategoryPickerDialog::class.java) {
+            ParentCategoryPickerDialog.newInstance()
+        }
         mParentCategoryPickerDialog?.setCallback(this)
-        mMultiCategoryPickerDialog = findOrCreateDialog(getMultiDialogTag()) {
+        mMultiCategoryPickerDialog = findOrCreateDialog(
+            MultiCategoryPickerDialog::class.java,
+            getMultiDialogTag()
+        ) {
             MultiCategoryPickerDialog.newInstance()
         }
         mMultiCategoryPickerDialog?.setCallback(this)

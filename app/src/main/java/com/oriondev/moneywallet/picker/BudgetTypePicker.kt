@@ -50,7 +50,9 @@ class BudgetTypePicker : Fragment(), BudgetTypePickerDialog.Callback {
             arguments != null -> arguments.readSerializable(ARG_DEFAULT_TYPE)
             else -> Contract.BudgetType.EXPENSES
         }
-        mBudgetTypePickerDialog = findOrCreateDialog { BudgetTypePickerDialog.newInstance() }
+        mBudgetTypePickerDialog = findOrCreateDialog(BudgetTypePickerDialog::class.java) {
+            BudgetTypePickerDialog.newInstance()
+        }
         mBudgetTypePickerDialog?.setCallback(this)
     }
 

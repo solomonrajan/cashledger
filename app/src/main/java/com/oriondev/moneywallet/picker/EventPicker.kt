@@ -51,7 +51,7 @@ class EventPicker : Fragment(), EventPickerDialog.Callback {
             arguments != null -> arguments.readParcelable(ARG_DEFAULT_EVENT)
             else -> null
         }
-        mEventPickerDialog = findOrCreateDialog { EventPickerDialog.newInstance() }
+        mEventPickerDialog = findOrCreateDialog(EventPickerDialog::class.java) { EventPickerDialog.newInstance() }
         mEventPickerDialog?.setCallback(this)
     }
 

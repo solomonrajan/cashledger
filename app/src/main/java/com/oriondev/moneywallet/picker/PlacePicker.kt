@@ -50,7 +50,7 @@ class PlacePicker : Fragment(), PlacePickerDialog.Callback {
             arguments != null -> arguments.readParcelable(ARG_DEFAULT_PLACE)
             else -> null
         }
-        mPlacePickerDialog = findOrCreateDialog { PlacePickerDialog.newInstance() }
+        mPlacePickerDialog = findOrCreateDialog(PlacePickerDialog::class.java) { PlacePickerDialog.newInstance() }
         mPlacePickerDialog?.setCallback(this)
     }
 
