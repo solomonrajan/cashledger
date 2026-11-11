@@ -221,7 +221,7 @@ class AutoBackupJobService : JobService() {
                     null
                 )
             } catch (e: BackendException) {
-                if (!e.isRecoverable()) {
+                if (!e.isRecoverable) {
                     BackendManager.disableAutoBackupAfterFailure(backendId)
                 }
                 throw e
@@ -300,7 +300,7 @@ class AutoBackupJobService : JobService() {
          */
         private fun notifyFailure(context: Context, exception: Exception) {
             if (exception is BackendException) {
-                val recoverable = exception.isRecoverable()
+                val recoverable = exception.isRecoverable
                 notifyMessage(
                     context,
                     context.getString(
@@ -381,3 +381,4 @@ class AutoBackupJobService : JobService() {
         return true
     }
 }
+

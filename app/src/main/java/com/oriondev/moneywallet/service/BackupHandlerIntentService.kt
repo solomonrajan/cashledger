@@ -153,7 +153,7 @@ class BackupHandlerIntentService : IntentService("BackupHandlerIntentService") {
             }
             // handle the exception if the task failed
             if (exception != null) {
-                if (exception is BackendException && !exception.isRecoverable()) {
+                if (exception is BackendException && !exception.isRecoverable) {
                     if (backendId != null) {
                         // disable auto-backup for this backend id
                         BackendManager.disableAutoBackupAfterFailure(backendId)
@@ -379,7 +379,7 @@ class BackupHandlerIntentService : IntentService("BackupHandlerIntentService") {
                 .setCategory(NotificationCompat.CATEGORY_ERROR)
             mNotificationBuilder = errorBuilder
             if (exception is BackendException) {
-                if (exception.isRecoverable()) {
+                if (exception.isRecoverable) {
                     setupRetryNotification(
                         errorBuilder,
                         baseIntent,
@@ -455,3 +455,4 @@ class BackupHandlerIntentService : IntentService("BackupHandlerIntentService") {
         )
     }
 }
+
