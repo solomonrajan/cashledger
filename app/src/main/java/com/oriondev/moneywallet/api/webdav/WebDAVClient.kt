@@ -216,7 +216,7 @@ class WebDAVClient(baseUrl: String?, username: String?, password: String?) {
          * type it both ways.
          */
         @JvmStatic
-        internal fun normalizeBaseUrl(url: String?): String {
+        fun normalizeBaseUrl(url: String?): String {
             var trimmed = url?.trim() ?: ""
             while (trimmed.endsWith("/")) {
                 trimmed = trimmed.substring(0, trimmed.length - 1)
@@ -230,7 +230,7 @@ class WebDAVClient(baseUrl: String?, username: String?, password: String?) {
          * servers, so this is not a corner case.
          */
         @JvmStatic
-        internal fun encodePath(path: String?): String {
+        fun encodePath(path: String?): String {
             if (path.isNullOrEmpty()) {
                 return ""
             }
@@ -263,7 +263,7 @@ class WebDAVClient(baseUrl: String?, username: String?, password: String?) {
         }
 
         @JvmStatic
-        internal fun decodePath(encoded: String): String {
+        fun decodePath(encoded: String): String {
             return try {
                 URLDecoder.decode(encoded, "UTF-8")
             } catch (e: UnsupportedEncodingException) {
@@ -280,7 +280,7 @@ class WebDAVClient(baseUrl: String?, username: String?, password: String?) {
          * base URL's own prefix, so both shapes are handled.
          */
         @JvmStatic
-        internal fun hrefToRelativePath(href: String, basePath: String): String {
+        fun hrefToRelativePath(href: String, basePath: String): String {
             var path = href
             val schemeEnd = path.indexOf("://")
             if (schemeEnd >= 0) {
@@ -295,7 +295,7 @@ class WebDAVClient(baseUrl: String?, username: String?, password: String?) {
         }
 
         @JvmStatic
-        internal fun nameOf(path: String): String {
+        fun nameOf(path: String): String {
             val slash = path.lastIndexOf('/')
             return if (slash >= 0) path.substring(slash + 1) else path
         }
@@ -310,7 +310,7 @@ class WebDAVClient(baseUrl: String?, username: String?, password: String?) {
          */
         @JvmStatic
         @Throws(IOException::class, SAXException::class, ParserConfigurationException::class)
-        internal fun parsePropfind(
+        fun parsePropfind(
             inputStream: InputStream,
             basePath: String,
             requestedPath: String
@@ -375,7 +375,7 @@ class WebDAVClient(baseUrl: String?, username: String?, password: String?) {
         }
 
         @JvmStatic
-        internal fun trimSlashes(path: String?): String {
+        fun trimSlashes(path: String?): String {
             var result = path ?: ""
             while (result.startsWith("/")) {
                 result = result.substring(1)
