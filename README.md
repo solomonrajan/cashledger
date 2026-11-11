@@ -8,6 +8,8 @@ An expense and budget tracker for Android that keeps your money on your own phon
 
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![GitHub release](https://img.shields.io/github/v/release/solomonrajan/cashledger)](https://github.com/solomonrajan/cashledger/releases/latest)
+[![Kotlin Migration](https://img.shields.io/badge/Kotlin_Migration-60.3%25-7F52FF?logo=kotlin&logoColor=white)](KOTLIN_MIGRATION.mdx)
+[![Android API](https://img.shields.io/badge/Android-API_24%2B-3DDC84?logo=android&logoColor=white)](app/build.gradle)
 
 [<img src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" alt="Get it on GitHub" height="70">](https://github.com/solomonrajan/cashledger/releases/latest)
 
@@ -57,10 +59,10 @@ The GitHub Actions build is reproducible and carries the developer signature, so
 The following diagram illustrates the primary user flows and navigation structure within Cash Ledger:
 
 ```mermaid
-graph TD
+flowchart TD
     A[Launch App / Lock Screen] --> B[Home / Overview]
     B --> C[Transactions List]
-    B --> D[Add Transaction]
+    B --> D[Add Transaction / Transfer]
     B --> E[Wallets / Accounts]
     B --> F[Budgets]
     B --> G[Reports / Statistics]
@@ -82,18 +84,18 @@ graph TD
 
 ## 📱 App Pages
 
-Here is a breakdown of the various pages (Activities) available in the app:
+Here is a breakdown of the various pages (Activities and Settings panels) available in the app:
 
 ### Core / Initial Pages
 
 - **Launcher Page**: The startup or splash screen (`LauncherActivity`).
 - **Main Page**: The main dashboard or entry point of the app (`MainActivity`).
 - **Tutorial Page**: Intro and onboarding screens for new users (`TutorialActivity`).
-- **Lock Screen**: The PIN or biometric lock screen to protect the app (`LockActivity`).
+- **Lock Screen**: The PIN, pattern, or biometric lock screen (`LockActivity`).
 
 ### Lists & Overviews
 
-- **Transaction List**: Shows a list of all transactions (`TransactionListActivity`).
+- **Transaction List**: Shows a list of transactions (`TransactionListActivity`).
 - **Wallet List**: Displays all your accounts/wallets (`WalletListActivity`).
 - **Calendar View**: Shows transactions organized on a calendar (`CalendarActivity`).
 - **Map View**: A map page showing locations of transactions (`MapActivity`).
@@ -112,47 +114,53 @@ Here is a breakdown of the various pages (Activities) available in the app:
 - **New/Edit Event** (`NewEditEventActivity`)
 - **New/Edit Place** (`NewEditPlaceActivity`)
 - **New/Edit Person** (`NewEditPersonActivity`)
-- **New/Edit Recurrent Transaction** (`NewEditRecurrentTransactionActivity`)
-- **New/Edit Transaction Model** (`NewEditTransactionModelActivity`)
+- **New/Edit Currency** (`NewEditCurrencyActivity`)
+- **New/Edit Item** (`NewEditItemActivity`)
+- **New/Edit Recurrent Transaction / Transfer** (`NewEditRecurrentTransactionActivity`, `NewEditRecurrentTransferActivity`)
+- **New/Edit Transaction / Transfer Model** (`NewEditTransactionModelActivity`, `NewEditTransferModelActivity`)
 
 ### Sorting & Configuration Pages
 
-- **Settings Page**: The main configuration and preferences page (`SettingsActivity`).
+- **Settings**: Multi-panel configuration across Database, UI, and Utilities (`SettingMultiPanelFragment`, `DatabaseSettingFragment`, `UserInterfaceSettingFragment`, `UtilitySettingFragment`).
 - **Category Picker / Sort**: `CategoryPickerActivity`, `CategorySortActivity`.
 - **Category Rules**: `CategoryRuleListActivity`, `NewEditCategoryRuleActivity`, `CategoryRuleSortActivity`.
 - **Wallet Sort**: `WalletSortActivity`.
 - **Icon List**: Pick icons for categories or wallets (`IconListActivity`).
-- **Place Picker**: Select a location on a map (`PlacePickerActivity`).
+- **Place Picker**: Select a location on a map (`PlacePickerActivity`, `osm` flavor).
 
-### Tools & System Pages
+### Tools, Widgets & System Pages
 
-- **Search Page**: To find specific transactions (`SearchActivity`).
-- **Import / Export**: To backup or restore data (`ImportExportActivity`).
-- **Backup List**: Shows existing backups (`BackupListActivity`).
-- **Backend Explorer**: A debug or database viewer screen (`BackendExplorerActivity`).
+- **Search Page**: Find specific transactions (`SearchActivity`).
+- **Calculator**: Built-in arithmetic calculator utility (`CalculatorActivity`).
+- **Home Screen Widget**: Configure per-wallet balance widgets (`WalletWidgetConfigureActivity`).
+- **Import / Export**: Export or import ledger data (`ImportExportActivity`).
+- **Backup List**: View and manage existing backups (`BackupListActivity`).
+- **Backend Explorer**: Browse backup folders and remote/local storage backends (`BackendExplorerActivity`).
 - **About Page**: Shows app info, versions, and credits (`AboutActivity`).
 
 ## 💻 Technology Stack
 
-Cash Ledger is built as a fully native and privacy-respecting Android application.
+Cash Ledger is built as a fully native, offline-first, and privacy-respecting Android application (`minSdk 24` / Android 7.0 through `targetSdk 35` / Android 15, `compileSdk 36`).
+
+**Languages & Kotlin Migration**
+
+- **Language:** Kotlin (`1.9.22`) & Java 17 — currently **60.3% pure Kotlin** across the tracked codebase (`312 / 517` files; **70.0%** or `312 / 446` in `app/src/main`, with Phases 1–5 complete). Follow live progress in [KOTLIN_MIGRATION.mdx](KOTLIN_MIGRATION.mdx).
+<div align="center">
+  <img src="https://quickchart.io/chart?w=600&h=100&bkg=transparent&c=%7B%22data%22%3A%7B%22labels%22%3A%5B%22%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Kotlin%20(312)%22%2C%22data%22%3A%5B312%5D%2C%22backgroundColor%22%3A%22%237F52FF%22%7D%2C%7B%22label%22%3A%22Java%20(205)%22%2C%22data%22%3A%5B205%5D%2C%22backgroundColor%22%3A%22%235382A1%22%7D%5D%7D%2C%22options%22%3A%7B%22maintainAspectRatio%22%3Afalse%2C%22scales%22%3A%7B%22xAxes%22%3A%5B%7B%22display%22%3Afalse%2C%22stacked%22%3Atrue%7D%5D%2C%22yAxes%22%3A%5B%7B%22display%22%3Afalse%2C%22stacked%22%3Atrue%7D%5D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%22legend%22%3A%7B%22labels%22%3A%7B%22fontSize%22%3A14%2C%22fontFamily%22%3A%22sans-serif%22%7D%2C%22position%22%3A%22bottom%22%7D%7D%2C%22type%22%3A%22horizontalBar%22%7D" alt="Language Breakdown" />
+</div>
 
 **Frontend & UI**
 
-- **Language:** Java & Kotlin
-<div align="center">
-  <img src="https://quickchart.io/chart?w=600&h=100&bkg=transparent&c=%7B%22type%22%3A%22horizontalBar%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Java%20%28445%29%22%2C%22data%22%3A%5B445%5D%2C%22backgroundColor%22%3A%22%234285F4%22%7D%2C%7B%22label%22%3A%22Kotlin%20%281%29%22%2C%22data%22%3A%5B1%5D%2C%22backgroundColor%22%3A%22%23EA4335%22%7D%5D%7D%2C%22options%22%3A%7B%22legend%22%3A%7B%22position%22%3A%22bottom%22%2C%22labels%22%3A%7B%22fontSize%22%3A14%2C%22fontFamily%22%3A%22sans-serif%22%7D%7D%2C%22scales%22%3A%7B%22xAxes%22%3A%5B%7B%22stacked%22%3Atrue%2C%22display%22%3Afalse%7D%5D%2C%22yAxes%22%3A%5B%7B%22stacked%22%3Atrue%2C%22display%22%3Afalse%7D%5D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%22maintainAspectRatio%22%3Afalse%7D%7D" alt="Language Breakdown" />
-</div>
+- **Framework:** Native Android SDK (AndroidX, XML Layouts / Views)
+- **Design System:** Material Design Components & Material Symbols
+- **Data Visualization & UX:** `MPAndroidChart`, `Glide`, `AppIntro`, `OSMdroid` (`osm` flavor maps), `PatternLockView`, `PinLockView`
 
-- **Framework:** *Native Android SDK (XML Layouts / Views)*
-- **Design System:** *Material Design Components*
-- **Data Visualization:** *MPAndroidChart for reports and statistics*
-- **Icons:** *Material Symbols*
+**Backend, Storage & Quality**
 
-<!-- **Backend & Storage** -->
-
-- **Database:** Local SQLite (offline-first architecture, no accounts or cloud services required)
-- **Backups:** Local storage, WebDAV (Nextcloud, NAS), and Android Auto Backup
-- **Import/Export:** CSV, XLS, PDF, and legacy MoneyWallet backups
+- **Database:** Local SQLite & `ContentProvider` (offline-first architecture, zero accounts or telemetry)
+- **Backups:** Storage Access Framework (`DocumentFile`), WebDAV via `OkHttp` (Nextcloud / NAS), AES-encrypted `Zip4j` archives, and Android Auto Backup
+- **Import / Export & Recurrence:** CSV (`OpenCSV`), XLS (`JExcelApi`), PDF (`iTextPDF`), RFC recurrence (`lib-recur`), and legacy MoneyWallet / Tallybook backups
+- **Static Analysis & Testing:** Detekt (`1.23.6`, zero-`!!` policy), Android Lint (`abortOnError`), JUnit 4, Robolectric, and Mockito
 
 ## 🔄 Coming from Tallybook
 
@@ -161,6 +169,7 @@ As Cash Ledger is a separate app with its own application id, it installs beside
 ## 📚 Docs
 
 - [Kotlin Migration Roadmap & Tracker](KOTLIN_MIGRATION.mdx)
+- [Kotlin Migration Guidelines](docs/KOTLIN_GUIDELINES.md)
 - [FAQ](docs/FAQ.md)
 - [Moving from Tallybook](MIGRATION.md)
 - [CSV import format](docs/CSV.md)
@@ -173,11 +182,17 @@ Every release note is on the [releases page](https://github.com/solomonrajan/cas
 
 Build the `floss` + `osm` flavors, which use OpenStreetMap and no proprietary services:
 
-```
+```bash
 ./gradlew assembleFlossOsmDebug
 ```
 
-Requirements: a recent Android SDK and JDK 17 or newer. Release builds use JDK 21, which is what the GitHub Actions build server uses, so a release built on an older JDK will not reproduce.
+Run unit tests, Android Lint, and Detekt static analysis locally (matching CI):
+
+```bash
+./gradlew testFlossOsmDebugUnitTest lintFlossOsmDebug detekt
+```
+
+Requirements: a recent Android SDK (`compileSdk 36`) and JDK 17 or newer. Release builds use JDK 21, which is what the GitHub Actions build server uses, so a release built on an older JDK will not reproduce.
 
 ## 🤝 Contributing
 
@@ -201,6 +216,6 @@ We owe a huge thanks to [AndreAle94](https://github.com/AndreAle94) and [herrera
 
 <div align="justify">
 
-The intro illustrations and the new app icon are designed by [solomonrajan](https://github.com/solomonrajan) (commit ID [3b9cac8](https://github.com/solomonrajan/cashledger/commit/3b9cac8)), released under the GPLv3. The category picker icons and UI elements use glyphs from Material Symbols. Full license texts are in [THIRD_PARTY_NOTICES.md](https://github.com/solomonrajan/cashledger/blob/master/THIRD_PARTY_NOTICES.md).
+The intro illustrations and the new app icon are designed by [solomonrajan](https://github.com/solomonrajan) (commit ID [3b9cac8](https://github.com/solomonrajan/cashledger/commit/3b9cac8)), released under the GPLv3. The category picker icons and UI elements use glyphs from Material Symbols. Full license texts are in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 </div>
