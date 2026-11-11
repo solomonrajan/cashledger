@@ -39,7 +39,7 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░
 | **Phase 7: Test Suite & Gradle DSL** | `app/src/test`, `build.gradle.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
 | **TOTALS** | **Entire Codebase** | **356** | **161** | **517** | **31.1%** | **🟡 Active** | **~13 Sprints** |
 
-*(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + `TutorialActivity.kt` are now pure Kotlin — 123 total).*
+*(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + 38 Phase 4 files (`api/`, `background/`, `service/`, `broadcast/`) + `TutorialActivity.kt` are now pure Kotlin — 161 total).*
 
 ### 📢 Recent Activity & Milestones
 
@@ -47,7 +47,8 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░
 - **2026-11-04 (Phase 1 Completed):** ✅ Migrated all 11 utility classes in `com.oriondev.moneywallet.utils` to idiomatic Kotlin (`Urls.kt`, `SystemBars.kt`, `DateUtils.kt`, `MoneyFormatter.kt`, `CurrencyManager.kt`, etc.).
 - **2026-11-05 (Phase 2 Completed):** ✅ Migrated all 34 domain model and entity classes in `com.oriondev.moneywallet.model` to idiomatic Kotlin. Resolved JVM bytecode platform clashes, interface property overrides (`Identifiable.id`), `toString()` contracts, and database entity schema nullability.
 - **2026-11-07 (Phase 3 Completed):** ✅ Migrated all 77 storage, database, preference, and cache classes in `com.oriondev.moneywallet.storage.*` to idiomatic Kotlin (`SQLDatabase.kt`, `DataContentProvider.kt`, `SyncContentProvider.kt`, preference managers, database serializers, etc.). Refactored query builders to `buildString` to eliminate compiler AST depth stack overflow bottlenecks, verified strict 0 double-bang (`!!`) compliance across the codebase, and verified 100% green in CI (all 662 unit tests passed, zero Detekt warnings, APK assembled).
-- **Next Target:** 🎯 **Phase 4: Remote API, Background Tasks & Services** (38 classes in `api/`, `background/`, `service/`, `broadcast/`).
+- **2026-11-11 (Phase 4 Completed):** ✅ Migrated all 38 API, service, background loader, and broadcast receiver classes across `broadcast/` (7), `background/` (8), `api/` (13), and `service/` (10) to idiomatic Kotlin (`WebDAVClient.kt`, `SAFBackendServiceAPI.kt`, `DiskBackendServiceAPI.kt`, `OverviewDataLoader.kt`, `AutoBackupJobService.kt`, `BackupHandlerIntentService.kt`, `ImportExportIntentService.kt`, `RecurrenceHandlerIntentService.kt`, etc.). Applied `@JvmSuppressWildcards` on Java-facing loader `List` APIs, exposed `@JvmStatic` WebDAV helper methods for Java tests, shared foreground notification and backup locking helpers (`ForegroundServices.kt`, `TaskReporter.kt`, `BackupOperation.kt`), maintained strict 0 double-bang (`!!`) compliance and zero Detekt warnings, and verified 100% green in CI (run `43038888396`).
+- **Next Target:** 🎯 **Phase 5: Reusable UI & Pickers** (151 classes in `picker/`, `ui/adapter/`, `ui/view/`).
 
 ---
 
@@ -97,8 +98,8 @@ flowchart LR
     P1["<b>Phase 1: Leaf Utils</b><br/>Nov 04 (Completed)"]:::done
     P2["<b>Phase 2: Domain Models</b><br/>Nov 05 (Completed)"]:::done
     P3["<b>Phase 3: Storage & DB</b><br/>Nov 07 (Completed)"]:::done
-    P4["<b>Phase 4: API & Services</b><br/>Nov 09 – Nov 20"]:::next
-    P5["<b>Phase 5: Reusable UI</b><br/>Nov 23 – Dec 11"]:::future
+    P4["<b>Phase 4: API & Services</b><br/>Nov 09 – Nov 11 (Completed)"]:::done
+    P5["<b>Phase 5: Reusable UI</b><br/>Nov 23 – Dec 11"]:::next
     P6["<b>Phase 6: Screens & App</b><br/>Dec 14 – Jan 08"]:::future
     P7["<b>Phase 7: Tests & KTS</b><br/>Jan 11 – Jan 22"]:::future
     REL["<b>v2.2.0 RC Release</b><br/>Jan 25 – Jan 29"]:::future
@@ -114,8 +115,8 @@ flowchart LR
 | **Phase 1** | Foundation & Leaf Utilities (`utils/`) | 11 | 1 Day | Nov 04, 2026 | **Nov 04, 2026** | 🟢 **Completed:** All 11 utility classes pure Kotlin; extension functions standardized. |
 | **Phase 2** | Domain Models & Entities (`model/`) | 34 | 1 Day | Nov 05, 2026 | **Nov 05, 2026** | 🟢 **Completed:** 34 POJOs $\rightarrow$ immutable data classes; zero `!!`. |
 | **Phase 3** | Storage, SQLite & ContentProvider (`storage/`) | 77 | 2 Days | Nov 06, 2026 | **Nov 07, 2026** | 🟢 **Completed:** SQLDatabase, DataContentProvider, Preferences, Caches (100% green CI). |
-| **Phase 4** | Remote API, Services & Background | 38 | 2 Weeks | Nov 09, 2026 | **Nov 20, 2026** | 🟡 **Ready to Start:** OkHttp, Coroutines, Workers, Broadcast Receivers. |
-| **Phase 5** | Reusable UI, Pickers & Adapters | 151 | 3 Weeks | Nov 23, 2026 | **Dec 11, 2026** | ⚪ **Pending:** Custom views, Pickers, RecyclerView Adapters & ViewHolders. |
+| **Phase 4** | Remote API, Services & Background | 38 | 3 Days | Nov 09, 2026 | **Nov 20, 2026** | 🟢 **Completed:** All 38 files across `api/`, `background/`, `service/`, `broadcast/` pure Kotlin (100% green CI). |
+| **Phase 5** | Reusable UI, Pickers & Adapters | 151 | 3 Weeks | Nov 23, 2026 | **Dec 11, 2026** | 🟡 **Ready to Start:** Custom views, Pickers, RecyclerView Adapters & ViewHolders. |
 | **Phase 6** | Top Screens, Fragments & App Core | 135 | 3.5 Weeks | Dec 14, 2026 | **Jan 08, 2027** | ⚪ **Pending:** Activities, Fragments, and `App.kt` (includes year-end stabilization buffer). |
 | **Phase 7** | Tests & Gradle Modernization (`.kts`) | 71 | 2 Weeks | Jan 11, 2027 | **Jan 22, 2027** | ⚪ **Pending:** 63 tests converted; root and app `build.gradle.kts` in Kotlin DSL. |
 | **Final** | **Release Verification & Smoke Test** | — | 1 Week | Jan 25, 2027 | **Jan 29, 2027** | ⚪ **Milestone:** **100% Pure Kotlin v2.2.0 Release Candidate tagged.** |
@@ -288,18 +289,19 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 4: Remote API, Background Tasks & Services
-**Dates:** Nov 09, 2026 – Nov 20, 2026 &bull; **Deadline:** Nov 20, 2026 (2 Weeks) &bull; **Files:** 38 Java Files &bull; **Status:** 🟢 Completed
+**Dates:** Nov 09, 2026 – Nov 11, 2026 &bull; **Deadline:** Nov 20, 2026 (Completed 9 Days Early) &bull; **Files:** 38 Files (0 Java Remaining) &bull; **Status:** 🟢 Completed
 **Path:** `api/`, `background/`, `service/`, `broadcast/`
 
-#### Key Components:
-- **`api/` (13 files):** Remote currency exchange rate clients (OkHttp integration).
-- **`background/` (8 files):** Asynchronous tasks and workers.
-- **`service/` (10 files):** Android background services (BackupService, AutoBackupService).
-- **`broadcast/` (7 files):** System event listeners and alarms.
+#### Deliverables:
+- [x] **Sub-phase 4A — Broadcast & Local Actions (`broadcast/`, 7 files):** `LocalAction.kt`, `Message.kt`, `BootBroadcastReceiver.kt`, `DailyBroadcastReceiver.kt`, `NotificationBroadcastReceiver.kt`, `AutoBackupBroadcastReceiver.kt`, `RecurrenceBroadcastReceiver.kt`.
+- [x] **Sub-phase 4B — Loaders & Data Providers (`background/`, 8 files):** `AbstractGenericLoader.kt`, `JsonResourceLoader.kt`, `ChangeLogLoader.kt`, `LicenseLoader.kt`, `IconGroupLoader.kt`, `OverviewDataLoader.kt`, `PeriodDetailFlowLoader.kt`, `PeriodDetailSummaryLoader.kt`.
+- [x] **Sub-phase 4C — Storage Backends & WebDAV API (`api/`, 13 files):** `BackendDescriptor.kt`, `BackendException.kt`, `IBackendServiceAPI.kt`, `AbstractBackendServiceAPI.kt`, `AbstractBackendServiceDelegate.kt`, `DiskBackendService.kt`, `DiskBackendServiceAPI.kt`, `SAFBackendService.kt`, `SAFBackendServiceAPI.kt`, `WebDAVException.kt`, `WebDAVBackendService.kt`, `WebDAVBackendServiceAPI.kt`, `WebDAVClient.kt` (OkHttp + XML PROPFIND client, SAF & local disk backends).
+- [x] **Sub-phase 4D — Services & Workers (`service/`, 10 files):** `ForegroundServices.kt`, `TaskReporter.kt`, `BackupOperation.kt`, `AttachmentHandlerIntentService.kt`, `BackendHandlerIntentService.kt`, `AutoBackupJobService.kt`, `BackupHandlerIntentService.kt`, `RecurrenceHandlerIntentService.kt`, `ImportExportIntentService.kt`, `UpgradeLegacyEditionIntentService.kt` (`IntentService`, `JobIntentService`, and `JobService` background workers).
 
-#### How We Do It:
-- Replace Java `Thread`, `Handler`, and callback interfaces with **Kotlin Coroutines** (`suspend fun`, `Dispatchers.IO`).
-- Simplify OkHttp network calls using Kotlin extension functions and coroutine adapters.
+#### Highlights & Implementation Notes:
+- **Zero `!!` & Strict Static Analysis:** All 38 files comply with Detekt 1.23.6 and ktlint formatting rules with zero `!!` double-bang operators.
+- **Java Interoperability:** Added `@JvmSuppressWildcards` on loader `List` return types (`ChangeLogLoader.kt`, `LicenseLoader.kt`, `IconGroupLoader.kt`), exposed unmangled `@JvmStatic` WebDAV helper methods on `WebDAVClient.kt` for Java unit tests, retained `protected` override visibility on `ImportExportIntentService.onHandleIntent` for same-package unit tests, and accessed `BackendException.isRecoverable` as a Kotlin property.
+- **Consolidated Service Helpers:** Shared foreground notification setup via `ForegroundServices.kt`, extracted progress callback reporting via `TaskReporter.kt` (`fun interface`), and centralized serialized backup locking via `BackupOperation.kt` — verified green in GitHub Actions CI run `43038888396`.
 
 ---
 
