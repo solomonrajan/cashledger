@@ -20,6 +20,7 @@
 
 package com.oriondev.moneywallet.ui.behavior
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -32,6 +33,7 @@ import kotlin.math.min
  * A custom behavior for the Floating Action Button when it is attached to a CoordinatorLayout. It
  * shrinks the button as a snackbar comes up under it, so the two do not overlap.
  */
+@SuppressLint("RestrictedApi")
 class ScrollingFloatingActionButtonBehavior(
     context: Context,
     attrs: AttributeSet?
