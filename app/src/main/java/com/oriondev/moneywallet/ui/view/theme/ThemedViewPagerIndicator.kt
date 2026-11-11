@@ -65,7 +65,7 @@ class ThemedViewPagerIndicator : TabLayout, ThemeEngine.ThemeConsumer {
         // GRAVITY_CENTER is what gives the tabs a wrapped width and centers the row instead of
         // stretching each tab to an equal share
         tabGravity = GRAVITY_CENTER
-        isUnboundedRipple = false
+        setUnboundedRipple(false)
         applyDotColors()
     }
 
