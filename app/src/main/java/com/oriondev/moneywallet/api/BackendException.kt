@@ -17,25 +17,20 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.api;
-
-import com.oriondev.moneywallet.model.IFile;
-import com.oriondev.moneywallet.utils.ProgressInputStream;
-import com.oriondev.moneywallet.utils.ProgressOutputStream;
-
-import java.io.File;
-import java.util.List;
+package com.oriondev.moneywallet.api
 
 /**
- * Created by andrea on 22/11/18.
+ * Created by andrea on 21/11/18.
  */
-public interface IBackendServiceAPI {
+open class BackendException(
+    message: String?,
+    cause: Throwable?,
+    val isRecoverable: Boolean
+) : Exception(message, cause) {
 
-    IFile uploadFile(IFile folder, File file, ProgressInputStream.UploadProgressListener listener) throws BackendException;
+    constructor(message: String?) : this(message, null, false)
 
-    File downloadFile(File folder, IFile file, ProgressOutputStream.DownloadProgressListener listener) throws BackendException;
+    constructor(message: String?, cause: Throwable?) : this(message, cause, false)
 
-    List<IFile> getFolderContent(IFile folder) throws BackendException;
-
-    IFile createFolder(IFile parent, String name) throws BackendException;
+    constructor(message: String?, isRecoverable: Boolean) : this(message, null, isRecoverable)
 }
