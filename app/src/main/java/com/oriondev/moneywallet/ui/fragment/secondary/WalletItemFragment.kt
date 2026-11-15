@@ -212,32 +212,32 @@ class WalletItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbac
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Wallet.ICON)))
+            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.ICON)))
             mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
-            mNameTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Wallet.NAME))
-            val currencyIso = cursor.getString(cursor.getColumnIndex(Contract.Wallet.CURRENCY))
+            mNameTextView?.text = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.NAME))
+            val currencyIso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY))
             val currency: CurrencyUnit? = CurrencyManager.getCurrency(currencyIso)
             // the wallet can name a currency this installation does not have, which a restore from
             // another one leaves behind, and then the iso is the only name there is. The money
             // below already reads a null currency, this line did not
             mCurrencyTextView?.text = currency?.name ?: currencyIso
-            val startMoney = cursor.getLong(cursor.getColumnIndex(Contract.Wallet.START_MONEY))
+            val startMoney = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY))
             mStartMoneyTextView?.let { mMoneyFormatter.applyNotTinted(it, currency, startMoney) }
-            val note = cursor.getString(cursor.getColumnIndex(Contract.Wallet.NOTE))
+            val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.NOTE))
             if (!TextUtils.isEmpty(note)) {
                 mNoteTextView?.text = note
                 mNoteTextView?.visibility = View.VISIBLE
             } else {
                 mNoteTextView?.visibility = View.GONE
             }
-            if (cursor.getInt(cursor.getColumnIndex(Contract.Wallet.ARCHIVED)) == 1) {
+            if (cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Wallet.ARCHIVED)) == 1) {
                 setMenuItemVisibility(R.id.action_archive_item, false)
                 setMenuItemVisibility(R.id.action_unarchive_item, true)
             } else {
                 setMenuItemVisibility(R.id.action_archive_item, true)
                 setMenuItemVisibility(R.id.action_unarchive_item, false)
             }
-            mNotExcludeTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.Wallet.COUNT_IN_TOTAL)) == 1
+            mNotExcludeTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Wallet.COUNT_IN_TOTAL)) == 1
         } else {
             showItemId(0L)
         }

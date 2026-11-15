@@ -181,9 +181,9 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
         if (cursor != null) {
             val currentWallet = PreferenceManager.getCurrentWallet()
             val now = DateUtils.getSQLDateTimeString(Date())
-            val indexWalletId = cursor.getColumnIndex(Contract.Transaction.WALLET_ID)
-            val indexCountInTotal = cursor.getColumnIndex(Contract.Transaction.WALLET_COUNT_IN_TOTAL)
-            val indexDate = cursor.getColumnIndex(Contract.Transaction.DATE)
+            val indexWalletId = cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_ID)
+            val indexCountInTotal = cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_COUNT_IN_TOTAL)
+            val indexDate = cursor.getColumnIndexOrThrow(Contract.Transaction.DATE)
             var i = 0
             while (i < cursor.count && !(otherWallets && future)) {
                 cursor.moveToPosition(i)

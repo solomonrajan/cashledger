@@ -264,7 +264,7 @@ class TransactionListFragment :
             if (cursor == null || !cursor.moveToFirst()) {
                 return false
             }
-            val date = cursor.getString(cursor.getColumnIndex(Contract.Transaction.DATE))
+            val date = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.DATE))
             return date != null && date.compareTo(DateUtils.getSQLDateTimeString(Date())) > 0
         }
     }

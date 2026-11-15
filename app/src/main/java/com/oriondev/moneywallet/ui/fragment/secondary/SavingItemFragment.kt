@@ -222,27 +222,27 @@ class SavingItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbac
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (loader.id == SAVING_LOADER_ID) {
             if (cursor != null && cursor.moveToFirst()) {
-                val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Saving.ICON)))
+                val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.ICON)))
                 mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
-                val iso = cursor.getString(cursor.getColumnIndex(Contract.Saving.WALLET_CURRENCY))
+                val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.WALLET_CURRENCY))
                 val currency = CurrencyManager.getCurrency(iso)
                 if (currency != null) {
                     mCurrencyTextView?.text = currency.symbol
                 } else {
                     mCurrencyTextView?.text = "?"
                 }
-                val money = cursor.getLong(cursor.getColumnIndex(Contract.Saving.END_MONEY))
+                val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Saving.END_MONEY))
                 mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-                val description = cursor.getString(cursor.getColumnIndex(Contract.Saving.DESCRIPTION))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.DESCRIPTION))
                 if (!TextUtils.isEmpty(description)) {
                     mDescriptionTextView?.text = description
                     mDescriptionTextView?.visibility = View.VISIBLE
                 } else {
                     mDescriptionTextView?.visibility = View.GONE
                 }
-                val startMoney = cursor.getLong(cursor.getColumnIndex(Contract.Saving.START_MONEY))
+                val startMoney = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Saving.START_MONEY))
                 mStartMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, startMoney, MoneyFormatter.CurrencyMode.ALWAYS_SHOWN)
-                val expirationDate = cursor.getString(cursor.getColumnIndex(Contract.Saving.END_DATE))
+                val expirationDate = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.END_DATE))
                 if (!TextUtils.isEmpty(expirationDate)) {
                     mExpirationDateTextView?.let {
                         DateFormatter.applyDate(it, DateUtils.getDateFromSQLDateString(expirationDate))
@@ -251,16 +251,16 @@ class SavingItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbac
                 } else {
                     mExpirationDateTextView?.visibility = View.GONE
                 }
-                val wallet = cursor.getString(cursor.getColumnIndex(Contract.Saving.WALLET_NAME))
+                val wallet = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.WALLET_NAME))
                 mWalletTextView?.text = wallet
-                val note = cursor.getString(cursor.getColumnIndex(Contract.Saving.NOTE))
+                val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.NOTE))
                 if (!TextUtils.isEmpty(note)) {
                     mNoteTextView?.text = note
                     mNoteTextView?.visibility = View.VISIBLE
                 } else {
                     mNoteTextView?.visibility = View.GONE
                 }
-                if (cursor.getInt(cursor.getColumnIndex(Contract.Saving.COMPLETE)) == 1) {
+                if (cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Saving.COMPLETE)) == 1) {
                     setMenuItemVisibility(R.id.action_archive_item, false)
                     setMenuItemVisibility(R.id.action_unarchive_item, true)
                 } else {

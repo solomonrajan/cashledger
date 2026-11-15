@@ -184,16 +184,16 @@ class CategoryItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallb
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Category.ICON)))
+            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Category.ICON)))
             mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
-            mNameTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Category.NAME))
-            if (!cursor.isNull(cursor.getColumnIndex(Contract.Category.PARENT))) {
-                mParentCategoryTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Category.PARENT_NAME))
+            mNameTextView?.text = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Category.NAME))
+            if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.Category.PARENT))) {
+                mParentCategoryTextView?.text = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Category.PARENT_NAME))
                 mParentCategoryTextView?.visibility = View.VISIBLE
             } else {
                 mParentCategoryTextView?.visibility = View.GONE
             }
-            val type = Contract.CategoryType.fromValue(cursor.getInt(cursor.getColumnIndex(Contract.Category.TYPE)))
+            val type = Contract.CategoryType.fromValue(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Category.TYPE)))
             if (type != null) {
                 when (type) {
                     Contract.CategoryType.INCOME -> {
@@ -211,14 +211,14 @@ class CategoryItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallb
             } else {
                 mCategoryTypeRadioGroup?.visibility = View.GONE
             }
-            if (cursor.getInt(cursor.getColumnIndex(Contract.Category.SHOW_REPORT)) == 1) {
+            if (cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Category.SHOW_REPORT)) == 1) {
                 mShowReportCheckBox?.isChecked = true
                 // the reports keep a transaction only when its category and its parent are both
                 // included, so a subcategory under a hidden parent is out however its own box
                 // reads. A top level category joins no parent row, and the null that leaves here
                 // means included, which is how the report filter reads it too.
-                val parentShowReport = cursor.getColumnIndex(Contract.Category.PARENT_SHOW_REPORT)
-                val parentName = cursor.getColumnIndex(Contract.Category.PARENT_NAME)
+                val parentShowReport = cursor.getColumnIndexOrThrow(Contract.Category.PARENT_SHOW_REPORT)
+                val parentName = cursor.getColumnIndexOrThrow(Contract.Category.PARENT_NAME)
                 if (!cursor.isNull(parentShowReport) && cursor.getInt(parentShowReport) == 0) {
                     mShowReportCheckBox?.text = getString(
                         R.string.hint_show_category_report_off_parent,

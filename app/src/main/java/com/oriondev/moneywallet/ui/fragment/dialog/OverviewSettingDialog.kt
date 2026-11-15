@@ -218,10 +218,10 @@ class OverviewSettingDialog : DialogFragment(), DateTimePicker.Controller, Categ
         var category: Category? = null
         context.contentResolver.query(uri, projection, selection, selectionArgs, null)?.use { cursor ->
             if (cursor.moveToFirst()) {
-                val idIndex = cursor.getColumnIndex(Contract.Category.ID)
-                val nameIndex = cursor.getColumnIndex(Contract.Category.NAME)
-                val iconIndex = cursor.getColumnIndex(Contract.Category.ICON)
-                val typeIndex = cursor.getColumnIndex(Contract.Category.TYPE)
+                val idIndex = cursor.getColumnIndexOrThrow(Contract.Category.ID)
+                val nameIndex = cursor.getColumnIndexOrThrow(Contract.Category.NAME)
+                val iconIndex = cursor.getColumnIndexOrThrow(Contract.Category.ICON)
+                val typeIndex = cursor.getColumnIndexOrThrow(Contract.Category.TYPE)
                 val id = if (idIndex >= 0) cursor.getLong(idIndex) else 0L
                 val name = if (nameIndex >= 0) cursor.getString(nameIndex) else ""
                 val iconStr = if (iconIndex >= 0) cursor.getString(iconIndex) else null

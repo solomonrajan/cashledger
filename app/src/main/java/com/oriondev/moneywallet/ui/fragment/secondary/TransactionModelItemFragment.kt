@@ -163,49 +163,49 @@ class TransactionModelItemFragment : SecondaryPanelFragment(), LoaderManager.Loa
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val iso = cursor.getString(cursor.getColumnIndex(Contract.TransactionModel.WALLET_CURRENCY))
+            val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_CURRENCY))
             val currency = CurrencyManager.getCurrency(iso)
             if (currency != null) {
                 mCurrencyTextView?.text = currency.symbol
             } else {
                 mCurrencyTextView?.text = "?"
             }
-            val money = cursor.getLong(cursor.getColumnIndex(Contract.TransactionModel.MONEY))
+            val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransactionModel.MONEY))
             mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-            val description = cursor.getString(cursor.getColumnIndex(Contract.TransactionModel.DESCRIPTION))
+            val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.DESCRIPTION))
             if (!TextUtils.isEmpty(description)) {
                 mDescriptionTextView?.text = description
                 mDescriptionTextView?.visibility = View.VISIBLE
             } else {
                 mDescriptionTextView?.visibility = View.GONE
             }
-            val category = cursor.getString(cursor.getColumnIndex(Contract.TransactionModel.CATEGORY_NAME))
+            val category = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CATEGORY_NAME))
             mCategoryTextView?.text = category
-            val wallet = cursor.getString(cursor.getColumnIndex(Contract.TransactionModel.WALLET_NAME))
+            val wallet = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.WALLET_NAME))
             mWalletTextView?.text = wallet
-            val event = cursor.getString(cursor.getColumnIndex(Contract.TransactionModel.EVENT_NAME))
+            val event = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.EVENT_NAME))
             if (!TextUtils.isEmpty(event)) {
                 mEventTextView?.text = event
                 mEventTextView?.visibility = View.VISIBLE
             } else {
                 mEventTextView?.visibility = View.GONE
             }
-            val place = cursor.getString(cursor.getColumnIndex(Contract.TransactionModel.PLACE_NAME))
+            val place = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.PLACE_NAME))
             if (!TextUtils.isEmpty(place)) {
                 mPlaceTextView?.text = place
                 mPlaceTextView?.visibility = View.VISIBLE
             } else {
                 mPlaceTextView?.visibility = View.GONE
             }
-            val note = cursor.getString(cursor.getColumnIndex(Contract.TransactionModel.NOTE))
+            val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransactionModel.NOTE))
             if (!TextUtils.isEmpty(note)) {
                 mNoteTextView?.text = note
                 mNoteTextView?.visibility = View.VISIBLE
             } else {
                 mNoteTextView?.visibility = View.GONE
             }
-            mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.TransactionModel.CONFIRMED)) == 1
-            mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.TransactionModel.COUNT_IN_TOTAL)) == 1
+            mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransactionModel.CONFIRMED)) == 1
+            mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransactionModel.COUNT_IN_TOTAL)) == 1
         } else {
             showItemId(0L)
         }

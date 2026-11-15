@@ -182,16 +182,16 @@ class BudgetItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbac
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (loader.id == BUDGET_LOADER_ID) {
             if (cursor != null && cursor.moveToFirst()) {
-                val iso = cursor.getString(cursor.getColumnIndex(Contract.Budget.CURRENCY))
+                val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.CURRENCY))
                 val currency = CurrencyManager.getCurrency(iso)
                 if (currency != null) {
                     mCurrencyTextView?.text = currency.symbol
                 } else {
                     mCurrencyTextView?.text = "?"
                 }
-                val money = cursor.getLong(cursor.getColumnIndex(Contract.Budget.MONEY))
+                val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Budget.MONEY))
                 mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-                val budgetType = Contract.BudgetType.fromValue(cursor.getInt(cursor.getColumnIndex(Contract.Budget.TYPE)))
+                val budgetType = Contract.BudgetType.fromValue(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Budget.TYPE)))
                 if (budgetType != null) {
                     when (budgetType) {
                         Contract.BudgetType.INCOMES -> {
@@ -204,17 +204,17 @@ class BudgetItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbac
                         }
                         Contract.BudgetType.CATEGORY -> {
                             mTypeTextView?.setText(R.string.hint_category)
-                            mCategoryTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Budget.CATEGORY_NAME))
+                            mCategoryTextView?.text = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.CATEGORY_NAME))
                             mCategoryTextView?.visibility = View.VISIBLE
                         }
                     }
                 }
-                val startDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Budget.START_DATE)))
-                val endDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Budget.END_DATE)))
+                val startDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.START_DATE)))
+                val endDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.END_DATE)))
                 mStartDateTextView?.let { DateFormatter.applyDate(it, startDate) }
                 mEndDateTextView?.let { DateFormatter.applyDate(it, endDate) }
-                val rule = cursor.getString(cursor.getColumnIndex(Contract.Budget.RULE))
-                val ruleStartString = cursor.getString(cursor.getColumnIndex(Contract.Budget.RULE_START))
+                val rule = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.RULE))
+                val ruleStartString = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.RULE_START))
                 val anchor = if (ruleStartString != null) DateUtils.getDateFromSQLDateString(ruleStartString) else startDate
                 if (rule != null && RecurrenceSetting.periodEnd(rule, anchor, anchor) != null) {
                     mRecurrenceTextView?.text = RecurrenceSetting(anchor, rule).getUserReadableString(activity)
@@ -234,7 +234,7 @@ class BudgetItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbac
                     if (i != 0) {
                         builder.append(", ")
                     }
-                    val name = cursor.getString(cursor.getColumnIndex(Contract.Wallet.NAME))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.NAME))
                     builder.append(name)
                     i++
                 }

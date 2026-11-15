@@ -156,14 +156,14 @@ class EventItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallback
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Event.ICON)))
+            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Event.ICON)))
             mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
-            mNameTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Event.NAME))
-            val startDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Event.START_DATE)))
-            val endDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Event.END_DATE)))
+            mNameTextView?.text = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Event.NAME))
+            val startDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Event.START_DATE)))
+            val endDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Event.END_DATE)))
             startDate?.let { d -> mStartDateTextView?.let { tv -> DateFormatter.applyDate(tv, d) } }
             endDate?.let { d -> mEndDateTextView?.let { tv -> DateFormatter.applyDate(tv, d) } }
-            val note = cursor.getString(cursor.getColumnIndex(Contract.Event.NOTE))
+            val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Event.NOTE))
             if (!TextUtils.isEmpty(note)) {
                 mNoteTextView?.text = note
                 mNoteTextView?.visibility = View.VISIBLE

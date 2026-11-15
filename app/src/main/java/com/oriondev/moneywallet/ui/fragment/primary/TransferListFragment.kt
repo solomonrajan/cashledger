@@ -199,7 +199,7 @@ class TransferListFragment : CursorListFragment(), TransferCursorAdapter.ActionL
             if (cursor == null || !cursor.moveToFirst()) {
                 return false
             }
-            val date = cursor.getString(cursor.getColumnIndex(Contract.Transfer.DATE))
+            val date = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.DATE))
             return date != null && date.compareTo(DateUtils.getSQLDateTimeString(Date())) > 0
         }
     }

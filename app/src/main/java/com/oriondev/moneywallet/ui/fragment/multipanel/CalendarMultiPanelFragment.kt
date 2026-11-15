@@ -324,7 +324,7 @@ class CalendarMultiPanelFragment : MultiPanelAppBarItemFragment(),
                 return Collections.emptySet()
             }
             val days: MutableSet<Int> = HashSet(cursor.count)
-            val index = cursor.getColumnIndex(COLUMN_DAY)
+            val index = cursor.getColumnIndexOrThrow(COLUMN_DAY)
             cursor.moveToPosition(-1)
             while (cursor.moveToNext()) {
                 val day = dayKey(cursor.getString(index))

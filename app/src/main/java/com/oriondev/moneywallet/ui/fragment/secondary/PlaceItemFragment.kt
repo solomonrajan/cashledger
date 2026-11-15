@@ -221,21 +221,21 @@ class PlaceItemFragment :
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Place.ICON)))
+            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Place.ICON)))
             mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
-            mNameTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Place.NAME))
-            val address = cursor.getString(cursor.getColumnIndex(Contract.Place.ADDRESS))
+            mNameTextView?.text = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Place.NAME))
+            val address = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Place.ADDRESS))
             if (!TextUtils.isEmpty(address)) {
                 mAddressTextView?.text = address
             } else {
                 mAddressTextView?.setText(R.string.hint_address_unknown)
             }
-            if (!cursor.isNull(cursor.getColumnIndex(Contract.Place.LATITUDE)) &&
-                !cursor.isNull(cursor.getColumnIndex(Contract.Place.LONGITUDE))
+            if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.Place.LATITUDE)) &&
+                !cursor.isNull(cursor.getColumnIndexOrThrow(Contract.Place.LONGITUDE))
             ) {
                 mCoordinates = Coordinates(
-                    cursor.getDouble(cursor.getColumnIndex(Contract.Place.LATITUDE)),
-                    cursor.getDouble(cursor.getColumnIndex(Contract.Place.LONGITUDE))
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(Contract.Place.LATITUDE)),
+                    cursor.getDouble(cursor.getColumnIndexOrThrow(Contract.Place.LONGITUDE))
                 )
             } else {
                 mCoordinates = null

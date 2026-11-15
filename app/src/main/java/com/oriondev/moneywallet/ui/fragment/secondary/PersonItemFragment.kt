@@ -154,10 +154,10 @@ class PersonItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbac
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Person.ICON)))
+            val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Person.ICON)))
             mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
-            mNameTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Person.NAME))
-            val note = cursor.getString(cursor.getColumnIndex(Contract.Person.NOTE))
+            mNameTextView?.text = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Person.NAME))
+            val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Person.NOTE))
             mNoteTextView?.text = note
             mNoteTextView?.visibility = if (TextUtils.isEmpty(note)) View.GONE else View.VISIBLE
         } else {

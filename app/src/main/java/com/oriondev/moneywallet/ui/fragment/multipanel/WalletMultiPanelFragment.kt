@@ -128,10 +128,10 @@ class WalletMultiPanelFragment : MultiPanelAppBarItemFragment(),
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null) {
             val money = Money()
-            val indexCurrency = cursor.getColumnIndex(Contract.Wallet.CURRENCY)
-            val indexInTotal = cursor.getColumnIndex(Contract.Wallet.COUNT_IN_TOTAL)
-            val indexWalletInitial = cursor.getColumnIndex(Contract.Wallet.START_MONEY)
-            val indexWalletTotal = cursor.getColumnIndex(Contract.Wallet.TOTAL_MONEY)
+            val indexCurrency = cursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY)
+            val indexInTotal = cursor.getColumnIndexOrThrow(Contract.Wallet.COUNT_IN_TOTAL)
+            val indexWalletInitial = cursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY)
+            val indexWalletTotal = cursor.getColumnIndexOrThrow(Contract.Wallet.TOTAL_MONEY)
             for (i in 0 until cursor.count) {
                 cursor.moveToPosition(i)
                 if (cursor.getInt(indexInTotal) == 1) {

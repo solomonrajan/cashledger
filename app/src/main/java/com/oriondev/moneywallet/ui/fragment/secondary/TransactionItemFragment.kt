@@ -213,7 +213,7 @@ class TransactionItemFragment :
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (loader.id == TRANSACTION_LOADER_ID) {
             if (cursor != null && cursor.moveToFirst()) {
-                val iso = cursor.getString(cursor.getColumnIndex(Contract.Transaction.WALLET_CURRENCY))
+                val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_CURRENCY))
                 val currency = CurrencyManager.getCurrency(iso)
                 if (currency != null) {
                     mCurrencyTextView?.text = currency.symbol
@@ -224,46 +224,46 @@ class TransactionItemFragment :
                 // this loads, so the item is hidden until the row says which kind this is.
                 setMenuItemVisibility(
                     R.id.action_duplicate_item,
-                    cursor.getInt(cursor.getColumnIndex(Contract.Transaction.TYPE)) == NewEditTransactionActivity.TYPE_STANDARD
+                    cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transaction.TYPE)) == NewEditTransactionActivity.TYPE_STANDARD
                 )
-                val money = cursor.getLong(cursor.getColumnIndex(Contract.Transaction.MONEY))
+                val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Transaction.MONEY))
                 mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-                val description = cursor.getString(cursor.getColumnIndex(Contract.Transaction.DESCRIPTION))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.DESCRIPTION))
                 if (!TextUtils.isEmpty(description)) {
                     mDescriptionTextView?.text = description
                     mDescriptionTextView?.visibility = View.VISIBLE
                 } else {
                     mDescriptionTextView?.visibility = View.GONE
                 }
-                val category = cursor.getString(cursor.getColumnIndex(Contract.Transaction.CATEGORY_NAME))
+                val category = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.CATEGORY_NAME))
                 mCategoryTextView?.text = category
-                val datetime: Date? = DateUtils.getDateFromSQLDateTimeString(cursor.getString(cursor.getColumnIndex(Contract.Transaction.DATE)))
+                val datetime: Date? = DateUtils.getDateFromSQLDateTimeString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.DATE)))
                 datetime?.let { d -> mDateTimeTextView?.let { tv -> DateFormatter.applyDateTime(tv, d) } }
-                val wallet = cursor.getString(cursor.getColumnIndex(Contract.Transaction.WALLET_NAME))
+                val wallet = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_NAME))
                 mWalletTextView?.text = wallet
-                val event = cursor.getString(cursor.getColumnIndex(Contract.Transaction.EVENT_NAME))
+                val event = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.EVENT_NAME))
                 if (!TextUtils.isEmpty(event)) {
                     mEventTextView?.text = event
                     mEventTextView?.visibility = View.VISIBLE
                 } else {
                     mEventTextView?.visibility = View.GONE
                 }
-                val place = cursor.getString(cursor.getColumnIndex(Contract.Transaction.PLACE_NAME))
+                val place = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.PLACE_NAME))
                 if (!TextUtils.isEmpty(place)) {
                     mPlaceTextView?.text = place
                     mPlaceTextView?.visibility = View.VISIBLE
                 } else {
                     mPlaceTextView?.visibility = View.GONE
                 }
-                val note = cursor.getString(cursor.getColumnIndex(Contract.Transaction.NOTE))
+                val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.NOTE))
                 if (!TextUtils.isEmpty(note)) {
                     mNoteTextView?.text = note
                     mNoteTextView?.visibility = View.VISIBLE
                 } else {
                     mNoteTextView?.visibility = View.GONE
                 }
-                mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.Transaction.CONFIRMED)) == 1
-                mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.Transaction.COUNT_IN_TOTAL)) == 1
+                mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transaction.CONFIRMED)) == 1
+                mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transaction.COUNT_IN_TOTAL)) == 1
             } else {
                 showItemId(0L)
             }
@@ -276,7 +276,7 @@ class TransactionItemFragment :
                     if (i != 0) {
                         builder.append(", ")
                     }
-                    val name = cursor.getString(cursor.getColumnIndex(Contract.Person.NAME))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Person.NAME))
                     builder.append(name)
                     i++
                 }
@@ -292,11 +292,11 @@ class TransactionItemFragment :
                 while (cursor.moveToPosition(i) && i < cursor.count) {
                     attachments.add(
                         Attachment(
-                            cursor.getLong(cursor.getColumnIndex(Contract.Attachment.ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Attachment.FILE)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Attachment.NAME)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Attachment.TYPE)),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Attachment.SIZE))
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Attachment.ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Attachment.FILE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Attachment.NAME)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Attachment.TYPE)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Attachment.SIZE))
                         )
                     )
                     i++

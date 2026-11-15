@@ -166,56 +166,56 @@ class TransferModelItemFragment : SecondaryPanelFragment(), LoaderManager.Loader
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val iso = cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_FROM_CURRENCY))
+            val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_CURRENCY))
             val currency = CurrencyManager.getCurrency(iso)
             if (currency != null) {
                 mCurrencyTextView?.text = currency.symbol
             } else {
                 mCurrencyTextView?.text = "?"
             }
-            val money = cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.MONEY_FROM))
+            val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.MONEY_FROM))
             mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-            val description = cursor.getString(cursor.getColumnIndex(Contract.TransferModel.DESCRIPTION))
+            val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.DESCRIPTION))
             if (!TextUtils.isEmpty(description)) {
                 mDescriptionTextView?.text = description
                 mDescriptionTextView?.visibility = View.VISIBLE
             } else {
                 mDescriptionTextView?.visibility = View.GONE
             }
-            val walletFrom = cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_FROM_NAME))
-            val walletTo = cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_TO_NAME))
+            val walletFrom = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_NAME))
+            val walletTo = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_NAME))
             mWalletFromTextView?.text = walletFrom
             mWalletToTextView?.text = walletTo
-            if (cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.MONEY_TAX)) > 0L) {
-                val tax = cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.MONEY_TAX))
+            if (cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.MONEY_TAX)) > 0L) {
+                val tax = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.MONEY_TAX))
                 mTaxTextView?.text = mMoneyFormatter.getNotTintedString(currency, tax)
                 mTaxTextView?.visibility = View.VISIBLE
             } else {
                 mTaxTextView?.visibility = View.GONE
             }
-            val event = cursor.getString(cursor.getColumnIndex(Contract.TransferModel.EVENT_NAME))
+            val event = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_NAME))
             if (!TextUtils.isEmpty(event)) {
                 mEventTextView?.text = event
                 mEventTextView?.visibility = View.VISIBLE
             } else {
                 mEventTextView?.visibility = View.GONE
             }
-            val place = cursor.getString(cursor.getColumnIndex(Contract.TransferModel.PLACE_NAME))
+            val place = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_NAME))
             if (!TextUtils.isEmpty(place)) {
                 mPlaceTextView?.text = place
                 mPlaceTextView?.visibility = View.VISIBLE
             } else {
                 mPlaceTextView?.visibility = View.GONE
             }
-            val note = cursor.getString(cursor.getColumnIndex(Contract.TransferModel.NOTE))
+            val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.NOTE))
             if (!TextUtils.isEmpty(note)) {
                 mNoteTextView?.text = note
                 mNoteTextView?.visibility = View.VISIBLE
             } else {
                 mNoteTextView?.visibility = View.GONE
             }
-            mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.CONFIRMED)) == 1
-            mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.COUNT_IN_TOTAL)) == 1
+            mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransferModel.CONFIRMED)) == 1
+            mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransferModel.COUNT_IN_TOTAL)) == 1
         } else {
             showItemId(0L)
         }

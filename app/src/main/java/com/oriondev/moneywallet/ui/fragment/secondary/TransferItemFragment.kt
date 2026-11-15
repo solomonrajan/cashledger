@@ -199,58 +199,58 @@ class TransferItemFragment :
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (loader.id == TRANSFER_LOADER_ID) {
             if (cursor != null && cursor.moveToFirst()) {
-                val iso = cursor.getString(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_FROM_WALLET_CURRENCY))
+                val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.TRANSACTION_FROM_WALLET_CURRENCY))
                 val currency = CurrencyManager.getCurrency(iso)
                 if (currency != null) {
                     mCurrencyTextView?.text = currency.symbol
                 } else {
                     mCurrencyTextView?.text = "?"
                 }
-                val money = cursor.getLong(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_FROM_MONEY))
+                val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Transfer.TRANSACTION_FROM_MONEY))
                 mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-                val description = cursor.getString(cursor.getColumnIndex(Contract.Transfer.DESCRIPTION))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.DESCRIPTION))
                 if (!TextUtils.isEmpty(description)) {
                     mDescriptionTextView?.text = description
                     mDescriptionTextView?.visibility = View.VISIBLE
                 } else {
                     mDescriptionTextView?.visibility = View.GONE
                 }
-                val datetime: Date? = DateUtils.getDateFromSQLDateTimeString(cursor.getString(cursor.getColumnIndex(Contract.Transfer.DATE)))
+                val datetime: Date? = DateUtils.getDateFromSQLDateTimeString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.DATE)))
                 datetime?.let { d -> mDateTimeTextView?.let { tv -> DateFormatter.applyDateTime(tv, d) } }
-                val walletFrom = cursor.getString(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_FROM_WALLET_NAME))
-                val walletTo = cursor.getString(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_TO_WALLET_NAME))
+                val walletFrom = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.TRANSACTION_FROM_WALLET_NAME))
+                val walletTo = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.TRANSACTION_TO_WALLET_NAME))
                 mWalletFromTextView?.text = walletFrom
                 mWalletToTextView?.text = walletTo
-                if (!cursor.isNull(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_TAX_ID))) {
-                    val tax = cursor.getLong(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_TAX_MONEY))
+                if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.Transfer.TRANSACTION_TAX_ID))) {
+                    val tax = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Transfer.TRANSACTION_TAX_MONEY))
                     mTaxTextView?.text = mMoneyFormatter.getNotTintedString(currency, tax)
                     mTaxTextView?.visibility = View.VISIBLE
                 } else {
                     mTaxTextView?.visibility = View.GONE
                 }
-                val event = cursor.getString(cursor.getColumnIndex(Contract.Transfer.EVENT_NAME))
+                val event = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.EVENT_NAME))
                 if (!TextUtils.isEmpty(event)) {
                     mEventTextView?.text = event
                     mEventTextView?.visibility = View.VISIBLE
                 } else {
                     mEventTextView?.visibility = View.GONE
                 }
-                val place = cursor.getString(cursor.getColumnIndex(Contract.Transfer.PLACE_NAME))
+                val place = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.PLACE_NAME))
                 if (!TextUtils.isEmpty(place)) {
                     mPlaceTextView?.text = place
                     mPlaceTextView?.visibility = View.VISIBLE
                 } else {
                     mPlaceTextView?.visibility = View.GONE
                 }
-                val note = cursor.getString(cursor.getColumnIndex(Contract.Transfer.NOTE))
+                val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transfer.NOTE))
                 if (!TextUtils.isEmpty(note)) {
                     mNoteTextView?.text = note
                     mNoteTextView?.visibility = View.VISIBLE
                 } else {
                     mNoteTextView?.visibility = View.GONE
                 }
-                mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.Transfer.CONFIRMED)) == 1
-                mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.Transfer.COUNT_IN_TOTAL)) == 1
+                mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transfer.CONFIRMED)) == 1
+                mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transfer.COUNT_IN_TOTAL)) == 1
             } else {
                 showItemId(0L)
             }
@@ -263,7 +263,7 @@ class TransferItemFragment :
                     if (i != 0) {
                         builder.append(", ")
                     }
-                    val name = cursor.getString(cursor.getColumnIndex(Contract.Person.NAME))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Person.NAME))
                     builder.append(name)
                     i++
                 }
@@ -279,11 +279,11 @@ class TransferItemFragment :
                 while (cursor.moveToPosition(i) && i < cursor.count) {
                     attachments.add(
                         Attachment(
-                            cursor.getLong(cursor.getColumnIndex(Contract.Attachment.ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Attachment.FILE)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Attachment.NAME)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Attachment.TYPE)),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Attachment.SIZE))
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Attachment.ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Attachment.FILE)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Attachment.NAME)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Attachment.TYPE)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Attachment.SIZE))
                         )
                     )
                     i++

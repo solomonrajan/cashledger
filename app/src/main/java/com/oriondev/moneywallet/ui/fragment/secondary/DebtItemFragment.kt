@@ -246,27 +246,27 @@ class DebtItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbacks
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (loader.id == DEBT_LOADER_ID) {
             if (cursor != null && cursor.moveToFirst()) {
-                val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Debt.ICON)))
+                val icon: Icon? = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.ICON)))
                 mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
-                val iso = cursor.getString(cursor.getColumnIndex(Contract.Debt.WALLET_CURRENCY))
+                val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.WALLET_CURRENCY))
                 val currency = CurrencyManager.getCurrency(iso)
                 if (currency != null) {
                     mCurrencyTextView?.text = currency.symbol
                 } else {
                     mCurrencyTextView?.text = "?"
                 }
-                val money = cursor.getLong(cursor.getColumnIndex(Contract.Debt.MONEY))
+                val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Debt.MONEY))
                 mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-                val description = cursor.getString(cursor.getColumnIndex(Contract.Debt.DESCRIPTION))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.DESCRIPTION))
                 if (!TextUtils.isEmpty(description)) {
                     mDescriptionTextView?.text = description
                     mDescriptionTextView?.visibility = View.VISIBLE
                 } else {
                     mDescriptionTextView?.visibility = View.GONE
                 }
-                val date: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Debt.DATE)))
+                val date: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.DATE)))
                 date?.let { d -> mDateTextView?.let { tv -> DateFormatter.applyDate(tv, d) } }
-                val expirationDate = cursor.getString(cursor.getColumnIndex(Contract.Debt.EXPIRATION_DATE))
+                val expirationDate = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.EXPIRATION_DATE))
                 if (!TextUtils.isEmpty(expirationDate)) {
                     val expDate = DateUtils.getDateFromSQLDateString(expirationDate)
                     if (expDate != null) {
@@ -278,23 +278,23 @@ class DebtItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbacks
                 } else {
                     mExpirationDateTextView?.visibility = View.GONE
                 }
-                val wallet = cursor.getString(cursor.getColumnIndex(Contract.Debt.WALLET_NAME))
+                val wallet = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.WALLET_NAME))
                 mWalletTextView?.text = wallet
-                val place = cursor.getString(cursor.getColumnIndex(Contract.Debt.PLACE_NAME))
+                val place = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.PLACE_NAME))
                 if (!TextUtils.isEmpty(place)) {
                     mPlaceTextView?.text = place
                     mPlaceTextView?.visibility = View.VISIBLE
                 } else {
                     mPlaceTextView?.visibility = View.GONE
                 }
-                val note = cursor.getString(cursor.getColumnIndex(Contract.Debt.NOTE))
+                val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Debt.NOTE))
                 if (!TextUtils.isEmpty(note)) {
                     mNoteTextView?.text = note
                     mNoteTextView?.visibility = View.VISIBLE
                 } else {
                     mNoteTextView?.visibility = View.GONE
                 }
-                if (cursor.getInt(cursor.getColumnIndex(Contract.Debt.ARCHIVED)) == 1) {
+                if (cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Debt.ARCHIVED)) == 1) {
                     setMenuItemVisibility(R.id.action_archive_item, false)
                     setMenuItemVisibility(R.id.action_unarchive_item, true)
                 } else {
@@ -313,7 +313,7 @@ class DebtItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbacks
                     if (i != 0) {
                         builder.append(", ")
                     }
-                    val name = cursor.getString(cursor.getColumnIndex(Contract.Person.NAME))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Person.NAME))
                     builder.append(name)
                     i++
                 }

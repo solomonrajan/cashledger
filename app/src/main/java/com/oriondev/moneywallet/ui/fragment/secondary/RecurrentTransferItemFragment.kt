@@ -175,36 +175,36 @@ class RecurrentTransferItemFragment : SecondaryPanelFragment(), LoaderManager.Lo
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor?) {
         if (cursor != null && cursor.moveToFirst()) {
-            val iso = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.WALLET_FROM_CURRENCY))
+            val iso = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.WALLET_FROM_CURRENCY))
             val currency = CurrencyManager.getCurrency(iso)
             if (currency != null) {
                 mCurrencyTextView?.text = currency.symbol
             } else {
                 mCurrencyTextView?.text = "?"
             }
-            val money = cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransfer.MONEY_FROM))
+            val money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.MONEY_FROM))
             mMoneyTextView?.text = mMoneyFormatter.getNotTintedString(currency, money, MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN)
-            val description = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.DESCRIPTION))
+            val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.DESCRIPTION))
             if (!TextUtils.isEmpty(description)) {
                 mDescriptionTextView?.text = description
                 mDescriptionTextView?.visibility = View.VISIBLE
             } else {
                 mDescriptionTextView?.visibility = View.GONE
             }
-            val walletFrom = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.WALLET_FROM_NAME))
-            val walletTo = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.WALLET_TO_NAME))
+            val walletFrom = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.WALLET_FROM_NAME))
+            val walletTo = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.WALLET_TO_NAME))
             mWalletFromTextView?.text = walletFrom
             mWalletToTextView?.text = walletTo
-            if (cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransfer.MONEY_TAX)) > 0L) {
-                val tax = cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransfer.MONEY_TAX))
+            if (cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.MONEY_TAX)) > 0L) {
+                val tax = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.MONEY_TAX))
                 mTaxTextView?.text = mMoneyFormatter.getNotTintedString(currency, tax)
                 mTaxTextView?.visibility = View.VISIBLE
             } else {
                 mTaxTextView?.visibility = View.GONE
             }
             try {
-                val startDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.START_DATE)))
-                val rule = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.RULE))
+                val startDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.START_DATE)))
+                val rule = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.RULE))
                 if (startDate != null && rule != null) {
                     val recurrenceSetting = RecurrenceSetting.build(startDate, rule)
                     mRecurrenceTextView?.text = recurrenceSetting.getUserReadableString(activity)
@@ -214,29 +214,29 @@ class RecurrentTransferItemFragment : SecondaryPanelFragment(), LoaderManager.Lo
             } catch (e: InvalidRecurrenceRuleException) {
                 mRecurrenceTextView?.setText(R.string.hint_recurrence_invalid)
             }
-            val event = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.EVENT_NAME))
+            val event = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.EVENT_NAME))
             if (!TextUtils.isEmpty(event)) {
                 mEventTextView?.text = event
                 mEventTextView?.visibility = View.VISIBLE
             } else {
                 mEventTextView?.visibility = View.GONE
             }
-            val place = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.PLACE_NAME))
+            val place = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.PLACE_NAME))
             if (!TextUtils.isEmpty(place)) {
                 mPlaceTextView?.text = place
                 mPlaceTextView?.visibility = View.VISIBLE
             } else {
                 mPlaceTextView?.visibility = View.GONE
             }
-            val note = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.NOTE))
+            val note = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.NOTE))
             if (!TextUtils.isEmpty(note)) {
                 mNoteTextView?.text = note
                 mNoteTextView?.visibility = View.VISIBLE
             } else {
                 mNoteTextView?.visibility = View.GONE
             }
-            mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.RecurrentTransfer.CONFIRMED)) == 1
-            mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.RecurrentTransfer.COUNT_IN_TOTAL)) == 1
+            mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.CONFIRMED)) == 1
+            mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RecurrentTransfer.COUNT_IN_TOTAL)) == 1
         } else {
             showItemId(0L)
         }
