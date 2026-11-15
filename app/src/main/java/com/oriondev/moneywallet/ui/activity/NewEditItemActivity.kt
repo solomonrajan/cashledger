@@ -17,108 +17,91 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.ui.activity;
+package com.oriondev.moneywallet.ui.activity
 
-import android.content.Intent;
-import android.os.Bundle;
-import androidx.annotation.CallSuper;
-import androidx.annotation.MenuRes;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import android.view.MenuItem;
-import android.widget.Toast;
-
-import com.oriondev.moneywallet.R;
-import com.oriondev.moneywallet.ui.activity.base.SinglePanelActivity;
-import com.oriondev.moneywallet.ui.activity.base.SinglePanelScrollActivity;
-
-import java.util.Date;
+import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.annotation.CallSuper
+import androidx.annotation.MenuRes
+import androidx.annotation.StringRes
+import com.oriondev.moneywallet.R
+import com.oriondev.moneywallet.ui.activity.base.SinglePanelScrollActivity
+import java.util.Date
 
 /**
  * This activity is an abstract implementation that act as a base for every
  * activity that is capable to insert or modify an item of the application.
  * It simplifies the development creating a much easier api to use.
  */
-public abstract class NewEditItemActivity extends SinglePanelScrollActivity {
+abstract class NewEditItemActivity : SinglePanelScrollActivity() {
 
-    public static final String MODE = "NewEditItemActivity::Mode";
-    public static final String ID = "NewEditItemActivity::Id";
-
-    public enum Mode {
-
+    enum class Mode {
         /**
          * This mode indicates that a new item must be created.
          */
         NEW_ITEM,
 
         /**
-         *  When the mode is EDIT_ITEM, the caller MUST set a valid item id or a RuntimeException
-         *  is thrown.
+         * When the mode is EDIT_ITEM, the caller MUST set a valid item id or a RuntimeException
+         * is thrown.
          */
         EDIT_ITEM
     }
 
-    private Mode mMode;
-    private Long mId;
+    private var mMode: Mode = Mode.NEW_ITEM
+    private var mId: Long = -1L
 
-    @Override
     @CallSuper
-    protected void onViewCreated(Bundle savedInstanceState) {
-        Intent intent = getIntent();
-        if (intent != null) {
-            mMode = (Mode) intent.getSerializableExtra(MODE);
-            if (mMode != null) {
-                if (mMode == Mode.EDIT_ITEM) {
-                    mId = intent.getLongExtra(ID, 0L);
+    override fun onViewCreated(savedInstanceState: Bundle?) {
+        val callerIntent = intent
+        if (callerIntent != null) {
+            val modeExtra = callerIntent.getSerializableExtra(MODE) as? Mode
+            if (modeExtra != null) {
+                mMode = modeExtra
+                if (modeExtra == Mode.EDIT_ITEM) {
+                    mId = callerIntent.getLongExtra(ID, 0L)
                     if (mId <= 0L) {
-                        throw new RuntimeException("Trying to edit an item with an invalid id");
+                        throw RuntimeException("Trying to edit an item with an invalid id")
                     }
-                } else if (mMode == Mode.NEW_ITEM) {
-                    mId = -1L;
+                } else if (modeExtra == Mode.NEW_ITEM) {
+                    mId = -1L
                 }
             } else {
-                mMode = Mode.NEW_ITEM;
-                mId = -1L;
+                mMode = Mode.NEW_ITEM
+                mId = -1L
             }
         }
     }
 
-    @Override
     @StringRes
-    protected int getActivityTitleRes() {
-        return getActivityTileRes(mMode);
+    override fun getActivityTitleRes(): Int {
+        return getActivityTileRes(mMode)
     }
 
-    protected Mode getMode() {
-        return mMode;
-    }
+    protected open fun getMode(): Mode = mMode
 
-    protected long getItemId() {
-        return mId;
-    }
+    protected open fun getItemId(): Long = mId
 
     /**
-     * This method is an implementation of the standard {@link SinglePanelActivity#getActivityTitleRes()}
+     * This method is an implementation of the standard [SinglePanelActivity.getActivityTitleRes]
      * to let the sub activity return the correct title according to the current mode.
      * @param mode current mode of the activity.
      * @return the string to set as title.
      */
     @StringRes
-    protected abstract int getActivityTileRes(Mode mode);
+    protected abstract fun getActivityTileRes(mode: Mode): Int
 
-    @Override
     @MenuRes
-    protected int onInflateMenu() {
-        return R.menu.menu_new_edit_item;
+    override fun onInflateMenu(): Int {
+        return R.menu.menu_new_edit_item
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.action_save_changes) {
-            onSaveChanges(mMode);
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_save_changes) {
+            onSaveChanges(mMode)
         }
-        return false;
+        return false
     }
 
     /**
@@ -126,7 +109,7 @@ public abstract class NewEditItemActivity extends SinglePanelScrollActivity {
      * and correctness, then modify the data inside the content provider.
      * @param mode current mode of the activity.
      */
-    protected abstract void onSaveChanges(Mode mode);
+    protected abstract fun onSaveChanges(mode: Mode)
 
     /**
      * Ends a save, saying first that the item is not counted yet when the date it was saved with
@@ -143,10 +126,15 @@ public abstract class NewEditItemActivity extends SinglePanelScrollActivity {
      *
      * @param date the date the item was saved with.
      */
-    protected void finishSaveDatedAt(@Nullable Date date) {
-        if (date != null && date.after(new Date())) {
-            Toast.makeText(this, R.string.message_saved_dated_ahead, Toast.LENGTH_LONG).show();
+    protected open fun finishSaveDatedAt(date: Date?) {
+        if (date != null && date.after(Date())) {
+            Toast.makeText(this, R.string.message_saved_dated_ahead, Toast.LENGTH_LONG).show()
         }
-        finish();
+        finish()
+    }
+
+    companion object {
+        const val MODE = "NewEditItemActivity::Mode"
+        const val ID = "NewEditItemActivity::Id"
     }
 }
