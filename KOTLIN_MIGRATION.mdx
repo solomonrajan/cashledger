@@ -1,7 +1,7 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-15"
+last_updated: "2026-11-16"
 status: "In Progress"
 overall_progress: "86.3%"
 ---
@@ -344,8 +344,8 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 6: Top-Level Screens & Application Core
-**Dates:** Dec 14, 2026 – Jan 08, 2027 &bull; **Deadline:** Jan 08, 2027 (3.5 Weeks) &bull; **Files:** 135 Files (`1` Kotlin, `134` Java) &bull; **Status:** 🟢 Completed
-**Path:** `ui/activity/` (`50`), `ui/fragment/` (`84`), `App.java` (`1`)
+**Dates:** Dec 14, 2026 – Jan 08, 2027 &bull; **Deadline:** Jan 08, 2027 (3.5 Weeks) &bull; **Files:** 135 Files (`135` Kotlin, `0` Java) &bull; **Status:** 🟢 Completed
+**Path:** `ui/activity/` (`35`), `ui/fragment/` (`99`), `App.kt` (`1`)
 
 #### Status:
 - [x] `TutorialActivity.kt` *(Already converted)*
@@ -398,7 +398,7 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 - [x] `SinglePanelSimpleListActivity.kt` *(in `ui/activity/base/`)*
 - [x] `SinglePanelViewPagerActivity.kt` *(in `ui/activity/base/`)*
 - [x] `MultiPanelActivity.kt` *(in `ui/activity/base/`)*
-- [ ] All `84` files under `ui/fragment/`
+- [x] All `99` files under `ui/fragment/` (base, dialog, primary, secondary, multipanel, singlepanel, stub)
 - [x] `App.kt`
 
 #### How We Do It:
