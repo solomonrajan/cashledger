@@ -148,7 +148,7 @@ class EventPickerDialog : DialogFragment(), EventSelectorCursorAdapter.Controlle
     }
 
     interface Callback {
-        fun onEventSelected(event: Event)
+        fun onEventSelected(event: Event?)
     }
 
     companion object {

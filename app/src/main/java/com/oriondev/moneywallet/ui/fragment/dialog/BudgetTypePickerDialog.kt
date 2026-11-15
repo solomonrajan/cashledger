@@ -76,7 +76,7 @@ class BudgetTypePickerDialog : DialogFragment(), BudgetTypeSelectorAdapter.Contr
     }
 
     interface Callback {
-        fun onBudgetTypeSelected(budgetType: Contract.BudgetType)
+        fun onBudgetTypeSelected(budgetType: Contract.BudgetType?)
     }
 
     companion object {

@@ -111,7 +111,7 @@ class ParentCategoryPickerDialog : DialogFragment(), ParentCategorySelectorCurso
         show(fragmentManager, tag)
     }
 
-    override fun onCategorySelected(category: Category?) {
+    override fun onCategorySelected(category: Category) {
         mCallback?.onCategorySelected(category)
         dismiss()
     }

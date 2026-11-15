@@ -82,7 +82,7 @@ class DataFormatPickerDialog : DialogFragment(), DataFormatSelectorAdapter.Contr
     }
 
     interface Callback {
-        fun onDataFormatSelected(dataFormat: DataFormat)
+        fun onDataFormatSelected(dataFormat: DataFormat?)
     }
 
     companion object {
