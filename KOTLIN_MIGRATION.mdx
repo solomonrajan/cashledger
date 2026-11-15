@@ -1,9 +1,9 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-12"
+last_updated: "2026-11-15"
 status: "In Progress"
-overall_progress: "60.3%"
+overall_progress: "62.5%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "60.3%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-312%20%2F%20517%20Files%20(60.3%25)-yellow?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-323%20%2F%20517%20Files%20(62.5%25)-yellow?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,7 +24,7 @@ overall_progress: "60.3%"
 > **How to update this dashboard:** Run `./gradlew updateMigrationTracker` (or [`scripts/Update-MigrationTracker.ps1`](scripts/Update-MigrationTracker.ps1)) to automatically recalculate counts, progress badges, statuses, Mermaid nodes, and file checklists from the codebase. CI also validates this in [`.github/workflows/build.yml`](.github/workflows/build.yml).
 
 ```
-Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░] 60.3% (312 / 517)
+Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░] 62.5% (323 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
@@ -35,11 +35,11 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 | **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 0 | 77 | 77 | 100% | 🟢 Completed | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 0 | 38 | 38 | 100% | 🟢 Completed | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view`, `ui/*` | 0 | 151 | 151 | 100% | 🟢 Completed | Sprint 8–9 |
-| **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 134 | 1 | 135 | 0.7% | 🟡 In Progress | Sprint 10–12 |
+| **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 123 | 12 | 135 | 8.9% | 🟡 In Progress | Sprint 10–12 |
 | **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **205** | **312** | **517** | **60.3%** | **🟡 Active** | **~13 Sprints** |
+| **TOTALS** | **Entire Codebase** | **194** | **323** | **517** | **62.5%** | **🟡 Active** | **~13 Sprints** |
 
-*(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + 38 Phase 4 files (`api/`, `background/`, `service/`, `broadcast/`) + 151 Phase 5 files (`picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/`) + `TutorialActivity.kt` are now pure Kotlin — 312 total).*
+*(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + 38 Phase 4 files (`api/`, `background/`, `service/`, `broadcast/`) + 151 Phase 5 files (`picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/`) + 12 Phase 6 files (`TutorialActivity.kt`, `ui/activity/base/*`, and controllers) are now pure Kotlin — 323 total).*
 
 ### 📢 Recent Activity & Milestones
 
@@ -49,7 +49,8 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 - **2026-11-07 (Phase 3 Completed):** ✅ Migrated all 77 storage, database, preference, and cache classes in `com.oriondev.moneywallet.storage.*` to idiomatic Kotlin (`SQLDatabase.kt`, `DataContentProvider.kt`, `SyncContentProvider.kt`, preference managers, database serializers, etc.). Refactored query builders to `buildString` to eliminate compiler AST depth stack overflow bottlenecks, verified strict 0 double-bang (`!!`) compliance across the codebase, and verified 100% green in CI (all 662 unit tests passed, zero Detekt warnings, APK assembled).
 - **2026-11-11 (Phase 4 Completed):** ✅ Migrated all 38 API, service, background loader, and broadcast receiver classes across `broadcast/` (7), `background/` (8), `api/` (13), and `service/` (10) to idiomatic Kotlin (`WebDAVClient.kt`, `SAFBackendServiceAPI.kt`, `DiskBackendServiceAPI.kt`, `OverviewDataLoader.kt`, `AutoBackupJobService.kt`, `BackupHandlerIntentService.kt`, `ImportExportIntentService.kt`, `RecurrenceHandlerIntentService.kt`, etc.). Applied `@JvmSuppressWildcards` on Java-facing loader `List` APIs, exposed `@JvmStatic` WebDAV helper methods for Java tests, shared foreground notification and backup locking helpers (`ForegroundServices.kt`, `TaskReporter.kt`, `BackupOperation.kt`), maintained strict 0 double-bang (`!!`) compliance and zero Detekt warnings, and verified 100% green in CI (run `43038888396`).
 - **2026-11-11 (Phase 5 Completed):** ✅ Migrated all 151 reusable UI component, custom view, picker, and adapter classes across `ui/behavior/` (1), `ui/drawable/` (2), `ui/notification/` (1), `ui/widget/` (4), `ui/preference/` (6), `ui/view/` (73 across root, `calendar/`, `chart/`, `text/`, `theme/`), `picker/` (16), and `ui/adapter/` (48 across `pager/` and `recycler/`) to pure idiomatic Kotlin. Consolidated drag-sort (`AbstractSortCursorAdapter`), theme/header tinting (`applyHeaderTintBackground`), and route formatting (`formatTransferRoute`) helpers while preserving `@JvmStatic`/`@JvmOverloads` Java test and screen compatibility, strict zero `!!` compliance, zero Detekt warnings, and green CI (run `43076795512`).
-- **Next Target:** 🎯 **Phase 6: Top-Level Screens & App** (134 Java classes remaining across `ui/activity/`, `ui/fragment/`, and `App.java`; `TutorialActivity.kt` is already migrated).
+- **2026-11-15 (Phase 6A Completed):** ✅ Migrated all 11 base presentation infrastructure, activity, and controller classes across `ui/activity/base/` (8: `ThemedActivity.kt`, `BaseActivity.kt`, `SinglePanelActivity.kt`, `SinglePanelAppBarActivity.kt`, `SinglePanelScrollActivity.kt`, `SinglePanelSimpleListActivity.kt`, `SinglePanelViewPagerActivity.kt`, `MultiPanelActivity.kt`) and `ui/activity/` (3: `ToolbarController.kt`, `DrawerController.kt`, `TransactionEditorRules.kt`) to pure idiomatic Kotlin. Preserved full Java interop contracts, static helpers (`@JvmStatic`), Robolectric test hooks (`ThemedActivityTeardownTest`), zero double-bangs, and clean tracker sync (`323 / 517`, `62.5%`).
+- **Next Target:** 🎯 **Phase 6B: Base Fragments & Stubs** (17 Java classes remaining across `ui/fragment/base/` and `ui/fragment/stub/`).
 
 ---
 
@@ -386,17 +387,17 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 - [ ] `BackupListActivity.java`
 - [ ] `BackendExplorerActivity.java`
 - [ ] `AboutActivity.java`
-- [ ] `DrawerController.java`
-- [ ] `ToolbarController.java`
-- [ ] `TransactionEditorRules.java`
-- [ ] `BaseActivity.java` *(in `ui/activity/base/`)*
-- [ ] `ThemedActivity.java` *(in `ui/activity/base/`)*
-- [ ] `SinglePanelActivity.java` *(in `ui/activity/base/`)*
-- [ ] `SinglePanelAppBarActivity.java` *(in `ui/activity/base/`)*
-- [ ] `SinglePanelScrollActivity.java` *(in `ui/activity/base/`)*
-- [ ] `SinglePanelSimpleListActivity.java` *(in `ui/activity/base/`)*
-- [ ] `SinglePanelViewPagerActivity.java` *(in `ui/activity/base/`)*
-- [ ] `MultiPanelActivity.java` *(in `ui/activity/base/`)*
+- [x] `DrawerController.kt`
+- [x] `ToolbarController.kt`
+- [x] `TransactionEditorRules.kt`
+- [x] `BaseActivity.kt` *(in `ui/activity/base/`)*
+- [x] `ThemedActivity.kt` *(in `ui/activity/base/`)*
+- [x] `SinglePanelActivity.kt` *(in `ui/activity/base/`)*
+- [x] `SinglePanelAppBarActivity.kt` *(in `ui/activity/base/`)*
+- [x] `SinglePanelScrollActivity.kt` *(in `ui/activity/base/`)*
+- [x] `SinglePanelSimpleListActivity.kt` *(in `ui/activity/base/`)*
+- [x] `SinglePanelViewPagerActivity.kt` *(in `ui/activity/base/`)*
+- [x] `MultiPanelActivity.kt` *(in `ui/activity/base/`)*
 - [ ] All `84` files under `ui/fragment/`
 - [ ] `App.java`
 
