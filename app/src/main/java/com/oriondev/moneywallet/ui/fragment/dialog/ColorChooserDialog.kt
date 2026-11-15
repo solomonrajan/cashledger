@@ -30,6 +30,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.AbsListView
 import android.widget.BaseAdapter
 import android.widget.EditText
 import android.widget.GridView
@@ -298,11 +299,11 @@ class ColorChooserDialog : DialogFragment() {
             } else {
                 val size = resources.getDimensionPixelSize(R.dimen.color_chooser_swatch_size)
                 val newView = ColorSwatchView(parent.context)
-                newView.layoutParams = GridView.LayoutParams(size, size)
+                newView.layoutParams = AbsListView.LayoutParams(size, size)
                 newView
             }
             swatch.setColor(colorAt(position))
-            swatch.setSwatchSelected(position == (if (mInShadeLevel) mShadeIndex else mHueIndex))
+            swatch.isSwatchSelected = (position == (if (mInShadeLevel) mShadeIndex else mHueIndex))
             swatch.setOnClickListener {
                 onSwatchClicked(position)
             }

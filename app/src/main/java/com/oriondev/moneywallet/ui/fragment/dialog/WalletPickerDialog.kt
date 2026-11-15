@@ -190,9 +190,9 @@ class WalletPickerDialog : DialogFragment(), LoaderManager.LoaderCallbacks<Curso
     }
 
     interface Callback {
-        fun onWalletSelected(wallet: Wallet)
+        fun onWalletSelected(wallet: Wallet?)
 
-        fun onWalletsSelected(wallets: Array<Wallet>)
+        fun onWalletsSelected(wallets: Array<Wallet>?)
     }
 
     companion object {

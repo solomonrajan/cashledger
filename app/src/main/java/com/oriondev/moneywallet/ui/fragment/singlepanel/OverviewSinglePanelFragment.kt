@@ -46,6 +46,7 @@ import com.oriondev.moneywallet.ui.activity.PeriodDetailActivity
 import com.oriondev.moneywallet.ui.adapter.pager.OverviewChartViewPagerAdapter
 import com.oriondev.moneywallet.ui.adapter.recycler.OverviewItemAdapter
 import com.oriondev.moneywallet.ui.fragment.base.SinglePanelFragment
+import java.util.Date
 
 /**
  * Created by andrea on 17/08/18.
@@ -65,7 +66,11 @@ class OverviewSinglePanelFragment : SinglePanelFragment(), OverviewSettingPicker
     }
 
     override fun onDetach() {
-        PreferenceManager.unregisterCurrentWalletObserver(activity, mBroadcastReceiver)
+        val receiver = mBroadcastReceiver
+        val act = activity
+        if (receiver != null && act != null) {
+            PreferenceManager.unregisterCurrentWalletObserver(act, receiver)
+        }
         super.onDetach()
     }
 
@@ -117,7 +122,12 @@ class OverviewSinglePanelFragment : SinglePanelFragment(), OverviewSettingPicker
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<OverviewData> {
-        val setting = mOverviewSettingPicker?.getCurrentSettings()
+        val setting = mOverviewSettingPicker?.currentSettings ?: OverviewSetting(
+            Date(),
+            Date(),
+            com.oriondev.moneywallet.model.Group.DAILY,
+            OverviewSetting.CashFlow.NET_INCOMES
+        )
         return OverviewDataLoader(requireContext(), setting)
     }
 

@@ -175,8 +175,8 @@ class OverviewSettingDialog : DialogFragment(), DateTimePicker.Controller, Categ
     }
 
     private fun getCurrentOverviewSetting(): OverviewSetting {
-        val startDate = mStartDatePicker?.getCurrentDateTime() ?: Date()
-        val endDate = mEndDatePicker?.getCurrentDateTime() ?: Date()
+        val startDate = mStartDatePicker?.currentDateTime ?: Date()
+        val endDate = mEndDatePicker?.currentDateTime ?: Date()
         val groupType = when (mGroupTypeSpinner?.selectedItemPosition ?: 0) {
             0 -> Group.DAILY
             1 -> Group.WEEKLY
@@ -193,7 +193,7 @@ class OverviewSettingDialog : DialogFragment(), DateTimePicker.Controller, Categ
             }
             OverviewSetting(startDate, endDate, groupType, cashFlow)
         } else {
-            val category = mCategoryPicker?.getCurrentCategory()
+            val category = mCategoryPicker?.currentCategory
             OverviewSetting(startDate, endDate, groupType, category?.id ?: 0L)
         }
     }
@@ -226,11 +226,12 @@ class OverviewSettingDialog : DialogFragment(), DateTimePicker.Controller, Categ
                 val name = if (nameIndex >= 0) cursor.getString(nameIndex) else ""
                 val iconStr = if (iconIndex >= 0) cursor.getString(iconIndex) else null
                 val typeVal = if (typeIndex >= 0) cursor.getInt(typeIndex) else 0
+                val categoryType = Contract.CategoryType.fromValue(typeVal) ?: Contract.CategoryType.EXPENSE
                 category = Category(
                     id,
                     name,
                     IconLoader.parse(iconStr),
-                    Contract.CategoryType.fromValue(typeVal)
+                    categoryType
                 )
             }
         }
@@ -250,22 +251,22 @@ class OverviewSettingDialog : DialogFragment(), DateTimePicker.Controller, Categ
         if (date == null) return
         when (tag) {
             TAG_START_DATE_PICKER -> {
-                mStartDateSpinner?.text = getString(R.string.spinner_item_start_date, DateFormatter.getFormattedDate(date))
+                mStartDateSpinner?.setText(getString(R.string.spinner_item_start_date, DateFormatter.getFormattedDate(date)))
             }
             TAG_END_DATE_PICKER -> {
-                mEndDateSpinner?.text = getString(R.string.spinner_item_end_date, DateFormatter.getFormattedDate(date))
+                mEndDateSpinner?.setText(getString(R.string.spinner_item_end_date, DateFormatter.getFormattedDate(date)))
             }
         }
     }
 
     override fun onCategoryChanged(tag: String?, category: Category?) {
         if (category != null) {
-            mCategorySpinner?.text = category.name
+            mCategorySpinner?.setText(category.name)
         }
     }
 
     interface Callback {
-        fun onOverviewSettingChanged(overviewSetting: OverviewSetting)
+        fun onOverviewSettingChanged(overviewSetting: OverviewSetting?)
     }
 
     companion object {

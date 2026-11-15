@@ -159,7 +159,7 @@ class PeoplePickerDialog : DialogFragment(), PeopleSelectorCursorAdapter.Control
     }
 
     interface Callback {
-        fun onPeopleSelected(people: Array<Person>)
+        fun onPeopleSelected(people: Array<Person>?)
     }
 
     companion object {

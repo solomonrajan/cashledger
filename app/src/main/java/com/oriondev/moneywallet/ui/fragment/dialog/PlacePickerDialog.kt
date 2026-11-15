@@ -135,7 +135,7 @@ class PlacePickerDialog : DialogFragment(), PlaceSelectorCursorAdapter.Controlle
     }
 
     interface Callback {
-        fun onPlaceSelected(place: Place)
+        fun onPlaceSelected(place: Place?)
     }
 
     companion object {

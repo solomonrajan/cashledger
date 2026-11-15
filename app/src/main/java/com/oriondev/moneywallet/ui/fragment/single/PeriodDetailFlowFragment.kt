@@ -72,7 +72,11 @@ class PeriodDetailFlowFragment : Fragment(), PeriodDetailFlowAdapter.Controller,
     }
 
     override fun onDetach() {
-        PreferenceManager.unregisterCurrentWalletObserver(activity, mBroadcastReceiver)
+        val receiver = mBroadcastReceiver
+        val act = activity
+        if (receiver != null && act != null) {
+            PreferenceManager.unregisterCurrentWalletObserver(act, receiver)
+        }
         super.onDetach()
     }
 
@@ -145,7 +149,7 @@ class PeriodDetailFlowFragment : Fragment(), PeriodDetailFlowAdapter.Controller,
             }
             mPieChartViewPagerAdapter?.setData(data)
             mRecyclerViewAdapter?.setData(data)
-            mPieChartViewPagerIndicator?.visibility = if (data.chartCount > 1) View.VISIBLE else View.GONE
+            mPieChartViewPagerIndicator?.visibility = if (data.getChartCount() > 1) View.VISIBLE else View.GONE
             mRecyclerView?.visibility = View.VISIBLE
         } else {
             if (rightTextView != null) {

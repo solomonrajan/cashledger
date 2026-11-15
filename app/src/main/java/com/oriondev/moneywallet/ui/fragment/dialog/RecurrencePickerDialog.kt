@@ -191,15 +191,15 @@ class RecurrencePickerDialog : DialogFragment(), DateTimePicker.Controller {
         }
 
         val childFm = childFragmentManager
-        mStartDatePicker = DateTimePicker.createPicker(childFm, TAG_START_DATE_PICKER, setting.startDate)
-        mEndDatePicker = DateTimePicker.createPicker(childFm, TAG_END_DATE_PICKER, setting.endDate)
+        mStartDatePicker = DateTimePicker.createPicker(childFm, TAG_START_DATE_PICKER, setting.getStartDate())
+        mEndDatePicker = DateTimePicker.createPicker(childFm, TAG_END_DATE_PICKER, setting.getEndDate())
 
-        updateRecurrenceType(setting.type, false)
-        updateRecurrenceOffsetValue(setting.offsetValue)
-        updateRecurrenceWeekDays(setting.weekDays)
-        updateRecurrenceMonthDay(setting.monthDay)
-        updateRecurrenceEndType(setting.endType, false)
-        updateRecurrenceOccurrenceValue(setting.occurrenceValue)
+        updateRecurrenceType(setting.getType(), false)
+        updateRecurrenceOffsetValue(setting.getOffsetValue())
+        updateRecurrenceWeekDays(setting.getWeekDays())
+        updateRecurrenceMonthDay(setting.getMonthDay())
+        updateRecurrenceEndType(setting.getEndType(), false)
+        updateRecurrenceOccurrenceValue(setting.getOccurrenceValue())
 
         if (!mEndTypeEnabled) {
             view.findViewById<View>(R.id.end_layout)?.visibility = View.GONE
@@ -329,7 +329,7 @@ class RecurrencePickerDialog : DialogFragment(), DateTimePicker.Controller {
     }
 
     fun getCurrentRecurrenceSetting(): RecurrenceSetting {
-        val startDate = mStartDatePicker?.getCurrentDateTime() ?: Date()
+        val startDate = mStartDatePicker?.currentDateTime ?: Date()
         val type = getCurrentRecurrenceType()
         val builder = RecurrenceSetting.Builder(startDate, type)
         builder.setOffset(getCurrentRecurrenceOffset())
@@ -342,7 +342,7 @@ class RecurrencePickerDialog : DialogFragment(), DateTimePicker.Controller {
         }
         when (getCurrentRecurrenceEndType()) {
             RecurrenceSetting.END_UNTIL -> {
-                val endDate = mEndDatePicker?.getCurrentDateTime()
+                val endDate = mEndDatePicker?.currentDateTime
                 if (endDate != null) {
                     builder.setEndUntil(endDate)
                 }
@@ -375,16 +375,16 @@ class RecurrencePickerDialog : DialogFragment(), DateTimePicker.Controller {
         if (date == null) return
         when (tag) {
             TAG_START_DATE_PICKER -> {
-                mRecurrenceStartDateSpinner?.text = DateFormatter.getFormattedDate(date)
+                mRecurrenceStartDateSpinner?.setText(DateFormatter.getFormattedDate(date))
             }
             TAG_END_DATE_PICKER -> {
-                mRecurrenceEndDateSpinner?.text = DateFormatter.getFormattedDate(date)
+                mRecurrenceEndDateSpinner?.setText(DateFormatter.getFormattedDate(date))
             }
         }
     }
 
     interface Callback {
-        fun onRecurrenceSettingChanged(recurrenceSetting: RecurrenceSetting)
+        fun onRecurrenceSettingChanged(recurrenceSetting: RecurrenceSetting?)
     }
 
     companion object {

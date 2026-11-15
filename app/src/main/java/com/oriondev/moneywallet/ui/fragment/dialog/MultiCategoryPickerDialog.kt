@@ -187,7 +187,7 @@ class MultiCategoryPickerDialog : DialogFragment(), ParentCategorySelectorCursor
     }
 
     interface Callback {
-        fun onCategoriesSelected(categories: Array<Category>)
+        fun onCategoriesSelected(categories: Array<Category>?)
     }
 
     companion object {

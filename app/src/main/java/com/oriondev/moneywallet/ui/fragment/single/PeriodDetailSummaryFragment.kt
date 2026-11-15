@@ -73,7 +73,11 @@ class PeriodDetailSummaryFragment : Fragment(), PeriodDetailSummaryAdapter.Contr
     }
 
     override fun onDetach() {
-        PreferenceManager.unregisterCurrentWalletObserver(activity, mBroadcastReceiver)
+        val receiver = mBroadcastReceiver
+        val act = activity
+        if (receiver != null && act != null) {
+            PreferenceManager.unregisterCurrentWalletObserver(act, receiver)
+        }
         super.onDetach()
     }
 
@@ -114,7 +118,9 @@ class PeriodDetailSummaryFragment : Fragment(), PeriodDetailSummaryAdapter.Contr
     }
 
     override fun onCreateLoader(id: Int, args: Bundle?): Loader<PeriodDetailSummaryData> {
-        val daysBetween = DateUtils.getDaysBetween(mStartDate, mEndDate)
+        val start = mStartDate ?: Date()
+        val end = mEndDate ?: Date()
+        val daysBetween = DateUtils.getDaysBetween(start, end)
         val groupType = when {
             daysBetween == 0 -> PeriodDetailSummaryLoader.GROUP_BY_HOUR
             daysBetween in 1..7 -> PeriodDetailSummaryLoader.GROUP_BY_DAY
@@ -122,7 +128,7 @@ class PeriodDetailSummaryFragment : Fragment(), PeriodDetailSummaryAdapter.Contr
             daysBetween in 32..365 -> PeriodDetailSummaryLoader.GROUP_BY_MONTH
             else -> PeriodDetailSummaryLoader.GROUP_BY_YEAR
         }
-        return PeriodDetailSummaryLoader(requireContext(), mStartDate, mEndDate, groupType)
+        return PeriodDetailSummaryLoader(requireContext(), start, end, groupType)
     }
 
     override fun onLoadFinished(loader: Loader<PeriodDetailSummaryData>, data: PeriodDetailSummaryData?) {
@@ -133,7 +139,7 @@ class PeriodDetailSummaryFragment : Fragment(), PeriodDetailSummaryAdapter.Contr
             }
             mBarChartViewPagerAdapter?.setData(data)
             mRecyclerViewAdapter?.setData(data)
-            mChartViewPagerIndicator?.visibility = if (data.chartCount > 1) View.VISIBLE else View.GONE
+            mChartViewPagerIndicator?.visibility = if (data.getChartCount() > 1) View.VISIBLE else View.GONE
             mRecyclerView?.visibility = View.VISIBLE
         } else {
             if (rightTextView != null) {
