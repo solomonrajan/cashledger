@@ -18,7 +18,7 @@ abstract class SinglePanelViewPagerActivity :
 
     override fun onCreateHeaderView(
         inflater: LayoutInflater,
-        parent: ViewGroup?,
+        parent: ViewGroup,
         savedInstanceState: Bundle?
     ) {
         val view = inflater.inflate(R.layout.view_multi_panel_view_pager_app_bar, parent, true)
@@ -27,7 +27,7 @@ abstract class SinglePanelViewPagerActivity :
 
     override fun onCreatePanelView(
         inflater: LayoutInflater,
-        parent: ViewGroup?,
+        parent: ViewGroup,
         savedInstanceState: Bundle?
     ) {
         val view = inflater.inflate(R.layout.view_multi_panel_view_pager_body, parent, true)

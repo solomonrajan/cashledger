@@ -77,11 +77,12 @@ abstract class ThemedActivity : AppCompatActivity(), ThemeEngine.ThemeObserver {
 
     @Throws(Exception::class)
     private fun getThemedViewConstructor(name: String): Constructor<*> {
-        var constructor = themedViewConstructors[name]
-        if (constructor == null) {
-            constructor = Class.forName(name).getConstructor(Context::class.java, AttributeSet::class.java)
-            themedViewConstructors[name] = constructor
+        val cached = themedViewConstructors[name]
+        if (cached != null) {
+            return cached
         }
+        val constructor = Class.forName(name).getConstructor(Context::class.java, AttributeSet::class.java)
+        themedViewConstructors[name] = constructor
         return constructor
     }
 

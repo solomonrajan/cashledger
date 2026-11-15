@@ -21,14 +21,14 @@ abstract class SinglePanelAppBarActivity : SinglePanelActivity() {
             R.id.primary_panel_container_card_view,
             R.id.primary_panel_container_linear_layout,
             R.id.primary_panel_container_coordinator_layout
-        )
+        ) ?: (findViewById(android.R.id.content) as ViewGroup)
         onCreateHeaderView(inflater, headerContainer, savedInstanceState)
         onCreatePanelView(inflater, panelContainer, savedInstanceState)
     }
 
     protected abstract fun onCreateHeaderView(
         inflater: LayoutInflater,
-        parent: ViewGroup?,
+        parent: ViewGroup,
         savedInstanceState: Bundle?
     )
 }

@@ -17,11 +17,11 @@ abstract class SinglePanelSimpleListActivity :
     SwipeRefreshLayout.OnRefreshListener {
 
     private var advancedRecyclerView: AdvancedRecyclerView? = null
-    private var abstractCursorAdapter: AbstractCursorAdapter? = null
+    private var abstractCursorAdapter: AbstractCursorAdapter<*>? = null
 
     override fun onCreatePanelView(
         inflater: LayoutInflater,
-        parent: ViewGroup?,
+        parent: ViewGroup,
         savedInstanceState: Bundle?
     ) {
         val view = inflater.inflate(R.layout.layout_activity_single_panel_body_list, parent, true)
@@ -30,7 +30,7 @@ abstract class SinglePanelSimpleListActivity :
         onPrepareRecyclerView(recyclerView)
         val adapter = onCreateAdapter()
         abstractCursorAdapter = adapter
-        recyclerView.adapter = adapter
+        recyclerView.setAdapter(adapter)
         recyclerView.setOnRefreshListener(this)
         recyclerView.setState(AdvancedRecyclerView.State.LOADING)
     }
@@ -46,7 +46,7 @@ abstract class SinglePanelSimpleListActivity :
 
     protected abstract fun onPrepareRecyclerView(recyclerView: AdvancedRecyclerView)
 
-    protected abstract fun onCreateAdapter(): AbstractCursorAdapter
+    protected abstract fun onCreateAdapter(): AbstractCursorAdapter<*>
 
     protected open fun getAdvancedRecyclerView(): AdvancedRecyclerView? {
         return advancedRecyclerView
