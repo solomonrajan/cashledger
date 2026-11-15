@@ -69,7 +69,6 @@ class SearchMultiPanelFragment : MultiPanelCursorListItemFragment(),
 
     private var query: String = ""
     private var searchEditText: EditText? = null
-    private var selectionMode: TransactionSelectionMode? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,22 +80,24 @@ class SearchMultiPanelFragment : MultiPanelCursorListItemFragment(),
         }
     }
 
-    override fun setupPrimaryToolbar(toolbar: Toolbar) {
+    override fun setupPrimaryToolbar(toolbar: Toolbar?) {
         super.setupPrimaryToolbar(toolbar)
-        toolbar.title = null
-        val view = layoutInflater.inflate(R.layout.layout_toolbar_search_view, toolbar, true)
-        val editText: EditText = view.findViewById(R.id.search_edit_text)
-        searchEditText = editText
-        editText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        toolbar?.title = null
+        if (toolbar != null) {
+            val view = layoutInflater.inflate(R.layout.layout_toolbar_search_view, toolbar, true)
+            val editText: EditText = view.findViewById(R.id.search_edit_text)
+            searchEditText = editText
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                query = s?.toString() ?: ""
-                recreateLoader()
-            }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    query = s?.toString() ?: ""
+                    recreateLoader()
+                }
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
+                override fun afterTextChanged(s: Editable?) {}
+            })
+        }
     }
 
     override fun onPrepareRecyclerView(recyclerView: AdvancedRecyclerView) {
@@ -104,7 +105,7 @@ class SearchMultiPanelFragment : MultiPanelCursorListItemFragment(),
         recyclerView.setEmptyText(R.string.message_no_transaction_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         val adapter = TransactionCursorAdapter(this)
         selectionMode = TransactionSelectionMode(this, this, adapter)
         return adapter
@@ -197,7 +198,7 @@ class SearchMultiPanelFragment : MultiPanelCursorListItemFragment(),
         return arguments.toTypedArray()
     }
 
-    override fun onHeaderClick(startDate: Date?, endDate: Date?) {
+    override fun onHeaderClick(startDate: Date, endDate: Date) {
         // this method will never be called by the adapter!
     }
 

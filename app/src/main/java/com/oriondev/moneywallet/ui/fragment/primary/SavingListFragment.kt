@@ -49,7 +49,7 @@ class SavingListFragment : CursorListFragment(), SavingCursorAdapter.ActionListe
         recyclerView.setEmptyText(R.string.message_no_saving_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return SavingCursorAdapter(this)
     }
 

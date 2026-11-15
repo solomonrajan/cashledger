@@ -48,7 +48,7 @@ class RecurrentTransactionListFragment : CursorListFragment(), RecurrentTransact
         recyclerView.setEmptyText(R.string.message_no_recurrence_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return RecurrentTransactionCursorAdapter(this)
     }
 

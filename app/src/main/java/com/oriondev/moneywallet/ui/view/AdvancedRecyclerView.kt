@@ -79,6 +79,18 @@ class AdvancedRecyclerView : SwipeRefreshLayout {
 
     fun getTextView(): TextView = mEmptyTextView
 
+    var layoutManager: RecyclerView.LayoutManager?
+        get() = mRecyclerView.layoutManager
+        set(value) {
+            mRecyclerView.layoutManager = value
+        }
+
+    var adapter: RecyclerView.Adapter<*>?
+        get() = mRecyclerView.adapter
+        set(value) {
+            mRecyclerView.adapter = value
+        }
+
     fun setLayoutManager(layoutManager: RecyclerView.LayoutManager?) {
         mRecyclerView.layoutManager = layoutManager
     }

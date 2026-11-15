@@ -76,8 +76,7 @@ class CalendarMultiPanelFragment : MultiPanelAppBarItemFragment(),
     private var monthView: MonthView? = null
     private var timelineView: TimelineView? = null
     private var advancedRecyclerView: AdvancedRecyclerView? = null
-    private var abstractCursorAdapter: AbstractCursorAdapter? = null
-    private var selectionMode: TransactionSelectionMode? = null
+    private var abstractCursorAdapter: AbstractCursorAdapter<*>? = null
 
     override fun onInflateRootLayout(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.fragment_multi_panel_appbar_without_scroll, container, false)
@@ -120,16 +119,16 @@ class CalendarMultiPanelFragment : MultiPanelAppBarItemFragment(),
         tv.setSelectedDate(year, month, day)
         tv.setOnDateSelectedListener(this)
         tv.setOnMonthScrolledListener(this)
-        onDateSelected(year, month, day, tv.selectedPosition)
+        onDateSelected(year, month, day, tv.getSelectedPosition())
         LoaderManager.getInstance(this).initLoader(MARKED_DAYS_LOADER_ID, null, markedDaysCallbacks)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         timelineView?.let { tv ->
-            outState.putInt(STATE_SELECTED_YEAR, tv.selectedYear)
-            outState.putInt(STATE_SELECTED_MONTH, tv.selectedMonth)
-            outState.putInt(STATE_SELECTED_DAY, tv.selectedDay)
+            outState.putInt(STATE_SELECTED_YEAR, tv.getSelectedYear())
+            outState.putInt(STATE_SELECTED_MONTH, tv.getSelectedMonth())
+            outState.putInt(STATE_SELECTED_DAY, tv.getSelectedDay())
         }
         selectionMode?.onSaveInstanceState(outState)
     }
@@ -161,13 +160,13 @@ class CalendarMultiPanelFragment : MultiPanelAppBarItemFragment(),
 
     override fun onMonthScrolled(year: Int, month: Int) {
         val mv = monthView ?: return
-        if (year == mv.selectedYear && month == mv.selectedMonth) {
+        if (year == mv.getSelectedYear() && month == mv.getSelectedMonth()) {
             return
         }
         mv.setSelectedMonth(year, month, false, true)
     }
 
-    override fun onHeaderClick(startDate: Date?, endDate: Date?) {
+    override fun onHeaderClick(startDate: Date, endDate: Date) {
         // never used here
     }
 
@@ -241,7 +240,7 @@ class CalendarMultiPanelFragment : MultiPanelAppBarItemFragment(),
     override fun onRefresh() {
         val tv = timelineView
         if (tv != null) {
-            loadTransactions(tv.selectedYear, tv.selectedMonth, tv.selectedDay)
+            loadTransactions(tv.getSelectedYear(), tv.getSelectedMonth(), tv.getSelectedDay())
         }
         loadMarkedDays()
         advancedRecyclerView?.setState(AdvancedRecyclerView.State.REFRESHING)
@@ -253,14 +252,14 @@ class CalendarMultiPanelFragment : MultiPanelAppBarItemFragment(),
     }
 
     override fun onDetach() {
-        PreferenceManager.unregisterCurrentWalletObserver(activity, currentWalletObserver)
+        currentWalletObserver?.let { PreferenceManager.unregisterCurrentWalletObserver(activity, it) }
         super.onDetach()
     }
 
     override fun onCurrentWalletChanged(walletId: Long) {
         val tv = timelineView ?: return
         selectionMode?.finish()
-        loadTransactions(tv.selectedYear, tv.selectedMonth, tv.selectedDay)
+        loadTransactions(tv.getSelectedYear(), tv.getSelectedMonth(), tv.getSelectedDay())
         loadMarkedDays()
         advancedRecyclerView?.setState(AdvancedRecyclerView.State.LOADING)
     }

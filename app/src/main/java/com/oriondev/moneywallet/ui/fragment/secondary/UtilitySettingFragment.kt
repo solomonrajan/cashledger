@@ -153,7 +153,7 @@ class UtilitySettingFragment : PreferenceFragmentCompat() {
             false
         }
         mSecurityModeListPreference?.setOnPreferenceChangeListener { preference, newValue ->
-            val oldValue = (preference as ThemedListPreference).value
+            val oldValue = (preference as ThemedListPreference).getValue()
             val value = newValue as String
             if (TextUtils.equals(oldValue, value)) {
                 // the value is not changed
@@ -287,7 +287,7 @@ class UtilitySettingFragment : PreferenceFragmentCompat() {
 
     private fun setupCurrentDailyReminder() {
         val hour = PreferenceManager.getCurrentDailyReminder()
-        mDailyReminderPreference?.value = hour.toString()
+        mDailyReminderPreference?.setValue(hour.toString())
         if (hour == PreferenceManager.DAILY_REMINDER_DISABLED) {
             mDailyReminderPreference?.setSummary(R.string.setting_item_daily_reminder_none)
         } else {
@@ -298,7 +298,7 @@ class UtilitySettingFragment : PreferenceFragmentCompat() {
 
     private fun setupCurrentLockMode() {
         val lockMode = PreferenceManager.getCurrentLockMode()
-        mSecurityModeListPreference?.value = lockMode.valueAsString
+        mSecurityModeListPreference?.setValue(lockMode.valueAsString)
         when (lockMode) {
             LockMode.NONE -> {
                 mSecurityModeListPreference?.setSummary(R.string.setting_item_security_none)

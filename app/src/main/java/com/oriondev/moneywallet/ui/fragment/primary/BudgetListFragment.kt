@@ -48,7 +48,7 @@ class BudgetListFragment : CursorListFragment(), BudgetCursorAdapter.ActionListe
         recyclerView.setEmptyText(R.string.message_no_budget_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return BudgetCursorAdapter(this)
     }
 

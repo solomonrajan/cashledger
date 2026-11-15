@@ -54,7 +54,7 @@ class TransferListFragment : CursorListFragment(), TransferCursorAdapter.ActionL
         recyclerView.setEmptyText(R.string.message_no_transfer_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return TransferCursorAdapter(this)
     }
 

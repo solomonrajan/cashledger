@@ -51,7 +51,7 @@ class DebtListFragment : CursorListFragment(), DebtCursorAdapter.ActionListener 
         recyclerView.setEmptyText(R.string.message_no_debt_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return DebtCursorAdapter(this)
     }
 

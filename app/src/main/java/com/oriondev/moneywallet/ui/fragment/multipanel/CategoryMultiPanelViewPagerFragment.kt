@@ -23,12 +23,16 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.view.MenuItem
+import androidx.annotation.MenuRes
 import androidx.fragment.app.FragmentManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.PagerAdapter
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.broadcast.LocalAction
 import com.oriondev.moneywallet.broadcast.Message
+import com.oriondev.moneywallet.storage.database.Contract
+import com.oriondev.moneywallet.ui.activity.CategorySortActivity
 import com.oriondev.moneywallet.ui.activity.NewEditCategoryActivity
 import com.oriondev.moneywallet.ui.activity.NewEditItemActivity
 import com.oriondev.moneywallet.ui.adapter.pager.CategoryViewPagerAdapter
@@ -37,7 +41,7 @@ import com.oriondev.moneywallet.ui.fragment.base.SecondaryPanelFragment
 import com.oriondev.moneywallet.ui.fragment.secondary.CategoryItemFragment
 
 /**
- * Created by andrea on 02/03/18.
+ * Created by andrea on 10/02/18.
  */
 class CategoryMultiPanelViewPagerFragment : MultiPanelViewPagerItemFragment() {
 
@@ -51,14 +55,36 @@ class CategoryMultiPanelViewPagerFragment : MultiPanelViewPagerItemFragment() {
     }
 
     override fun onCreatePagerAdapter(fragmentManager: FragmentManager): PagerAdapter {
-        return CategoryViewPagerAdapter(fragmentManager, activity)
+        return CategoryViewPagerAdapter(fragmentManager, requireContext(), true, true)
     }
 
+    override fun getDefaultViewPagerPosition(): Int = 1
+
     override fun getTitleRes(): Int = R.string.menu_category
+
+    @MenuRes
+    override fun onInflateMenu(): Int = R.menu.menu_category_multipanel_fragment
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_sort_items) {
+            val intent = Intent(activity, CategorySortActivity::class.java)
+            when (getViewPagerPosition()) {
+                0 -> intent.putExtra(CategorySortActivity.TYPE, Contract.CategoryType.INCOME)
+                1 -> intent.putExtra(CategorySortActivity.TYPE, Contract.CategoryType.EXPENSE)
+                2 -> intent.putExtra(CategorySortActivity.TYPE, Contract.CategoryType.SYSTEM)
+            }
+            startActivity(intent)
+        }
+        return false
+    }
 
     override fun onFloatingActionButtonClick() {
         val intent = Intent(activity, NewEditCategoryActivity::class.java).apply {
             putExtra(NewEditItemActivity.MODE, NewEditItemActivity.Mode.NEW_ITEM)
+            when (getViewPagerPosition()) {
+                0, 2 -> putExtra(NewEditCategoryActivity.TYPE, Contract.CategoryType.INCOME)
+                1 -> putExtra(NewEditCategoryActivity.TYPE, Contract.CategoryType.EXPENSE)
+            }
         }
         startActivity(intent)
     }

@@ -48,7 +48,7 @@ class RecurrentTransferListFragment : CursorListFragment(), RecurrentTransferCur
         recyclerView.setEmptyText(R.string.message_no_recurrence_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return RecurrentTransferCursorAdapter(this)
     }
 

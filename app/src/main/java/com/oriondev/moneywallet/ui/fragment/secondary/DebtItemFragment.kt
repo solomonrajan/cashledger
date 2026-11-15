@@ -265,11 +265,14 @@ class DebtItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallbacks
                     mDescriptionTextView?.visibility = View.GONE
                 }
                 val date: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Debt.DATE)))
-                mDateTextView?.let { DateFormatter.applyDate(it, date) }
+                date?.let { d -> mDateTextView?.let { tv -> DateFormatter.applyDate(tv, d) } }
                 val expirationDate = cursor.getString(cursor.getColumnIndex(Contract.Debt.EXPIRATION_DATE))
                 if (!TextUtils.isEmpty(expirationDate)) {
-                    mExpirationDateTextView?.let {
-                        DateFormatter.applyDate(it, DateUtils.getDateFromSQLDateString(expirationDate))
+                    val expDate = DateUtils.getDateFromSQLDateString(expirationDate)
+                    if (expDate != null) {
+                        mExpirationDateTextView?.let { tv ->
+                            DateFormatter.applyDate(tv, expDate)
+                        }
                     }
                     mExpirationDateTextView?.visibility = View.VISIBLE
                 } else {

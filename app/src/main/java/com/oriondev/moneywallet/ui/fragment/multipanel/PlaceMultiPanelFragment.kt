@@ -51,7 +51,7 @@ class PlaceMultiPanelFragment : MultiPanelCursorListItemFragment(), PlaceCursorA
         recyclerView.setEmptyText(R.string.message_no_place_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return PlaceCursorAdapter(this)
     }
 

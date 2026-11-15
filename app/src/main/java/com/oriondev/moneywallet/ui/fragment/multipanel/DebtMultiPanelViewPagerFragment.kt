@@ -67,9 +67,9 @@ class DebtMultiPanelViewPagerFragment : MultiPanelViewPagerItemFragment() {
     @MenuRes
     override fun onInflateMenu(): Int = R.menu.menu_debt_multipanel_fragment
 
-    override fun setupPrimaryToolbar(toolbar: Toolbar) {
+    override fun setupPrimaryToolbar(toolbar: Toolbar?) {
         super.setupPrimaryToolbar(toolbar)
-        val item = toolbar.menu.findItem(R.id.action_show_finished_debts_only)
+        val item = toolbar?.menu?.findItem(R.id.action_show_finished_debts_only)
         item?.isChecked = PreferenceManager.isDebtFinishedOnlyEnabled()
     }
 
@@ -100,7 +100,7 @@ class DebtMultiPanelViewPagerFragment : MultiPanelViewPagerItemFragment() {
     }
 
     private fun getCurrentDebtType(): Contract.DebtType? {
-        return when (viewPagerPosition) {
+        return when (getViewPagerPosition()) {
             0 -> Contract.DebtType.DEBT
             1 -> Contract.DebtType.CREDIT
             else -> null

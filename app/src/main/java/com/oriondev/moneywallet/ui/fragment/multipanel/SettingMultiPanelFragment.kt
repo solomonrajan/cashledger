@@ -80,7 +80,7 @@ class SettingMultiPanelFragment : MultiPanelFragment(), SettingCategoryAdapter.A
         val view = inflater.inflate(R.layout.layout_setting_secondary_panel, secondaryPanel, true)
         val toolbar: Toolbar = view.findViewById(R.id.secondary_toolbar)
         secondaryToolbar = toolbar
-        if (!isExtendedLayout) {
+        if (!isExtendedLayout()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolbar.setNavigationOnClickListener { hideSecondaryPanel() }
         }

@@ -235,7 +235,7 @@ class UserInterfaceSettingFragment : PreferenceFragmentCompat(), ColorPicker.Con
     private fun setupCurrentDateFormat() {
         val index = PreferenceManager.getCurrentDateFormatIndex()
         val summary = DateFormatter.getFormattedDateTime(Calendar.getInstance().time, index)
-        mDateFormatPreference?.value = index.toString()
+        mDateFormatPreference?.setValue(index.toString())
         mDateFormatPreference?.summary = summary
     }
 
@@ -274,19 +274,19 @@ class UserInterfaceSettingFragment : PreferenceFragmentCompat(), ColorPicker.Con
     private fun setupCurrentFirstDayOfWeek() {
         val index = PreferenceManager.getFirstDayOfWeek()
         val weekdays = DateFormatSymbols().weekdays
-        mFirstDayWeekPreference?.value = index.toString()
+        mFirstDayWeekPreference?.setValue(index.toString())
         mFirstDayWeekPreference?.summary = weekdays[index]
     }
 
     private fun setupCurrentFirstDayOfMonth() {
         val index = PreferenceManager.getFirstDayOfMonth()
-        mFirstDayMonthPreference?.value = index.toString()
+        mFirstDayMonthPreference?.setValue(index.toString())
         mFirstDayMonthPreference?.summary = String.format(Locale.getDefault(), "%d", index)
     }
 
     private fun setupCurrentGroupType() {
         val groupType = PreferenceManager.getCurrentGroupType()
-        mGroupTypePreference?.value = groupType.type.toString()
+        mGroupTypePreference?.setValue(groupType.type.toString())
         when (groupType) {
             Group.DAILY -> mGroupTypePreference?.setSummary(R.string.setting_item_ui_group_type_daily)
             Group.WEEKLY -> mGroupTypePreference?.setSummary(R.string.setting_item_ui_group_type_weekly)
@@ -299,19 +299,19 @@ class UserInterfaceSettingFragment : PreferenceFragmentCompat(), ColorPicker.Con
         val theme = ThemeEngine.getTheme()
         when (theme.mode) {
             ThemeEngine.Mode.LIGHT -> {
-                mThemeTypePreference?.value = THEME_TYPE_LIGHT
+                mThemeTypePreference?.setValue(THEME_TYPE_LIGHT)
                 mThemeTypePreference?.setSummary(R.string.setting_item_ui_theme_type_light)
             }
             ThemeEngine.Mode.DARK -> {
-                mThemeTypePreference?.value = THEME_TYPE_DARK
+                mThemeTypePreference?.setValue(THEME_TYPE_DARK)
                 mThemeTypePreference?.setSummary(R.string.setting_item_ui_theme_type_dark)
             }
             ThemeEngine.Mode.DEEP_DARK -> {
-                mThemeTypePreference?.value = THEME_TYPE_DEEP_DARK
+                mThemeTypePreference?.setValue(THEME_TYPE_DEEP_DARK)
                 mThemeTypePreference?.setSummary(R.string.setting_item_ui_theme_type_deep_dark)
             }
             ThemeEngine.Mode.SYSTEM_DEFAULT -> {
-                mThemeTypePreference?.value = THEME_TYPE_SYSTEM_DEFAULT
+                mThemeTypePreference?.setValue(THEME_TYPE_SYSTEM_DEFAULT)
                 mThemeTypePreference?.setSummary(R.string.setting_item_ui_theme_type_system_default)
             }
         }
@@ -333,25 +333,25 @@ class UserInterfaceSettingFragment : PreferenceFragmentCompat(), ColorPicker.Con
     override fun onColorChanged(tag: String?, color: Int, autoFired: Boolean) {
         when (tag) {
             TAG_COLOR_INCOME -> {
-                mColorIncomePreference?.color = color
+                mColorIncomePreference?.setColor(color)
                 if (!autoFired) {
                     PreferenceManager.setCurrentIncomeColor(color)
                 }
             }
             TAG_COLOR_EXPENSE -> {
-                mColorExpensePreference?.color = color
+                mColorExpensePreference?.setColor(color)
                 if (!autoFired) {
                     PreferenceManager.setCurrentExpenseColor(color)
                 }
             }
             TAG_COLOR_PRIMARY -> {
-                mColorPrimaryPreference?.color = color
+                mColorPrimaryPreference?.setColor(color)
                 if (!autoFired) {
                     ThemeEngine.setColorPrimary(color)
                 }
             }
             TAG_COLOR_ACCENT -> {
-                mColorAccentPreference?.color = color
+                mColorAccentPreference?.setColor(color)
                 if (!autoFired) {
                     ThemeEngine.setColorAccent(color)
                 }

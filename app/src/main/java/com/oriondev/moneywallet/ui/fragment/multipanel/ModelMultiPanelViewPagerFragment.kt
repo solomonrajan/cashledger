@@ -20,12 +20,16 @@
 package com.oriondev.moneywallet.ui.fragment.multipanel
 
 import android.content.BroadcastReceiver
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
+import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.viewpager.widget.PagerAdapter
+import com.google.android.material.snackbar.Snackbar
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.broadcast.LocalAction
 import com.oriondev.moneywallet.broadcast.Message
@@ -37,9 +41,10 @@ import com.oriondev.moneywallet.ui.fragment.base.MultiPanelViewPagerMultiItemFra
 import com.oriondev.moneywallet.ui.fragment.base.SecondaryPanelFragment
 import com.oriondev.moneywallet.ui.fragment.secondary.TransactionModelItemFragment
 import com.oriondev.moneywallet.ui.fragment.secondary.TransferModelItemFragment
+import com.oriondev.moneywallet.ui.view.theme.ThemeEngine
 
 /**
- * Created by andrea on 04/11/18.
+ * Created by andrea on 02/03/18.
  */
 class ModelMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragment() {
 
@@ -48,8 +53,8 @@ class ModelMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragment() 
             if (intent != null) {
                 val id = intent.getLongExtra(Message.ITEM_ID, 0L)
                 when (intent.getIntExtra(Message.ITEM_TYPE, 0)) {
-                    Message.TYPE_MODEL_TRANSACTION -> showItemId(TYPE_TRANSACTION, id)
-                    Message.TYPE_MODEL_TRANSFER -> showItemId(TYPE_TRANSFER, id)
+                    Message.TYPE_TRANSACTION_MODEL -> showItemId(TYPE_TRANSACTION_MODEL, id)
+                    Message.TYPE_TRANSFER_MODEL -> showItemId(TYPE_TRANSFER_MODEL, id)
                     else -> return
                 }
                 showSecondaryPanel()
@@ -59,8 +64,8 @@ class ModelMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragment() 
 
     override fun onCreateSecondaryPanel(index: Int): SecondaryPanelFragment {
         return when (index) {
-            TYPE_TRANSACTION -> TransactionModelItemFragment()
-            TYPE_TRANSFER -> TransferModelItemFragment()
+            TYPE_TRANSACTION_MODEL -> TransactionModelItemFragment()
+            TYPE_TRANSFER_MODEL -> TransferModelItemFragment()
             else -> throw IllegalArgumentException("Unknown item type: $index")
         }
     }
@@ -70,7 +75,7 @@ class ModelMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragment() 
     }
 
     override fun onFloatingActionButtonClick() {
-        val intent = when (viewPagerPosition) {
+        val intent = when (getViewPagerPosition()) {
             0 -> Intent(activity, NewEditTransactionModelActivity::class.java)
             1 -> Intent(activity, NewEditTransferModelActivity::class.java)
             else -> return
@@ -85,6 +90,8 @@ class ModelMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragment() 
 
     override fun getTitleRes(): Int = R.string.menu_models
 
+    override fun showsCurrentWallet(): Boolean = true
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         val filter = IntentFilter(LocalAction.ACTION_ITEM_CLICK)
@@ -98,10 +105,49 @@ class ModelMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragment() 
         }
     }
 
+    fun onTransactionAdded(uri: Uri) {
+        showItemAddedSnackBar(
+            R.string.snackbar_message_model_transaction_added,
+            R.string.snackbar_message_model_transaction_removed,
+            uri
+        )
+    }
+
+    fun onTransferAdded(uri: Uri) {
+        showItemAddedSnackBar(
+            R.string.snackbar_message_model_transfer_added,
+            R.string.snackbar_message_model_transfer_removed,
+            uri
+        )
+    }
+
+    private fun showItemAddedSnackBar(additionText: Int, undoText: Int, uri: Uri) {
+        val view = primaryPanel ?: return
+        val snackbar = Snackbar.make(view, additionText, Snackbar.LENGTH_LONG)
+        snackbar.setActionTextColor(ThemeEngine.getTheme().colorAccent)
+        snackbar.setAction(R.string.action_undo, UndoModelItemInsert(view, undoText, uri))
+        snackbar.show()
+    }
+
+    private class UndoModelItemInsert(
+        private val view: View,
+        private val stringRes: Int,
+        private val uri: Uri
+    ) : View.OnClickListener {
+
+        override fun onClick(v: View?) {
+            val context = view.context
+            val contentResolver: ContentResolver = context.contentResolver
+            contentResolver.delete(uri, null, null)
+            val snackbar = Snackbar.make(view, stringRes, Snackbar.LENGTH_SHORT)
+            snackbar.show()
+        }
+    }
+
     companion object {
         private const val SECONDARY_FRAGMENT_TAG = "ModelMultiPanelViewPagerFragment::Tag::SecondaryPanelFragment"
 
-        private const val TYPE_TRANSACTION = 0
-        private const val TYPE_TRANSFER = 1
+        private const val TYPE_TRANSACTION_MODEL = 0
+        private const val TYPE_TRANSFER_MODEL = 1
     }
 }

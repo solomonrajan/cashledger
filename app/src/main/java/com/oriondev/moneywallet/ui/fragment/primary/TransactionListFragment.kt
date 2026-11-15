@@ -69,7 +69,7 @@ class TransactionListFragment :
         recyclerView.setEmptyText(R.string.message_no_transaction_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         // the only one of the four that opens the report from a header click
         val adapter = TransactionCursorAdapter(this, true)
         mAdapter = adapter
@@ -165,7 +165,7 @@ class TransactionListFragment :
         }
     }
 
-    override fun onHeaderClick(startDate: Date?, endDate: Date?) {
+    override fun onHeaderClick(startDate: Date, endDate: Date) {
         val intent = Intent(activity, PeriodDetailActivity::class.java).apply {
             putExtra(PeriodDetailActivity.START_DATE, startDate)
             putExtra(PeriodDetailActivity.END_DATE, endDate)

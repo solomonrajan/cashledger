@@ -98,7 +98,7 @@ class TransactionMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragm
     }
 
     override fun onFloatingActionButtonClick() {
-        val intent = when (viewPagerPosition) {
+        val intent = when (getViewPagerPosition()) {
             0 -> Intent(activity, NewEditTransactionActivity::class.java).apply {
                 putExtra(NewEditTransactionActivity.AUTO_OPEN_CALCULATOR, true)
             }

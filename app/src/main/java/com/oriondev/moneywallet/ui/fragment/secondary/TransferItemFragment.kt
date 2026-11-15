@@ -216,7 +216,7 @@ class TransferItemFragment :
                     mDescriptionTextView?.visibility = View.GONE
                 }
                 val datetime: Date? = DateUtils.getDateFromSQLDateTimeString(cursor.getString(cursor.getColumnIndex(Contract.Transfer.DATE)))
-                mDateTimeTextView?.let { DateFormatter.applyDateTime(it, datetime) }
+                datetime?.let { d -> mDateTimeTextView?.let { tv -> DateFormatter.applyDateTime(tv, d) } }
                 val walletFrom = cursor.getString(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_FROM_WALLET_NAME))
                 val walletTo = cursor.getString(cursor.getColumnIndex(Contract.Transfer.TRANSACTION_TO_WALLET_NAME))
                 mWalletFromTextView?.text = walletFrom

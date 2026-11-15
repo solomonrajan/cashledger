@@ -161,8 +161,8 @@ class EventItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallback
             mNameTextView?.text = cursor.getString(cursor.getColumnIndex(Contract.Event.NAME))
             val startDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Event.START_DATE)))
             val endDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Event.END_DATE)))
-            mStartDateTextView?.let { DateFormatter.applyDate(it, startDate) }
-            mEndDateTextView?.let { DateFormatter.applyDate(it, endDate) }
+            startDate?.let { d -> mStartDateTextView?.let { tv -> DateFormatter.applyDate(tv, d) } }
+            endDate?.let { d -> mEndDateTextView?.let { tv -> DateFormatter.applyDate(tv, d) } }
             val note = cursor.getString(cursor.getColumnIndex(Contract.Event.NOTE))
             if (!TextUtils.isEmpty(note)) {
                 mNoteTextView?.text = note

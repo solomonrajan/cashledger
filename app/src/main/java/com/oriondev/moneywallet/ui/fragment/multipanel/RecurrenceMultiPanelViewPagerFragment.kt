@@ -70,7 +70,7 @@ class RecurrenceMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragme
     }
 
     override fun onFloatingActionButtonClick() {
-        val intent = when (viewPagerPosition) {
+        val intent = when (getViewPagerPosition()) {
             0 -> Intent(activity, NewEditRecurrentTransactionActivity::class.java)
             1 -> Intent(activity, NewEditRecurrentTransferActivity::class.java)
             else -> return

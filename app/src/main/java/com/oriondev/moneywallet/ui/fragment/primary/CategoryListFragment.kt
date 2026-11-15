@@ -51,7 +51,7 @@ class CategoryListFragment : CursorListFragment(), CategoryCursorAdapter.Categor
         recyclerView.setEmptyText(R.string.message_no_category_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         val adapter = CategoryCursorAdapter(this)
         mAdapter = adapter
         // After a rotation the activity has its query back before this view is built, so the

@@ -87,18 +87,18 @@ class BackupMultiPanelFragment : MultiPanelFragment(), BackupServiceAdapter.Cont
         secondaryPanelFragmentContainer?.visibility = if (show) View.GONE else View.VISIBLE
     }
 
-    override fun onBackupServiceClick(service: BackupService?) {
+    override fun onBackupServiceClick(service: BackupService) {
         val fragmentManager: FragmentManager = childFragmentManager
         val tag = getBackupServiceTag(service)
         val fragment: Fragment? = tag?.let { fragmentManager.findFragmentByTag(it) }
         val container = secondaryPanelFragmentContainer
         if (fragment != null) {
             fragmentManager.beginTransaction().show(fragment).commit()
-        } else if (service != null && container != null) {
+        } else if (container != null) {
             val newFragment = BackupHandlerFragment.newInstance(service.identifier, allowBackup, allowRestore)
             fragmentManager.beginTransaction().replace(container.id, newFragment, tag).commit()
         }
-        showCoverLayout = service == null
+        showCoverLayout = false
         showCoverLayout(showCoverLayout)
         showSecondaryPanel()
     }

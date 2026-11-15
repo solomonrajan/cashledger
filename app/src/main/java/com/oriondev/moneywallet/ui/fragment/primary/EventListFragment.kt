@@ -47,7 +47,7 @@ class EventListFragment : CursorListFragment(), EventCursorAdapter.ActionListene
         recyclerView.setEmptyText(R.string.message_no_event_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return EventCursorAdapter(this)
     }
 

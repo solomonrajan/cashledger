@@ -205,8 +205,12 @@ class RecurrentTransferItemFragment : SecondaryPanelFragment(), LoaderManager.Lo
             try {
                 val startDate: Date? = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.START_DATE)))
                 val rule = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransfer.RULE))
-                val recurrenceSetting = RecurrenceSetting.build(startDate, rule)
-                mRecurrenceTextView?.text = recurrenceSetting.getUserReadableString(activity)
+                if (startDate != null && rule != null) {
+                    val recurrenceSetting = RecurrenceSetting.build(startDate, rule)
+                    mRecurrenceTextView?.text = recurrenceSetting.getUserReadableString(activity)
+                } else {
+                    mRecurrenceTextView?.text = null
+                }
             } catch (e: InvalidRecurrenceRuleException) {
                 mRecurrenceTextView?.setText(R.string.hint_recurrence_invalid)
             }

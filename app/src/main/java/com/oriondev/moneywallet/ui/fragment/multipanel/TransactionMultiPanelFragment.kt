@@ -72,7 +72,6 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
     }
 
     private var broadcastReceiver: BroadcastReceiver? = null
-    private var selectionMode: TransactionSelectionMode? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -80,7 +79,7 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
     }
 
     override fun onDetach() {
-        PreferenceManager.unregisterCurrentWalletObserver(activity, broadcastReceiver)
+        broadcastReceiver?.let { PreferenceManager.unregisterCurrentWalletObserver(activity, it) }
         super.onDetach()
     }
 
@@ -93,7 +92,7 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
         recyclerView.setEmptyText(R.string.message_no_transaction_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         val adapter = TransactionCursorAdapter(this)
         selectionMode = TransactionSelectionMode(this, this, adapter)
         return adapter
@@ -132,7 +131,7 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
                 selection += " AND $dateRange"
             }
             val sortOrder = "${Contract.Transaction.DATE} DESC"
-            val groupType = PreferenceManager.getCurrentGroupType()
+            val groupType = PreferenceManager.getCurrentGroupType() ?: Group.DEFAULT
             return WrappedCursorLoader(act, uri, null, selection, selectionArgs, sortOrder, groupType, startDate, endDate)
         }
         return null
@@ -216,7 +215,7 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
 
     override fun isFloatingActionButtonEnabled(): Boolean = false
 
-    override fun onHeaderClick(startDate: Date?, endDate: Date?) {}
+    override fun onHeaderClick(startDate: Date, endDate: Date) {}
 
     override fun onTransactionClick(id: Long) {
         showItemId(id)
@@ -247,7 +246,7 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
         selection: String?,
         selectionArgs: Array<String>?,
         sortOrder: String?,
-        private val group: Group?,
+        private val group: Group,
         private val startDate: Date?,
         private val endDate: Date?
     ) : CursorLoader(context, uri, projection, selection, selectionArgs, sortOrder) {

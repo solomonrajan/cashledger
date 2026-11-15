@@ -33,6 +33,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.ComponentActivity
 import androidx.annotation.MenuRes
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
@@ -117,8 +118,9 @@ class BackupHandlerFragment :
     override fun onResume() {
         super.onResume()
         val service = mBackendService
-        if (service != null) {
-            if (service.isServiceEnabled(activity)) {
+        val act = activity
+        if (service != null && act != null) {
+            if (service.isServiceEnabled(act)) {
                 hideCoverView()
                 loadCurrentFolder()
             } else {
@@ -143,7 +145,7 @@ class BackupHandlerFragment :
         toolbar.setTitle(getTitle())
 
         val parent = parentFragment
-        if (parent is MultiPanelFragment && !parent.isExtendedLayout) {
+        if (parent is MultiPanelFragment && !parent.isExtendedLayout()) {
             toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
             toolbar.setNavigationOnClickListener {
                 val p = parentFragment
@@ -191,7 +193,7 @@ class BackupHandlerFragment :
                             val input = inputEditText.text
                             val folder = if (mFileStack.isEmpty()) ROOT_FOLDER else mFileStack[mFileStack.size - 1]
                             val intent = Intent(act, BackupHandlerIntentService::class.java).apply {
-                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.id)
+                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.getId())
                                 putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_BACKUP)
                                 putExtra(BackupHandlerIntentService.PARENT_FOLDER, folder)
                                 if (!input.isNullOrEmpty()) {
@@ -214,13 +216,16 @@ class BackupHandlerFragment :
         val coverActionButton: Button = view.findViewById(R.id.cover_action_button)
         val service = mBackendService
         if (service != null) {
-            coverTextView.setText(service.backupCoverMessage)
-            coverActionButton.setText(service.backupCoverAction)
+            coverTextView.setText(service.getBackupCoverMessage())
+            coverActionButton.setText(service.getBackupCoverAction())
             coverActionButton.setOnClickListener {
-                try {
-                    service.setup(activity)
-                } catch (e: BackendException) {
-                    e.printStackTrace()
+                val act = activity as? ComponentActivity
+                if (act != null) {
+                    try {
+                        service.setup(act)
+                    } catch (e: BackendException) {
+                        e.printStackTrace()
+                    }
                 }
             }
         }
@@ -237,7 +242,7 @@ class BackupHandlerFragment :
     protected fun hideCoverView() {
         mCoverLayout?.let {
             // setup menu item visibility
-            setMenuItemVisibility(R.id.action_disconnect, mBackendService?.isDisconnectable == true)
+            setMenuItemVisibility(R.id.action_disconnect, mBackendService?.isDisconnectable() == true)
             // setup layout visibility
             it.visibility = View.GONE
             mPrimaryLayout?.visibility = View.VISIBLE
@@ -245,7 +250,7 @@ class BackupHandlerFragment :
     }
 
     protected fun getTitle(): Int {
-        return mBackendService?.name ?: 0
+        return mBackendService?.getName() ?: 0
     }
 
     @MenuRes
@@ -261,16 +266,19 @@ class BackupHandlerFragment :
     override fun onMenuItemClick(item: MenuItem): Boolean {
         val itemId = item.itemId
         if (itemId == R.id.action_disconnect) {
-            try {
-                mBackendService?.teardown(activity)
-            } catch (e: BackendException) {
-                e.printStackTrace()
+            val act = activity as? ComponentActivity
+            if (act != null) {
+                try {
+                    mBackendService?.teardown(act)
+                } catch (e: BackendException) {
+                    e.printStackTrace()
+                }
             }
         } else if (itemId == R.id.action_auto_backup) {
             val service = mBackendService
             if (service != null) {
                 val tag = "${tag}::AutoBackupSettingDialog"
-                mAutoBackupSettingDialog?.show(childFragmentManager, tag, service.id)
+                mAutoBackupSettingDialog?.show(childFragmentManager, tag, service.getId())
             }
         }
         return false
@@ -289,7 +297,7 @@ class BackupHandlerFragment :
         val service = mBackendService
         if (act != null && service != null) {
             val intent = Intent(act, BackupHandlerIntentService::class.java).apply {
-                putExtra(BackupHandlerIntentService.BACKEND_ID, service.id)
+                putExtra(BackupHandlerIntentService.BACKEND_ID, service.getId())
                 putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_LIST)
                 putExtra(BackupHandlerIntentService.PARENT_FOLDER, folder)
                 putExtra(BackupHandlerIntentService.CALLER_ID, BACKUP_SERVICE_CALLER_ID)
@@ -308,7 +316,7 @@ class BackupHandlerFragment :
     }
 
     override fun onFileClick(file: IFile) {
-        if (file.isDirectory) {
+        if (file.isDirectory()) {
             mFileStack.add(file)
             mAdvancedRecyclerView?.setState(AdvancedRecyclerView.State.LOADING)
             loadFolder(file)
@@ -316,13 +324,14 @@ class BackupHandlerFragment :
             val act = activity
             val service = mBackendService
             if (mAllowRestore && act != null && service != null) {
-                if (file.name.endsWith(BackupManager.BACKUP_EXTENSION_STANDARD)) {
+                val fileName = file.getName()
+                if (fileName != null && fileName.endsWith(BackupManager.BACKUP_EXTENSION_STANDARD)) {
                     ThemedDialog.buildMaterialDialog(act)
                         .setTitle(R.string.title_backup_restore)
                         .setMessage(R.string.message_backup_restore_standard)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             val intent = Intent(activity, BackupHandlerIntentService::class.java).apply {
-                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.id)
+                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.getId())
                                 putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_RESTORE)
                                 putExtra(BackupHandlerIntentService.BACKUP_FILE, file)
                                 putExtra(BackupHandlerIntentService.CALLER_ID, BACKUP_SERVICE_CALLER_ID)
@@ -331,7 +340,7 @@ class BackupHandlerFragment :
                         }
                         .setNegativeButton(android.R.string.cancel, null)
                         .show()
-                } else if (file.name.endsWith(BackupManager.BACKUP_EXTENSION_PROTECTED)) {
+                } else if (fileName != null && fileName.endsWith(BackupManager.BACKUP_EXTENSION_PROTECTED)) {
                     val inputView = LayoutInflater.from(act).inflate(R.layout.dialog_input, null)
                     val inputEditText: EditText = inputView.findViewById(R.id.dialog_input_edit_text)
                     inputEditText.setHint(R.string.hint_password)
@@ -342,7 +351,7 @@ class BackupHandlerFragment :
                         .setView(inputView)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             val intent = Intent(activity, BackupHandlerIntentService::class.java).apply {
-                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.id)
+                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.getId())
                                 putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_RESTORE)
                                 putExtra(BackupHandlerIntentService.BACKUP_FILE, file)
                                 putExtra(BackupHandlerIntentService.PASSWORD, inputEditText.text.toString())
@@ -352,13 +361,13 @@ class BackupHandlerFragment :
                         }
                         .create()
                     ThemedDialog.showWithInput(dialog, inputEditText, false)
-                } else if (file.name.endsWith(BackupManager.BACKUP_EXTENSION_LEGACY)) {
+                } else if (fileName != null && fileName.endsWith(BackupManager.BACKUP_EXTENSION_LEGACY)) {
                     ThemedDialog.buildMaterialDialog(act)
                         .setTitle(R.string.title_backup_restore)
                         .setMessage(R.string.message_backup_restore_legacy)
                         .setPositiveButton(android.R.string.ok) { _, _ ->
                             val intent = Intent(activity, BackupHandlerIntentService::class.java).apply {
-                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.id)
+                                putExtra(BackupHandlerIntentService.BACKEND_ID, service.getId())
                                 putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_RESTORE)
                                 putExtra(BackupHandlerIntentService.BACKUP_FILE, file)
                                 putExtra(BackupHandlerIntentService.CALLER_ID, BACKUP_SERVICE_CALLER_ID)
@@ -393,22 +402,26 @@ class BackupHandlerFragment :
         if (mFileStack.isNotEmpty() || service == null) {
             return
         }
-        val defaultFolder = BackendServiceFactory.getFile(service.id, null)
+        val defaultFolder = BackendServiceFactory.getFile(service.getId(), null)
         if (defaultFolder != null) {
             mFileStack.add(defaultFolder)
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        val act = activity
         val service = mBackendService
-        if (service == null || !service.handlePermissionsResult(activity, requestCode, permissions, grantResults)) {
+        @Suppress("UNCHECKED_CAST")
+        val stringPermissions = permissions as? Array<String> ?: Array(permissions.size) { permissions[it] }
+        if (act == null || service == null || !service.handlePermissionsResult(act, requestCode, stringPermissions, grantResults)) {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        val act = activity
         val service = mBackendService
-        if (service == null || !service.handleActivityResult(activity, requestCode, resultCode, data)) {
+        if (act == null || service == null || !service.handleActivityResult(act, requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)
         }
     }

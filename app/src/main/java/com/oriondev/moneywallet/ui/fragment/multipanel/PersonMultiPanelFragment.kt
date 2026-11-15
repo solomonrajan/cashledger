@@ -31,6 +31,7 @@ import com.oriondev.moneywallet.storage.database.Contract
 import com.oriondev.moneywallet.storage.database.DataContentProvider
 import com.oriondev.moneywallet.ui.activity.NewEditItemActivity
 import com.oriondev.moneywallet.ui.activity.NewEditPersonActivity
+import com.oriondev.moneywallet.ui.activity.TransactionListActivity
 import com.oriondev.moneywallet.ui.adapter.recycler.AbstractCursorAdapter
 import com.oriondev.moneywallet.ui.adapter.recycler.PersonCursorAdapter
 import com.oriondev.moneywallet.ui.fragment.base.MultiPanelCursorListItemFragment
@@ -48,7 +49,7 @@ class PersonMultiPanelFragment : MultiPanelCursorListItemFragment(), PersonCurso
         recyclerView.setEmptyText(R.string.message_no_person_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return PersonCursorAdapter(this)
     }
 
@@ -59,8 +60,7 @@ class PersonMultiPanelFragment : MultiPanelCursorListItemFragment(), PersonCurso
             val projection = arrayOf(
                 Contract.Person.ID,
                 Contract.Person.NAME,
-                Contract.Person.ICON,
-                Contract.Person.NUMBER
+                Contract.Person.ICON
             )
             val sortOrder = "${Contract.Person.NAME} ASC"
             return CursorLoader(act, uri, projection, null, null, sortOrder)
@@ -72,9 +72,24 @@ class PersonMultiPanelFragment : MultiPanelCursorListItemFragment(), PersonCurso
 
     override fun getSecondaryFragmentTag(): String = SECONDARY_FRAGMENT_TAG
 
-    override fun getTitleRes(): Int = R.string.menu_person
+    override fun getTitleRes(): Int = R.string.menu_people
 
     override fun onPersonClick(id: Long) {
+        if (isExtendedLayout()) {
+            showPersonPanel(id)
+        } else {
+            val intent = Intent(activity, TransactionListActivity::class.java).apply {
+                putExtra(TransactionListActivity.PERSON_ID, id)
+            }
+            startActivity(intent)
+        }
+    }
+
+    override fun onPersonLongClick(id: Long) {
+        showPersonPanel(id)
+    }
+
+    private fun showPersonPanel(id: Long) {
         showItemId(id)
         showSecondaryPanel()
     }

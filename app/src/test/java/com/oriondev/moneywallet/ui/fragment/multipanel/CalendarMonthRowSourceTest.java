@@ -126,7 +126,7 @@ public class CalendarMonthRowSourceTest {
             "tv.setSelectedDate(year, month, day) "
             + "tv.setOnDateSelectedListener(this) "
             + "tv.setOnMonthScrolledListener(this) "
-            + "onDateSelected(year, month, day, tv.selectedPosition)";
+            + "onDateSelected(year, month, day, tv.getSelectedPosition())";
 
     /** And what the strip does with it. */
     private static final String THE_STRIP_KEEPS_IT_JAVA =
@@ -146,7 +146,7 @@ public class CalendarMonthRowSourceTest {
             + "mMonthView.setSelectedMonth(year, month, false, true); }";
     private static final String THE_ROW_FOLLOWS_KOTLIN =
             "override fun onMonthScrolled(year: Int, month: Int) { val mv = monthView ?: return "
-            + "if (year == mv.selectedYear && month == mv.selectedMonth) { return } "
+            + "if (year == mv.getSelectedYear() && month == mv.getSelectedMonth()) { return } "
             + "mv.setSelectedMonth(year, month, false, true) }";
 
     /** Every call that moves the row, whatever arguments it carries. */

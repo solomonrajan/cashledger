@@ -51,7 +51,7 @@ class TransactionModelListFragment : CursorListFragment(), TransactionModelCurso
         recyclerView.setEmptyText(R.string.message_no_model_found)
     }
 
-    override fun onCreateAdapter(): AbstractCursorAdapter {
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
         return TransactionModelCursorAdapter(this)
     }
 

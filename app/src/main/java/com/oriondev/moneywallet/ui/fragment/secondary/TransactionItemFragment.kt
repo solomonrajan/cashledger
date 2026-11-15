@@ -238,7 +238,7 @@ class TransactionItemFragment :
                 val category = cursor.getString(cursor.getColumnIndex(Contract.Transaction.CATEGORY_NAME))
                 mCategoryTextView?.text = category
                 val datetime: Date? = DateUtils.getDateFromSQLDateTimeString(cursor.getString(cursor.getColumnIndex(Contract.Transaction.DATE)))
-                mDateTimeTextView?.let { DateFormatter.applyDateTime(it, datetime) }
+                datetime?.let { d -> mDateTimeTextView?.let { tv -> DateFormatter.applyDateTime(tv, d) } }
                 val wallet = cursor.getString(cursor.getColumnIndex(Contract.Transaction.WALLET_NAME))
                 mWalletTextView?.text = wallet
                 val event = cursor.getString(cursor.getColumnIndex(Contract.Transaction.EVENT_NAME))
