@@ -318,12 +318,12 @@ class NewEditBudgetActivity : NewEditItemActivity(),
                 val cursor = contentResolver.query(uri, projection, null, null, null)
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
-                        type = Contract.BudgetType.fromValue(cursor.getInt(cursor.getColumnIndex(Contract.Budget.TYPE)))
-                        money = cursor.getLong(cursor.getColumnIndex(Contract.Budget.MONEY))
-                        startDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Budget.START_DATE)))
-                        endDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Budget.END_DATE)))
-                        rule = cursor.getString(cursor.getColumnIndex(Contract.Budget.RULE))
-                        val ruleStartString = cursor.getString(cursor.getColumnIndex(Contract.Budget.RULE_START))
+                        type = Contract.BudgetType.fromValue(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Budget.TYPE)))
+                        money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Budget.MONEY))
+                        startDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.START_DATE)))
+                        endDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.END_DATE)))
+                        rule = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.RULE))
+                        val ruleStartString = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.RULE_START))
                         if (ruleStartString != null) {
                             ruleStart = DateUtils.getDateFromSQLDateString(ruleStartString)
                         }
@@ -353,10 +353,10 @@ class NewEditBudgetActivity : NewEditItemActivity(),
                             if (categoryCursor.moveToPosition(i)) {
                                 list.add(
                                     Category(
-                                        categoryCursor.getLong(categoryCursor.getColumnIndex(Contract.Category.ID)),
-                                        categoryCursor.getString(categoryCursor.getColumnIndex(Contract.Category.NAME)),
-                                        IconLoader.parse(categoryCursor.getString(categoryCursor.getColumnIndex(Contract.Category.ICON))),
-                                        Contract.CategoryType.fromValue(categoryCursor.getInt(categoryCursor.getColumnIndex(Contract.Category.TYPE)))
+                                        categoryCursor.getLong(categoryCursor.getColumnIndexOrThrow(Contract.Category.ID)),
+                                        categoryCursor.getString(categoryCursor.getColumnIndexOrThrow(Contract.Category.NAME)),
+                                        IconLoader.parse(categoryCursor.getString(categoryCursor.getColumnIndexOrThrow(Contract.Category.ICON))),
+                                        Contract.CategoryType.fromValue(categoryCursor.getInt(categoryCursor.getColumnIndexOrThrow(Contract.Category.TYPE)))
                                             ?: Contract.CategoryType.EXPENSE
                                     )
                                 )
@@ -384,11 +384,11 @@ class NewEditBudgetActivity : NewEditItemActivity(),
                         while (walletCursor.moveToPosition(i) && i < count) {
                             list.add(
                                 Wallet(
-                                    walletCursor.getLong(walletCursor.getColumnIndex(Contract.Wallet.ID)),
-                                    walletCursor.getString(walletCursor.getColumnIndex(Contract.Wallet.NAME)),
-                                    IconLoader.parse(walletCursor.getString(walletCursor.getColumnIndex(Contract.Wallet.ICON))),
-                                    CurrencyManager.getCurrency(walletCursor.getString(walletCursor.getColumnIndex(Contract.Wallet.CURRENCY))),
-                                    walletCursor.getLong(walletCursor.getColumnIndex(Contract.Wallet.START_MONEY)),
+                                    walletCursor.getLong(walletCursor.getColumnIndexOrThrow(Contract.Wallet.ID)),
+                                    walletCursor.getString(walletCursor.getColumnIndexOrThrow(Contract.Wallet.NAME)),
+                                    IconLoader.parse(walletCursor.getString(walletCursor.getColumnIndexOrThrow(Contract.Wallet.ICON))),
+                                    CurrencyManager.getCurrency(walletCursor.getString(walletCursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY))),
+                                    walletCursor.getLong(walletCursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY)),
                                     0L
                                 )
                             )
@@ -423,12 +423,12 @@ class NewEditBudgetActivity : NewEditItemActivity(),
                     if (cursor.moveToFirst()) {
                         wallets = arrayOf(
                             Wallet(
-                                cursor.getLong(cursor.getColumnIndex(Contract.Wallet.ID)),
-                                cursor.getString(cursor.getColumnIndex(Contract.Wallet.NAME)),
-                                IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Wallet.ICON))),
-                                CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.Wallet.CURRENCY))),
-                                cursor.getLong(cursor.getColumnIndex(Contract.Wallet.START_MONEY)),
-                                cursor.getLong(cursor.getColumnIndex(Contract.Wallet.TOTAL_MONEY))
+                                cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.ID)),
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.NAME)),
+                                IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.ICON))),
+                                CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY))),
+                                cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY)),
+                                cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.TOTAL_MONEY))
                             )
                         )
                     }
@@ -527,7 +527,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
-                    return cursor.getString(cursor.getColumnIndex(column))
+                    return cursor.getString(cursor.getColumnIndexOrThrow(column))
                 }
             } finally {
                 cursor.close()
@@ -569,10 +569,10 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             if (cursor != null) {
                 try {
                     if (cursor.moveToFirst()) {
-                        val storedStart = cursor.getString(cursor.getColumnIndex(Contract.Budget.START_DATE))
-                        val storedEnd = cursor.getString(cursor.getColumnIndex(Contract.Budget.END_DATE))
-                        val storedRule = cursor.getString(cursor.getColumnIndex(Contract.Budget.RULE))
-                        val storedRuleStart = cursor.getString(cursor.getColumnIndex(Contract.Budget.RULE_START))
+                        val storedStart = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.START_DATE))
+                        val storedEnd = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.END_DATE))
+                        val storedRule = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.RULE))
+                        val storedRuleStart = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Budget.RULE_START))
                         val scheduleHeld = TextUtils.equals(rule, storedRule) &&
                             TextUtils.equals(DateUtils.getSQLDateString(anchor), storedRuleStart)
                         if (scheduleHeld) {

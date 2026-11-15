@@ -215,57 +215,57 @@ class NewEditTransferModelActivity : NewEditItemActivity(),
                 val cursor = contentResolver.query(uri, projection, null, null, null)
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
-                        mDescriptionEditText?.setText(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.DESCRIPTION)))
+                        mDescriptionEditText?.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.DESCRIPTION)))
                         walletFrom = Wallet(
-                            cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.WALLET_FROM_ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_FROM_NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_FROM_ICON))),
-                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_FROM_CURRENCY))),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_ICON))),
+                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_FROM_CURRENCY))),
                             0L,
                             0L
                         )
                         walletTo = Wallet(
-                            cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.WALLET_TO_ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_TO_NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_TO_ICON))),
-                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.WALLET_TO_CURRENCY))),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_ICON))),
+                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.WALLET_TO_CURRENCY))),
                             0L,
                             0L
                         )
-                        moneyFrom = cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.MONEY_FROM))
-                        tax = cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.MONEY_TAX))
-                        if (!cursor.isNull(cursor.getColumnIndex(Contract.TransferModel.PLACE_ID))) {
-                            val lat = if (cursor.isNull(cursor.getColumnIndex(Contract.TransferModel.PLACE_LATITUDE))) {
+                        moneyFrom = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.MONEY_FROM))
+                        tax = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.MONEY_TAX))
+                        if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ID))) {
+                            val lat = if (cursor.isNull(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LATITUDE))) {
                                 null
                             } else {
-                                cursor.getDouble(cursor.getColumnIndex(Contract.TransferModel.PLACE_LATITUDE))
+                                cursor.getDouble(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LATITUDE))
                             }
-                            val lon = if (cursor.isNull(cursor.getColumnIndex(Contract.TransferModel.PLACE_LONGITUDE))) {
+                            val lon = if (cursor.isNull(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LONGITUDE))) {
                                 null
                             } else {
-                                cursor.getDouble(cursor.getColumnIndex(Contract.TransferModel.PLACE_LONGITUDE))
+                                cursor.getDouble(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_LONGITUDE))
                             }
                             place = Place(
-                                cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.PLACE_ID)),
-                                cursor.getString(cursor.getColumnIndex(Contract.TransferModel.PLACE_NAME)),
-                                IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.PLACE_ICON))),
-                                cursor.getString(cursor.getColumnIndex(Contract.TransferModel.PLACE_ADDRESS)),
+                                cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ID)),
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_NAME)),
+                                IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ICON))),
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.PLACE_ADDRESS)),
                                 lat,
                                 lon
                             )
                         }
-                        mNoteEditText?.setText(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.NOTE)))
-                        if (!cursor.isNull(cursor.getColumnIndex(Contract.TransferModel.EVENT_ID))) {
+                        mNoteEditText?.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.NOTE)))
+                        if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_ID))) {
                             event = Event(
-                                cursor.getLong(cursor.getColumnIndex(Contract.TransferModel.EVENT_ID)),
-                                cursor.getString(cursor.getColumnIndex(Contract.TransferModel.EVENT_NAME)),
-                                IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.EVENT_ICON))),
-                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.EVENT_START_DATE))),
-                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.TransferModel.EVENT_END_DATE)))
+                                cursor.getLong(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_ID)),
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_NAME)),
+                                IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_ICON))),
+                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_START_DATE))),
+                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.TransferModel.EVENT_END_DATE)))
                             )
                         }
-                        mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.CONFIRMED)) == 1
-                        mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.TransferModel.COUNT_IN_TOTAL)) == 1
+                        mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransferModel.CONFIRMED)) == 1
+                        mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.TransferModel.COUNT_IN_TOTAL)) == 1
                     }
                     cursor.close()
                 }
@@ -289,12 +289,12 @@ class NewEditTransferModelActivity : NewEditItemActivity(),
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         walletFrom = Wallet(
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Wallet.NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Wallet.ICON))),
-                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.Wallet.CURRENCY))),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.START_MONEY)),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.TOTAL_MONEY))
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.ICON))),
+                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY))),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.TOTAL_MONEY))
                         )
                     }
                     cursor.close()

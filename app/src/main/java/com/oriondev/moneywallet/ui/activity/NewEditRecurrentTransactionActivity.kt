@@ -224,57 +224,57 @@ class NewEditRecurrentTransactionActivity : NewEditItemActivity(),
                 val cursor = contentResolver.query(uri, projection, null, null, null)
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
-                        money = cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransaction.MONEY))
-                        mDescriptionEditText?.setText(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.DESCRIPTION)))
+                        money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.MONEY))
+                        mDescriptionEditText?.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.DESCRIPTION)))
                         category = Category(
-                            cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransaction.CATEGORY_ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.CATEGORY_NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.CATEGORY_ICON))),
-                            Contract.CategoryType.fromValue(cursor.getInt(cursor.getColumnIndex(Contract.RecurrentTransaction.CATEGORY_TYPE)))
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.CATEGORY_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.CATEGORY_NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.CATEGORY_ICON))),
+                            Contract.CategoryType.fromValue(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.CATEGORY_TYPE)))
                                 ?: Contract.CategoryType.EXPENSE
                         )
                         wallet = Wallet(
-                            cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransaction.WALLET_ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.WALLET_NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.WALLET_ICON))),
-                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.WALLET_CURRENCY))),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.WALLET_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.WALLET_NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.WALLET_ICON))),
+                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.WALLET_CURRENCY))),
                             0L,
                             0L
                         )
-                        if (!cursor.isNull(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_ID))) {
-                            val lat = if (cursor.isNull(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_LATITUDE))) {
+                        if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_ID))) {
+                            val lat = if (cursor.isNull(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_LATITUDE))) {
                                 null
                             } else {
-                                cursor.getDouble(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_LATITUDE))
+                                cursor.getDouble(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_LATITUDE))
                             }
-                            val lon = if (cursor.isNull(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_LONGITUDE))) {
+                            val lon = if (cursor.isNull(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_LONGITUDE))) {
                                 null
                             } else {
-                                cursor.getDouble(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_LONGITUDE))
+                                cursor.getDouble(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_LONGITUDE))
                             }
                             place = Place(
-                                cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_ID)),
-                                cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_NAME)),
-                                IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_ICON))),
-                                cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.PLACE_ADDRESS)),
+                                cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_ID)),
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_NAME)),
+                                IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_ICON))),
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.PLACE_ADDRESS)),
                                 lat,
                                 lon
                             )
                         }
-                        mNoteEditText?.setText(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.NOTE)))
-                        if (!cursor.isNull(cursor.getColumnIndex(Contract.RecurrentTransaction.EVENT_ID))) {
+                        mNoteEditText?.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.NOTE)))
+                        if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.EVENT_ID))) {
                             event = Event(
-                                cursor.getLong(cursor.getColumnIndex(Contract.RecurrentTransaction.EVENT_ID)),
-                                cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.EVENT_NAME)),
-                                IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.EVENT_ICON))),
-                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.EVENT_START_DATE))),
-                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.EVENT_END_DATE)))
+                                cursor.getLong(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.EVENT_ID)),
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.EVENT_NAME)),
+                                IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.EVENT_ICON))),
+                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.EVENT_START_DATE))),
+                                DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.EVENT_END_DATE)))
                             )
                         }
-                        mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.RecurrentTransaction.CONFIRMED)) == 1
-                        mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndex(Contract.RecurrentTransaction.COUNT_IN_TOTAL)) == 1
-                        val startDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.START_DATE)))
-                        val rule = cursor.getString(cursor.getColumnIndex(Contract.RecurrentTransaction.RULE))
+                        mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.CONFIRMED)) == 1
+                        mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.COUNT_IN_TOTAL)) == 1
+                        val startDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.START_DATE)))
+                        val rule = cursor.getString(cursor.getColumnIndexOrThrow(Contract.RecurrentTransaction.RULE))
                         if (startDate != null && rule != null) {
                             recurrenceSetting = RecurrenceSetting(startDate, rule)
                         }
@@ -301,12 +301,12 @@ class NewEditRecurrentTransactionActivity : NewEditItemActivity(),
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         wallet = Wallet(
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Wallet.NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Wallet.ICON))),
-                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.Wallet.CURRENCY))),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.START_MONEY)),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.TOTAL_MONEY))
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.ICON))),
+                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY))),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.TOTAL_MONEY))
                         )
                     }
                     cursor.close()

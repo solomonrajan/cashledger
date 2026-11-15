@@ -168,19 +168,19 @@ class NewEditSavingActivity : NewEditItemActivity(),
                 val cursor = contentResolver.query(uri, projection, null, null, null)
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
-                        mDescriptionEditText?.setText(cursor.getString(cursor.getColumnIndex(Contract.Saving.DESCRIPTION)))
-                        icon = IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Saving.ICON)))
-                        startMoney = cursor.getLong(cursor.getColumnIndex(Contract.Saving.START_MONEY))
-                        money = cursor.getLong(cursor.getColumnIndex(Contract.Saving.END_MONEY))
-                        if (!cursor.isNull(cursor.getColumnIndex(Contract.Saving.END_DATE))) {
-                            expirationDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndex(Contract.Saving.END_DATE)))
+                        mDescriptionEditText?.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.DESCRIPTION)))
+                        icon = IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.ICON)))
+                        startMoney = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Saving.START_MONEY))
+                        money = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Saving.END_MONEY))
+                        if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.Saving.END_DATE))) {
+                            expirationDate = DateUtils.getDateFromSQLDateString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.END_DATE)))
                         }
-                        mNoteEditText?.setText(cursor.getString(cursor.getColumnIndex(Contract.Saving.NOTE)))
+                        mNoteEditText?.setText(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.NOTE)))
                         wallet = Wallet(
-                            cursor.getLong(cursor.getColumnIndex(Contract.Saving.WALLET_ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Saving.WALLET_NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Saving.WALLET_ICON))),
-                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.Saving.WALLET_CURRENCY))),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Saving.WALLET_ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.WALLET_NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.WALLET_ICON))),
+                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Saving.WALLET_CURRENCY))),
                             0L,
                             0L
                         )
@@ -207,12 +207,12 @@ class NewEditSavingActivity : NewEditItemActivity(),
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         wallet = Wallet(
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.ID)),
-                            cursor.getString(cursor.getColumnIndex(Contract.Wallet.NAME)),
-                            IconLoader.parse(cursor.getString(cursor.getColumnIndex(Contract.Wallet.ICON))),
-                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndex(Contract.Wallet.CURRENCY))),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.START_MONEY)),
-                            cursor.getLong(cursor.getColumnIndex(Contract.Wallet.TOTAL_MONEY))
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.ID)),
+                            cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.NAME)),
+                            IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.ICON))),
+                            CurrencyManager.getCurrency(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Wallet.CURRENCY))),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.START_MONEY)),
+                            cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Wallet.TOTAL_MONEY))
                         )
                     }
                     cursor.close()
