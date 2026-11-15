@@ -117,11 +117,16 @@ public class CalendarMonthRowSourceTest {
      * What tells the strip where to report, with the two lines around it, because the statement
      * on its own reads the same sitting in a method nothing calls.
      */
-    private static final String WIRING =
+    private static final String WIRING_JAVA =
             "mTimelineView.setSelectedDate(year, month, day); "
             + "mTimelineView.setOnDateSelectedListener(this); "
             + "mTimelineView.setOnMonthScrolledListener(this); "
             + "onDateSelected(year, month, day, mTimelineView.getSelectedPosition());";
+    private static final String WIRING_KOTLIN =
+            "tv.setSelectedDate(year, month, day) "
+            + "tv.setOnDateSelectedListener(this) "
+            + "tv.setOnMonthScrolledListener(this) "
+            + "onDateSelected(year, month, day, tv.selectedPosition)";
 
     /** And what the strip does with it. */
     private static final String THE_STRIP_KEEPS_IT_JAVA =
@@ -135,17 +140,24 @@ public class CalendarMonthRowSourceTest {
      * The whole method, because the guard's condition without its return re centers the row on
      * every scrolled pixel, which is the slide under the finger the guard is there to stop.
      */
-    private static final String THE_ROW_FOLLOWS =
+    private static final String THE_ROW_FOLLOWS_JAVA =
             "public void onMonthScrolled(int year, int month) { if (year == "
             + "mMonthView.getSelectedYear() && month == mMonthView.getSelectedMonth()) { return; } "
             + "mMonthView.setSelectedMonth(year, month, false, true); }";
+    private static final String THE_ROW_FOLLOWS_KOTLIN =
+            "override fun onMonthScrolled(year: Int, month: Int) { val mv = monthView ?: return "
+            + "if (year == mv.selectedYear && month == mv.selectedMonth) { return } "
+            + "mv.setSelectedMonth(year, month, false, true) }";
 
     /** Every call that moves the row, whatever arguments it carries. */
-    private static final String ANY_MOVE = "mMonthView.setSelectedMonth(";
+    private static final String ANY_MOVE_JAVA = "mMonthView.setSelectedMonth(";
+    private static final String ANY_MOVE_KOTLIN = "setSelectedMonth(";
 
     /** Moving the row with the listening form turned off. */
-    private static final String MOVE_THE_ROW =
+    private static final String MOVE_THE_ROW_JAVA =
             "mMonthView.setSelectedMonth(year, month, false, true);";
+    private static final String MOVE_THE_ROW_KOTLIN =
+            "setSelectedMonth(year, month, false, true)";
 
     /** The month tapped is the month already marked, and the fragment is told anyway. */
     private static final String TELL_ON_A_TAP_OF_THE_MARKED_MONTH_JAVA =
@@ -197,8 +209,9 @@ public class CalendarMonthRowSourceTest {
 
     @Test
     public void theStripIsToldWhereToReportTo() {
+        boolean calendarKotlin = isKotlin(CALENDAR_BASE);
         assertTrue("without this line the strip reports to nobody and the row never follows",
-                readSource(CALENDAR_BASE).contains(WIRING));
+                readSource(CALENDAR_BASE).contains(calendarKotlin ? WIRING_KOTLIN : WIRING_JAVA));
         boolean kotlin = isKotlin(STRIP_BASE);
         assertTrue("and being told is no use if the strip does not keep it",
                 readSource(STRIP_BASE).contains(kotlin ? THE_STRIP_KEEPS_IT_KOTLIN : THE_STRIP_KEEPS_IT_JAVA));
@@ -206,21 +219,23 @@ public class CalendarMonthRowSourceTest {
 
     @Test
     public void theRowFollowsTheStripAndIsLeftAloneInsideOneMonth() {
+        boolean calendarKotlin = isKotlin(CALENDAR_BASE);
         assertTrue("the row has to move to the month reported, and has to be left alone while "
                         + "the strip is inside the month it already marks, or it is re centered "
                         + "on every scrolled pixel and slides under the finger",
-                readSource(CALENDAR_BASE).contains(THE_ROW_FOLLOWS));
+                readSource(CALENDAR_BASE).contains(calendarKotlin ? THE_ROW_FOLLOWS_KOTLIN : THE_ROW_FOLLOWS_JAVA));
     }
 
     @Test
     public void nothingElseMovesTheMonthRow() {
+        boolean calendarKotlin = isKotlin(CALENDAR_BASE);
         String source = readSource(CALENDAR_BASE);
         assertEquals("the day tapped and the month scrolled onto are the only two things that "
-                        + "move the row", 2, count(source, ANY_MOVE));
+                        + "move the row", 2, count(source, calendarKotlin ? ANY_MOVE_KOTLIN : ANY_MOVE_JAVA));
         assertEquals("both have to pass callListener false, and a two argument call passes it "
                         + "true. The listening form calls onMonthSelected, which sends the strip "
                         + "to the first of the month and takes it out from under the drag",
-                2, count(source, MOVE_THE_ROW));
+                2, count(source, calendarKotlin ? MOVE_THE_ROW_KOTLIN : MOVE_THE_ROW_JAVA));
     }
 
     @Test
