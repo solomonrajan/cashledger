@@ -72,11 +72,6 @@ class RecurrenceSetting : Parcelable {
         }
     }
 
-    val type: Int get() = getType()
-    val startDate: Date get() = getStartDate()
-    val offsetValue: Int get() = getOffsetValue()
-    val rule: String get() = getRule()
-
     fun getType(): Int {
         return when (mRecurrenceRule.freq) {
             Freq.DAILY -> TYPE_DAILY

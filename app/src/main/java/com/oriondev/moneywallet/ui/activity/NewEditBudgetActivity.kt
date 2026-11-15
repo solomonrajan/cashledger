@@ -513,7 +513,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
                 return fieldStart
             }
         }
-        return mRecurrencePicker?.currentSettings?.startDate ?: Date()
+        return mRecurrencePicker?.currentSettings?.getStartDate() ?: Date()
     }
 
     private fun storedColumn(column: String): String? {
@@ -538,16 +538,16 @@ class NewEditBudgetActivity : NewEditItemActivity(),
 
     private fun getRepeatingPeriod(): Array<Date>? {
         val recurrenceSetting = mRecurrencePicker?.currentSettings ?: return null
-        return RecurrenceSetting.periodOn(recurrenceSetting.rule, recurrenceSetting.startDate, Date())
+        return RecurrenceSetting.periodOn(recurrenceSetting.getRule(), recurrenceSetting.getStartDate(), Date())
     }
 
     private fun rebuiltOn(startDate: Date): RecurrenceSetting {
         val current = mRecurrencePicker?.currentSettings ?: monthlyOn(startDate)
-        val builder = RecurrenceSetting.Builder(startDate, current.type)
-        builder.setOffset(current.offsetValue)
-        if (current.type == RecurrenceSetting.TYPE_MONTHLY) {
+        val builder = RecurrenceSetting.Builder(startDate, current.getType())
+        builder.setOffset(current.getOffsetValue())
+        if (current.getType() == RecurrenceSetting.TYPE_MONTHLY) {
             builder.setRepeatSameMonthDay()
-        } else if (current.type == RecurrenceSetting.TYPE_YEARLY) {
+        } else if (current.getType() == RecurrenceSetting.TYPE_YEARLY) {
             builder.setRepeatSameYearDay()
         }
         return builder.build()
@@ -555,8 +555,8 @@ class NewEditBudgetActivity : NewEditItemActivity(),
 
     private fun periodToSave(mode: Mode): Array<Date>? {
         val schedule = scheduleToSave()
-        val rule = schedule.rule
-        val anchor = schedule.startDate
+        val rule = schedule.getRule()
+        val anchor = schedule.getStartDate()
         if (mode == Mode.EDIT_ITEM) {
             val uri = ContentUris.withAppendedId(DataContentProvider.CONTENT_BUDGETS, getItemId())
             val projection = arrayOf(
@@ -656,8 +656,8 @@ class NewEditBudgetActivity : NewEditItemActivity(),
                         put(Contract.Budget.END_DATE, DateUtils.getSQLDateString(period[1]))
                     }
                     val schedule = scheduleToSave()
-                    put(Contract.Budget.RULE, schedule.rule)
-                    put(Contract.Budget.RULE_START, DateUtils.getSQLDateString(schedule.startDate))
+                    put(Contract.Budget.RULE, schedule.getRule())
+                    put(Contract.Budget.RULE_START, DateUtils.getSQLDateString(schedule.getStartDate()))
                 } else {
                     val startDate = mStartDatePicker?.currentDateTime
                     val endDate = mEndDatePicker?.currentDateTime

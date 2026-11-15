@@ -354,8 +354,8 @@ class NewEditRecurrentTransactionActivity : NewEditItemActivity(),
                 put(Contract.RecurrentTransaction.NOTE, mNoteEditText?.getTextAsString() ?: "")
                 put(Contract.RecurrentTransaction.CONFIRMED, mConfirmedCheckBox?.isChecked == true)
                 put(Contract.RecurrentTransaction.COUNT_IN_TOTAL, mCountInTotalCheckBox?.isChecked == true)
-                put(Contract.RecurrentTransaction.START_DATE, DateUtils.getSQLDateString(recurrenceSetting.startDate))
-                put(Contract.RecurrentTransaction.RULE, recurrenceSetting.rule)
+                put(Contract.RecurrentTransaction.START_DATE, DateUtils.getSQLDateString(recurrenceSetting.getStartDate()))
+                put(Contract.RecurrentTransaction.RULE, recurrenceSetting.getRule())
             }
             val contentResolver = contentResolver
             when (mode) {
