@@ -169,12 +169,12 @@ class CalculatorActivity : SinglePanelActivity(), View.OnClickListener, Equation
 
     private fun execute() {
         val currentSolver = solver ?: return
-        if (currentSolver.isPendingOperation) {
+        if (currentSolver.isPendingOperation()) {
             if (!currentSolver.execute(true)) {
                 // TODO: show error!
             }
         } else if (keypadMode) {
-            val money = currentSolver.result
+            val money = currentSolver.getResult()
             if (money < 0 && !allowNegative) {
                 ThemedDialog.buildMaterialDialog(this)
                     .setTitle(R.string.title_error)
@@ -201,7 +201,7 @@ class CalculatorActivity : SinglePanelActivity(), View.OnClickListener, Equation
     private fun updateActionButton() {
         val button = actionButton ?: return
         val currentSolver = solver ?: return
-        val confirm = keypadMode && !currentSolver.isPendingOperation
+        val confirm = keypadMode && !currentSolver.isPendingOperation()
         if (confirm) {
             button.setText(R.string.keyboard_confirm)
             button.contentDescription = getString(R.string.description_calculator_confirm)

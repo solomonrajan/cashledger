@@ -123,7 +123,7 @@ class WalletSortActivity : SinglePanelSimpleListActivity(), WalletSortCursorAdap
         val contentResolver: ContentResolver = contentResolver
         val adapter = getAdvancedRecyclerView()?.getRecyclerView()?.adapter
         if (adapter is WalletSortCursorAdapter) {
-            val walletIdsList: List<Long> = adapter.sortedCategoryIds
+            val walletIdsList: List<Long> = adapter.getSortedCategoryIds()
             for (i in walletIdsList.indices) {
                 val walletId = walletIdsList[i]
                 val uri = ContentUris.withAppendedId(baseUri, walletId)

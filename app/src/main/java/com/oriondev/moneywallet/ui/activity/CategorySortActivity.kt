@@ -135,7 +135,7 @@ class CategorySortActivity : SinglePanelSimpleListActivity(), CategorySortCursor
         val contentResolver: ContentResolver = contentResolver
         val adapter = getAdvancedRecyclerView()?.getRecyclerView()?.adapter
         if (adapter is CategorySortCursorAdapter) {
-            val categoryIdsList: List<Long> = adapter.sortedCategoryIds
+            val categoryIdsList: List<Long> = adapter.getSortedCategoryIds()
             for (i in categoryIdsList.indices) {
                 val categoryId = categoryIdsList[i]
                 val uri = ContentUris.withAppendedId(baseUri, categoryId)

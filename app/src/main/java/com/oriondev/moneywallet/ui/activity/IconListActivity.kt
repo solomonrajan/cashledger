@@ -115,7 +115,7 @@ class IconListActivity : SinglePanelActivity(),
         }
     }
 
-    override fun onIconClick(icon: Icon?) {
+    override fun onIconClick(icon: Icon) {
         val intent = Intent().apply {
             putExtra(RESULT_ICON, icon)
         }

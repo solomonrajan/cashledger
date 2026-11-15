@@ -143,6 +143,7 @@ class CategoryPickerActivity : SinglePanelViewPagerActivity(), CategoryListFragm
                     cursor.getString(cursor.getColumnIndexOrThrow(Contract.Category.NAME)),
                     IconLoader.parse(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Category.ICON))),
                     Contract.CategoryType.fromValue(cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Category.TYPE)))
+                        ?: Contract.CategoryType.EXPENSE
                 )
             }
             cursor.close()

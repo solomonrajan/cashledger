@@ -71,7 +71,7 @@ class CategoryRuleListActivity : SinglePanelSimpleListActivity(), CategoryRuleCu
 
     override fun onFloatingActionButtonClick() {
         val intent = Intent(this, NewEditCategoryRuleActivity::class.java).apply {
-            putExtra(NewEditCategoryRuleActivity.MODE, NewEditCategoryRuleActivity.Mode.NEW_ITEM)
+            putExtra(NewEditItemActivity.MODE, NewEditItemActivity.Mode.NEW_ITEM)
         }
         startActivity(intent)
     }
@@ -90,8 +90,8 @@ class CategoryRuleListActivity : SinglePanelSimpleListActivity(), CategoryRuleCu
 
     override fun onCategoryRuleClick(id: Long) {
         val intent = Intent(this, NewEditCategoryRuleActivity::class.java).apply {
-            putExtra(NewEditCategoryRuleActivity.MODE, NewEditCategoryRuleActivity.Mode.EDIT_ITEM)
-            putExtra(NewEditCategoryRuleActivity.ID, id)
+            putExtra(NewEditItemActivity.MODE, NewEditItemActivity.Mode.EDIT_ITEM)
+            putExtra(NewEditItemActivity.ID, id)
         }
         startActivity(intent)
     }

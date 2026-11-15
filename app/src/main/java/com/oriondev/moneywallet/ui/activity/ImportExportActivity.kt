@@ -361,17 +361,21 @@ class ImportExportActivity : SinglePanelActivity(),
         startDateEt.setOnClickListener {
             startDateTimePicker?.showDatePicker()
         }
-        startDateEt.setOnCancelButtonClickListener {
-            startDateTimePicker?.currentDateTime = null
-            false
-        }
+        startDateEt.setOnCancelButtonClickListener(object : MaterialEditText.CancelButtonListener {
+            override fun onCancelButtonClick(materialEditText: MaterialEditText): Boolean {
+                startDateTimePicker?.currentDateTime = null
+                return false
+            }
+        })
         endDateEt.setOnClickListener {
             endDateTimePicker?.showDatePicker()
         }
-        endDateEt.setOnCancelButtonClickListener {
-            endDateTimePicker?.currentDateTime = null
-            false
-        }
+        endDateEt.setOnCancelButtonClickListener(object : MaterialEditText.CancelButtonListener {
+            override fun onCancelButtonClick(materialEditText: MaterialEditText): Boolean {
+                endDateTimePicker?.currentDateTime = null
+                return false
+            }
+        })
         walletsEt.setOnClickListener {
             walletPicker?.showMultiWalletPicker()
         }
@@ -571,8 +575,9 @@ class ImportExportActivity : SinglePanelActivity(),
                 importMapping.spendingPositive = spendingPositiveCheckbox?.isChecked == true
                 val headerCells = header?.cells
                 if (headerCells != null) {
+                    @Suppress("UNCHECKED_CAST")
                     PreferenceManager.setCsvImportMapping(
-                        CsvImportMapping.signature(headerCells),
+                        CsvImportMapping.signature(headerCells as Array<String?>),
                         importMapping.encode()
                     )
                 }
@@ -674,9 +679,11 @@ class ImportExportActivity : SinglePanelActivity(),
 
     private fun getRememberedImportMapping(): CsvImportMapping {
         val header = importHeader ?: return CsvImportMapping()
-        val signature = CsvImportMapping.signature(header.cells)
+        val cells = header.cells ?: return CsvImportMapping()
+        @Suppress("UNCHECKED_CAST")
+        val signature = CsvImportMapping.signature(cells as Array<String?>)
         val remembered = CsvImportMapping.decode(PreferenceManager.getCsvImportMapping(signature))
-        val columns = header.cells.size
+        val columns = cells.size
         if (remembered != null && remembered.date < columns && remembered.amount < columns
             && remembered.description < columns && remembered.note < columns
             && remembered.category < columns
@@ -717,10 +724,11 @@ class ImportExportActivity : SinglePanelActivity(),
             return null
         }
         val header = importHeader ?: return null
-        if (column < 0 || column >= header.cells.size) {
+        val cells = header.cells ?: return null
+        if (column < 0 || column >= cells.size) {
             return null
         }
-        val name = header.cells[column].trim()
+        val name = cells[column].trim()
         return if (name.isEmpty()) getString(R.string.csv_import_column_unnamed, column + 1) else name
     }
 
@@ -731,12 +739,13 @@ class ImportExportActivity : SinglePanelActivity(),
         onPicked: (Int) -> Unit
     ) {
         val header = importHeader ?: return
+        val cells = header.cells ?: return
         val offset = if (optional) 1 else 0
-        val items = arrayOfNulls<String>(header.cells.size + offset)
+        val items = arrayOfNulls<String>(cells.size + offset)
         if (optional) {
             items[0] = getString(R.string.csv_import_column_none)
         }
-        for (i in header.cells.indices) {
+        for (i in cells.indices) {
             items[i + offset] = getColumnName(i)
         }
         @Suppress("UNCHECKED_CAST")
@@ -835,7 +844,7 @@ class ImportExportActivity : SinglePanelActivity(),
 
     override fun isFloatingActionButtonEnabled(): Boolean = false
 
-    override fun onFormatChanged(tag: String, format: DataFormat?) {
+    override fun onFormatChanged(tag: String?, format: DataFormat?) {
         if (format != null) {
             when (format) {
                 DataFormat.CSV -> {
@@ -872,7 +881,7 @@ class ImportExportActivity : SinglePanelActivity(),
         onFormatOrWalletChanged()
     }
 
-    override fun onDateTimeChanged(tag: String, date: Date?) {
+    override fun onDateTimeChanged(tag: String?, date: Date?) {
         when (tag) {
             TAG_START_DATE_TIME_PICKER -> {
                 startDateEditText?.let { editText ->
@@ -895,11 +904,11 @@ class ImportExportActivity : SinglePanelActivity(),
         }
     }
 
-    override fun onWalletChanged(tag: String, wallet: Wallet?) {
+    override fun onWalletChanged(tag: String?, wallet: Wallet?) {
         importWalletEditText?.setText(wallet?.name)
     }
 
-    override fun onWalletListChanged(tag: String, wallets: Array<Wallet>?) {
+    override fun onWalletListChanged(tag: String?, wallets: Array<Wallet>?) {
         if (wallets != null && wallets.isNotEmpty()) {
             val builder = StringBuilder()
             for (i in wallets.indices) {
@@ -934,7 +943,7 @@ class ImportExportActivity : SinglePanelActivity(),
         uniqueWalletCheckbox?.visibility = View.GONE
     }
 
-    override fun onExportColumnsChanged(tag: String, columns: Array<String>?) {
+    override fun onExportColumnsChanged(tag: String?, columns: Array<String>?) {
         if (columns != null && columns.isNotEmpty()) {
             val builder = StringBuilder()
             for (i in columns.indices) {
