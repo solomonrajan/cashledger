@@ -159,7 +159,7 @@ class NewEditTransactionActivity : NewEditItemActivity(),
         peopleEditText.setTextViewMode(true)
         placeEditText.setTextViewMode(true)
 
-        dateEditText.addValidator(object : Validator() {
+        dateEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_date)
             }
@@ -171,7 +171,7 @@ class NewEditTransactionActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        categoryEditText.addValidator(object : Validator() {
+        categoryEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_category)
             }
@@ -183,7 +183,7 @@ class NewEditTransactionActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        walletEditText.addValidator(object : Validator() {
+        walletEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_wallet)
             }
@@ -377,8 +377,8 @@ class NewEditTransactionActivity : NewEditItemActivity(),
                             if (transferCursor.moveToFirst()) {
                                 val transferId = transferCursor.getLong(transferCursor.getColumnIndex(Contract.Transfer.ID))
                                 val intent = Intent(this, NewEditTransferActivity::class.java).apply {
-                                    putExtra(NewEditTransferActivity.MODE, Mode.EDIT_ITEM)
-                                    putExtra(NewEditTransferActivity.ID, transferId)
+                                    putExtra(NewEditItemActivity.MODE, Mode.EDIT_ITEM)
+                                    putExtra(NewEditItemActivity.ID, transferId)
                                 }
                                 startActivity(intent)
                                 finish()

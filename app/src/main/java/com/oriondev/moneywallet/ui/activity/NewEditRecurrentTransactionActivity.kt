@@ -125,7 +125,7 @@ class NewEditRecurrentTransactionActivity : NewEditItemActivity(),
         eventEditText.setTextViewMode(true)
         placeEditText.setTextViewMode(true)
 
-        categoryEditText.addValidator(object : Validator() {
+        categoryEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_category)
             }
@@ -137,7 +137,7 @@ class NewEditRecurrentTransactionActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        walletEditText.addValidator(object : Validator() {
+        walletEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_wallet)
             }

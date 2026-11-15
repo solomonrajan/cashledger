@@ -154,7 +154,7 @@ class NewEditTransferActivity : NewEditItemActivity(),
         peopleEditText.setTextViewMode(true)
         placeEditText.setTextViewMode(true)
 
-        walletFromEditText.addValidator(object : Validator() {
+        walletFromEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_wallet)
             }
@@ -166,7 +166,7 @@ class NewEditTransferActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        walletToEditText.addValidator(object : Validator() {
+        walletToEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_wallet)
             }

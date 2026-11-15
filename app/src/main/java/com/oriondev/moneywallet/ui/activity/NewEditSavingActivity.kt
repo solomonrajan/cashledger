@@ -112,7 +112,7 @@ class NewEditSavingActivity : NewEditItemActivity(),
         walletEditText.setTextViewMode(true)
 
         descriptionEditText.addValidator(NonEmptyTextValidator(this, R.string.error_input_missing_description))
-        walletEditText.addValidator(object : Validator() {
+        walletEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_wallet)
             }

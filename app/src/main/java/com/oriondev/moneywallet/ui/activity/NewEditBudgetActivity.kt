@@ -143,7 +143,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             }
         }
 
-        typeEditText.addValidator(object : Validator() {
+        typeEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_budget_type)
             }
@@ -155,7 +155,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        walletsEditText.addValidator(object : Validator() {
+        walletsEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_multiple_wallets)
             }
@@ -167,7 +167,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        walletsEditText.addValidator(object : Validator() {
+        walletsEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_currency_not_valid)
             }
@@ -185,7 +185,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        walletsEditText.addValidator(object : Validator() {
+        walletsEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_invalid_multiple_wallets)
             }
@@ -206,7 +206,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        recurrenceEditText.addValidator(object : Validator() {
+        recurrenceEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_invalid_budget_recurrence)
             }
@@ -218,7 +218,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        startDateEditText.addValidator(object : Validator() {
+        startDateEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_start_date)
             }
@@ -230,7 +230,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        endDateEditText.addValidator(object : Validator() {
+        endDateEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_end_date)
             }
@@ -242,7 +242,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        startDateEditText.addValidator(object : Validator() {
+        startDateEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_invalid_date_range)
             }
@@ -256,7 +256,7 @@ class NewEditBudgetActivity : NewEditItemActivity(),
             override fun autoValidate(): Boolean = false
         })
 
-        categoryEditText.addValidator(object : Validator() {
+        categoryEditText.addValidator(object : Validator {
             override fun getErrorMessage(): String {
                 return getString(R.string.error_input_missing_categories)
             }
