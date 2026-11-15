@@ -122,7 +122,7 @@ class ModelMultiPanelViewPagerFragment : MultiPanelViewPagerMultiItemFragment() 
     }
 
     private fun showItemAddedSnackBar(additionText: Int, undoText: Int, uri: Uri) {
-        val view = primaryPanel ?: return
+        val view = getPrimaryPanel() ?: return
         val snackbar = Snackbar.make(view, additionText, Snackbar.LENGTH_LONG)
         snackbar.setActionTextColor(ThemeEngine.getTheme().colorAccent)
         snackbar.setAction(R.string.action_undo, UndoModelItemInsert(view, undoText, uri))

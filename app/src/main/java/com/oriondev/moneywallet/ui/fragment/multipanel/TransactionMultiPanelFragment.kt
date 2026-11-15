@@ -131,7 +131,7 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
                 selection += " AND $dateRange"
             }
             val sortOrder = "${Contract.Transaction.DATE} DESC"
-            val groupType = PreferenceManager.getCurrentGroupType() ?: Group.DEFAULT
+            val groupType = PreferenceManager.getCurrentGroupType()
             return WrappedCursorLoader(act, uri, null, selection, selectionArgs, sortOrder, groupType, startDate, endDate)
         }
         return null
