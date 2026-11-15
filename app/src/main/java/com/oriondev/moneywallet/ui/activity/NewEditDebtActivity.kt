@@ -426,7 +426,11 @@ class NewEditDebtActivity : NewEditItemActivity(),
     override fun onDateTimeChanged(tag: String?, date: Date?) {
         when (tag) {
             TAG_DATE_PICKER -> {
-                mDateEditText?.let { DateFormatter.applyDate(it, date) }
+                if (date != null) {
+                    mDateEditText?.let { DateFormatter.applyDate(it, date) }
+                } else {
+                    mDateEditText?.setText(null)
+                }
             }
             TAG_EXP_DATE_PICKER -> {
                 if (date != null) {
