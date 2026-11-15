@@ -17,26 +17,24 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.ui.activity;
+package com.oriondev.moneywallet.ui.activity
 
-import com.oriondev.moneywallet.ui.activity.base.MultiPanelActivity;
-import com.oriondev.moneywallet.ui.fragment.base.MultiPanelFragment;
-import com.oriondev.moneywallet.ui.fragment.multipanel.CalendarMultiPanelFragment;
+import com.oriondev.moneywallet.ui.activity.base.MultiPanelActivity
+import com.oriondev.moneywallet.ui.fragment.base.MultiPanelFragment
+import com.oriondev.moneywallet.ui.fragment.multipanel.CalendarMultiPanelFragment
 
 /**
  * Created by andrea on 04/04/18.
  */
-public class CalendarActivity extends MultiPanelActivity {
+class CalendarActivity : MultiPanelActivity() {
 
-    private static final String TAG_FRAGMENT_CALENDAR = "CalendarActivity::CalendarMultiPanelFragment";
-
-    @Override
-    protected MultiPanelFragment onCreateMultiPanelFragment() {
-        return new CalendarMultiPanelFragment();
+    override fun onCreateMultiPanelFragment(): MultiPanelFragment {
+        return CalendarMultiPanelFragment()
     }
 
-    @Override
-    protected String getMultiPanelFragmentTag() {
-        return TAG_FRAGMENT_CALENDAR;
+    override fun getMultiPanelFragmentTag(): String = TAG_FRAGMENT_CALENDAR
+
+    companion object {
+        private const val TAG_FRAGMENT_CALENDAR = "CalendarActivity::CalendarMultiPanelFragment"
     }
 }

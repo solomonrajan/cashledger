@@ -17,26 +17,24 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.ui.activity;
+package com.oriondev.moneywallet.ui.activity
 
-import com.oriondev.moneywallet.ui.activity.base.MultiPanelActivity;
-import com.oriondev.moneywallet.ui.fragment.base.MultiPanelFragment;
-import com.oriondev.moneywallet.ui.fragment.multipanel.SearchMultiPanelFragment;
+import com.oriondev.moneywallet.ui.activity.base.MultiPanelActivity
+import com.oriondev.moneywallet.ui.fragment.base.MultiPanelFragment
+import com.oriondev.moneywallet.ui.fragment.multipanel.SearchMultiPanelFragment
 
 /**
  * Created by andrea on 04/04/18.
  */
-public class SearchActivity extends MultiPanelActivity {
+class SearchActivity : MultiPanelActivity() {
 
-    private static final String TAG_FRAGMENT_SEARCH = "SearchActivity::SearchMultiPanelFragment";
-
-    @Override
-    protected MultiPanelFragment onCreateMultiPanelFragment() {
-        return new SearchMultiPanelFragment();
+    override fun onCreateMultiPanelFragment(): MultiPanelFragment {
+        return SearchMultiPanelFragment()
     }
 
-    @Override
-    protected String getMultiPanelFragmentTag() {
-        return TAG_FRAGMENT_SEARCH;
+    override fun getMultiPanelFragmentTag(): String = TAG_FRAGMENT_SEARCH
+
+    companion object {
+        private const val TAG_FRAGMENT_SEARCH = "SearchActivity::SearchMultiPanelFragment"
     }
 }
