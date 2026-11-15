@@ -17,12 +17,11 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.ui.fragment.base;
+package com.oriondev.moneywallet.ui.fragment.base
 
 /**
  * Created by andrea on 17/01/18.
  */
-public interface NavigableFragment {
-
-    boolean navigateBack();
+interface NavigableFragment {
+    fun navigateBack(): Boolean
 }

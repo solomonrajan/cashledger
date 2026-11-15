@@ -8,7 +8,7 @@ An expense and budget tracker for Android that keeps your money on your own phon
 
 [![License: GPLv3](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![GitHub release](https://img.shields.io/github/v/release/solomonrajan/cashledger)](https://github.com/solomonrajan/cashledger/releases/latest)
-[![Kotlin Migration](https://img.shields.io/badge/Kotlin_Migration-62.5%25-7F52FF?logo=kotlin&logoColor=white)](KOTLIN_MIGRATION.mdx)
+[![Kotlin Migration](https://img.shields.io/badge/Kotlin_Migration-65.8%25-7F52FF?logo=kotlin&logoColor=white)](KOTLIN_MIGRATION.mdx)
 [![Android API](https://img.shields.io/badge/Android-API_24%2B-3DDC84?logo=android&logoColor=white)](app/build.gradle)
 
 [<img src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" alt="Get it on GitHub" height="70">](https://github.com/solomonrajan/cashledger/releases/latest)
@@ -144,9 +144,9 @@ Cash Ledger is built as a fully native, offline-first, and privacy-respecting An
 
 **Languages & Kotlin Migration**
 
-- **Language:** Kotlin (`1.9.22`) & Java 17 — currently **62.5% pure Kotlin** across the tracked codebase (`323 / 517` files; **72.4%** or `323 / 446` in `app/src/main`, with Phases 1–5 and Phase 6A complete). Follow live progress in [KOTLIN_MIGRATION.mdx](KOTLIN_MIGRATION.mdx).
+- **Language:** Kotlin (`1.9.22`) & Java 17 — currently **65.8% pure Kotlin** across the tracked codebase (`340 / 517` files; **76.2%** or `340 / 446` in `app/src/main`, with Phases 1–5 and Phases 6A–6B complete). Follow live progress in [KOTLIN_MIGRATION.mdx](KOTLIN_MIGRATION.mdx).
 <div align="center">
-  <img src="https://quickchart.io/chart?w=600&h=100&bkg=transparent&c=%7B%22data%22%3A%7B%22labels%22%3A%5B%22%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Kotlin%20(323)%22%2C%22data%22%3A%5B323%5D%2C%22backgroundColor%22%3A%22%237F52FF%22%7D%2C%7B%22label%22%3A%22Java%20(194)%22%2C%22data%22%3A%5B194%5D%2C%22backgroundColor%22%3A%22%235382A1%22%7D%5D%7D%2C%22options%22%3A%7B%22maintainAspectRatio%22%3Afalse%2C%22scales%22%3A%7B%22xAxes%22%3A%5B%7B%22display%22%3Afalse%2C%22stacked%22%3Atrue%7D%5D%2C%22yAxes%22%3A%5B%7B%22display%22%3Afalse%2C%22stacked%22%3Atrue%7D%5D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%22legend%22%3A%7B%22labels%22%3A%7B%22fontSize%22%3A14%2C%22fontFamily%22%3A%22sans-serif%22%7D%2C%22position%22%3A%22bottom%22%7D%7D%2C%22type%22%3A%22horizontalBar%22%7D" alt="Language Breakdown" />
+  <img src="https://quickchart.io/chart?w=600&h=100&bkg=transparent&c=%7B%22data%22%3A%7B%22labels%22%3A%5B%22%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Kotlin%20(340)%22%2C%22data%22%3A%5B340%5D%2C%22backgroundColor%22%3A%22%237F52FF%22%7D%2C%7B%22label%22%3A%22Java%20(177)%22%2C%22data%22%3A%5B177%5D%2C%22backgroundColor%22%3A%22%235382A1%22%7D%5D%7D%2C%22options%22%3A%7B%22maintainAspectRatio%22%3Afalse%2C%22scales%22%3A%7B%22xAxes%22%3A%5B%7B%22display%22%3Afalse%2C%22stacked%22%3Atrue%7D%5D%2C%22yAxes%22%3A%5B%7B%22display%22%3Afalse%2C%22stacked%22%3Atrue%7D%5D%7D%2C%22plugins%22%3A%7B%22datalabels%22%3A%7B%22display%22%3Afalse%7D%7D%2C%22legend%22%3A%7B%22labels%22%3A%7B%22fontSize%22%3A14%2C%22fontFamily%22%3A%22sans-serif%22%7D%2C%22position%22%3A%22bottom%22%7D%7D%2C%22type%22%3A%22horizontalBar%22%7D" alt="Language Breakdown" />
 </div>
 
 **Frontend & UI**

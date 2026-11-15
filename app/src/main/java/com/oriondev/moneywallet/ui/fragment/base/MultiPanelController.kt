@@ -17,14 +17,12 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.ui.fragment.base;
+package com.oriondev.moneywallet.ui.fragment.base
 
 /**
  * Created by andrea on 03/04/18.
  */
-public interface MultiPanelController extends NavigableFragment {
-
-    boolean isExtendedLayout();
-
-    boolean closeSecondaryPanel();
+interface MultiPanelController : NavigableFragment {
+    fun isExtendedLayout(): Boolean
+    fun closeSecondaryPanel(): Boolean
 }
