@@ -91,14 +91,6 @@ class AdvancedRecyclerView : SwipeRefreshLayout {
             mRecyclerView.adapter = value
         }
 
-    fun setLayoutManager(layoutManager: RecyclerView.LayoutManager?) {
-        mRecyclerView.layoutManager = layoutManager
-    }
-
-    fun setAdapter(adapter: RecyclerView.Adapter<*>?) {
-        mRecyclerView.adapter = adapter
-    }
-
     /**
      * The text is also written by [setState]. Setting it on the view here as well
      * is what lets a caller refine the message after the empty view is already on screen, with
