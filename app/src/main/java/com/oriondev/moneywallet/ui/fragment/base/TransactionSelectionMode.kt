@@ -108,7 +108,7 @@ class TransactionSelectionMode(
             resolver: ContentResolver,
             ids: LongArray,
             walletId: Long,
-            walletName: String,
+            walletName: String?,
             walletIso: String?
         ): String {
             val to = if (walletIso != null) CurrencyManager.getCurrency(walletIso) else null
@@ -138,7 +138,7 @@ class TransactionSelectionMode(
             }
             var message = resources.getQuantityString(
                 R.plurals.message_move_selected_transactions,
-                count, count, walletName
+                count, count, walletName ?: ""
             )
             if (otherCurrency > 0) {
                 message += " " + resources.getQuantityString(
@@ -155,7 +155,7 @@ class TransactionSelectionMode(
             resolver: ContentResolver,
             ids: LongArray,
             categoryId: Long,
-            categoryName: String
+            categoryName: String?
         ): String {
             var count = 0
             val projection = arrayOf(Contract.Transaction.TYPE, Contract.Transaction.CATEGORY_ID)
@@ -170,7 +170,7 @@ class TransactionSelectionMode(
             }
             return resources.getQuantityString(
                 R.plurals.message_change_category_selected_transactions,
-                count, count, categoryName
+                count, count, categoryName ?: ""
             )
         }
 
@@ -373,7 +373,7 @@ class TransactionSelectionMode(
         if (wallet == null || !removePicker(TAG_WALLET_PICKER)) {
             return
         }
-        val ids = mAdapter.selectedIds
+        val ids = mAdapter.getSelectedIds()
         val iso = wallet.currency?.iso
         val context = mListFragment.requireActivity()
         val resources = context.resources
@@ -384,7 +384,7 @@ class TransactionSelectionMode(
                 if (mListFragment.view == null) {
                     return@post
                 }
-                if (!isSameSelection(mAdapter.selectedIds, ids)) {
+                if (!isSameSelection(mAdapter.getSelectedIds(), ids)) {
                     showSelectionChangedToast()
                     return@post
                 }
@@ -399,7 +399,7 @@ class TransactionSelectionMode(
         if (category == null || !removePicker(TAG_CATEGORY_PICKER)) {
             return
         }
-        val ids = mAdapter.selectedIds
+        val ids = mAdapter.getSelectedIds()
         val context = mListFragment.requireActivity()
         val resources = context.resources
         val resolver = context.applicationContext.contentResolver
@@ -409,7 +409,7 @@ class TransactionSelectionMode(
                 if (mListFragment.view == null) {
                     return@post
                 }
-                if (!isSameSelection(mAdapter.selectedIds, ids)) {
+                if (!isSameSelection(mAdapter.getSelectedIds(), ids)) {
                     showSelectionChangedToast()
                     return@post
                 }
@@ -435,18 +435,18 @@ class TransactionSelectionMode(
     }
 
     fun onSaveInstanceState(outState: Bundle) {
-        outState.putLongArray(SS_SELECTED_IDS, mAdapter.selectedIds)
+        outState.putLongArray(SS_SELECTED_IDS, mAdapter.getSelectedIds())
     }
 
     fun onRestoreInstanceState(savedInstanceState: Bundle?) {
         val ids = savedInstanceState?.getLongArray(SS_SELECTED_IDS)
         if (ids != null && ids.isNotEmpty()) {
-            mAdapter.selectedIds = ids
+            mAdapter.setSelectedIds(ids)
         }
     }
 
     private fun showDeleteDialog(context: Context) {
-        val ids = mAdapter.selectedIds
+        val ids = mAdapter.getSelectedIds()
         ThemedDialog.buildMaterialDialog(context)
             .setTitle(R.string.title_warning)
             .setMessage(
@@ -490,7 +490,7 @@ class TransactionSelectionMode(
     }
 
     private fun change(ids: LongArray, write: IntSupplier) {
-        if (!isSameSelection(mAdapter.selectedIds, ids)) {
+        if (!isSameSelection(mAdapter.getSelectedIds(), ids)) {
             showSelectionChangedToast()
             return
         }

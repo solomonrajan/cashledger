@@ -76,7 +76,7 @@ abstract class CursorListFragment : Fragment(),
         val recyclerView = AdvancedRecyclerView(requireContext())
         mAdvancedRecyclerView = recyclerView
         SystemBars.pad(
-            recyclerView.recyclerView,
+            recyclerView.getRecyclerView(),
             false,
             resources.getBoolean(R.bool.panel_fills_window),
             true
