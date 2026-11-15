@@ -274,7 +274,7 @@ class TransactionMultiPanelFragment : MultiPanelCursorListItemFragment(),
         )
 
         @JvmStatic
-        fun newInstance(type: FilterType, id: Long, startDate: Date?, endDate: Date?): TransactionMultiPanelFragment {
+        fun newInstance(type: FilterType?, id: Long, startDate: Date?, endDate: Date?): TransactionMultiPanelFragment {
             return TransactionMultiPanelFragment().apply {
                 arguments = Bundle().apply {
                     putSerializable(FILTER_TYPE, type)

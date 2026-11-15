@@ -30,38 +30,39 @@ import java.util.Date
  */
 class TransactionListActivity : MultiPanelActivity() {
 
-    override fun onCreateMultiPanelFragment(): MultiPanelFragment? {
-        val intent = intent ?: return null
+    override fun onCreateMultiPanelFragment(): MultiPanelFragment {
+        val intent = intent
         var type: TransactionMultiPanelFragment.FilterType? = null
         var itemId = 0L
-        if (intent.hasExtra(CATEGORY_ID)) {
-            type = TransactionMultiPanelFragment.FilterType.CATEGORY
-            itemId = intent.getLongExtra(CATEGORY_ID, 0L)
-        } else if (intent.hasExtra(DEBT_ID)) {
-            type = TransactionMultiPanelFragment.FilterType.DEBT
-            itemId = intent.getLongExtra(DEBT_ID, 0L)
-        } else if (intent.hasExtra(BUDGET_ID)) {
-            type = TransactionMultiPanelFragment.FilterType.BUDGET
-            itemId = intent.getLongExtra(BUDGET_ID, 0L)
-        } else if (intent.hasExtra(SAVING_ID)) {
-            type = TransactionMultiPanelFragment.FilterType.SAVING
-            itemId = intent.getLongExtra(SAVING_ID, 0L)
-        } else if (intent.hasExtra(EVENT_ID)) {
-            type = TransactionMultiPanelFragment.FilterType.EVENT
-            itemId = intent.getLongExtra(EVENT_ID, 0L)
-        } else if (intent.hasExtra(PLACE_ID)) {
-            type = TransactionMultiPanelFragment.FilterType.PLACE
-            itemId = intent.getLongExtra(PLACE_ID, 0L)
-        } else if (intent.hasExtra(PERSON_ID)) {
-            type = TransactionMultiPanelFragment.FilterType.PERSON
-            itemId = intent.getLongExtra(PERSON_ID, 0L)
+        var startDate: Date? = null
+        var endDate: Date? = null
+        if (intent != null) {
+            if (intent.hasExtra(CATEGORY_ID)) {
+                type = TransactionMultiPanelFragment.FilterType.CATEGORY
+                itemId = intent.getLongExtra(CATEGORY_ID, 0L)
+            } else if (intent.hasExtra(DEBT_ID)) {
+                type = TransactionMultiPanelFragment.FilterType.DEBT
+                itemId = intent.getLongExtra(DEBT_ID, 0L)
+            } else if (intent.hasExtra(BUDGET_ID)) {
+                type = TransactionMultiPanelFragment.FilterType.BUDGET
+                itemId = intent.getLongExtra(BUDGET_ID, 0L)
+            } else if (intent.hasExtra(SAVING_ID)) {
+                type = TransactionMultiPanelFragment.FilterType.SAVING
+                itemId = intent.getLongExtra(SAVING_ID, 0L)
+            } else if (intent.hasExtra(EVENT_ID)) {
+                type = TransactionMultiPanelFragment.FilterType.EVENT
+                itemId = intent.getLongExtra(EVENT_ID, 0L)
+            } else if (intent.hasExtra(PLACE_ID)) {
+                type = TransactionMultiPanelFragment.FilterType.PLACE
+                itemId = intent.getLongExtra(PLACE_ID, 0L)
+            } else if (intent.hasExtra(PERSON_ID)) {
+                type = TransactionMultiPanelFragment.FilterType.PERSON
+                itemId = intent.getLongExtra(PERSON_ID, 0L)
+            }
+            startDate = intent.getSerializableExtra(START_DATE) as? Date
+            endDate = intent.getSerializableExtra(END_DATE) as? Date
         }
-        return TransactionMultiPanelFragment.newInstance(
-            type,
-            itemId,
-            intent.getSerializableExtra(START_DATE) as? Date,
-            intent.getSerializableExtra(END_DATE) as? Date
-        )
+        return TransactionMultiPanelFragment.newInstance(type, itemId, startDate, endDate)
     }
 
     override fun getMultiPanelFragmentTag(): String {

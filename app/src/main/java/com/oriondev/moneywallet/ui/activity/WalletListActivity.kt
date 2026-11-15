@@ -29,7 +29,7 @@ import com.oriondev.moneywallet.ui.fragment.multipanel.WalletMultiPanelFragment
  */
 class WalletListActivity : MultiPanelActivity() {
 
-    override fun onCreateMultiPanelFragment(): MultiPanelFragment? {
+    override fun onCreateMultiPanelFragment(): MultiPanelFragment {
         return WalletMultiPanelFragment()
     }
 
