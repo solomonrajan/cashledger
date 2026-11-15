@@ -1,9 +1,9 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-15"
+last_updated: "2026-11-16"
 status: "In Progress"
-overall_progress: "83.6%"
+overall_progress: "85.1%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "83.6%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-432%20%2F%20517%20Files%20(83.6%25)-yellow?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-440%20%2F%20517%20Files%20(85.1%25)-yellow?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,7 +24,7 @@ overall_progress: "83.6%"
 > **How to update this dashboard:** Run `./gradlew updateMigrationTracker` (or [`scripts/Update-MigrationTracker.ps1`](scripts/Update-MigrationTracker.ps1)) to automatically recalculate counts, progress badges, statuses, Mermaid nodes, and file checklists from the codebase. CI also validates this in [`.github/workflows/build.yml`](.github/workflows/build.yml).
 
 ```
-Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░] 83.6% (432 / 517)
+Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░] 85.1% (440 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
@@ -35,9 +35,9 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 | **Phase 3: Storage & Database** | `com...moneywallet.storage.*` | 0 | 77 | 77 | 100% | 🟢 Completed | Sprint 4–5 |
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 0 | 38 | 38 | 100% | 🟢 Completed | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view`, `ui/*` | 0 | 151 | 151 | 100% | 🟢 Completed | Sprint 8–9 |
-| **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 14 | 121 | 135 | 89.6% | 🟡 In Progress | Sprint 10–12 |
+| **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 6 | 129 | 135 | 95.6% | 🟡 In Progress | Sprint 10–12 |
 | **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 71 | 0 | 71 | 0% | ⚪ Pending | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **85** | **432** | **517** | **83.6%** | **🟡 Active** | **~13 Sprints** |
+| **TOTALS** | **Entire Codebase** | **77** | **440** | **517** | **85.1%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: 11 `utils/` files + 34 `model/` domain files + 77 `storage/` database & cache files + 38 Phase 4 files (`api/`, `background/`, `service/`, `broadcast/`) + 151 Phase 5 files (`picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/`) + 12 Phase 6 files (`TutorialActivity.kt`, `ui/activity/base/*`, and controllers) are now pure Kotlin — 323 total).*
 
@@ -359,22 +359,22 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 - [x] `PeriodDetailActivity.kt`
 - [x] `CurrencyListActivity.kt`
 - [x] `CalculatorActivity.kt`
-- [ ] `NewEditTransactionActivity.java`
-- [ ] `NewEditTransferActivity.java`
+- [x] `NewEditTransactionActivity.kt`
+- [x] `NewEditTransferActivity.kt`
 - [x] `NewEditWalletActivity.kt`
 - [x] `NewEditCategoryActivity.kt`
-- [ ] `NewEditBudgetActivity.java`
+- [x] `NewEditBudgetActivity.kt`
 - [x] `NewEditCurrencyActivity.kt`
 - [x] `NewEditDebtActivity.kt`
-- [ ] `NewEditSavingActivity.java`
+- [x] `NewEditSavingActivity.kt`
 - [x] `NewEditEventActivity.kt`
 - [x] `NewEditItemActivity.kt`
 - [x] `NewEditPlaceActivity.kt`
 - [x] `NewEditPersonActivity.kt`
-- [ ] `NewEditRecurrentTransactionActivity.java`
-- [ ] `NewEditRecurrentTransferActivity.java`
-- [ ] `NewEditTransactionModelActivity.java`
-- [ ] `NewEditTransferModelActivity.java`
+- [x] `NewEditRecurrentTransactionActivity.kt`
+- [x] `NewEditRecurrentTransferActivity.kt`
+- [x] `NewEditTransactionModelActivity.kt`
+- [x] `NewEditTransferModelActivity.kt`
 - [x] `CategoryPickerActivity.kt`
 - [x] `CategorySortActivity.kt`
 - [x] `CategoryRuleListActivity.kt`
