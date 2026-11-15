@@ -85,7 +85,7 @@ class NewEditPersonActivity : NewEditItemActivity(), IconPicker.Controller {
         val fragmentManager = supportFragmentManager
         val picker = IconPicker.createPicker(fragmentManager, TAG_ICON_PICKER, icon)
         mIconPicker = picker
-        picker.listenOn(mNameEditText)
+        mNameEditText?.let { picker.listenOn(it) }
     }
 
     override fun getActivityTileRes(mode: Mode): Int {
@@ -118,7 +118,7 @@ class NewEditPersonActivity : NewEditItemActivity(), IconPicker.Controller {
     }
 
     override fun onIconChanged(tag: String?, icon: Icon?) {
-        IconLoader.loadInto(icon, mIconView)
+        mIconView?.let { IconLoader.loadInto(icon, it) }
     }
 
     companion object {

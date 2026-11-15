@@ -92,7 +92,7 @@ class NewEditCategoryActivity : NewEditItemActivity(), IconPicker.Controller, Ca
         }
         parentCategoryEt.setOnCancelButtonClickListener(object : MaterialEditText.CancelButtonListener {
             override fun onCancelButtonClick(materialEditText: MaterialEditText): Boolean {
-                mCategoryPicker?.currentCategory = null
+                mCategoryPicker?.setCategory(null)
                 return false
             }
         })
@@ -103,7 +103,7 @@ class NewEditCategoryActivity : NewEditItemActivity(), IconPicker.Controller, Ca
                     if ((isChecked && category.type != Contract.CategoryType.INCOME) ||
                         (!isChecked && category.type != Contract.CategoryType.EXPENSE)
                     ) {
-                        mCategoryPicker?.currentCategory = null
+                        mCategoryPicker?.setCategory(null)
                     }
                 }
             }
@@ -162,7 +162,7 @@ class NewEditCategoryActivity : NewEditItemActivity(), IconPicker.Controller, Ca
         mIconPicker = iconPicker
         mCategoryPicker = CategoryPicker.createPicker(fragmentManager, TAG_CURRENCY_PICKER, category)
         setCurrentCategoryType(type)
-        iconPicker.listenOn(mNameEditText)
+        mNameEditText?.let { iconPicker.listenOn(it) }
     }
 
     override fun getActivityTileRes(mode: Mode): Int {
@@ -279,7 +279,7 @@ class NewEditCategoryActivity : NewEditItemActivity(), IconPicker.Controller, Ca
     }
 
     override fun onIconChanged(tag: String?, icon: Icon?) {
-        IconLoader.loadInto(icon, mIconView)
+        mIconView?.let { IconLoader.loadInto(icon, it) }
     }
 
     override fun onCategoryChanged(tag: String?, category: Category?) {

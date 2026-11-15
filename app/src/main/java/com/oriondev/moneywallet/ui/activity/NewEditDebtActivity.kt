@@ -167,7 +167,7 @@ class NewEditDebtActivity : NewEditItemActivity(),
         }
         peopleEt.setOnCancelButtonClickListener(object : MaterialEditText.CancelButtonListener {
             override fun onCancelButtonClick(materialEditText: MaterialEditText): Boolean {
-                mPersonPicker?.people = null
+                mPersonPicker?.setPeople(null)
                 return true
             }
         })
@@ -316,7 +316,7 @@ class NewEditDebtActivity : NewEditItemActivity(),
         mWalletPicker = WalletPicker.createPicker(fragmentManager, TAG_WALLET_PICKER, wallet)
         mPersonPicker = PersonPicker.createPicker(fragmentManager, TAG_PERSON_PICKER, people)
         mPlacePicker = PlacePicker.createPicker(fragmentManager, TAG_PLACE_PICKER, place)
-        iconPicker.listenOn(mDescriptionEditText)
+        mDescriptionEditText?.let { iconPicker.listenOn(it) }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -362,9 +362,11 @@ class NewEditDebtActivity : NewEditItemActivity(),
             put(Contract.Debt.TYPE, debtType.value)
             put(Contract.Debt.ICON, mIconPicker?.currentIcon?.toString() ?: "")
             put(Contract.Debt.DESCRIPTION, mDescriptionEditText?.getTextAsString() ?: "")
-            put(Contract.Debt.DATE, DateUtils.getSQLDateString(mDatePicker?.currentDateTime))
+            val date = mDatePicker?.currentDateTime
+            val dateStr = if (date != null) DateUtils.getSQLDateString(date) else ""
+            put(Contract.Debt.DATE, dateStr)
             val expDate = if (mExpDatePicker?.isSelected == true) {
-                DateUtils.getSQLDateString(mExpDatePicker?.currentDateTime)
+                mExpDatePicker?.currentDateTime?.let { DateUtils.getSQLDateString(it) }
             } else {
                 null
             }
@@ -405,7 +407,7 @@ class NewEditDebtActivity : NewEditItemActivity(),
     }
 
     override fun onIconChanged(tag: String?, icon: Icon?) {
-        IconLoader.loadInto(icon, mAvatarImageView)
+        mAvatarImageView?.let { IconLoader.loadInto(icon, it) }
     }
 
     override fun onMoneyChanged(tag: String?, currency: CurrencyUnit?, money: Long) {
@@ -439,10 +441,10 @@ class NewEditDebtActivity : NewEditItemActivity(),
     override fun onWalletChanged(tag: String?, wallet: Wallet?) {
         if (wallet != null) {
             mWalletEditText?.setText(wallet.name)
-            mMoneyPicker?.currency = wallet.currency
+            mMoneyPicker?.setCurrency(wallet.currency)
         } else {
             mWalletEditText?.setText(null)
-            mMoneyPicker?.currency = null
+            mMoneyPicker?.setCurrency(null)
         }
     }
 

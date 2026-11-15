@@ -122,7 +122,7 @@ class NewEditPlaceActivity : NewEditItemActivity(),
         val iconPicker = IconPicker.createPicker(fragmentManager, TAG_ICON_PICKER, icon)
         mIconPicker = iconPicker
         mPlacePicker = MapPlacePicker.createPicker(fragmentManager, TAG_PLACE_PICKER, place)
-        iconPicker.listenOn(mNameEditText)
+        mNameEditText?.let { iconPicker.listenOn(it) }
         mMapView?.loadMapAsync(this)
     }
 
@@ -205,7 +205,7 @@ class NewEditPlaceActivity : NewEditItemActivity(),
     }
 
     override fun onIconChanged(tag: String?, icon: Icon?) {
-        IconLoader.loadInto(icon, mIconView)
+        mIconView?.let { IconLoader.loadInto(icon, it) }
     }
 
     override fun onMapReady() {

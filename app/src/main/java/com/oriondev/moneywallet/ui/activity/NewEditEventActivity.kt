@@ -153,7 +153,7 @@ class NewEditEventActivity : NewEditItemActivity(), IconPicker.Controller, DateT
         mIconPicker = iconPicker
         mStartDatePicker = DateTimePicker.createPicker(fragmentManager, TAG_START_DATE_PICKER, startDate)
         mEndDatePicker = DateTimePicker.createPicker(fragmentManager, TAG_END_DATE_PICKER, endDate)
-        iconPicker.listenOn(mNameEditText)
+        mNameEditText?.let { iconPicker.listenOn(it) }
     }
 
     override fun getActivityTileRes(mode: Mode): Int {
@@ -171,11 +171,13 @@ class NewEditEventActivity : NewEditItemActivity(), IconPicker.Controller, DateT
 
     override fun onSaveChanges(mode: Mode) {
         if (validate()) {
+            val startDate = mStartDatePicker?.currentDateTime ?: return
+            val endDate = mEndDatePicker?.currentDateTime ?: return
             val contentValues = ContentValues().apply {
                 put(Contract.Event.NAME, mNameEditText?.getTextAsString() ?: "")
                 put(Contract.Event.ICON, mIconPicker?.currentIcon?.toString() ?: "")
-                put(Contract.Event.START_DATE, DateUtils.getSQLDateString(mStartDatePicker?.currentDateTime))
-                put(Contract.Event.END_DATE, DateUtils.getSQLDateString(mEndDatePicker?.currentDateTime))
+                put(Contract.Event.START_DATE, DateUtils.getSQLDateString(startDate))
+                put(Contract.Event.END_DATE, DateUtils.getSQLDateString(endDate))
                 put(Contract.Event.NOTE, mNoteEditText?.getTextAsString() ?: "")
             }
             val contentResolver: ContentResolver = contentResolver
@@ -194,16 +196,24 @@ class NewEditEventActivity : NewEditItemActivity(), IconPicker.Controller, DateT
     }
 
     override fun onIconChanged(tag: String?, icon: Icon?) {
-        IconLoader.loadInto(icon, mIconView)
+        mIconView?.let { IconLoader.loadInto(icon, it) }
     }
 
     override fun onDateTimeChanged(tag: String?, date: Date?) {
         when (tag) {
             TAG_START_DATE_PICKER -> {
-                mStartDateEditText?.let { DateFormatter.applyDate(it, date) }
+                if (date != null) {
+                    mStartDateEditText?.let { DateFormatter.applyDate(it, date) }
+                } else {
+                    mStartDateEditText?.setText(null)
+                }
             }
             TAG_END_DATE_PICKER -> {
-                mEndDateEditText?.let { DateFormatter.applyDate(it, date) }
+                if (date != null) {
+                    mEndDateEditText?.let { DateFormatter.applyDate(it, date) }
+                } else {
+                    mEndDateEditText?.setText(null)
+                }
             }
         }
     }

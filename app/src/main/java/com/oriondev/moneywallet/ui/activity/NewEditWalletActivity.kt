@@ -149,7 +149,7 @@ class NewEditWalletActivity : NewEditItemActivity(),
         mIconPicker = iconPicker
         mCurrencyPicker = CurrencyPicker.createPicker(fragmentManager, TAG_CURRENCY_PICKER, currencyUnit)
         mMoneyPicker = MoneyPicker.createPicker(fragmentManager, TAG_MONEY_PICKER, currencyUnit, startMoney, true)
-        iconPicker.listenOn(mNameEditText)
+        mNameEditText?.let { iconPicker.listenOn(it) }
     }
 
     @StringRes
@@ -190,7 +190,7 @@ class NewEditWalletActivity : NewEditItemActivity(),
     }
 
     override fun onIconChanged(tag: String?, icon: Icon?) {
-        IconLoader.loadInto(icon, mIconView)
+        mIconView?.let { IconLoader.loadInto(icon, it) }
     }
 
     override fun onCurrencyChanged(tag: String?, currency: CurrencyUnit?) {
@@ -199,7 +199,7 @@ class NewEditWalletActivity : NewEditItemActivity(),
         } else {
             mCurrencyEditText?.setText(null)
         }
-        mMoneyPicker?.currency = currency
+        mMoneyPicker?.setCurrency(currency)
     }
 
     override fun onMoneyChanged(tag: String?, currency: CurrencyUnit?, money: Long) {
