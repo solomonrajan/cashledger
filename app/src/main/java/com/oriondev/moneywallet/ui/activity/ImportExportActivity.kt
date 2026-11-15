@@ -561,12 +561,10 @@ class ImportExportActivity : SinglePanelActivity(),
     }
 
     fun importData() {
-        val picker = dataFormatPicker ?: return
-        val stagedFile = importFile ?: return
         val serviceIntent = Intent(this, ImportExportIntentService::class.java).apply {
             putExtra(ImportExportIntentService.MODE, ImportExportIntentService.MODE_IMPORT)
-            putExtra(ImportExportIntentService.FORMAT, picker.currentFormat)
-            putExtra(ImportExportIntentService.FILE, stagedFile)
+            putExtra(ImportExportIntentService.FORMAT, dataFormatPicker?.currentFormat)
+            putExtra(ImportExportIntentService.FILE, importFile)
             if (isImportMappingShown()) {
                 val header = importHeader
                 if (header != null) {
@@ -595,21 +593,15 @@ class ImportExportActivity : SinglePanelActivity(),
     }
 
     fun exportData() {
-        val picker = dataFormatPicker ?: return
-        val startPicker = startDateTimePicker ?: return
-        val endPicker = endDateTimePicker ?: return
-        val walletsPick = walletPicker ?: return
-        val columnsPicker = exportColumnsPicker ?: return
-
         val serviceIntent = Intent(this, ImportExportIntentService::class.java).apply {
             putExtra(ImportExportIntentService.MODE, ImportExportIntentService.MODE_EXPORT)
-            putExtra(ImportExportIntentService.FORMAT, picker.currentFormat)
-            putExtra(ImportExportIntentService.START_DATE, startPicker.currentDateTime)
-            putExtra(ImportExportIntentService.END_DATE, endPicker.currentDateTime)
-            putExtra(ImportExportIntentService.WALLETS, walletsPick.currentWallets)
+            putExtra(ImportExportIntentService.FORMAT, dataFormatPicker?.currentFormat)
+            putExtra(ImportExportIntentService.START_DATE, startDateTimePicker?.currentDateTime)
+            putExtra(ImportExportIntentService.END_DATE, endDateTimePicker?.currentDateTime)
+            putExtra(ImportExportIntentService.WALLETS, walletPicker?.currentWallets)
             putExtra(ImportExportIntentService.FOLDER, getExportCacheDir())
             putExtra(ImportExportIntentService.UNIQUE_WALLET, uniqueWalletCheckbox?.isChecked == true)
-            putExtra(ImportExportIntentService.OPTIONAL_COLUMNS, columnsPicker.currentServiceColumns)
+            putExtra(ImportExportIntentService.OPTIONAL_COLUMNS, exportColumnsPicker?.currentServiceColumns)
             val token = UUID.randomUUID().toString()
             tokens.add(token)
             putExtra(ImportExportIntentService.TOKEN, token)
