@@ -30,7 +30,7 @@ abstract class SinglePanelSimpleListActivity :
         onPrepareRecyclerView(recyclerView)
         val adapter = onCreateAdapter()
         abstractCursorAdapter = adapter
-        recyclerView.setAdapter(adapter)
+        recyclerView.adapter = adapter
         recyclerView.setOnRefreshListener(this)
         recyclerView.setState(AdvancedRecyclerView.State.LOADING)
     }

@@ -84,7 +84,7 @@ abstract class CursorListFragment : Fragment(),
         onPrepareRecyclerView(recyclerView)
         val adapter = onCreateAdapter()
         mAbstractCursorAdapter = adapter
-        recyclerView.setAdapter(adapter)
+        recyclerView.adapter = adapter
         recyclerView.setOnRefreshListener(this)
         recyclerView.setState(AdvancedRecyclerView.State.LOADING)
         return recyclerView

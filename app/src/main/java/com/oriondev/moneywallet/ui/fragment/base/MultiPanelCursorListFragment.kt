@@ -57,7 +57,7 @@ abstract class MultiPanelCursorListFragment : MultiPanelFragment(),
             onPrepareRecyclerView(recyclerView)
             val adapter = onCreateAdapter()
             mAbstractCursorAdapter = adapter
-            recyclerView.setAdapter(adapter)
+            recyclerView.adapter = adapter
             recyclerView.setOnRefreshListener(this)
             LoaderManager.getInstance(this).initLoader(DEFAULT_LOADER_ID, null, this)
             recyclerView.setState(AdvancedRecyclerView.State.LOADING)
