@@ -23,120 +23,103 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.oriondev.moneywallet.R
-import com.oriondev.moneywallet.ui.adapter.recycler.SettingCategoryAdapter
+import com.oriondev.moneywallet.model.BackupService
+import com.oriondev.moneywallet.ui.adapter.recycler.BackupServiceAdapter
 import com.oriondev.moneywallet.ui.fragment.base.MultiPanelFragment
 import com.oriondev.moneywallet.ui.fragment.secondary.BackupHandlerFragment
 
 /**
- * Created by andrea on 03/03/18.
+ * Created by andre on 21/03/2018.
  */
-class BackupMultiPanelFragment : MultiPanelFragment(), SettingCategoryAdapter.ActionListener {
+class BackupMultiPanelFragment : MultiPanelFragment(), BackupServiceAdapter.Controller {
 
-    private var secondaryToolbar: Toolbar? = null
-    private var currentAction: BackupHandlerFragment.Action? = null
+    private var secondaryPanelCoverLayout: ViewGroup? = null
+    private var secondaryPanelFragmentContainer: ViewGroup? = null
+
+    private var allowBackup: Boolean = true
+    private var allowRestore: Boolean = true
+    private var showCoverLayout: Boolean = true
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val arguments = arguments
+        if (arguments != null) {
+            allowBackup = arguments.getBoolean(ARG_ALLOW_BACKUP, true)
+            allowRestore = arguments.getBoolean(ARG_ALLOW_RESTORE, true)
+        } else {
+            throw IllegalStateException("Arguments bundle is null, please instantiate the fragment using the newInstance() method instead.")
+        }
+    }
 
     override fun onCreatePrimaryPanel(inflater: LayoutInflater, primaryPanel: ViewGroup, savedInstanceState: Bundle?) {
-        val view = inflater.inflate(R.layout.layout_setting_primary_panel, primaryPanel, true)
+        val view = inflater.inflate(R.layout.layout_recycler_view, primaryPanel, true)
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(inflater.context)
-        val adapter = SettingCategoryAdapter(this)
-        adapter.addCategory(
-            ID_DRIVE,
-            R.drawable.ic_google_drive_black_24dp,
-            R.string.backup_title_drive,
-            R.string.backup_subtitle_drive
-        )
-        adapter.addCategory(
-            ID_LOCAL_BACKUP,
-            R.drawable.ic_file_upload_black_24dp,
-            R.string.backup_title_local_backup,
-            R.string.backup_subtitle_local_backup
-        )
-        adapter.addCategory(
-            ID_LOCAL_RESTORE,
-            R.drawable.ic_file_download_black_24dp,
-            R.string.backup_title_local_restore,
-            R.string.backup_subtitle_local_restore
-        )
-        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = BackupServiceAdapter(this)
     }
 
     override fun onCreateSecondaryPanel(inflater: LayoutInflater, secondaryPanel: ViewGroup, savedInstanceState: Bundle?) {
-        val view = inflater.inflate(R.layout.layout_setting_secondary_panel, secondaryPanel, true)
-        val toolbar: Toolbar = view.findViewById(R.id.secondary_toolbar)
-        secondaryToolbar = toolbar
-        if (!isExtendedLayout) {
-            toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp)
-            toolbar.setNavigationOnClickListener { hideSecondaryPanel() }
-        }
-        val action = if (savedInstanceState != null && savedInstanceState.containsKey(SS_CURRENT_ACTION)) {
-            val serializable = savedInstanceState.getSerializable(SS_CURRENT_ACTION)
-            serializable as? BackupHandlerFragment.Action ?: BackupHandlerFragment.Action.GOOGLE_DRIVE
-        } else {
-            BackupHandlerFragment.Action.GOOGLE_DRIVE
-        }
-        loadSecondaryFragment(action)
+        val view = inflater.inflate(R.layout.layout_secondary_panel_fragment_container, secondaryPanel, true)
+        val coverLayout: ViewGroup = view.findViewById(R.id.secondary_panel_cover_layout)
+        val fragmentContainer: ViewGroup = view.findViewById(R.id.secondary_panel_fragment_container)
+        secondaryPanelCoverLayout = coverLayout
+        secondaryPanelFragmentContainer = fragmentContainer
+        showCoverLayout = savedInstanceState?.getBoolean(SS_SHOW_COVER_LAYOUT) ?: true
+        showCoverLayout(showCoverLayout)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putSerializable(SS_CURRENT_ACTION, currentAction)
+        outState.putBoolean(SS_SHOW_COVER_LAYOUT, showCoverLayout)
     }
 
-    override fun getTitleRes(): Int = R.string.menu_backup
+    override fun getTitleRes(): Int = R.string.title_activity_backup_services
 
     override fun isFloatingActionButtonEnabled(): Boolean = false
 
-    override fun onSettingCategoryClick(id: Int) {
-        val action = when (id) {
-            ID_DRIVE -> BackupHandlerFragment.Action.GOOGLE_DRIVE
-            ID_LOCAL_BACKUP -> BackupHandlerFragment.Action.LOCAL_BACKUP
-            ID_LOCAL_RESTORE -> BackupHandlerFragment.Action.LOCAL_RESTORE
-            else -> return
+    private fun showCoverLayout(show: Boolean) {
+        secondaryPanelCoverLayout?.visibility = if (show) View.VISIBLE else View.GONE
+        secondaryPanelFragmentContainer?.visibility = if (show) View.GONE else View.VISIBLE
+    }
+
+    override fun onBackupServiceClick(service: BackupService?) {
+        val fragmentManager: FragmentManager = childFragmentManager
+        val tag = getBackupServiceTag(service)
+        val fragment: Fragment? = tag?.let { fragmentManager.findFragmentByTag(it) }
+        val container = secondaryPanelFragmentContainer
+        if (fragment != null) {
+            fragmentManager.beginTransaction().show(fragment).commit()
+        } else if (service != null && container != null) {
+            val newFragment = BackupHandlerFragment.newInstance(service.identifier, allowBackup, allowRestore)
+            fragmentManager.beginTransaction().replace(container.id, newFragment, tag).commit()
         }
-        loadSecondaryFragment(action)
+        showCoverLayout = service == null
+        showCoverLayout(showCoverLayout)
         showSecondaryPanel()
     }
 
-    private fun loadSecondaryFragment(action: BackupHandlerFragment.Action) {
-        val fragmentManager = childFragmentManager
-        val fragmentTag = getSecondaryFragmentTag(action)
-        var fragment = fragmentManager.findFragmentByTag(fragmentTag)
-        if (fragment == null) {
-            fragment = BackupHandlerFragment.newInstance(action)
-            fragmentManager.beginTransaction()
-                .replace(R.id.secondary_panel_fragment_container, fragment, fragmentTag)
-                .commitNow()
-        } else {
-            fragmentManager.beginTransaction().show(fragment).commit()
-        }
-        secondaryToolbar?.setTitle(getFragmentTitle(action))
-        currentAction = action
-    }
-
-    private fun getSecondaryFragmentTag(action: BackupHandlerFragment.Action): String {
-        return "$SECONDARY_FRAGMENT_TAG::${action.name}"
-    }
-
-    private fun getFragmentTitle(action: BackupHandlerFragment.Action): Int {
-        return when (action) {
-            BackupHandlerFragment.Action.GOOGLE_DRIVE -> R.string.backup_title_drive
-            BackupHandlerFragment.Action.LOCAL_BACKUP -> R.string.backup_title_local_backup
-            BackupHandlerFragment.Action.LOCAL_RESTORE -> R.string.backup_title_local_restore
-        }
+    private fun getBackupServiceTag(service: BackupService?): String? {
+        return if (service != null) "BackupMultiPanelFragment::Fragment::${service.identifier}" else null
     }
 
     companion object {
-        private const val SS_CURRENT_ACTION = "BackupMultiPanelFragment::SavedState::CurrentAction"
-        private const val SECONDARY_FRAGMENT_TAG = "BackupMultiPanelFragment::Tag::SecondaryFragment"
+        private const val ARG_ALLOW_BACKUP = "BackupMultiPanelFragment::Arguments::AllowBackup"
+        private const val ARG_ALLOW_RESTORE = "BackupMultiPanelFragment::Arguments::AllowRestore"
+        private const val SS_SHOW_COVER_LAYOUT = "BackupMultiPanelFragment::Arguments::ShowCoverLayout"
 
-        private const val ID_DRIVE = 0
-        private const val ID_LOCAL_BACKUP = 1
-        private const val ID_LOCAL_RESTORE = 2
+        @JvmStatic
+        fun newInstance(allowBackup: Boolean, allowRestore: Boolean): BackupMultiPanelFragment {
+            return BackupMultiPanelFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(ARG_ALLOW_BACKUP, allowBackup)
+                    putBoolean(ARG_ALLOW_RESTORE, allowRestore)
+                }
+            }
+        }
     }
 }
