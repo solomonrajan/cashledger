@@ -286,15 +286,16 @@ class RecurrenceSettingTest {
     @Test
     fun everyMonthOfAYearIsCoveredWhenTheAnchorIsTheThirtyFirst() {
         val rule = monthlyOn(day(2026, 0, 31))
-        var instance: Date? = day(2026, 0, 31)
+        var instance: Date = day(2026, 0, 31)
         val months = intArrayOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
         for (month in months) {
-            instance = RecurrenceSetting.nextInstanceAfter(rule, day(2026, 0, 31), instance)
-            assertNotNull(instance)
-            val nonNullInstance = instance ?: return
+            val next = RecurrenceSetting.nextInstanceAfter(rule, day(2026, 0, 31), instance)
+            assertNotNull(next)
+            val nonNullInstance = next ?: return
             val calendar = Calendar.getInstance()
             calendar.time = nonNullInstance
             assertEquals(month, calendar.get(Calendar.MONTH))
+            instance = nonNullInstance
         }
     }
 

@@ -3,7 +3,7 @@ title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
 last_updated: "2026-11-17"
 status: "In Progress"
-overall_progress: "91.3%"
+overall_progress: "92.5%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "91.3%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-472%20%2F%20517%20Files%20(91.3%25)-yellow?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-478%20%2F%20517%20Files%20(92.5%25)-yellow?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,7 +24,7 @@ overall_progress: "91.3%"
 > **How to update this dashboard:** Run `./gradlew updateMigrationTracker` (or [`scripts/Update-MigrationTracker.ps1`](scripts/Update-MigrationTracker.ps1)) to automatically recalculate counts, progress badges, statuses, Mermaid nodes, and file checklists from the codebase. CI also validates this in [`.github/workflows/build.yml`](.github/workflows/build.yml).
 
 ```
-Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░] 91.3% (472 / 517)
+Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░] 92.5% (478 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
@@ -36,8 +36,8 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 0 | 38 | 38 | 100% | 🟢 Completed | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view`, `ui/*` | 0 | 151 | 151 | 100% | 🟢 Completed | Sprint 8–9 |
 | **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 0 | 135 | 135 | 100% | 🟢 Completed | Sprint 10–12 |
-| **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 45 | 26 | 71 | 36.6% | 🟡 In Progress | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **45** | **472** | **517** | **91.3%** | **🟡 Active** | **~13 Sprints** |
+| **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 39 | 32 | 71 | 45.1% | 🟡 In Progress | Sprint 13 |
+| **TOTALS** | **Entire Codebase** | **39** | **478** | **517** | **92.5%** | **🟡 Active** | **~13 Sprints** |
 
 *(Note: 100% of the main Android app source set (`app/src/main`) is pure Kotlin — 446 / 446 files! Only 71 test and flavor files remain for Phase 7).*
 
