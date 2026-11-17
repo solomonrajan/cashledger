@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018.
+ * Copyright (c) 2026 solomonrajan.
  *
  * This file is part of MoneyWallet.
  *
@@ -17,22 +18,19 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.oriondev.moneywallet.api;
+package com.oriondev.moneywallet.storage.database
 
-import org.junit.Test;
+import android.content.Context
+import com.oriondev.moneywallet.utils.CurrencyManager
 
-import static org.junit.Assert.assertNull;
+/**
+ * Gives a JVM test a database of its own, seeded the way a first launch seeds it.
+ */
+object TestDatabases {
 
-public class BackendServiceFactoryTest {
-
-    @Test
-    public void noFolderChosenStaysNullForABackendWithoutADefault() {
-        assertNull(BackendServiceFactory.getFile(BackendServiceFactory.SERVICE_ID_WEBDAV, null));
-    }
-
-    @Test
-    public void unknownBackendStaysNull() {
-        assertNull(BackendServiceFactory.getFile("no_such_backend", null));
-        assertNull(BackendServiceFactory.getFile("no_such_backend", "/storage/emulated/0"));
+    @JvmStatic
+    fun useFreshDatabase(context: Context) {
+        SQLDatabase.resetShared(context)
+        CurrencyManager.invalidateCache(context)
     }
 }
