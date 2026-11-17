@@ -38,7 +38,10 @@ abstract class AbstractGenericLoader<T>(context: Context) : AsyncTaskLoader<T>(c
      * runs. Without one nothing ever marks the content changed, so the reload below can never
      * happen and the screen keeps whatever it read the first time.
      */
-    protected open fun getObservedUri(): Uri? = null
+    open fun getObservedUri(): Uri? = null
+
+    open val observedUri: Uri?
+        get() = getObservedUri()
 
     /* Runs on the UI thread */
     override fun deliverResult(genericData: T?) {

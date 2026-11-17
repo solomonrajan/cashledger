@@ -135,6 +135,9 @@ class RecurrenceSetting : Parcelable {
 
     fun getRule(): String = mRecurrenceRule.toString()
 
+    val rule: String
+        get() = getRule()
+
     override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
