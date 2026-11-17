@@ -93,7 +93,7 @@ class MapViewWrapper(view: View) {
      */
     private fun setupTileSource() {
         val url = PreferenceManager.getMapTileServer()
-        if (TextUtils.isEmpty(url) || !Urls.isUsableTileAddress(url)) {
+        if (url.isNullOrEmpty() || !Urls.isUsableTileAddress(url)) {
             return
         }
         mapView.setTileSource(TemplateTileSource(Urls.asTileTemplate(url)))
@@ -200,9 +200,8 @@ class MapViewWrapper(view: View) {
         callback?.onMapReady()
     }
 
-    fun isMapReady(): Boolean {
-        return true
-    }
+    val isMapReady: Boolean
+        get() = true
 
     fun disableMapInteractions() {
         mapView.setOnTouchListener { _, _ -> true }

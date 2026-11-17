@@ -49,7 +49,7 @@ object BackendServiceFactory {
     private fun buildDescriptors(): List<BackendDescriptor> {
         val descriptors = ArrayList<BackendDescriptor>()
         descriptors.add(object : BackendDescriptor(SERVICE_ID_EXTERNAL_MEMORY, R.drawable.ic_sd_24dp) {
-            override fun getDefaultFolder(): IFile {
+            override fun getDefaultFolder(): IFile? {
                 return DiskBackendServiceAPI.getDefaultFolder()
             }
 
@@ -127,8 +127,8 @@ object BackendServiceFactory {
     fun getBackupServices(): List<BackupService> {
         val services = ArrayList<BackupService>()
         for (descriptor in DESCRIPTORS) {
-            if (descriptor.isAvailable) {
-                services.add(BackupService(descriptor.id, descriptor.iconRes, descriptor.nameRes))
+            if (descriptor.isAvailable()) {
+                services.add(BackupService(descriptor.id, descriptor.iconRes, descriptor.getNameRes()))
             }
         }
         return services
@@ -137,6 +137,6 @@ object BackendServiceFactory {
     @JvmStatic
     fun getFile(backendId: String?, encoded: String?): IFile? {
         val descriptor = findDescriptor(backendId) ?: return null
-        return if (encoded != null) descriptor.createFile(encoded) else descriptor.defaultFolder
+        return if (encoded != null) descriptor.createFile(encoded) else descriptor.getDefaultFolder()
     }
 }
