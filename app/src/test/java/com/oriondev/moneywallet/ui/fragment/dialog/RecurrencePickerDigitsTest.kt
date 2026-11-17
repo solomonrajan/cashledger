@@ -75,9 +75,9 @@ class RecurrencePickerDigitsTest {
             assertEquals("the every count", "۲", every(dialog).text.toString())
             assertEquals("the times count", "۳", times(dialog).text.toString())
             val read = dialog.getCurrentRecurrenceSetting()
-            assertEquals(RecurrenceSetting.END_FOR, read.endType)
-            assertEquals("the every count read back", EVERY, read.offsetValue)
-            assertEquals("the times count read back", TIMES, read.occurrenceValue)
+            assertEquals(RecurrenceSetting.END_FOR, read.getEndType())
+            assertEquals("the every count read back", EVERY, read.getOffsetValue())
+            assertEquals("the times count read back", TIMES, read.getOccurrenceValue())
         }
 
         private fun run(body: (controller: ActivityController<AppCompatActivity>, dialog: RecurrencePickerDialog) -> Unit) {

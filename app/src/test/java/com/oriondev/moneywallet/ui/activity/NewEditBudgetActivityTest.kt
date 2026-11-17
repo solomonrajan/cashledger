@@ -152,11 +152,11 @@ class NewEditBudgetActivityTest {
                 assertEquals(listOf(walletA), walletPickerIds(activity))
                 assertEquals(CurrencyManager.getCurrency("EUR"), moneyPicker(activity).currentCurrency)
                 assertEquals(
-                    CurrencyManager.getCurrency("EUR").symbol,
+                    CurrencyManager.getCurrency("EUR")?.symbol,
                     headerText(activity, R.id.currency_text_view)
                 )
-                assertEquals(today, DateUtils.getSQLDateString(startDatePicker(activity).currentDateTime))
-                assertEquals(monthAhead, DateUtils.getSQLDateString(endDatePicker(activity).currentDateTime))
+                assertEquals(today, DateUtils.getSQLDateString(checkNotNull(startDatePicker(activity).currentDateTime)))
+                assertEquals(monthAhead, DateUtils.getSQLDateString(checkNotNull(endDatePicker(activity).currentDateTime)))
                 moneyPicker(activity).currentMoney = 500000L
                 assertEquals(
                     formattedMoney("EUR", 500000L),
@@ -284,7 +284,7 @@ class NewEditBudgetActivityTest {
             scenario.onActivity { activity ->
                 assertEquals(CurrencyManager.getCurrency("JPY"), moneyPicker(activity).currentCurrency)
                 assertEquals(
-                    CurrencyManager.getCurrency("JPY").symbol,
+                    CurrencyManager.getCurrency("JPY")?.symbol,
                     headerText(activity, R.id.currency_text_view)
                 )
                 moneyPicker(activity).currentMoney = 250000L
@@ -438,7 +438,7 @@ class NewEditBudgetActivityTest {
                 )
                 assertEquals(CurrencyManager.getCurrency("EUR"), moneyPicker(activity).currentCurrency)
                 assertEquals(
-                    CurrencyManager.getCurrency("EUR").symbol,
+                    CurrencyManager.getCurrency("EUR")?.symbol,
                     headerText(activity, R.id.currency_text_view)
                 )
                 walletsPicker(activity).onWalletsSelected(
@@ -449,7 +449,7 @@ class NewEditBudgetActivityTest {
                 )
                 assertEquals(CurrencyManager.getCurrency("JPY"), moneyPicker(activity).currentCurrency)
                 assertEquals(
-                    CurrencyManager.getCurrency("JPY").symbol,
+                    CurrencyManager.getCurrency("JPY")?.symbol,
                     headerText(activity, R.id.currency_text_view)
                 )
                 moneyPicker(activity).currentMoney = 500000L
@@ -639,12 +639,12 @@ class NewEditBudgetActivityTest {
                     formattedDate(activity, date(APRIL_END)),
                     fieldText(activity, R.id.end_date_edit_text)
                 )
-                assertEquals(APRIL_START, DateUtils.getSQLDateString(startDatePicker(activity).currentDateTime))
-                assertEquals(APRIL_END, DateUtils.getSQLDateString(endDatePicker(activity).currentDateTime))
+                assertEquals(APRIL_START, DateUtils.getSQLDateString(checkNotNull(startDatePicker(activity).currentDateTime)))
+                assertEquals(APRIL_END, DateUtils.getSQLDateString(checkNotNull(endDatePicker(activity).currentDateTime)))
                 // a budget carrying no anchor seeds the recurrence dialog off the day it starts
                 assertEquals(
                     APRIL_START,
-                    DateUtils.getSQLDateString(recurrencePicker(activity).currentSettings.startDate)
+                    DateUtils.getSQLDateString(checkNotNull(recurrencePicker(activity).currentSettings?.getStartDate()))
                 )
                 save(activity)
                 assertTrue(activity.isFinishing)
@@ -715,7 +715,7 @@ class NewEditBudgetActivityTest {
                 walletsPicker(activity).onWalletsSelected(arrayOf(wallet(walletD, "Tokyo", "JPY")))
                 assertEquals(CurrencyManager.getCurrency("JPY"), moneyPicker(activity).currentCurrency)
                 assertEquals(
-                    CurrencyManager.getCurrency("JPY").symbol,
+                    CurrencyManager.getCurrency("JPY")?.symbol,
                     headerText(activity, R.id.currency_text_view)
                 )
                 save(activity)
@@ -776,12 +776,12 @@ class NewEditBudgetActivityTest {
                 )
                 assertEquals(View.GONE, activity.findViewById<View>(R.id.start_date_edit_text).visibility)
                 assertEquals(View.GONE, activity.findViewById<View>(R.id.end_date_edit_text).visibility)
-                assertEquals("2019-03-15", DateUtils.getSQLDateString(startDatePicker(activity).currentDateTime))
+                assertEquals("2019-03-15", DateUtils.getSQLDateString(checkNotNull(startDatePicker(activity).currentDateTime)))
                 assertEquals(
                     "2019-01-15",
-                    DateUtils.getSQLDateString(recurrencePicker(activity).currentSettings.startDate)
+                    DateUtils.getSQLDateString(checkNotNull(recurrencePicker(activity).currentSettings?.getStartDate()))
                 )
-                assertEquals(schedule.rule, recurrencePicker(activity).currentSettings.rule)
+                assertEquals(schedule.rule, recurrencePicker(activity).currentSettings?.rule)
                 save(activity)
                 assertTrue(activity.isFinishing)
             }
@@ -2083,7 +2083,7 @@ class NewEditBudgetActivityTest {
         }
 
         private fun fieldText(activity: NewEditBudgetActivity, viewId: Int): String {
-            return field(activity, viewId).textAsString
+            return field(activity, viewId).getTextAsString()
         }
 
         private fun headerText(activity: NewEditBudgetActivity, viewId: Int): String {

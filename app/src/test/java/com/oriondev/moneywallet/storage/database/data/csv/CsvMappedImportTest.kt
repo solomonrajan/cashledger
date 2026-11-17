@@ -428,10 +428,10 @@ class CsvMappedImportTest {
         val second = CSVDataImporter(context, file, commaMapping())
         try {
             first.importData()
-            assertEquals(1, first.roundedAmounts)
+            assertEquals(1, first.getRoundedAmounts())
             second.importData()
             assertEquals(1, second.alreadySavedRows)
-            assertEquals(0, second.roundedAmounts)
+            assertEquals(0, second.getRoundedAmounts())
         } finally {
             first.close()
             second.close()
@@ -449,10 +449,10 @@ class CsvMappedImportTest {
         val second = CSVDataImporter(context, file)
         try {
             first.importData()
-            assertEquals(1, first.roundedAmounts)
+            assertEquals(1, first.getRoundedAmounts())
             second.importData()
             assertEquals(1, second.alreadySavedRows)
-            assertEquals(0, second.roundedAmounts)
+            assertEquals(0, second.getRoundedAmounts())
         } finally {
             first.close()
             second.close()

@@ -74,10 +74,10 @@ class MultiPanelSelectionTest {
                     val selectedTitle = host.getString(R.string.title_transactions_selected, 1)
                     assertEquals(selectedTitle, host.getPrimaryToolbar()?.title?.toString().orEmpty())
                     panel.navigateBackSafely()
-                    assertEquals(1, adapter.selectedIds.size)
+                    assertEquals(1, adapter.getSelectedIds().size)
                     assertEquals(selectedTitle, host.getPrimaryToolbar()?.title?.toString().orEmpty())
                     assertTrue(host.navigateBack())
-                    assertEquals(0, adapter.selectedIds.size)
+                    assertEquals(0, adapter.getSelectedIds().size)
                     assertFalse(host.navigateBack())
                 }
             }
@@ -122,7 +122,7 @@ class MultiPanelSelectionTest {
 
         var selectionMode: TransactionSelectionMode? = null
 
-        override fun onHeaderClick(startDate: Date?, endDate: Date?) {
+        override fun onHeaderClick(startDate: Date, endDate: Date) {
             // never called here
         }
 

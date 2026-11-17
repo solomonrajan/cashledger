@@ -98,8 +98,11 @@ class MoneyPicker : Fragment() {
     val currentCurrency: CurrencyUnit?
         get() = mCurrentCurrency
 
-    val currentMoney: Long
+    var currentMoney: Long
         get() = mCurrentMoney
+        set(value) {
+            setMoney(value)
+        }
 
     fun showPicker() {
         // TODO let the user choose in preferences whether to start the calculator or bottom sheet keypad

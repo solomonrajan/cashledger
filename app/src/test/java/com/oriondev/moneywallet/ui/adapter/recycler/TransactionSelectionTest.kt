@@ -326,7 +326,7 @@ class TransactionSelectionTest {
 
         private fun selected(adapter: TransactionCursorAdapter): Set<Long> {
             val ids = HashSet<Long>()
-            for (id in adapter.selectedIds) {
+            for (id in adapter.getSelectedIds()) {
                 ids.add(id)
             }
             return ids

@@ -377,7 +377,7 @@ class CsvImportMappingTest {
             }
         }
 
-        private fun refusesAmount(cell: String, decimalComma: boolean) {
+        private fun refusesAmount(cell: String, decimalComma: Boolean) {
             try {
                 val parsed = CsvImportMapping.parseAmount(cell, decimalComma)
                 fail("$cell has to be refused, but it read as $parsed")

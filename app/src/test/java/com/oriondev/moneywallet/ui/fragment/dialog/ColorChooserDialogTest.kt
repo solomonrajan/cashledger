@@ -43,11 +43,11 @@ class ColorChooserDialogTest {
         var selected: Int? = null
         var dismissed: Boolean = false
 
-        override fun onColorSelection(dialog: ColorChooserDialog, color: Int) {
+        override fun onColorSelection(dialog: ColorChooserDialog?, color: Int) {
             selected = color
         }
 
-        override fun onColorChooserDismissed(dialog: ColorChooserDialog) {
+        override fun onColorChooserDismissed(dialog: ColorChooserDialog?) {
             dismissed = true
         }
     }

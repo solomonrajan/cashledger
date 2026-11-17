@@ -61,6 +61,43 @@ class AbstractDataImporterTest {
         override fun importData() {}
         override fun getRoundedAmounts(): Int = 0
         override fun close() {}
+
+        public override fun insertTransaction(
+            wallet: String,
+            currencyUnit: CurrencyUnit,
+            category: String,
+            datetime: Date,
+            money: Long,
+            direction: Int,
+            description: String?,
+            event: String?,
+            place: String?,
+            people: String?,
+            note: String?
+        ): Boolean {
+            return super.insertTransaction(
+                wallet, currencyUnit, category, datetime, money, direction,
+                description, event, place, people, note
+            )
+        }
+
+        public override fun insertTransaction(
+            walletId: Long,
+            category: String,
+            datetime: Date,
+            money: Long,
+            direction: Int,
+            description: String?,
+            event: String?,
+            place: String?,
+            people: String?,
+            note: String?
+        ): Boolean {
+            return super.insertTransaction(
+                walletId, category, datetime, money, direction,
+                description, event, place, people, note
+            )
+        }
     }
 
     @Before

@@ -686,7 +686,7 @@ class EquationSolverTest {
 
         assertFalse(equationSolver.execute(false))
         assertEquals("10", equationSolver.mFirstNumber)
-        assertTrue(equationSolver.isPendingOperation)
+        assertTrue(equationSolver.isPendingOperation())
     }
 
     // Saved state
@@ -759,7 +759,7 @@ class EquationSolverTest {
         doAnswer(getOrDefault).`when`(bundle).getString(anyString(), nullable(String::class.java))
         doAnswer(getOrDefault).`when`(bundle).getBoolean(anyString(), anyBoolean())
         doAnswer(get).`when`(bundle).getSerializable(anyString())
-        doAnswer(get).`when`(bundle).getParcelable(anyString())
+        doAnswer(get).`when`(bundle).getParcelable<Parcelable>(anyString())
         return bundle
     }
 
