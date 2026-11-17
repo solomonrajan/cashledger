@@ -17,4 +17,4 @@
  * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':app'
+include(":app")
