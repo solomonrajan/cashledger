@@ -200,7 +200,7 @@ class ImportExportIntentService : IntentService("ImportExportIntentService") {
         return created
     }
 
-    override fun onHandleIntent(intent: Intent?) {
+    public override fun onHandleIntent(intent: Intent?) {
         if (intent != null) {
             mReporter = TaskReporter(this)
             mToken = intent.getStringExtra(TOKEN)

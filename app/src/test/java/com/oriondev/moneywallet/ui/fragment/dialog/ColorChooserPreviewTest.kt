@@ -159,12 +159,12 @@ class ColorChooserPreviewTest {
         var previews: Int = 0
             private set
 
-        override fun onColorSelection(dialog: ColorChooserDialog, color: Int) {}
+        override fun onColorSelection(dialog: ColorChooserDialog?, color: Int) {}
 
-        override fun onColorChooserDismissed(dialog: ColorChooserDialog) {}
+        override fun onColorChooserDismissed(dialog: ColorChooserDialog?) {}
 
         /** As the engine does, which refuses to override the color that is stored. */
-        override fun onColorPreview(dialog: ColorChooserDialog, color: Int): Boolean {
+        override fun onColorPreview(dialog: ColorChooserDialog?, color: Int): Boolean {
             previews++
             return color != PRESELECT
         }

@@ -33,6 +33,7 @@ import org.robolectric.Robolectric
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows
 import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowCanvas
 import org.robolectric.shadows.ShadowLegacyCanvas
 
 /**
@@ -72,7 +73,7 @@ class MaterialEditTextTest {
         return view
     }
 
-    private fun bottomLineOf(view: MaterialEditText): ShadowLegacyCanvas.RectPaintHistoryEvent {
+    private fun bottomLineOf(view: MaterialEditText): ShadowCanvas.RectPaintHistoryEvent {
         val canvas = Canvas()
         view.onDrawBottomLine(canvas)
         val shadow = Shadows.shadowOf(canvas) as ShadowLegacyCanvas
@@ -84,7 +85,7 @@ class MaterialEditTextTest {
         return shadow.lastDrawnRect
     }
 
-    private fun assertRunsTheFullWidth(line: ShadowLegacyCanvas.RectPaintHistoryEvent) {
+    private fun assertRunsTheFullWidth(line: ShadowCanvas.RectPaintHistoryEvent) {
         assertEquals("the line does not start at the side padding", SIDE_PADDING.toFloat(), line.left, 0f)
         assertEquals(
             "the line does not end at the side padding",

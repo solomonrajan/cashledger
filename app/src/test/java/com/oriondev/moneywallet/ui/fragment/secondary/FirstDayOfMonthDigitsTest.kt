@@ -112,10 +112,10 @@ class FirstDayOfMonthDigitsTest {
         onSetting(12) { preference, dialog ->
             assertEntries(dialog, PERSIAN_ZERO.toChar(), PERSIAN_NINE.toChar())
             assertEquals("۱۲", preference.summary?.toString().orEmpty())
-            assertEquals("12", preference.value)
+            assertEquals("12", preference.getValue())
             choose(dialog, 14)
             assertEquals(15, PreferenceManager.getFirstDayOfMonth())
-            assertEquals("15", preference.value)
+            assertEquals("15", preference.getValue())
             assertEquals("۱۵", preference.summary?.toString().orEmpty())
         }
     }
@@ -126,7 +126,7 @@ class FirstDayOfMonthDigitsTest {
         onSetting(12) { preference, dialog ->
             assertEntries(dialog, '0', '9')
             assertEquals("12", preference.summary?.toString().orEmpty())
-            assertEquals("12", preference.value)
+            assertEquals("12", preference.getValue())
             choose(dialog, 14)
             assertEquals(15, PreferenceManager.getFirstDayOfMonth())
             assertEquals("15", preference.summary?.toString().orEmpty())

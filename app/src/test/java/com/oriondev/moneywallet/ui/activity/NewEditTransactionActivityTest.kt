@@ -426,7 +426,7 @@ class NewEditTransactionActivityTest {
             scenario.onActivity { activity ->
                 assertEquals(
                     "Alice",
-                    activity.findViewById<MaterialEditText>(R.id.people_edit_text).textAsString
+                    activity.findViewById<MaterialEditText>(R.id.people_edit_text).getTextAsString()
                 )
                 // the id is what files the row; the label only shows the name
                 val people = checkNotNull(personPicker(activity).currentPeople)
@@ -1032,11 +1032,11 @@ class NewEditTransactionActivityTest {
         }
 
         private fun walletField(activity: NewEditTransactionActivity): String {
-            return activity.findViewById<MaterialEditText>(R.id.wallet_edit_text).textAsString
+            return activity.findViewById<MaterialEditText>(R.id.wallet_edit_text).getTextAsString()
         }
 
         private fun descriptionField(activity: NewEditTransactionActivity): String {
-            return activity.findViewById<MaterialEditText>(R.id.description_edit_text).textAsString
+            return activity.findViewById<MaterialEditText>(R.id.description_edit_text).getTextAsString()
         }
 
         private fun save(activity: NewEditTransactionActivity) {

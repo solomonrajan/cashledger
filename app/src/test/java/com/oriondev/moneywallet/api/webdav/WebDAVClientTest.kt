@@ -108,13 +108,13 @@ class WebDAVClientTest {
         val files = parse(xml, "/dav/", "backups")
 
         assertEquals(2, files.size)
-        assertEquals("one.zip", files[0].name)
-        assertEquals("backups/one.zip", files[0].path)
-        assertEquals(1234L, files[0].size)
-        assertFalse(files[0].isDirectory)
-        assertEquals("nested", files[1].name)
-        assertTrue(files[1].isDirectory)
-        assertEquals(0L, files[1].size)
+        assertEquals("one.zip", files[0].getName())
+        assertEquals("backups/one.zip", files[0].getPath())
+        assertEquals(1234L, files[0].getSize())
+        assertFalse(files[0].isDirectory())
+        assertEquals("nested", files[1].getName())
+        assertTrue(files[1].isDirectory())
+        assertEquals(0L, files[1].getSize())
     }
 
     @Test
@@ -130,8 +130,8 @@ class WebDAVClientTest {
         val files = parse(xml, "/dav/", "")
 
         assertEquals(1, files.size)
-        assertEquals("two.zip", files[0].name)
-        assertEquals(7L, files[0].size)
+        assertEquals("two.zip", files[0].getName())
+        assertEquals(7L, files[0].getSize())
     }
 
     @Test
@@ -147,7 +147,7 @@ class WebDAVClientTest {
         val files = parse(xml, "/dav/", "")
 
         assertEquals(1, files.size)
-        assertEquals("my backup.zip", files[0].name)
+        assertEquals("my backup.zip", files[0].getName())
     }
 
     @Test
@@ -163,7 +163,7 @@ class WebDAVClientTest {
         val files = parse(xml, "/dav/", "")
 
         assertEquals(1, files.size)
-        assertEquals(0L, files[0].size)
+        assertEquals(0L, files[0].getSize())
     }
 
     companion object {
