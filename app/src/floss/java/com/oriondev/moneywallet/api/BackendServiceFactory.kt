@@ -62,8 +62,8 @@ object BackendServiceFactory {
                 return DiskBackendServiceAPI()
             }
 
-            override fun createFile(encoded: String?): IFile {
-                return LocalFile(encoded)
+            override fun createFile(encoded: String?): IFile? {
+                return if (encoded != null) LocalFile(encoded) else null
             }
         })
         descriptors.add(object : BackendDescriptor(SERVICE_ID_SAF, R.drawable.ic_storage_black_24dp) {
