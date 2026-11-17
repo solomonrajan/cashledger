@@ -433,9 +433,6 @@ class ThemeEngine private constructor(context: Context) : ITheme {
             return sInstance ?: throw RuntimeException("ThemeEngine not initialized!")
         }
 
-        val theme: ITheme?
-            get() = sInstance
-
         @JvmStatic
         fun applyTheme(view: View?, propagate: Boolean) {
             val instance = sInstance

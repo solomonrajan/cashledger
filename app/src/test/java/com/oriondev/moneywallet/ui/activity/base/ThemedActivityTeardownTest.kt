@@ -48,7 +48,7 @@ class ThemedActivityTeardownTest {
         val activity = controller.get()
         activity.supportFragmentManager
             .beginTransaction().add(PreviewEndingFragment(), "ending").commitNow()
-        val currentPrimary = ThemeEngine.theme?.colorPrimary ?: 0
+        val currentPrimary = ThemeEngine.getTheme().colorPrimary
         ThemeEngine.previewColorPrimary(currentPrimary xor 0x00FFFFFF)
 
         controller.pause().stop().destroy()

@@ -206,7 +206,7 @@ class MainActivityTest {
                 assertTrue(drawer(activity).background is MaterialShapeDrawable)
                 val bg = drawer(activity).background as? MaterialShapeDrawable
                 assertEquals(
-                    ThemeEngine.theme?.drawerBackgroundColor,
+                    ThemeEngine.getTheme().drawerBackgroundColor,
                     bg?.fillColor?.defaultColor
                 )
                 assertFalse(ElevationOverlayProvider(activity).isThemeElevationOverlayEnabled)
