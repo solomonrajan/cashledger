@@ -35,7 +35,12 @@ import com.oriondev.moneywallet.ui.activity.PlacePickerActivity
 class MapPlacePicker : Fragment() {
 
     private var controller: Controller? = null
-    private var currentPlace: Place? = null
+
+    var currentPlace: Place? = null
+        set(value) {
+            field = value
+            fireCallbackSafely()
+        }
 
     val isSelected: Boolean
         get() = currentPlace != null
@@ -49,11 +54,12 @@ class MapPlacePicker : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        currentPlace = if (savedInstanceState != null) {
+        val initialPlace: Place? = if (savedInstanceState != null) {
             savedInstanceState.getParcelable(SS_CURRENT_PLACE)
         } else {
             arguments?.getParcelable(ARG_DEFAULT_PLACE)
         }
+        currentPlace = initialPlace
     }
 
     @Deprecated("Deprecated in Java")
@@ -74,7 +80,6 @@ class MapPlacePicker : Fragment() {
 
     fun setCurrentPlace(place: Place?) {
         currentPlace = place
-        fireCallbackSafely()
     }
 
     fun getCurrentPlace(): Place? {
@@ -98,7 +103,6 @@ class MapPlacePicker : Fragment() {
             val act = activity
             if (act != null && resultCode == Activity.RESULT_OK && data != null) {
                 currentPlace = data.getParcelableExtra(PlacePickerActivity.RESULT_PLACE)
-                fireCallbackSafely()
             }
         } else {
             @Suppress("DEPRECATION")

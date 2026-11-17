@@ -96,7 +96,7 @@ class PlacePickerActivity : SinglePanelActivity() {
     override fun onMenuItemClick(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_select_place) {
             val wrapper = mapView
-            if (wrapper != null && wrapper.isMapReady()) {
+            if (wrapper != null && wrapper.isMapReady) {
                 val coordinates = wrapper.getCenterCoordinates()
                 val place = Place(0L, null, null, null, coordinates)
                 val intent = Intent().apply {
