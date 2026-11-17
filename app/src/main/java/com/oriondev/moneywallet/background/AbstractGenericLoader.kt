@@ -40,9 +40,6 @@ abstract class AbstractGenericLoader<T>(context: Context) : AsyncTaskLoader<T>(c
      */
     open fun getObservedUri(): Uri? = null
 
-    open val observedUri: Uri?
-        get() = getObservedUri()
-
     /* Runs on the UI thread */
     override fun deliverResult(genericData: T?) {
         mGenericData = genericData
