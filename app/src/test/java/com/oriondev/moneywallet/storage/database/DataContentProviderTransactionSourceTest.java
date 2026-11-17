@@ -63,31 +63,22 @@ public class DataContentProviderTransactionSourceTest {
             "\"(?:\\\\.|[^\"\\\\])*\"|//.*?$|/[*].*?[*]/",
             Pattern.DOTALL | Pattern.MULTILINE);
 
-    private static File findSourceFile(String relativePath) {
-        File file = new File(relativePath);
-        if (!file.exists()) {
-            file = new File("app/" + relativePath);
-        }
-        return file;
-    }
-
-    private boolean isKotlin() {
-        return findSourceFile("src/main/java/com/oriondev/moneywallet/storage/database/DataContentProvider.kt").exists();
-    }
-
     private String readSource() {
-        File file = findSourceFile("src/main/java/com/oriondev/moneywallet/storage/database/DataContentProvider.kt");
+        String path = "src/main/java/com/oriondev/moneywallet/storage/database/DataContentProvider.java";
+        File file = new File(path);
         if (!file.exists()) {
-            file = findSourceFile("src/main/java/com/oriondev/moneywallet/storage/database/DataContentProvider.java");
+            // a runner rooted at the repo root instead of the module, which the precedent
+            // handles the same way
+            file = new File("app/" + path);
         }
         if (!file.exists()) {
-            fail("Cannot find DataContentProvider at " + file.getAbsolutePath());
+            fail("Cannot find DataContentProvider.java at " + file.getAbsolutePath());
         }
         try {
             String source = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
             return STRIPPED.matcher(source).replaceAll(" ");
         } catch (IOException e) {
-            fail("Cannot read DataContentProvider: " + e.getMessage());
+            fail("Cannot read DataContentProvider.java: " + e.getMessage());
             return null;
         }
     }
@@ -113,41 +104,18 @@ public class DataContentProviderTransactionSourceTest {
             "private int updateInTransaction(",
     };
 
-    private String[][] writeMethods() {
-        if (isKotlin()) {
-            return new String[][] {
-                    {"fun insert(", "insertInTransaction(database,"},
-                    {"fun delete(", "deleteInTransaction(database,"},
-                    {"fun update(", "updateInTransaction(database,"},
-            };
-        }
-        return WRITE_METHODS;
-    }
-
-    private String[] transactionBodies() {
-        if (isKotlin()) {
-            return new String[] {
-                    "fun insertInTransaction(",
-                    "fun deleteInTransaction(",
-                    "fun updateInTransaction(",
-            };
-        }
-        return TRANSACTION_BODIES;
-    }
-
     @Test
     public void everyWriteMethodRunsItsBodyInsideATransaction() {
         String source = readSource();
-        for (String[] method : writeMethods()) {
+        for (String[] method : WRITE_METHODS) {
             String body = bodyOf(source, method[0]);
             // inSharedTransaction and not inTransaction directly. It is the one that holds the
             // swap lock across resolving the helper AND running the transaction, so a restore
             // replacing the database cannot land between the two and leave the write running on
             // a helper that has just been closed
-            String sharedTxnCall = isKotlin() ? "SQLDatabase.inSharedTransaction(context" : "SQLDatabase.inSharedTransaction(getContext(),";
             assertTrue(method[0] + " no longer goes through SQLDatabase.inSharedTransaction, so "
                             + "a restore can swap the shared helper part way through its write",
-                    body.contains(sharedTxnCall));
+                    body.contains("SQLDatabase.inSharedTransaction(getContext(),"));
             // the whole call and not its halves. Asserting only that inSharedTransaction appears
             // leaves every way of handing the body something else, such as passing db() into it
             // or resolving the static again inside it
@@ -160,7 +128,7 @@ public class DataContentProviderTransactionSourceTest {
     @Test
     public void nothingInsideATransactionNotifiesTheObservers() {
         String source = readSource();
-        for (String signature : transactionBodies()) {
+        for (String signature : TRANSACTION_BODIES) {
             assertFalse(signature + " now calls notifyChange, which would announce a change that "
                             + "a rollback then undoes",
                     bodyOf(source, signature).contains("notifyChange("));
@@ -170,7 +138,7 @@ public class DataContentProviderTransactionSourceTest {
     @Test
     public void noBodyResolvesTheSharedHelperForItself() {
         String source = readSource();
-        for (String signature : transactionBodies()) {
+        for (String signature : TRANSACTION_BODIES) {
             String body = bodyOf(source, signature);
             // every way back to the shared helper, not just the one the provider happens to use.
             // A body that reached it again could be handed a different helper than the one its
@@ -186,15 +154,13 @@ public class DataContentProviderTransactionSourceTest {
     @Test
     public void thePreferenceWriteStaysOutsideTheTransaction() {
         String source = readSource();
-        String deleteInTxnSig = isKotlin() ? "fun deleteInTransaction(" : "private int deleteInTransaction(";
-        String deleteSig = isKotlin() ? "fun delete(" : "public int delete(";
         assertFalse("deleteInTransaction writes the current wallet preference again. That write "
                         + "and the broadcast behind it cannot be rolled back, so a commit that "
                         + "fails would leave the wallet in the ledger and the preference already "
                         + "moved off it",
-                bodyOf(source, deleteInTxnSig).contains("setCurrentWallet("));
+                bodyOf(source, "private int deleteInTransaction(").contains("setCurrentWallet("));
         assertTrue("delete no longer resets the current wallet after the commit, so deleting the "
                         + "wallet in use leaves every query filtering on an id that is gone",
-                bodyOf(source, deleteSig).contains("setCurrentWallet("));
+                bodyOf(source, "public int delete(").contains("setCurrentWallet("));
     }
 }
