@@ -29,6 +29,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MenuRes
+import androidx.annotation.VisibleForTesting
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.oriondev.moneywallet.R
@@ -47,7 +48,9 @@ abstract class SecondaryPanelFragment : Fragment(), Toolbar.OnMenuItemClickListe
     companion object {
         private const val SS_ITEM_ID = "SecondaryPanelFragment::SavedState::ItemId"
 
-        private val sDeleteExecutor: Executor = Executors.newSingleThreadExecutor { r ->
+        @JvmField
+        @VisibleForTesting
+        internal val sDeleteExecutor: Executor = Executors.newSingleThreadExecutor { r ->
             Thread(r, "SecondaryPanelDelete")
         }
         private val sMainHandler = Handler(Looper.getMainLooper())
