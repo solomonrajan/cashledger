@@ -78,23 +78,32 @@ public class WalletWidgetObserverSourceTest {
             "\\.\\s*registerContentObserver\\s*\\(");
 
     private String source() {
-        String path = "src/main/java/com/oriondev/moneywallet/ui/widget/WalletWidgetObserver.java";
+        String ktPath = "src/main/java/com/oriondev/moneywallet/ui/widget/WalletWidgetObserver.kt";
+        String javaPath = "src/main/java/com/oriondev/moneywallet/ui/widget/WalletWidgetObserver.java";
+        File file = findSourceFile(ktPath);
+        if (!file.exists()) {
+            file = findSourceFile(javaPath);
+        }
+        if (!file.exists()) {
+            fail("Cannot find WalletWidgetObserver source at " + file.getAbsolutePath());
+        }
+        try {
+            String read = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+            return STRIPPED.matcher(read).replaceAll(" ");
+        } catch (IOException e) {
+            fail("Cannot read " + file.getName() + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    private static File findSourceFile(String path) {
         File file = new File(path);
         if (!file.exists()) {
             // a runner rooted at the repo root instead of the module, which the precedent
             // handles the same way
             file = new File("app/" + path);
         }
-        if (!file.exists()) {
-            fail("Cannot find " + path + " at " + file.getAbsolutePath());
-        }
-        try {
-            String read = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-            return STRIPPED.matcher(read).replaceAll(" ");
-        } catch (IOException e) {
-            fail("Cannot read " + path + ": " + e.getMessage());
-            return null;
-        }
+        return file;
     }
 
     @Test
