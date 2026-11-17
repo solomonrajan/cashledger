@@ -28,13 +28,13 @@ import com.github.mikephil.charting.data.BarData
 class PeriodDetailSummaryData(
     val netIncomes: Money,
     private val mBarDataList: List<BarData>,
-    private val mBarDataCurrencies: List<CurrencyUnit>,
+    private val mBarDataCurrencies: List<CurrencyUnit?>,
     private val mPeriodList: List<PeriodMoney>
 ) {
 
     fun getChartData(index: Int): BarData = mBarDataList[index]
 
-    fun getChartCurrency(index: Int): CurrencyUnit = mBarDataCurrencies[index]
+    fun getChartCurrency(index: Int): CurrencyUnit? = mBarDataCurrencies[index]
 
     fun getChartCount(): Int = mBarDataList.size
 

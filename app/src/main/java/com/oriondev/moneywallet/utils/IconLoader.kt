@@ -38,8 +38,8 @@ object IconLoader {
     @JvmStatic
     fun getColorIconString(source: String?): String {
         val trimmed = source?.trim()?.replace(" +".toRegex(), " ")
-        if (!TextUtils.isEmpty(trimmed)) {
-            val parts = trimmed!!.split(" ")
+        if (!trimmed.isNullOrEmpty()) {
+            val parts = trimmed.split(" ")
             return if (parts.size >= 2 && parts[0].isNotEmpty() && parts[1].isNotEmpty()) {
                 ("${parts[0][0]}${parts[1][0]}").uppercase()
             } else {
