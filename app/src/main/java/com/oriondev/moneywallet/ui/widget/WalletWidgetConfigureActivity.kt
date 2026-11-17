@@ -163,10 +163,10 @@ class WalletWidgetConfigureActivity :
         }
     }
 
-    override fun getActivityTileRes(mode: Mode?): Int =
+    override fun getActivityTileRes(mode: Mode): Int =
         R.string.title_activity_widget_configure
 
-    override fun onSaveChanges(mode: Mode?) {
+    override fun onSaveChanges(mode: Mode) {
         val walletEditText = mWalletEditText ?: return
         if (!walletEditText.validate()) {
             return

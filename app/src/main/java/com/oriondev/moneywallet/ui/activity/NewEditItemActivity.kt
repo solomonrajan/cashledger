@@ -1,0 +1,140 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * This file is part of MoneyWallet.
+ *
+ * MoneyWallet is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MoneyWallet is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.oriondev.moneywallet.ui.activity
+
+import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.annotation.CallSuper
+import androidx.annotation.MenuRes
+import androidx.annotation.StringRes
+import com.oriondev.moneywallet.R
+import com.oriondev.moneywallet.ui.activity.base.SinglePanelScrollActivity
+import java.util.Date
+
+/**
+ * This activity is an abstract implementation that act as a base for every
+ * activity that is capable to insert or modify an item of the application.
+ * It simplifies the development creating a much easier api to use.
+ */
+abstract class NewEditItemActivity : SinglePanelScrollActivity() {
+
+    enum class Mode {
+        /**
+         * This mode indicates that a new item must be created.
+         */
+        NEW_ITEM,
+
+        /**
+         * When the mode is EDIT_ITEM, the caller MUST set a valid item id or a RuntimeException
+         * is thrown.
+         */
+        EDIT_ITEM
+    }
+
+    private var mMode: Mode = Mode.NEW_ITEM
+    private var mId: Long = -1L
+
+    @CallSuper
+    override fun onViewCreated(savedInstanceState: Bundle?) {
+        val callerIntent = intent
+        if (callerIntent != null) {
+            val modeExtra = callerIntent.getSerializableExtra(MODE) as? Mode
+            if (modeExtra != null) {
+                mMode = modeExtra
+                if (modeExtra == Mode.EDIT_ITEM) {
+                    mId = callerIntent.getLongExtra(ID, 0L)
+                    if (mId <= 0L) {
+                        throw RuntimeException("Trying to edit an item with an invalid id")
+                    }
+                } else if (modeExtra == Mode.NEW_ITEM) {
+                    mId = -1L
+                }
+            } else {
+                mMode = Mode.NEW_ITEM
+                mId = -1L
+            }
+        }
+    }
+
+    @StringRes
+    override fun getActivityTitleRes(): Int {
+        return getActivityTileRes(mMode)
+    }
+
+    protected open fun getMode(): Mode = mMode
+
+    protected open fun getItemId(): Long = mId
+
+    /**
+     * This method is an implementation of the standard [SinglePanelActivity.getActivityTitleRes]
+     * to let the sub activity return the correct title according to the current mode.
+     * @param mode current mode of the activity.
+     * @return the string to set as title.
+     */
+    @StringRes
+    protected abstract fun getActivityTileRes(mode: Mode): Int
+
+    @MenuRes
+    override fun onInflateMenu(): Int {
+        return R.menu.menu_new_edit_item
+    }
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_save_changes) {
+            onSaveChanges(mMode)
+        }
+        return false
+    }
+
+    /**
+     * When this method is called, the sub activity should check for data consistency
+     * and correctness, then modify the data inside the content provider.
+     * @param mode current mode of the activity.
+     */
+    protected abstract fun onSaveChanges(mode: Mode)
+
+    /**
+     * Ends a save, saying first that the item is not counted yet when the date it was saved with
+     * is ahead of now. The transaction and transfer lists, the per item lists, the overview and
+     * every balance all filter on DATETIME(date) <= DATETIME('now', 'localtime'), so a row dated
+     * ahead is written and then counts for nothing, and the save reads as though it did nothing.
+     *
+     * A toast rather than a dialog, because this activity is closing and a dialog would have to
+     * hold it open to be read.
+     *
+     * The wording says what the balance does rather than where the row is. The editor can close
+     * back to another application entirely, or to search, which carries no date filter and does
+     * list the row.
+     *
+     * @param date the date the item was saved with.
+     */
+    protected open fun finishSaveDatedAt(date: Date?) {
+        if (date != null && date.after(Date())) {
+            Toast.makeText(this, R.string.message_saved_dated_ahead, Toast.LENGTH_LONG).show()
+        }
+        finish()
+    }
+
+    companion object {
+        const val MODE = "NewEditItemActivity::Mode"
+        const val ID = "NewEditItemActivity::Id"
+    }
+}

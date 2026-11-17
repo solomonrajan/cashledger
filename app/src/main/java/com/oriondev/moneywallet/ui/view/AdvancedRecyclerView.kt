@@ -79,13 +79,17 @@ class AdvancedRecyclerView : SwipeRefreshLayout {
 
     fun getTextView(): TextView = mEmptyTextView
 
-    fun setLayoutManager(layoutManager: RecyclerView.LayoutManager?) {
-        mRecyclerView.layoutManager = layoutManager
-    }
+    var layoutManager: RecyclerView.LayoutManager?
+        get() = mRecyclerView.layoutManager
+        set(value) {
+            mRecyclerView.layoutManager = value
+        }
 
-    fun setAdapter(adapter: RecyclerView.Adapter<*>?) {
-        mRecyclerView.adapter = adapter
-    }
+    var adapter: RecyclerView.Adapter<*>?
+        get() = mRecyclerView.adapter
+        set(value) {
+            mRecyclerView.adapter = value
+        }
 
     /**
      * The text is also written by [setState]. Setting it on the view here as well

@@ -1,0 +1,143 @@
+/*
+ * Copyright (c) 2018.
+ *
+ * This file is part of MoneyWallet.
+ *
+ * MoneyWallet is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * MoneyWallet is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with MoneyWallet.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package com.oriondev.moneywallet.ui.activity
+
+import android.app.Activity
+import android.content.ContentResolver
+import android.content.ContentUris
+import android.content.ContentValues
+import android.database.Cursor
+import android.net.Uri
+import android.os.Bundle
+import android.view.MenuItem
+import androidx.annotation.MenuRes
+import androidx.loader.content.CursorLoader
+import androidx.loader.content.Loader
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.oriondev.moneywallet.R
+import com.oriondev.moneywallet.storage.database.Contract
+import com.oriondev.moneywallet.storage.database.DataContentProvider
+import com.oriondev.moneywallet.ui.activity.base.SinglePanelSimpleListActivity
+import com.oriondev.moneywallet.ui.adapter.recycler.AbstractCursorAdapter
+import com.oriondev.moneywallet.ui.adapter.recycler.CategoryRuleSortCursorAdapter
+import com.oriondev.moneywallet.ui.view.AdvancedRecyclerView
+
+/**
+ * The order the category rules are matched in, dragged into place by hand. The rule nearest the
+ * top is the one a description matching more than one rule is filed under.
+ */
+class CategoryRuleSortActivity : SinglePanelSimpleListActivity(), CategoryRuleSortCursorAdapter.CategoryRuleSortListener {
+
+    private var mItemTouchHelper: ItemTouchHelper? = null
+
+    override fun getActivityTitleRes(): Int = R.string.title_activity_category_rule_sort
+
+    @MenuRes
+    override fun onInflateMenu(): Int = R.menu.menu_save_changes
+
+    override fun onMenuItemClick(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_save_changes) {
+            saveChanges()
+        }
+        return false
+    }
+
+    override fun isFloatingActionButtonEnabled(): Boolean = false
+
+    override fun onPrepareRecyclerView(recyclerView: AdvancedRecyclerView) {
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        // the list screen's string tells the user to add a rule and there is no button for that
+        // here. The sort menu item is offered whatever the rule count is, so a user with no rules
+        // reaches this screen
+        recyclerView.setEmptyText(R.string.message_no_category_rule_found_sort)
+        recyclerView.isEnabled = false
+        // setup item touch helper and attach it to the recycler view
+        val touchHelper = ItemTouchHelper(object : ItemTouchHelper.Callback() {
+            override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+                return makeMovementFlags(dragFlags, 0)
+            }
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                val adapter = recyclerView.adapter
+                if (adapter is CategoryRuleSortCursorAdapter) {
+                    return adapter.moveItem(viewHolder.adapterPosition, target.adapterPosition)
+                }
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // not used here, only drag and drop is handled
+            }
+
+            override fun isLongPressDragEnabled(): Boolean {
+                // disable long press to drag: the only way to drag the rules is to click and
+                // drag the appropriate action image view at the end of it
+                return false
+            }
+        })
+        mItemTouchHelper = touchHelper
+        touchHelper.attachToRecyclerView(recyclerView.getRecyclerView())
+    }
+
+    override fun onCreateAdapter(): AbstractCursorAdapter<*> {
+        return CategoryRuleSortCursorAdapter(this)
+    }
+
+    override fun onCreateLoader(id: Int, args: Bundle?): Loader<Cursor> {
+        val uri: Uri = DataContentProvider.CONTENT_CATEGORY_RULES
+        val projection = arrayOf(
+            Contract.CategoryRule.ID,
+            Contract.CategoryRule.PATTERN,
+            Contract.CategoryRule.CATEGORY_NAME
+        )
+        val sortOrder = "${Contract.CategoryRule.INDEX} ASC, ${Contract.CategoryRule.ID} ASC"
+        return CursorLoader(this, uri, projection, null, null, sortOrder)
+    }
+
+    override fun onCategoryRuleDragStarted(viewHolder: RecyclerView.ViewHolder) {
+        mItemTouchHelper?.startDrag(viewHolder)
+    }
+
+    private fun saveChanges() {
+        val baseUri: Uri = DataContentProvider.CONTENT_CATEGORY_RULES
+        val contentResolver: ContentResolver = contentResolver
+        val adapter = getAdvancedRecyclerView()?.getRecyclerView()?.adapter
+        if (adapter is CategoryRuleSortCursorAdapter) {
+            val ruleIdsList: List<Long> = adapter.getSortedCategoryRuleIds()
+            for (i in ruleIdsList.indices) {
+                val ruleId = ruleIdsList[i]
+                val uri = ContentUris.withAppendedId(baseUri, ruleId)
+                val contentValues = ContentValues().apply {
+                    put(Contract.CategoryRule.INDEX, i + 1)
+                }
+                contentResolver.update(uri, contentValues, null, null)
+            }
+        }
+        setResult(Activity.RESULT_OK)
+        finish()
+    }
+}
