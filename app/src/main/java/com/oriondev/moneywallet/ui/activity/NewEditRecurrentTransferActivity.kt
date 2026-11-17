@@ -366,7 +366,7 @@ class NewEditRecurrentTransferActivity : NewEditItemActivity(),
                 put(Contract.RecurrentTransfer.CONFIRMED, mConfirmedCheckBox?.isChecked == true)
                 put(Contract.RecurrentTransfer.COUNT_IN_TOTAL, mCountInTotalCheckBox?.isChecked == true)
                 put(Contract.RecurrentTransfer.START_DATE, DateUtils.getSQLDateString(recurrenceSetting.getStartDate()))
-                put(Contract.RecurrentTransfer.RULE, recurrenceSetting.getRule())
+                put(Contract.RecurrentTransfer.RULE, recurrenceSetting.rule)
             }
             val contentResolver = contentResolver
             when (mode) {

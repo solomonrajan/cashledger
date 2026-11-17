@@ -549,7 +549,7 @@ class LegacyDatabaseImporter @Throws(ImportException::class) constructor(legacyD
                 val lastDate = transaction.mLastOccurrence?.let { DateUtils.getDateFromSQLDateString(it) }
                 val nextOccurrence = if (lastDate != null) recurrenceSetting.getNextOccurrence(lastDate) else null
                 transaction.mNextOccurrence = if (nextOccurrence != null) DateUtils.getSQLDateString(nextOccurrence) else null
-                transaction.mRule = recurrenceSetting.getRule()
+                transaction.mRule = recurrenceSetting.rule
                 transaction.mUUID = getStringSafely(cursor, LegacyDatabaseSchema.Recurrence.UUID)
                 transaction.mDeleted = getBooleanSafely(cursor, LegacyDatabaseSchema.Recurrence.DELETED)
                 transaction.mLastEdit = getLongSafely(cursor, LegacyDatabaseSchema.Recurrence.LAST_EDIT)
