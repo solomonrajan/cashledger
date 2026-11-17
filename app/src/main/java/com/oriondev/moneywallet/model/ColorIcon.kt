@@ -87,23 +87,21 @@ class ColorIcon : Icon {
         dest.writeString(mName)
     }
 
-    val color: Int
-        @ColorInt
-        get() = Color.parseColor(mColor)
+    @ColorInt
+    fun getColor(): Int = Color.parseColor(mColor)
 
-    val name: String
-        get() = mName
+    fun getName(): String = mName
 
     override fun getDrawable(context: Context): Drawable = getDrawable()
 
     fun getDrawable(): Drawable {
-        val iconColor = color
-        val backgroundColor = Color.argb(26, Color.red(iconColor), Color.green(iconColor), Color.blue(iconColor))
+        val color = getColor()
+        val backgroundColor = Color.argb(26, Color.red(color), Color.green(color), Color.blue(color))
         return TextDrawable.builder()
             .beginConfig()
             .width(60)
             .height(60)
-            .textColor(iconColor)
+            .textColor(color)
             .bold()
             .endConfig()
             .buildRound(mName, backgroundColor)
