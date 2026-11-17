@@ -78,13 +78,6 @@ class MapPlacePicker : Fragment() {
         outState.putParcelable(SS_CURRENT_PLACE, currentPlace)
     }
 
-    fun setCurrentPlace(place: Place?) {
-        currentPlace = place
-    }
-
-    fun getCurrentPlace(): Place? {
-        return currentPlace
-    }
 
     fun showPicker() {
         val intent = Intent(activity, PlacePickerActivity::class.java)
