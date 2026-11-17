@@ -158,16 +158,16 @@ class AbstractGenericLoaderTest {
             Group.MONTHLY,
             OverviewSetting.CashFlow.NET_INCOMES
         )
-        assertEquals(DataContentProvider.CONTENT_ALL, OverviewDataLoader(context, setting).observedUri)
-        assertEquals(DataContentProvider.CONTENT_ALL, PeriodDetailFlowLoader(context, start, end, false).observedUri)
+        assertEquals(DataContentProvider.CONTENT_ALL, OverviewDataLoader(context, setting).getObservedUri())
+        assertEquals(DataContentProvider.CONTENT_ALL, PeriodDetailFlowLoader(context, start, end, false).getObservedUri())
         assertEquals(
             DataContentProvider.CONTENT_ALL,
-            PeriodDetailSummaryLoader(context, start, end, PeriodDetailSummaryLoader.GROUP_BY_MONTH).observedUri
+            PeriodDetailSummaryLoader(context, start, end, PeriodDetailSummaryLoader.GROUP_BY_MONTH).getObservedUri()
         )
-        assertNull(LicenseLoader(context).observedUri)
-        assertNull(ChangeLogLoader(context).observedUri)
-        assertNull(IconGroupLoader(context).observedUri)
-        assertNull(JsonResourceLoader(context, "anything").observedUri)
+        assertNull(LicenseLoader(context).getObservedUri())
+        assertNull(ChangeLogLoader(context).getObservedUri())
+        assertNull(IconGroupLoader(context).getObservedUri())
+        assertNull(JsonResourceLoader(context, "anything").getObservedUri())
     }
 
     private fun watching(uri: Uri?): CountingLoader {
