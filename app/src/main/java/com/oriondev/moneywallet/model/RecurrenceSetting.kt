@@ -133,7 +133,8 @@ class RecurrenceSetting : Parcelable {
         return count ?: 1
     }
 
-    fun getRule(): String = mRecurrenceRule.toString()
+    val rule: String
+        get() = mRecurrenceRule.toString()
 
     override fun describeContents(): Int = 0
 

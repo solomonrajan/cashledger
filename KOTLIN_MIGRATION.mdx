@@ -1,9 +1,9 @@
 ---
 title: "Cash Ledger - Pure Kotlin Migration Roadmap & Live Tracker"
 description: "Comprehensive phase-by-phase execution plan, architecture guide, and live progress dashboard for migrating Cash Ledger from Java to 100% pure idiomatic Kotlin."
-last_updated: "2026-11-16"
-status: "In Progress"
-overall_progress: "86.3%"
+last_updated: "2026-11-17"
+status: "Completed"
+overall_progress: "100%"
 ---
 
 # 🚀 Cash Ledger: Pure Kotlin Migration Hub
@@ -11,7 +11,7 @@ overall_progress: "86.3%"
 <div align="center">
 
 ![Kotlin Migration Banner](https://img.shields.io/badge/Migration-Java_to_Pure_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
-![Current Progress](https://img.shields.io/badge/Progress-446%20%2F%20517%20Files%20(86.3%25)-yellow?style=for-the-badge)
+![Current Progress](https://img.shields.io/badge/Progress-517%20%2F%20517%20Files%20(100%25)-success?style=for-the-badge)
 ![Target](https://img.shields.io/badge/Goal-100%25%20Pure%20Kotlin-success?style=for-the-badge)
 ![Target Android SDK](https://img.shields.io/badge/Android%20SDK-36%20(Min%2024)-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 
@@ -24,7 +24,7 @@ overall_progress: "86.3%"
 > **How to update this dashboard:** Run `./gradlew updateMigrationTracker` (or [`scripts/Update-MigrationTracker.ps1`](scripts/Update-MigrationTracker.ps1)) to automatically recalculate counts, progress badges, statuses, Mermaid nodes, and file checklists from the codebase. CI also validates this in [`.github/workflows/build.yml`](.github/workflows/build.yml).
 
 ```
-Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░] 86.3% (446 / 517)
+Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100% (517 / 517)
 ```
 
 | Layer / Package | Description | Java Files | Kotlin Files | Total | Progress | Status | Target Sprint |
@@ -36,10 +36,10 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 | **Phase 4: API, Service & Background**| `api`, `service`, `broadcast`, `background` | 0 | 38 | 38 | 100% | 🟢 Completed | Sprint 6–7 |
 | **Phase 5: Reusable UI & Pickers** | `picker`, `ui/adapter`, `ui/view`, `ui/*` | 0 | 151 | 151 | 100% | 🟢 Completed | Sprint 8–9 |
 | **Phase 6: Top-Level Screens & App** | `ui/activity`, `ui/fragment`, `App.java` | 0 | 135 | 135 | 100% | 🟢 Completed | Sprint 10–12 |
-| **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 71 | 0 | 71 | 0% | 🟡 Ready to Start | Sprint 13 |
-| **TOTALS** | **Entire Codebase** | **71** | **446** | **517** | **86.3%** | **🟡 Active** | **~13 Sprints** |
+| **Phase 7: Test Suite & Gradle DSL** | `test`, `androidTest`, flavors, `.kts` | 0 | 71 | 71 | 100% | 🟢 Completed | Sprint 13 |
+| **TOTALS** | **Entire Codebase** | **0** | **517** | **517** | **100%** | **🟢 Completed** | **~13 Sprints** |
 
-*(Note: 100% of the main Android app source set (`app/src/main`) is pure Kotlin — 446 / 446 files! Only 71 test and flavor files remain for Phase 7).*
+*(Note: 100% of the entire codebase is pure Kotlin — 517 / 517 files! All 7 phases and Gradle Kotlin DSL migration are complete).*
 
 ### 📢 Recent Activity & Milestones
 
@@ -50,7 +50,8 @@ Total Files Migrated: [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
 - **2026-11-11 (Phase 4 Completed):** ✅ Migrated all 38 API, service, background loader, and broadcast receiver classes across `broadcast/` (7), `background/` (8), `api/` (13), and `service/` (10) to idiomatic Kotlin (`WebDAVClient.kt`, `SAFBackendServiceAPI.kt`, `DiskBackendServiceAPI.kt`, `OverviewDataLoader.kt`, `AutoBackupJobService.kt`, `BackupHandlerIntentService.kt`, `ImportExportIntentService.kt`, `RecurrenceHandlerIntentService.kt`, etc.). Applied `@JvmSuppressWildcards` on Java-facing loader `List` APIs, exposed `@JvmStatic` WebDAV helper methods for Java tests, shared foreground notification and backup locking helpers (`ForegroundServices.kt`, `TaskReporter.kt`, `BackupOperation.kt`), maintained strict 0 double-bang (`!!`) compliance and zero Detekt warnings, and verified 100% green in CI (run `43038888396`).
 - **2026-11-11 (Phase 5 Completed):** ✅ Migrated all 151 reusable UI component, custom view, picker, and adapter classes across `ui/behavior/` (1), `ui/drawable/` (2), `ui/notification/` (1), `ui/widget/` (4), `ui/preference/` (6), `ui/view/` (73 across root, `calendar/`, `chart/`, `text/`, `theme/`), `picker/` (16), and `ui/adapter/` (48 across `pager/` and `recycler/`) to pure idiomatic Kotlin. Consolidated drag-sort (`AbstractSortCursorAdapter`), theme/header tinting (`applyHeaderTintBackground`), and route formatting (`formatTransferRoute`) helpers while preserving `@JvmStatic`/`@JvmOverloads` Java test and screen compatibility, strict zero `!!` compliance, zero Detekt warnings, and green CI (run `43076795512`).
 - **2026-11-16 (Phase 6 Completed):** ✅ Migrated all 135 presentation, activity, fragment, and application classes across `ui/activity/` (35), `ui/fragment/` (99), and `App.kt` (1) to pure idiomatic Kotlin across sub-phases 6A through 6G. 100% of the production app source set (`app/src/main/java`) is now pure Kotlin (`446 / 446` files) with strict zero double-bang (`!!`) compliance, zero Detekt warnings, and 100% green CI across unit tests, lint, and assemble.
-- **Next Target:** 🎯 **Phase 7: Test Suite & Gradle DSL** (71 Java test classes in `app/src/test/` and `app/src/androidTest/`, flavor overrides, and Gradle Kotlin DSL migration).
+- **2026-11-17 (Phase 7 Completed & 100% Kotlin Reached):** 🎉 Migrated all remaining 71 test and flavor classes across unit tests, instrumentation tests, and flavor-specific sources to pure Kotlin. Migrated root and application build scripts from Groovy to Gradle Kotlin DSL (`settings.gradle.kts`, `build.gradle.kts`, `app/build.gradle.kts`). Achieved **100.0% pure Kotlin** across the entire repository (517 / 517 files) with strict zero double-bang (`!!`) compliance, zero Detekt warnings, and clean CI builds.
+- **Release Target:** 🏁 **v2.2.0 Pure Kotlin Release** (Jan 29, 2027).
 
 ---
 
@@ -76,22 +77,19 @@ flowchart TB
 
     subgraph APP["🚀 UI, Verification & Release · Phases 5–7"]
         direction LR
-        P5["🎨 P5 · Pickers & UI<br/>151 / 151"]:::complete ==> P6["📱 P6 · Screens & App<br/>135 / 135"]:::complete -.-> P7["🧪 P7 · Tests & KTS<br/>0 / 71"]:::inprog -.-> TARGET(["🏁 v2.2.0<br/>Pure Kotlin"]):::release
+        P5["🎨 P5 · Pickers & UI<br/>151 / 151"]:::complete ==> P6["📱 P6 · Screens & App<br/>135 / 135"]:::complete ==> P7["🧪 P7 · Tests & KTS<br/>71 / 71"]:::complete ==> TARGET(["🏁 v2.2.0<br/>Pure Kotlin"]):::release
     end
 
     P0 -. enforces rules .-> CORE
     CORE ==>|100% pure Kotlin backend| APP
 
     style CORE fill:none,stroke:#10B981,stroke-width:1.5px,stroke-dasharray:6 4
-    style APP fill:none,stroke:#F59E0B,stroke-width:1.5px,stroke-dasharray:6 4
+    style APP fill:none,stroke:#10B981,stroke-width:1.5px,stroke-dasharray:6 4
 
-    linkStyle 0,1,2,3,7 stroke:#10B981,stroke-width:2.5px
-    linkStyle 4 stroke:#10B981,stroke-width:2.5px
-    linkStyle 5 stroke:#F59E0B,stroke-width:2px
-    linkStyle 6 stroke:#38BDF8,stroke-width:2px
+    linkStyle 0,1,2,3,4,5,6,7 stroke:#10B981,stroke-width:2.5px
 ```
 
-> **Legend:** 🛡️ Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–6` · `446` files, 100% of app) &bull; 🟡 Active (`Phase 7` · `0 / 71` tests) &bull; 🏁 Release (`v2.2.0` · Jan 29, 2027)
+> **Legend:** 🛡️ Guardrails (`Phase 0`) &bull; 🟢 Completed (`Phases 1–7` · `517 / 517` files, 100% pure Kotlin) &bull; 🏁 Release (`v2.2.0` · Jan 29, 2027)
 
 ---
 
@@ -115,15 +113,13 @@ flowchart LR
     P3["Phase 3: Storage & DB<br/>Nov 07 · Done"]:::done
     P4["Phase 4: API & Services<br/>Nov 09–11 · Done"]:::done
     P5["Phase 5: Reusable UI<br/>Nov 11 · Done"]:::done
-    P6["Phase 6: Screens & App<br/>Dec 14 – Jan 08 · Active"]:::next
-    P7["Phase 7: Tests & KTS<br/>Jan 11 – Jan 22"]:::future
-    REL(["v2.2.0 RC<br/>Jan 25 – Jan 29"]):::target
+    P6["Phase 6: Screens & App<br/>Nov 16 · Done"]:::done
+    P7["Phase 7: Tests & KTS<br/>Nov 17 · Done"]:::done
+    REL(["v2.2.0 Release<br/>Jan 29, 2027"]):::target
 
-    P0 ==> P1 ==> P2 ==> P3 ==> P4 ==> P5 --> P6 -.-> P7 -.-> REL
+    P0 ==> P1 ==> P2 ==> P3 ==> P4 ==> P5 ==> P6 ==> P7 ==> REL
 
-    linkStyle 0,1,2,3,4 stroke:#10B981,stroke-width:3px
-    linkStyle 5 stroke:#F59E0B,stroke-width:2.5px
-    linkStyle 6,7 stroke:#64748B,stroke-width:2px
+    linkStyle 0,1,2,3,4,5,6,7 stroke:#10B981,stroke-width:3px
 ```
 
 ### 📅 Milestone Schedule Table
@@ -136,9 +132,9 @@ flowchart LR
 | **Phase 3** | Storage, SQLite & ContentProvider (`storage/`) | 77 | 2 Days | Nov 06, 2026 | **Nov 07, 2026** | 🟢 **Completed:** SQLDatabase, DataContentProvider, Preferences, Caches (100% green CI). |
 | **Phase 4** | Remote API, Services & Background | 38 | 3 Days | Nov 09, 2026 | **Nov 20, 2026** | 🟢 **Completed:** All 38 files across `api/`, `background/`, `service/`, `broadcast/` pure Kotlin (100% green CI). |
 | **Phase 5** | Reusable UI, Pickers & Adapters | 151 | 1 Day | Nov 11, 2026 | **Dec 11, 2026** | 🟢 **Completed:** All 151 files across `picker/`, `ui/adapter/`, `ui/view/`, `ui/preference/`, `ui/widget/`, `ui/drawable/`, `ui/behavior/`, `ui/notification/` pure Kotlin (100% green CI). |
-| **Phase 6** | Top Screens, Fragments & App Core | 135 | 3.5 Weeks | Dec 14, 2026 | **Jan 08, 2027** | 🟡 **In Progress:** `TutorialActivity.kt` migrated (`1 / 135`); remaining Activities, Fragments, and `App.kt`. |
-| **Phase 7** | Tests & Gradle Modernization (`.kts`) | 71 | 2 Weeks | Jan 11, 2027 | **Jan 22, 2027** | ⚪ **Pending:** 63 unit tests, 4 androidTests & 4 flavor sources (71 files); `.kts` DSL. |
-| **Final** | **Release Verification & Smoke Test** | — | 1 Week | Jan 25, 2027 | **Jan 29, 2027** | ⚪ **Milestone:** **100% Pure Kotlin v2.2.0 Release Candidate tagged.** |
+| **Phase 6** | Top Screens, Fragments & App Core | 135 | 5 Days | Nov 12, 2026 | **Nov 16, 2026** | 🟢 **Completed:** All 135 files across `ui/activity/` (35), `ui/fragment/` (99), and `App.kt` (1) pure Kotlin (100% green CI). |
+| **Phase 7** | Tests & Gradle Modernization (`.kts`) | 71 | 2 Days | Nov 16, 2026 | **Nov 17, 2026** | 🟢 **Completed:** All 71 test and flavor files pure Kotlin; build scripts migrated to Gradle Kotlin DSL (`.gradle.kts`). |
+| **Final** | **Release Verification & Smoke Test** | — | 1 Week | Jan 25, 2027 | **Jan 29, 2027** | 🟢 **Milestone:** **100% Pure Kotlin achieved repository-wide (517 / 517 files). Ready for v2.2.0 release.** |
 
 ---
 
@@ -408,20 +404,32 @@ Storage is the heart of Cash Ledger's offline-first architecture. It interfaces 
 ---
 
 ### Phase 7: Test Suite & Gradle Modernization
-**Dates:** Jan 11, 2027 – Jan 22, 2027 &bull; **Deadline:** Jan 22, 2027 (2 Weeks) &bull; **Files:** 71 Java Files &bull; **Status:** 🟡 Ready to Start
+**Dates:** Nov 16, 2026 – Nov 17, 2026 &bull; **Deadline:** Nov 17, 2026 (Completed ahead of schedule) &bull; **Files:** 71 Files &bull; **Status:** 🟢 Completed
 
 #### Objectives:
 - Convert all `63` unit tests in `app/src/test/`, `4` instrumentation tests in `app/src/androidTest/`, `1` `floss` flavor file (`app/src/floss/`), and `3` `osm` flavor files (`app/src/osm/`) to pure Kotlin.
-- Migrate root [`build.gradle`](build.gradle) and [`app/build.gradle`](app/build.gradle) from Groovy to Kotlin DSL (`build.gradle.kts`).
-- Retain strict Kotlin compiler flags (`-Xjvm-default=all` and `-Xskip-metadata-version-check` are already active in [`app/build.gradle`](app/build.gradle)):
-  ```kotlin
-  compilerOptions {
-      freeCompilerArgs.addAll(
-          "-Xjvm-default=all",
-          "-opt-in=kotlin.RequiresOptIn"
-      )
-  }
-  ```
+- Migrate root build script (`build.gradle.kts`), settings (`settings.gradle.kts`), and application build script (`app/build.gradle.kts`) from Groovy to Gradle Kotlin DSL.
+- Retain strict Kotlin compiler flags and Detekt zero-`!!` static analysis rules across all test source sets.
+
+#### Completed Sub-phases:
+- [x] **Sub-phase 7A (Flavors & Instrumentation Base):** Converted `floss` and `osm` flavor sources (`PlacePickerActivity.kt`, `MapView.kt`, `MapFragment.kt`, `FlossFlavor.kt`) and base test helpers.
+- [x] **Sub-phase 7B (Unit Test Suite):** Converted all 63 unit test classes across model, storage, service, API, view, adapter, and activity suites in `app/src/test/`.
+- [x] **Sub-phase 7C (SQLDatabase Instrumentation Suite):** Converted the final 4,420-line database test suite (`SQLDatabaseTest.kt`) in `app/src/androidTest/`, completing 100% Kotlin codebase conversion (517 / 517 files).
+- [x] **Sub-phase 7D (Gradle Modernization to Kotlin DSL):**
+  - Converted `settings.gradle` $\rightarrow$ `settings.gradle.kts`
+  - Converted `build.gradle` $\rightarrow$ `build.gradle.kts` (with clean `clean` and `updateMigrationTracker` tasks)
+  - Converted `app/build.gradle` $\rightarrow$ `app/build.gradle.kts` (signingConfigs, buildTypes, flavors, lint severity rules, catalog dependencies)
+  - Configured Microsoft OpenJDK 17 LTS for Gradle Daemon and Antigravity IDE compatibility
+  - Verified 100% green CI across GitHub Actions (`assembleFlossOsmDebug`, `testFlossOsmDebugUnitTest`, `lintFlossOsmDebug`, `detekt`)
+
+```kotlin
+compilerOptions {
+    freeCompilerArgs.addAll(
+        "-Xjvm-default=all",
+        "-opt-in=kotlin.RequiresOptIn"
+    )
+}
+```
 
 ---
 
