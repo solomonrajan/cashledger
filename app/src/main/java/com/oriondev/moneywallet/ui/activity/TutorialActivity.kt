@@ -148,7 +148,7 @@ class TutorialActivity : AppIntro2() {
             val contentValues = ContentValues()
             contentValues.put(Contract.Category.NAME, category.name)
             contentValues.put(Contract.Category.ICON, category.icon.toString())
-            contentValues.put(Contract.Category.TYPE, category.type.value)
+            contentValues.put(Contract.Category.TYPE, category.type?.value ?: Contract.CategoryType.EXPENSE.value)
             contentValues.put(Contract.Category.SHOW_REPORT, true)
             contentValues.put(Contract.Category.TAG, category.tag)
             contentResolver.insert(uri, contentValues)

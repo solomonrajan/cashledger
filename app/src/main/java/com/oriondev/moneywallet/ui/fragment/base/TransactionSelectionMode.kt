@@ -42,6 +42,7 @@ import com.oriondev.moneywallet.picker.WalletPicker
 import com.oriondev.moneywallet.storage.database.Contract
 import com.oriondev.moneywallet.storage.database.DataContentProvider
 import com.oriondev.moneywallet.storage.database.SQLiteDataException
+import com.oriondev.moneywallet.storage.database.SyncContentProvider
 import com.oriondev.moneywallet.ui.activity.ToolbarController
 import com.oriondev.moneywallet.ui.adapter.recycler.TransactionCursorAdapter
 import com.oriondev.moneywallet.ui.fragment.secondary.TransactionItemFragment
@@ -50,7 +51,6 @@ import com.oriondev.moneywallet.utils.CurrencyManager
 import com.oriondev.moneywallet.utils.MoneyFormatter
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
-import java.util.function.IntSupplier
 
 /**
  * The selection of a transaction list, drawn on the primary toolbar of the multi panel fragment
@@ -61,6 +61,11 @@ class TransactionSelectionMode(
     private val mOwner: MultiPanelFragment,
     private val mAdapter: TransactionCursorAdapter
 ) : Toolbar.OnMenuItemClickListener {
+
+    class SkippedRows(
+        val refused: Int,
+        val split: Int
+    )
 
     companion object {
         private const val SS_SELECTED_IDS = "TransactionSelectionMode::SavedState::SelectedIds"
@@ -154,23 +159,28 @@ class TransactionSelectionMode(
             resources: Resources,
             resolver: ContentResolver,
             ids: LongArray,
-            categoryId: Long,
-            categoryName: String?
+            category: Category
         ): String {
             var count = 0
-            val projection = arrayOf(Contract.Transaction.TYPE, Contract.Transaction.CATEGORY_ID)
+            val split = querySplit(resolver, ids)
+            val projection = arrayOf(
+                Contract.Transaction.ID,
+                Contract.Transaction.TYPE,
+                Contract.Transaction.CATEGORY_ID,
+                Contract.Transaction.DIRECTION
+            )
             queryStored(resolver, ids, *projection)?.use { rows ->
                 val catIdIndex = rows.getColumnIndexOrThrow(Contract.Transaction.CATEGORY_ID)
                 val typeIndex = rows.getColumnIndexOrThrow(Contract.Transaction.TYPE)
                 while (rows.moveToNext()) {
-                    if (rows.getLong(catIdIndex) != categoryId && isStandard(rows, typeIndex)) {
+                    if (rows.getLong(catIdIndex) != category.id && isStandard(rows, typeIndex) && !keepsItsParts(rows, split, category)) {
                         count++
                     }
                 }
             }
             return resources.getQuantityString(
                 R.plurals.message_change_category_selected_transactions,
-                count, count, categoryName ?: ""
+                count, count, category.name ?: ""
             )
         }
 
@@ -215,6 +225,7 @@ class TransactionSelectionMode(
                                 Contract.Transaction.MONEY,
                                 MoneyFormatter.normalize(money, from.decimals, to.decimals)
                             )
+                            values.put(Contract.Transaction.FIX_SPLIT_DECIMALS, to.decimals - from.decimals)
                         }
                         resolver.update(uri, values, null, null)
                     }
@@ -230,9 +241,16 @@ class TransactionSelectionMode(
             resolver: ContentResolver,
             ids: LongArray,
             category: Category
-        ): Int {
-            val projection = arrayOf(Contract.Transaction.TYPE, Contract.Transaction.CATEGORY_ID)
+        ): SkippedRows {
+            val projection = arrayOf(
+                Contract.Transaction.ID,
+                Contract.Transaction.TYPE,
+                Contract.Transaction.CATEGORY_ID,
+                Contract.Transaction.DIRECTION
+            )
+            val split = querySplit(resolver, ids)
             var skipped = 0
+            var splitSkipped = 0
             for (id in ids) {
                 val uri = ContentUris.withAppendedId(DataContentProvider.CONTENT_TRANSACTIONS, id)
                 try {
@@ -246,6 +264,10 @@ class TransactionSelectionMode(
                             skipped++
                             return@use
                         }
+                        if (keepsItsParts(row, split, category)) {
+                            splitSkipped++
+                            return@use
+                        }
                         val values = ContentValues()
                         values.put(Contract.Transaction.CATEGORY_ID, category.id)
                         values.put(Contract.Transaction.DIRECTION, category.direction)
@@ -255,7 +277,63 @@ class TransactionSelectionMode(
                     skipped++
                 }
             }
-            return skipped
+            return SkippedRows(skipped, splitSkipped)
+        }
+
+        @JvmStatic
+        fun buildSkippedMessage(resources: Resources, skipped: SkippedRows): String? {
+            val message = StringBuilder()
+            if (skipped.refused > 0) {
+                message.append(
+                    resources.getQuantityString(
+                        R.plurals.message_error_change_selected_transactions,
+                        skipped.refused,
+                        skipped.refused
+                    )
+                )
+            }
+            if (skipped.split > 0) {
+                if (message.isNotEmpty()) {
+                    message.append("\n\n")
+                }
+                message.append(
+                    resources.getQuantityString(
+                        R.plurals.message_error_change_split_transactions,
+                        skipped.split,
+                        skipped.split
+                    )
+                )
+            }
+            return if (message.isEmpty()) null else message.toString()
+        }
+
+        private fun idsIn(column: String, ids: LongArray): String {
+            val joined = StringBuilder()
+            for (id in ids) {
+                if (joined.isNotEmpty()) joined.append(",")
+                joined.append(id)
+            }
+            return "$column IN ($joined)"
+        }
+
+        private fun querySplit(resolver: ContentResolver, ids: LongArray): Set<Long> {
+            val split = HashSet<Long>()
+            resolver.query(
+                SyncContentProvider.CONTENT_TRANSACTION_SPLIT,
+                arrayOf(Contract.TransactionSplit.TRANSACTION_ID),
+                "${idsIn(Contract.TransactionSplit.TRANSACTION_ID, ids)} AND ${Contract.TransactionSplit.DELETED} = 0",
+                null, null
+            )?.use { parts ->
+                while (parts.moveToNext()) {
+                    split.add(parts.getLong(0))
+                }
+            }
+            return split
+        }
+
+        private fun keepsItsParts(row: Cursor, split: Set<Long>, category: Category): Boolean {
+            return split.contains(row.getLong(row.getColumnIndexOrThrow(Contract.Transaction.ID))) &&
+                    row.getInt(row.getColumnIndexOrThrow(Contract.Transaction.DIRECTION)) != category.direction
         }
 
         private fun queryStored(resolver: ContentResolver, ids: LongArray, vararg projection: String): Cursor? {
@@ -389,7 +467,7 @@ class TransactionSelectionMode(
                     return@post
                 }
                 showChangeDialog(mListFragment.requireActivity(), ids, message) {
-                    moveTransactions(resolver, ids, wallet.id, iso)
+                    SkippedRows(moveTransactions(resolver, ids, wallet.id, iso), 0)
                 }
             }
         }
@@ -404,7 +482,7 @@ class TransactionSelectionMode(
         val resources = context.resources
         val resolver = context.applicationContext.contentResolver
         sDeleteExecutor.execute {
-            val message = buildCategoryMessage(resources, resolver, ids, category.id, category.name)
+            val message = buildCategoryMessage(resources, resolver, ids, category)
             sMainHandler.post {
                 if (mListFragment.view == null) {
                     return@post
@@ -480,7 +558,7 @@ class TransactionSelectionMode(
         }
     }
 
-    private fun showChangeDialog(context: Context, ids: LongArray, message: String, write: IntSupplier) {
+    private fun showChangeDialog(context: Context, ids: LongArray, message: String, write: () -> SkippedRows) {
         ThemedDialog.buildMaterialDialog(context)
             .setTitle(R.string.title_warning)
             .setMessage(message)
@@ -489,25 +567,22 @@ class TransactionSelectionMode(
             .show()
     }
 
-    private fun change(ids: LongArray, write: IntSupplier) {
+    private fun change(ids: LongArray, write: () -> SkippedRows) {
         if (!isSameSelection(mAdapter.getSelectedIds(), ids)) {
             showSelectionChangedToast()
             return
         }
         finish()
         sDeleteExecutor.execute {
-            val skipped = write.asInt
+            val skipped = write()
             sMainHandler.post {
-                if (mListFragment.view == null || skipped == 0) {
+                if (mListFragment.view == null) {
                     return@post
                 }
+                val message = buildSkippedMessage(mListFragment.resources, skipped) ?: return@post
                 ThemedDialog.buildMaterialDialog(mListFragment.requireActivity())
                     .setTitle(R.string.title_error)
-                    .setMessage(
-                        mListFragment.resources.getQuantityString(
-                            R.plurals.message_error_change_selected_transactions, skipped, skipped
-                        )
-                    )
+                    .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null)
                     .show()
             }

@@ -66,6 +66,7 @@ class SQLDatabaseUpgradeTest {
         old.execSQL(CREATE_TABLE_CATEGORY_BEFORE_3)
         old.execSQL(CREATE_TABLE_BUDGET_BEFORE_4)
         old.execSQL(Schema.CREATE_TABLE_CURRENCY)
+        old.execSQL("CREATE TABLE transactions (transaction_id INTEGER PRIMARY KEY AUTOINCREMENT)")
         if (version >= 3) {
             old.execSQL(Schema.CREATE_WALLET_INDEX_COLUMN)
             old.execSQL(Schema.CREATE_CATEGORY_INDEX_COLUMN)
@@ -89,7 +90,7 @@ class SQLDatabaseUpgradeTest {
         val helper = SQLDatabase(context, NAME)
         val upgraded = helper.writableDatabase
 
-        assertEquals(7, upgraded.version)
+        assertEquals(9, upgraded.version)
         assertEquals("ok", text(upgraded, "PRAGMA integrity_check"))
         assertEquals(0L, count(upgraded, "pragma_foreign_key_check", null))
         assertSchemaMatchesAFreshInstall(upgraded)
@@ -191,7 +192,7 @@ class SQLDatabaseUpgradeTest {
         val helper = SQLDatabase(context, NAME)
         val upgraded = helper.writableDatabase
 
-        assertEquals(7, upgraded.version)
+        assertEquals(9, upgraded.version)
         assertEquals("ok", text(upgraded, "PRAGMA integrity_check"))
         assertEquals(0L, count(upgraded, "pragma_foreign_key_check", null))
         assertEquals(2L, count(upgraded, Schema.CategoryRule.TABLE, null))
@@ -220,12 +221,127 @@ class SQLDatabaseUpgradeTest {
         )
     }
 
+    /**
+     * A database this app wrote before the table of parts, arriving at the upgrade. The table
+     * of parts comes forward empty.
+     */
+    @Test
+    fun aDatabaseFromBeforeThePartsComesForwardWithAnEmptyTable() {
+        val writer = SQLDatabase(context, NAME)
+        val old = writer.writableDatabase
+        old.execSQL("DROP TABLE transaction_splits")
+        insertCategory(old, 900, "Food")
+        insertWalletIn(old, 901, "Cash", "EUR", 1500L, false)
+        insertTransaction(old, 910, 901, 2500L)
+        old.version = 8
+        writer.close()
+
+        val helper = SQLDatabase(context, NAME)
+        val upgraded = helper.writableDatabase
+
+        assertEquals(9, upgraded.version)
+        assertEquals("ok", text(upgraded, "PRAGMA integrity_check"))
+        assertEquals(0L, count(upgraded, "pragma_foreign_key_check", null))
+        assertEquals(0L, count(upgraded, "transaction_splits", null))
+        assertEquals(2500L, moneyOf(upgraded, 910))
+        helper.close()
+    }
+
+    /**
+     * A database this app wrote, put back to the version before the table of parts, arriving at
+     * the upgrade a second time. The create is guarded, so the parts already stored stay where
+     * they are instead of the create throwing on a table that is already there.
+     */
+    @Test
+    fun partsSurviveTheUpgradeRunningASecondTime() {
+        val writer = SQLDatabase(context, NAME)
+        val old = writer.writableDatabase
+        insertCategory(old, 900, "Food")
+        insertCategory(old, 902, "Household")
+        insertWalletIn(old, 901, "Cash", "EUR", 1500L, false)
+        insertTransaction(old, 910, 901, 2500L)
+        insertSplit(old, 920, 910, 902, 700L, "soap")
+        insertSplit(old, 921, 910, 902, 300L, null)
+        old.version = 8
+        writer.close()
+
+        val helper = SQLDatabase(context, NAME)
+        val upgraded = helper.writableDatabase
+
+        assertEquals(9, upgraded.version)
+        assertEquals("ok", text(upgraded, "PRAGMA integrity_check"))
+        assertEquals(0L, count(upgraded, "pragma_foreign_key_check", null))
+        assertEquals(2L, count(upgraded, "transaction_splits", null))
+        assertEquals(
+            1L,
+            count(
+                upgraded,
+                "transaction_splits",
+                "split_id = 920 AND _transaction = 910 AND split_category = 902 AND split_money = 700 AND split_note = 'soap'"
+            )
+        )
+        assertEquals(
+            1L,
+            count(
+                upgraded,
+                "transaction_splits",
+                "split_id = 921 AND _transaction = 910 AND split_category = 902 AND split_money = 300 AND split_note IS NULL"
+            )
+        )
+        helper.close()
+    }
+
+    private fun insertSplit(
+        db: SQLiteDatabase,
+        id: Long,
+        transaction: Long,
+        category: Long,
+        money: Long,
+        note: String?
+    ) {
+        db.execSQL(
+            "INSERT INTO transaction_splits (split_id, _transaction, split_category, " +
+                "split_money, split_note, uuid, last_edit, deleted) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, 0)",
+            arrayOf<Any?>(id, transaction, category, money, note, "split-$id", EDIT)
+        )
+    }
+
+    /**
+     * A database from before the table of parts, which the version 6 step reaches with no such
+     * table, since the version 9 step that creates it runs after. The rescale has to finish
+     * without it, and the table comes forward empty.
+     */
+    @Test
+    fun theStepRunsOnADatabaseFromBeforeTheParts() {
+        writeADatabaseAtVersionFive(0)
+        val old = context.openOrCreateDatabase(NAME, Context.MODE_PRIVATE, null)
+        old.execSQL("DROP TABLE transaction_splits")
+        old.close()
+
+        val helper = SQLDatabase(context, NAME)
+        val upgraded = helper.writableDatabase
+
+        assertEquals(9, upgraded.version)
+        assertEquals(150000L, moneyOf(upgraded, 910))
+        // two tables the rescale reaches after the parts, so a step that stopped at the missing
+        // table would leave these where they were
+        assertEquals(
+            740000L,
+            number(upgraded, "SELECT model_transaction_money FROM transaction_models WHERE model_id = 950")
+        )
+        assertEquals(3000000L, budgetMoneyOf(upgraded, 920))
+        assertEquals(0L, number(upgraded, "SELECT COUNT(*) FROM transaction_splits"))
+        helper.close()
+    }
+
     private fun upgradeAgainOverRowsThatAreAlreadyThere(version: Int) {
         val old = context.openOrCreateDatabase(NAME, Context.MODE_PRIVATE, null)
         old.execSQL(Schema.CREATE_TABLE_CATEGORY)
         old.execSQL(Schema.CREATE_TABLE_BUDGET)
         old.execSQL(Schema.CREATE_TABLE_BUDGET_CATEGORY)
         old.execSQL(Schema.CREATE_TABLE_CURRENCY)
+        old.execSQL("CREATE TABLE transactions (transaction_id INTEGER PRIMARY KEY AUTOINCREMENT)")
         insertCategory(old, 1, "Food")
         insertCategory(old, 5, "Rent")
         insertCategory(old, 7, "Fun")
@@ -248,7 +364,7 @@ class SQLDatabaseUpgradeTest {
         val helper = SQLDatabase(context, NAME)
         val upgraded = helper.writableDatabase
 
-        assertEquals(7, upgraded.version)
+        assertEquals(9, upgraded.version)
         assertEquals("ok", text(upgraded, "PRAGMA integrity_check"))
         assertEquals(0L, count(upgraded, "pragma_foreign_key_check", null))
         assertEquals(7L, count(upgraded, Schema.BudgetCategory.TABLE, null))
@@ -345,7 +461,7 @@ class SQLDatabaseUpgradeTest {
         val helper = SQLDatabase(context, NAME)
         val upgraded = helper.writableDatabase
 
-        assertEquals(7, upgraded.version)
+        assertEquals(9, upgraded.version)
         assertEquals(2L, decimalsOf(upgraded, "AMD"))
         assertEquals(15000000L, startMoneyOf(upgraded, 901))
         assertEquals(150000L, moneyOf(upgraded, 910))
@@ -447,7 +563,7 @@ class SQLDatabaseUpgradeTest {
         val second = SQLDatabase(context, NAME)
         val upgraded = second.writableDatabase
 
-        assertEquals(7, upgraded.version)
+        assertEquals(9, upgraded.version)
         assertEquals(2L, decimalsOf(upgraded, "AMD"))
         assertEquals(15000000L, startMoneyOf(upgraded, 901))
         assertEquals(150000L, moneyOf(upgraded, 910))

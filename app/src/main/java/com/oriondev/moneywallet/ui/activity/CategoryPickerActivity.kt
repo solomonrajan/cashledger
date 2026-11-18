@@ -24,6 +24,7 @@ import android.content.ContentUris
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -100,12 +101,22 @@ class CategoryPickerActivity : SinglePanelViewPagerActivity(), CategoryListFragm
             showSubCategories = intent.getBooleanExtra(SHOW_SUB_CATEGORIES, true)
             showSystemCategories = intent.getBooleanExtra(SHOW_SYSTEM_CATEGORIES, false)
         }
-        return CategoryViewPagerAdapter(fragmentManager, this, showSubCategories, showSystemCategories)
+        return CategoryViewPagerAdapter(fragmentManager, this, showSubCategories, showSystemCategories, getOnlyType())
+    }
+
+    private fun getOnlyType(): Contract.CategoryType? {
+        val intent = intent ?: return null
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getSerializableExtra(ONLY_TYPE, Contract.CategoryType::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getSerializableExtra(ONLY_TYPE) as? Contract.CategoryType
+        }
     }
 
     override fun onCreatePanelView(inflater: LayoutInflater, parent: ViewGroup, savedInstanceState: Bundle?) {
         super.onCreatePanelView(inflater, parent, savedInstanceState)
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && getOnlyType() == null) {
             setViewPagerPosition(1)
         }
     }
@@ -116,9 +127,14 @@ class CategoryPickerActivity : SinglePanelViewPagerActivity(), CategoryListFragm
     override fun onFloatingActionButtonClick() {
         val intent = Intent(this, NewEditCategoryActivity::class.java).apply {
             putExtra(NewEditItemActivity.MODE, NewEditItemActivity.Mode.NEW_ITEM)
-            when (getViewPagerPosition()) {
-                0, 2 -> putExtra(NewEditCategoryActivity.TYPE, Contract.CategoryType.INCOME)
-                1 -> putExtra(NewEditCategoryActivity.TYPE, Contract.CategoryType.EXPENSE)
+            val onlyType = getOnlyType()
+            if (onlyType != null) {
+                putExtra(NewEditCategoryActivity.TYPE, onlyType)
+            } else {
+                when (getViewPagerPosition()) {
+                    0, 2 -> putExtra(NewEditCategoryActivity.TYPE, Contract.CategoryType.INCOME)
+                    1 -> putExtra(NewEditCategoryActivity.TYPE, Contract.CategoryType.EXPENSE)
+                }
             }
         }
         startActivity(intent)
@@ -157,6 +173,7 @@ class CategoryPickerActivity : SinglePanelViewPagerActivity(), CategoryListFragm
         const val SHOW_SUB_CATEGORIES = "CategoryPickerActivity::Argument::ShowSubCategories"
         const val SHOW_SYSTEM_CATEGORIES = "CategoryPickerActivity::Argument::ShowSystemCategories"
         const val RESULT_CATEGORY = "CategoryPickerActivity::Result::Category"
+        const val ONLY_TYPE = "CategoryPickerActivity::Argument::OnlyType"
 
         private const val SS_QUERY = "CategoryPickerActivity::SavedState::Query"
     }

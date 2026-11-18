@@ -43,6 +43,7 @@ import com.oriondev.moneywallet.storage.database.model.Transaction
 import com.oriondev.moneywallet.storage.database.model.TransactionAttachment
 import com.oriondev.moneywallet.storage.database.model.TransactionModel
 import com.oriondev.moneywallet.storage.database.model.TransactionPerson
+import com.oriondev.moneywallet.storage.database.model.TransactionSplit
 import com.oriondev.moneywallet.storage.database.model.Transfer
 import com.oriondev.moneywallet.storage.database.model.TransferAttachment
 import com.oriondev.moneywallet.storage.database.model.TransferModel
@@ -396,6 +397,21 @@ object SQLDatabaseImporter {
             put(Schema.Transaction.DELETED, transaction.mDeleted)
         }
         val uri = contentResolver.insert(SyncContentProvider.CONTENT_TRANSACTION, contentValues)
+        return uri?.let { ContentUris.parseId(it) } ?: -1L
+    }
+
+    @JvmStatic
+    fun insert(contentResolver: ContentResolver, transactionSplit: TransactionSplit): Long {
+        val contentValues = ContentValues().apply {
+            put(Schema.TransactionSplit.TRANSACTION, transactionSplit.mTransaction)
+            put(Schema.TransactionSplit.CATEGORY, transactionSplit.mCategory)
+            put(Schema.TransactionSplit.MONEY, transactionSplit.mMoney)
+            put(Schema.TransactionSplit.NOTE, transactionSplit.mNote)
+            put(Schema.TransactionSplit.UUID, transactionSplit.mUUID)
+            put(Schema.TransactionSplit.LAST_EDIT, transactionSplit.mLastEdit)
+            put(Schema.TransactionSplit.DELETED, transactionSplit.mDeleted)
+        }
+        val uri = contentResolver.insert(SyncContentProvider.CONTENT_TRANSACTION_SPLIT, contentValues)
         return uri?.let { ContentUris.parseId(it) } ?: -1L
     }
 

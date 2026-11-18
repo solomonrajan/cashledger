@@ -18,6 +18,7 @@
 package com.oriondev.moneywallet.storage.database.data.csv
 
 import android.content.Context
+import android.database.SQLException
 import com.opencsv.CSVReader
 import com.opencsv.CSVReaderBuilder
 import com.opencsv.CSVReaderHeaderAware
@@ -258,7 +259,7 @@ class CSVDataImporter @Throws(IOException::class) @JvmOverloads constructor(
                     }
                 }
             } catch (e: RuntimeException) {
-                if (write) {
+                if (write || e is SQLException) {
                     throw e
                 }
                 throw RuntimeException("Line ${reader.linesRead}: ${e.message}", e)
@@ -288,7 +289,9 @@ class CSVDataImporter @Throws(IOException::class) @JvmOverloads constructor(
         val money = toMinorUnits(moneyDecimal, moneyString, currencyUnit.decimals)
         val direction = directionOf(money)
         val datetime = parseDatetime(datetimeString)
-        if (write && insertTransaction(
+        if (!write) {
+            countRow(wallet, currencyUnit, datetime, kotlin.math.abs(money), direction, description)
+        } else if (insertTransaction(
                 wallet,
                 currencyUnit,
                 category,

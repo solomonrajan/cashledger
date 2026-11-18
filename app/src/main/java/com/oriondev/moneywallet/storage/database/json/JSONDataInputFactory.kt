@@ -37,6 +37,7 @@ import com.oriondev.moneywallet.storage.database.model.Transaction
 import com.oriondev.moneywallet.storage.database.model.TransactionAttachment
 import com.oriondev.moneywallet.storage.database.model.TransactionModel
 import com.oriondev.moneywallet.storage.database.model.TransactionPerson
+import com.oriondev.moneywallet.storage.database.model.TransactionSplit
 import com.oriondev.moneywallet.storage.database.model.Transfer
 import com.oriondev.moneywallet.storage.database.model.TransferAttachment
 import com.oriondev.moneywallet.storage.database.model.TransferModel
@@ -380,6 +381,18 @@ internal class JSONDataInputFactory {
         transaction.mLastEdit = `object`.optLong(JSONDatabase.Transaction.LAST_EDIT, 0L)
         transaction.mDeleted = `object`.optBoolean(JSONDatabase.Transaction.DELETED, false)
         return transaction
+    }
+
+    fun getTransactionSplit(`object`: JSONObject): TransactionSplit {
+        val transactionSplit = TransactionSplit()
+        transactionSplit.mTransaction = cacheTransactions[`object`.optNullableString(JSONDatabase.TransactionSplit.TRANSACTION)]
+        transactionSplit.mCategory = cacheCategories[`object`.optNullableString(JSONDatabase.TransactionSplit.CATEGORY)]
+        transactionSplit.mMoney = `object`.optLong(JSONDatabase.TransactionSplit.MONEY, 0L)
+        transactionSplit.mNote = `object`.optNullableString(JSONDatabase.TransactionSplit.NOTE)
+        transactionSplit.mUUID = `object`.optNullableString(JSONDatabase.TransactionSplit.ID)
+        transactionSplit.mLastEdit = `object`.optLong(JSONDatabase.TransactionSplit.LAST_EDIT, 0L)
+        transactionSplit.mDeleted = `object`.optBoolean(JSONDatabase.TransactionSplit.DELETED, false)
+        return transactionSplit
     }
 
     fun getTransactionPerson(`object`: JSONObject): TransactionPerson {

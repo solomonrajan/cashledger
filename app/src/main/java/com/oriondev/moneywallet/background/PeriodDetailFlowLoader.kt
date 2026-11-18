@@ -58,7 +58,7 @@ class PeriodDetailFlowLoader(
         val directMoneyMap = HashMap<Long, Money>()
         val categoryCache = loadCategoryCache()
         val childCategoryCache = loadChildCategoryCache()
-        val uri = DataContentProvider.CONTENT_TRANSACTIONS
+        val uri = DataContentProvider.CONTENT_CATEGORY_LINES
         val projection = arrayOf(
             Contract.Transaction.CATEGORY_ID,
             Contract.Transaction.CATEGORY_PARENT_ID,

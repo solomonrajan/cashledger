@@ -82,6 +82,9 @@ interface DatabaseImporter {
     fun importTransactions(contentResolver: ContentResolver)
 
     @Throws(ImportException::class)
+    fun importTransactionSplits(contentResolver: ContentResolver)
+
+    @Throws(ImportException::class)
     fun importTransactionPeople(contentResolver: ContentResolver)
 
     @Throws(ImportException::class)

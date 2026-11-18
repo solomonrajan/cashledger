@@ -41,7 +41,7 @@ class DiskBackendServiceTest {
     private val service = DiskBackendService(null)
 
     @Test
-    @Config(sdk = [33, 36])
+    @Config(sdk = [33, 35])
     fun theBackendIsEnabledFromAndroid13WithoutTheStoragePermission() {
         val application = ApplicationProvider.getApplicationContext<Application>()
         shadowOf(application).denyPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)

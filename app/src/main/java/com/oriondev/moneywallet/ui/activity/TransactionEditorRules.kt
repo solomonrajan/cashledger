@@ -12,7 +12,7 @@ import kotlin.math.abs
  * The editor keeps the loading. Every branch of it chooses which row to read and reading takes a
  * content resolver, so what lives here is only what is decided once the values are in hand.
  *
- * It carries the five pieces of state the editor holds across a recreate. They travel as one
+ * It carries the six pieces of state the editor holds across a recreate. They travel as one
  * object under one bundle key, so the keys cannot collide with each other.
  */
 class TransactionEditorRules : Serializable {
@@ -22,6 +22,16 @@ class TransactionEditorRules : Serializable {
     var savingId: Long? = null
     var isSavingCompleted: Boolean = false
     var isDebtPayment: Boolean = false
+    var isRecurrent: Boolean = false
+
+    /**
+     * Only a transaction standing on its own is split. A transfer leg, a debt row and a saving
+     * row each carry their role in a category of their own, and a row started from a model is
+     * stored as a model row. One a recurrence wrote is left whole like the recurrence itself.
+     */
+    fun offersSplit(): Boolean {
+        return type == TYPE_STANDARD && debtId == null && savingId == null && !isRecurrent
+    }
 
     /**
      * A debt row and a saving row are both filed under a category the editor picks for them, so

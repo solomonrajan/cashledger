@@ -30,15 +30,28 @@ import com.oriondev.moneywallet.ui.fragment.primary.CategoryListFragment
 /**
  * Created by andrea on 10/02/18.
  */
-class CategoryViewPagerAdapter(
+class CategoryViewPagerAdapter @JvmOverloads constructor(
     fm: FragmentManager,
     context: Context,
     private val mShowSubCategories: Boolean,
-    showSystemCategories: Boolean
-) : BaseTabPagerAdapter(fm, context, *tabTitlesFor(showSystemCategories)) {
+    showSystemCategories: Boolean,
+    private val mOnlyType: Contract.CategoryType? = null
+) : BaseTabPagerAdapter(fm, context, *tabTitlesFor(showSystemCategories, mOnlyType)) {
+
+    /**
+     * The page a type is shown on when every type is.
+     */
+    private fun pageOf(position: Int): Int {
+        val onlyType = mOnlyType ?: return position
+        return when (onlyType) {
+            Contract.CategoryType.INCOME -> 0
+            Contract.CategoryType.EXPENSE -> 1
+            else -> 2
+        }
+    }
 
     override fun getItem(position: Int): Fragment {
-        return when (position) {
+        return when (pageOf(position)) {
             0 -> CategoryListFragment.newInstance(Contract.CategoryType.INCOME, mShowSubCategories)
             1 -> CategoryListFragment.newInstance(Contract.CategoryType.EXPENSE, mShowSubCategories)
             2 -> CategoryListFragment.newInstance(Contract.CategoryType.SYSTEM, mShowSubCategories)
@@ -47,7 +60,14 @@ class CategoryViewPagerAdapter(
     }
 
     companion object {
-        private fun tabTitlesFor(showSystemCategories: Boolean): IntArray {
+        private fun tabTitlesFor(showSystemCategories: Boolean, onlyType: Contract.CategoryType?): IntArray {
+            if (onlyType != null) {
+                return when (onlyType) {
+                    Contract.CategoryType.INCOME -> intArrayOf(R.string.menu_category_tab_income)
+                    Contract.CategoryType.EXPENSE -> intArrayOf(R.string.menu_category_tab_expense)
+                    else -> intArrayOf(R.string.menu_category_tab_system)
+                }
+            }
             return if (showSystemCategories) {
                 intArrayOf(
                     R.string.menu_category_tab_income,

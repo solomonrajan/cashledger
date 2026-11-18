@@ -30,11 +30,15 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.Editable
+import android.text.TextPaint
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -58,7 +62,7 @@ open class MaterialEditText :
     private var mHint: String? = null
     private var mFloatingLabelColorNormal = 0
     private var mFloatingLabelColorFocused = 0
-    private val mFloatingLabelPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mFloatingLabelPaint = TextPaint(Paint.ANTI_ALIAS_FLAG)
     private var mAnimator: ValueAnimator? = null
     private var mWasEmpty = true
 
@@ -266,12 +270,14 @@ open class MaterialEditText :
             paddingBottom += mMeter.height()
         }
         var paddingTop = getPixels(16)
-        val label = mHint
-        if (mMode == Mode.FLOATING_LABEL && label != null) {
-            mFloatingLabelPaint.getTextBounds(label, 0, label.length, mMeter)
-            paddingTop += mMeter.height()
+        if (mMode == Mode.FLOATING_LABEL && mHint != null) {
+            paddingTop += getFloatingLabelHeight()
         }
         setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+    }
+
+    private fun getFloatingLabelHeight(): Int {
+        return -mFloatingLabelPaint.fontMetricsInt.ascent
     }
 
     override fun onFocusChanged(focused: Boolean, direction: Int, previouslyFocusedRect: Rect?) {
@@ -308,17 +314,25 @@ open class MaterialEditText :
         drawable.draw(canvas)
     }
 
-    protected open fun onDrawFloatingLabel(canvas: Canvas) {
-        val label = mHint
-        if (mMode == Mode.FLOATING_LABEL && label != null) {
+    internal open fun onDrawFloatingLabel(canvas: Canvas) {
+        val hint = mHint
+        if (mMode == Mode.FLOATING_LABEL && hint != null) {
             mFloatingLabelPaint.color =
                 if (hasFocus()) mFloatingLabelColorFocused else mFloatingLabelColorNormal
-            mFloatingLabelPaint.getTextBounds(label, 0, label.length, mMeter)
-            val startY = paddingTop + mMeter.height()
+            val cancelWidth = if (mShowCancelButton) getPixels(CANCEL_BUTTON_PADDING_DP) else 0
+            val maxWidth = measuredWidth - paddingLeft - paddingRight + cancelWidth
+            val label = TextUtils.ellipsize(
+                hint,
+                mFloatingLabelPaint,
+                maxWidth.toFloat(),
+                TextUtils.TruncateAt.END
+            ).toString()
+            val startY = paddingTop + getFloatingLabelHeight()
             val endY = paddingTop - getPixels(8)
             val textY = startY - ((startY - endY) * getAnimatedY()).toInt()
+            val labelWidth = mFloatingLabelPaint.measureText(label).toInt()
             val startX = scrollX + if (isRtl()) {
-                measuredWidth - paddingRight - mMeter.width()
+                measuredWidth - paddingRight - labelWidth
             } else {
                 paddingLeft
             }
@@ -400,6 +414,17 @@ open class MaterialEditText :
     private fun isRtl(): Boolean {
         return Utils.isRtl(resources)
     }
+
+    /**
+     * Sets the label drawn above the text. TextView.setHint cannot do it, since it is final and
+     * the label is read from the hint only once, when the view is inflated.
+     */
+    var floatingLabelText: String?
+        get() = mHint
+        set(label) {
+            mHint = label
+            calculatePadding()
+        }
 
     fun setFloatingLabelColorNormal(@ColorInt floatingLabelColorNormal: Int) {
         mFloatingLabelColorNormal = floatingLabelColorNormal
@@ -522,6 +547,17 @@ open class MaterialEditText :
         mErrorMessage = errorMessage
         calculatePadding()
         invalidate()
+    }
+
+    /**
+     * Exposes the label as the hint to accessibility services, since a real hint would size the
+     * field to fit it even while it is not shown.
+     */
+    override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfo) {
+        super.onInitializeAccessibilityNodeInfo(info)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && hint == null && mHint != null) {
+            info.hintText = mHint
+        }
     }
 
     override fun onAnimationUpdate(animation: ValueAnimator) {

@@ -451,6 +451,30 @@ class JSONDatabaseImporter @Throws(ImportException::class) constructor(
     }
 
     @Throws(ImportException::class)
+    override fun importTransactionSplits(contentResolver: ContentResolver) {
+        // transaction splits are stored starting from backup version >= 5
+        if (version >= 5) {
+            try {
+                if (JSONDatabase.TransactionSplit.ARRAY == reader.readName()) {
+                    reader.beginArray()
+                    while (reader.hasArrayAnotherObject()) {
+                        val `object` = reader.readObject()
+                        val transactionSplit = factory.getTransactionSplit(`object`)
+                        SQLDatabaseImporter.insert(contentResolver, transactionSplit)
+                    }
+                    reader.endArray()
+                } else {
+                    throw ImportException("Wrong array name (expected = 'transaction_splits')")
+                }
+            } catch (e: IOException) {
+                throw ImportException(e.message)
+            } catch (e: JSONException) {
+                throw ImportException(e.message)
+            }
+        }
+    }
+
+    @Throws(ImportException::class)
     override fun importTransactionPeople(contentResolver: ContentResolver) {
         try {
             if (JSONDatabase.TransactionPeople.ARRAY == reader.readName()) {

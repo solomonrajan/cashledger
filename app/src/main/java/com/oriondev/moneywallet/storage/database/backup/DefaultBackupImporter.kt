@@ -35,7 +35,7 @@ class DefaultBackupImporter(
 ) : AbstractBackupImporter(context, backupFile) {
 
     @Throws(ImportException::class)
-    override fun importDatabase(temporaryFolder: File) {
+    internal override fun importDatabase(temporaryFolder: File) {
         var importer: DatabaseImporter? = null
         try {
             val zipFile = ZipFile(backupFile)
@@ -74,6 +74,7 @@ class DefaultBackupImporter(
             importer.importRecurrentTransactions(resolver)
             importer.importRecurrentTransfers(resolver)
             importer.importTransactions(resolver)
+            importer.importTransactionSplits(resolver)
             importer.importTransactionPeople(resolver)
             importer.importTransactionModels(resolver)
             importer.importTransfers(resolver)

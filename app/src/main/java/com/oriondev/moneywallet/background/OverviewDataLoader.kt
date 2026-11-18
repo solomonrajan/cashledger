@@ -63,7 +63,7 @@ class OverviewDataLoader(
     override fun loadInBackground(): OverviewData {
         val totalNetIncomes = Money()
         val periodMoneyList = ArrayList<PeriodMoney>()
-        val uri = DataContentProvider.CONTENT_TRANSACTIONS
+        val uri = DataContentProvider.CONTENT_CATEGORY_LINES
         val projection = arrayOf(
             Contract.Transaction.DATE,
             Contract.Transaction.DIRECTION,

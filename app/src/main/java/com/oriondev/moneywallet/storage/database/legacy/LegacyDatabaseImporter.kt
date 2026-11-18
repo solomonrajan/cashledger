@@ -748,6 +748,11 @@ class LegacyDatabaseImporter @Throws(ImportException::class) constructor(legacyD
     }
 
     @Throws(ImportException::class)
+    override fun importTransactionSplits(contentResolver: ContentResolver) {
+        // not supported in legacy database
+    }
+
+    @Throws(ImportException::class)
     override fun importTransactionPeople(contentResolver: ContentResolver) {
         // not supported in legacy database
     }

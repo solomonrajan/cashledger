@@ -5,6 +5,7 @@ app/build/
 
 # Local configuration
 local.properties
+.android-sdk/
 
 # Android Studio / IntelliJ IDEA
 .idea/

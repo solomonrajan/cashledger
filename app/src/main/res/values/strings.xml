@@ -133,6 +133,14 @@
     <string name="hint_people">"People"</string>
     <string name="hint_place">"Place"</string>
     <string name="hint_note">"Note"</string>
+    <string name="hint_split">"Split"</string>
+    <string name="hint_split_into_categories">"Split into categories"</string>
+    <string name="hint_split_add_part">"Add a part"</string>
+    <string name="hint_split_remaining">"Remaining under %1$s"</string>
+    <string name="split_part">"%1$s, %2$s"</string>
+    <string name="split_part_with_note">"%1$s, %2$s, %3$s"</string>
+    <string name="split_remainder">"%1$s, %2$s, the rest of the total"</string>
+    <string name="split_not_counted">"These parts are not counted until they are fixed in the editor."</string>
     <string name="hint_tax">"Tax"</string>
     <string name="hint_type">"Type"</string>
     <string name="hint_incomes">"Incomes"</string>
@@ -418,6 +426,10 @@
     <string name="title_failed">"Failed"</string>
     <string name="title_error">"Error"</string>
     <string name="error_saving_withdraw_over_balance">"You Cannot Withdraw More Than %1$s From This Saving."</string>
+    <string name="error_split_total_below_parts">"The amount is less than the parts add up to. Raise the amount or lower the parts."</string>
+    <string name="error_split_part_not_positive">"Every part needs an amount above zero."</string>
+    <string name="error_split_part_wrong_type">"Every part needs a category of the same type as the main category, income or expense."</string>
+    <string name="error_split_not_saved">"These parts cannot be saved. Check the category of each part."</string>
     <string name="title_atm_search">"Search Atm"</string>
     <string name="title_bank_search">"Search Bank"</string>
     <string name="title_changelog">"Changelog"</string>
@@ -464,8 +476,14 @@
     <string name="message_error_insert_category_not_consistent">"The Selected Parent Category Is Not Of The Same Type Of This Category."</string>
     <string name="message_error_update_category_deep_hierarchy">"Nested Child Categories Are Not Supported: This Category Has One Or More Children And Cannot Be Updated As Child Category."</string>
     <string name="message_error_update_category_not_consistent">"The Selected Parent Category Is Not Of The Same Type Of This Category."</string>
+    <string name="message_error_update_category_type_in_split">"The type of this category cannot be changed while a split transaction uses it."</string>
     <string name="message_error_delete_category_with_children">"This Category Cannot Be Deleted Because It Has One Or More Children. Please Remove Them Before."</string>
     <string name="message_error_delete_category_in_use">"This Category Cannot Be Deleted Because It Is In Use. Please Remove Any References To This Category And Retry."</string>
+    <string name="message_error_delete_category_in_split">"This category cannot be deleted because a split transaction uses it as a part, %1$s on %2$s. Remove that part in the transaction editor and retry."</string>
+    <plurals name="message_error_delete_category_in_more_splits">
+        <item quantity="one">"%d more split transaction uses it too."</item>
+        <item quantity="other">"%d more split transactions use it too."</item>
+    </plurals>
     <string name="message_error_delete_system_category">"This Category Cannot Be Deleted Because It Is A System Category."</string>
     <string name="message_delete_transaction">"Are You Sure You Want To Delete This Transaction?"</string>
     <plurals name="message_delete_selected_transactions">
@@ -490,8 +508,16 @@
         <item quantity="one">"%d Transaction Could Not Be Changed. Transfers, Debts And Savings Are Changed From Their Own Screens."</item>
         <item quantity="other">"%d Transactions Could Not Be Changed. Transfers, Debts And Savings Are Changed From Their Own Screens."</item>
     </plurals>
+    <plurals name="message_error_change_split_transactions">
+        <item quantity="one">"%d split transaction kept its category, because a split transaction cannot move between income and expense."</item>
+        <item quantity="other">"%d split transactions kept their category, because a split transaction cannot move between income and expense."</item>
+    </plurals>
     <string name="title_transactions_selected">"%d Selected"</string>
     <string name="description_close_selection">"Close Selection"</string>
+    <plurals name="description_split_categories">
+        <item quantity="one">"Split into %d category"</item>
+        <item quantity="other">"Split into %d categories"</item>
+    </plurals>
     <string name="message_selection_changed_nothing_changed">"The Selection Changed, So Nothing Was Changed."</string>
     <string name="message_delete_transfer">"Are You Sure You Want To Delete This Transfer?"</string>
     <string name="message_error_delete_transaction_of_transfer">"This Transaction Cannot Be Deleted Because Is Part Of A Transfer. Please Remove The Related Transfer To Delete This Transaction."</string>

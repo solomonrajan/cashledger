@@ -37,6 +37,7 @@ import com.oriondev.moneywallet.storage.database.model.Transaction
 import com.oriondev.moneywallet.storage.database.model.TransactionAttachment
 import com.oriondev.moneywallet.storage.database.model.TransactionModel
 import com.oriondev.moneywallet.storage.database.model.TransactionPerson
+import com.oriondev.moneywallet.storage.database.model.TransactionSplit
 import com.oriondev.moneywallet.storage.database.model.Transfer
 import com.oriondev.moneywallet.storage.database.model.TransferAttachment
 import com.oriondev.moneywallet.storage.database.model.TransferModel
@@ -389,6 +390,19 @@ internal class JSONDataOutputFactory {
         if (id != null && uuid != null) {
             cacheTransactions[id] = uuid
         }
+        return `object`
+    }
+
+    @Throws(JSONException::class)
+    fun getObject(transactionSplit: TransactionSplit): JSONObject {
+        val `object` = JSONObject()
+        `object`.put(JSONDatabase.TransactionSplit.TRANSACTION, cacheTransactions[transactionSplit.mTransaction])
+        `object`.put(JSONDatabase.TransactionSplit.CATEGORY, cacheCategories[transactionSplit.mCategory])
+        `object`.put(JSONDatabase.TransactionSplit.MONEY, transactionSplit.mMoney)
+        `object`.put(JSONDatabase.TransactionSplit.NOTE, transactionSplit.mNote)
+        `object`.put(JSONDatabase.TransactionSplit.ID, transactionSplit.mUUID)
+        `object`.put(JSONDatabase.TransactionSplit.LAST_EDIT, transactionSplit.mLastEdit)
+        `object`.put(JSONDatabase.TransactionSplit.DELETED, transactionSplit.mDeleted)
         return `object`
     }
 

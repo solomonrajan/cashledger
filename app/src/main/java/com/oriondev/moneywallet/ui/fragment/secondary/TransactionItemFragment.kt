@@ -68,6 +68,7 @@ class TransactionItemFragment :
 
     private var mDescriptionTextView: TextView? = null
     private var mCategoryTextView: TextView? = null
+    private var mSplitTextView: TextView? = null
     private var mDateTimeTextView: TextView? = null
     private var mWalletTextView: TextView? = null
     private var mEventTextView: TextView? = null
@@ -77,6 +78,11 @@ class TransactionItemFragment :
     private var mConfirmedCheckBox: CheckBox? = null
     private var mCountInTotalCheckBox: CheckBox? = null
     private var mAttachmentView: AttachmentView? = null
+
+    private var mCurrency: CurrencyUnit? = null
+    private var mMainLine: Part? = null
+    private var mSplitCounted: Boolean = false
+    private var mParts: MutableList<Part>? = null
 
     private val mMoneyFormatter: MoneyFormatter = MoneyFormatter.getInstance()
 
@@ -92,6 +98,7 @@ class TransactionItemFragment :
         mMainLayout = view.findViewById(R.id.secondary_panel_layout)
         mDescriptionTextView = view.findViewById(R.id.description_text_view)
         mCategoryTextView = view.findViewById(R.id.category_text_view)
+        mSplitTextView = view.findViewById(R.id.split_text_view)
         mDateTimeTextView = view.findViewById(R.id.date_time_text_view)
         mWalletTextView = view.findViewById(R.id.wallet_text_view)
         mEventTextView = view.findViewById(R.id.event_text_view)
@@ -159,6 +166,7 @@ class TransactionItemFragment :
         LoaderManager.getInstance(this).restartLoader(TRANSACTION_LOADER_ID, null, this)
         LoaderManager.getInstance(this).restartLoader(PEOPLE_LOADER_ID, null, this)
         LoaderManager.getInstance(this).restartLoader(ATTACHMENTS_LOADER_ID, null, this)
+        LoaderManager.getInstance(this).restartLoader(SPLITS_LOADER_ID, null, this)
     }
 
     private fun setLoadingScreen(loading: Boolean) {
@@ -170,6 +178,8 @@ class TransactionItemFragment :
             mCurrencyTextView?.text = null
             mDescriptionTextView?.text = null
             mCategoryTextView?.text = null
+            mSplitTextView?.text = null
+            mSplitTextView?.visibility = View.GONE
             mDateTimeTextView?.text = null
             mWalletTextView?.text = null
             mEventTextView?.text = null
@@ -205,6 +215,13 @@ class TransactionItemFragment :
                 Contract.Attachment.SIZE
             )
             CursorLoader(act, Uri.withAppendedPath(uri, "attachments"), projection, null, null, null)
+        } else if (id == SPLITS_LOADER_ID) {
+            val projection = arrayOf(
+                Contract.TransactionSplit.CATEGORY_NAME,
+                Contract.TransactionSplit.MONEY,
+                Contract.TransactionSplit.NOTE
+            )
+            CursorLoader(act, Uri.withAppendedPath(uri, "splits"), projection, null, null, null)
         } else {
             null
         }
@@ -237,6 +254,11 @@ class TransactionItemFragment :
                 }
                 val category = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.CATEGORY_NAME))
                 mCategoryTextView?.text = category
+                mCurrency = currency
+                mMainLine = Part(category, money, null)
+                val splitCategoriesIdx = cursor.getColumnIndex(Contract.Transaction.SPLIT_CATEGORIES)
+                mSplitCounted = splitCategoriesIdx != -1 && cursor.getInt(splitCategoriesIdx) > 0
+                showSplit()
                 val datetime: Date? = DateUtils.getDateFromSQLDateTimeString(cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.DATE)))
                 datetime?.let { d -> mDateTimeTextView?.let { tv -> DateFormatter.applyDateTime(tv, d) } }
                 val wallet = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_NAME))
@@ -306,12 +328,84 @@ class TransactionItemFragment :
             } else {
                 mAttachmentView?.visibility = View.GONE
             }
+        } else if (loader.id == SPLITS_LOADER_ID) {
+            val parts = ArrayList<Part>()
+            if (cursor != null && cursor.moveToFirst()) {
+                val catIndex = cursor.getColumnIndexOrThrow(Contract.TransactionSplit.CATEGORY_NAME)
+                val moneyIndex = cursor.getColumnIndexOrThrow(Contract.TransactionSplit.MONEY)
+                val noteIndex = cursor.getColumnIndexOrThrow(Contract.TransactionSplit.NOTE)
+                do {
+                    parts.add(
+                        Part(
+                            cursor.getString(catIndex),
+                            cursor.getLong(moneyIndex),
+                            cursor.getString(noteIndex)
+                        )
+                    )
+                } while (cursor.moveToNext())
+            }
+            mParts = parts
+            showSplit()
         }
     }
 
     override fun onLoaderReset(loader: Loader<Cursor>) {
         // nothing to release
     }
+
+    /**
+     * Lists every live part and what the parts leave under the main category. Parts that read as
+     * nothing are listed too, so the user can see what the editor will ask to fix, with a line
+     * saying no total counts them.
+     */
+    private fun showSplit() {
+        val parts = mParts ?: return
+        val mainLine = mMainLine ?: return
+        val splitTextView = mSplitTextView ?: return
+        if (parts.isEmpty()) {
+            splitTextView.visibility = View.GONE
+            return
+        }
+        val builder = java.lang.StringBuilder()
+        var remainder = mainLine.money
+        for (part in parts) {
+            if (builder.isNotEmpty()) {
+                builder.append("\n")
+            }
+            builder.append(describe(part))
+            remainder -= part.money
+        }
+        if (!mSplitCounted) {
+            builder.append("\n").append(getString(R.string.split_not_counted))
+        } else if (remainder > 0L) {
+            builder.append("\n").append(
+                getString(
+                    R.string.split_remainder,
+                    mainLine.category ?: "?",
+                    mMoneyFormatter.getNotTintedString(mCurrency, remainder)
+                )
+            )
+        }
+        splitTextView.text = builder
+        splitTextView.visibility = View.VISIBLE
+    }
+
+    private fun describe(part: Part): String {
+        val category = part.category ?: "?"
+        val money = mMoneyFormatter.getNotTintedString(mCurrency, part.money)
+        val note = part.note
+        return if (note.isNullOrEmpty()) {
+            getString(R.string.split_part, category, money)
+        } else {
+            getString(R.string.split_part_with_note, category, money, note)
+        }
+    }
+
+    private class Part(
+        val category: String?,
+        val money: Long,
+        val note: String?
+    )
 
     override fun onAttachmentClick(attachment: Attachment) {
         Attachment.openAttachment(activity, attachment)
@@ -325,5 +419,6 @@ class TransactionItemFragment :
         private const val TRANSACTION_LOADER_ID = 54347
         private const val PEOPLE_LOADER_ID = 54348
         private const val ATTACHMENTS_LOADER_ID = 54349
+        private const val SPLITS_LOADER_ID = 54350
     }
 }

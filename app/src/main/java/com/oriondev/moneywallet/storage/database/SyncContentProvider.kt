@@ -79,6 +79,8 @@ class SyncContentProvider : ContentProvider() {
         @JvmField
         val CONTENT_TRANSACTION_PEOPLE: Uri = Uri.parse("content://$AUTHORITY/transaction_people")
         @JvmField
+        val CONTENT_TRANSACTION_SPLIT: Uri = Uri.parse("content://$AUTHORITY/transaction_splits")
+        @JvmField
         val CONTENT_TRANSACTION_MODEL: Uri = Uri.parse("content://$AUTHORITY/transaction_model")
         @JvmField
         val CONTENT_TRANSFER: Uri = Uri.parse("content://$AUTHORITY/transfers")
@@ -118,6 +120,7 @@ class SyncContentProvider : ContentProvider() {
         private const val TABLE_TRANSACTION_ATTACHMENTS = 22
         private const val TABLE_TRANSFER_ATTACHMENTS = 23
         private const val TABLE_CATEGORY_RULES = 25
+        private const val TABLE_TRANSACTION_SPLITS = 26
 
         private val mUriMatcher: UriMatcher = createUriMatcher()
 
@@ -141,6 +144,7 @@ class SyncContentProvider : ContentProvider() {
             matcher.addURI(AUTHORITY, "recurrent_transfers", TABLE_RECURRENT_TRANSFERS)
             matcher.addURI(AUTHORITY, "transactions", TABLE_TRANSACTIONS)
             matcher.addURI(AUTHORITY, "transaction_people", TABLE_TRANSACTION_PEOPLE)
+            matcher.addURI(AUTHORITY, "transaction_splits", TABLE_TRANSACTION_SPLITS)
             matcher.addURI(AUTHORITY, "transaction_model", TABLE_TRANSACTION_MODELS)
             matcher.addURI(AUTHORITY, "transfers", TABLE_TRANSFERS)
             matcher.addURI(AUTHORITY, "transfer_people", TABLE_TRANSFER_PEOPLE)
@@ -193,6 +197,7 @@ class SyncContentProvider : ContentProvider() {
             TABLE_RECURRENT_TRANSFERS -> Schema.RecurrentTransfer.TABLE
             TABLE_TRANSACTIONS -> Schema.Transaction.TABLE
             TABLE_TRANSACTION_PEOPLE -> Schema.TransactionPeople.TABLE
+            TABLE_TRANSACTION_SPLITS -> Schema.TransactionSplit.TABLE
             TABLE_TRANSACTION_MODELS -> Schema.TransactionModel.TABLE
             TABLE_TRANSFERS -> Schema.Transfer.TABLE
             TABLE_TRANSFER_PEOPLE -> Schema.TransferPeople.TABLE

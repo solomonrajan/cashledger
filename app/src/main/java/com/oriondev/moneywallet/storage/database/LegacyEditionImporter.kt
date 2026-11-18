@@ -103,6 +103,7 @@ class LegacyEditionImporter @Throws(ImportException::class) constructor(context:
         mDatabaseImporter.importRecurrentTransactions(contentResolver)
         mDatabaseImporter.importRecurrentTransfers(contentResolver)
         mDatabaseImporter.importTransactions(contentResolver)
+        mDatabaseImporter.importTransactionSplits(contentResolver)
         mDatabaseImporter.importTransactionPeople(contentResolver)
         mDatabaseImporter.importTransactionModels(contentResolver)
         mDatabaseImporter.importTransfers(contentResolver)

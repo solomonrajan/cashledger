@@ -20,7 +20,7 @@ package com.oriondev.moneywallet.storage.database.json
 internal object JSONDatabase {
 
     const val MIN_SUPPORTED_VERSION: Int = 1
-    const val MAX_SUPPORTED_VERSION: Int = 4
+    const val MAX_SUPPORTED_VERSION: Int = 5
 
     // version 3 adds the budget_categories array, so that a budget covering more than one
     // category keeps every one of them through a backup. A release that predates it refuses a
@@ -29,7 +29,10 @@ internal object JSONDatabase {
     // version 4 adds the category_rules array, so that the rules naming a category from a
     // description survive a restore and a move to another device. A release that predates it
     // refuses a version 4 file by its header instead of failing part way through the arrays.
-    const val VERSION: Int = 4
+    // version 5 adds the transaction_splits array, so that the parts a transaction is split into
+    // survive a restore. A release that predates it refuses a version 5 file by its header
+    // instead of failing part way through the arrays.
+    const val VERSION: Int = 5
 
     object Header {
         const val OBJECT: String = "header"
@@ -274,6 +277,17 @@ internal object JSONDatabase {
         const val CONFIRMED: String = "confirmed"
         const val COUNT_IN_TOTAL: String = "count_in_total"
         const val TAG: String = "tag"
+        const val LAST_EDIT: String = "last_edit"
+        const val DELETED: String = "deleted"
+    }
+
+    object TransactionSplit {
+        const val ARRAY: String = "transaction_splits"
+        const val ID: String = "id"
+        const val TRANSACTION: String = "transaction"
+        const val CATEGORY: String = "category"
+        const val MONEY: String = "money"
+        const val NOTE: String = "note"
         const val LAST_EDIT: String = "last_edit"
         const val DELETED: String = "deleted"
     }

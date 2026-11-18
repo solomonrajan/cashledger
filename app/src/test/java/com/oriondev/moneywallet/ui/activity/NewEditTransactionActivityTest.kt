@@ -6,25 +6,36 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
+import android.os.Looper
+import android.util.DisplayMetrics
 import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Lifecycle
+import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import com.google.android.material.tabs.TabLayout
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.model.Attachment
 import com.oriondev.moneywallet.model.Category
 import com.oriondev.moneywallet.model.Person
+import com.oriondev.moneywallet.model.Wallet
 import com.oriondev.moneywallet.picker.AttachmentPicker
 import com.oriondev.moneywallet.picker.CategoryPicker
 import com.oriondev.moneywallet.picker.DateTimePicker
 import com.oriondev.moneywallet.picker.MoneyPicker
 import com.oriondev.moneywallet.picker.PersonPicker
+import com.oriondev.moneywallet.picker.WalletPicker
 import com.oriondev.moneywallet.storage.database.Contract
 import com.oriondev.moneywallet.storage.database.DataContentProvider
+import com.oriondev.moneywallet.storage.database.SplitLedger
 import com.oriondev.moneywallet.storage.database.TestDatabases
 import com.oriondev.moneywallet.storage.preference.PreferenceManager
 import com.oriondev.moneywallet.ui.view.text.MaterialEditText
@@ -34,12 +45,15 @@ import com.oriondev.moneywallet.utils.IconLoader
 import com.oriondev.moneywallet.utils.MoneyFormatter
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
 import org.robolectric.shadows.ShadowDialog
+import java.util.Collections
 import java.util.Date
 
 /**
@@ -659,6 +673,440 @@ class NewEditTransactionActivityTest {
         }
     }
 
+    @Test
+    fun aTransactionSavedFromAModelIsStoredAsAPlainOne() {
+        val intent = newItemIntent().apply {
+            putExtra(NewEditTransactionActivity.TYPE, NewEditTransactionActivity.TYPE_MODEL)
+            putExtra(NewEditTransactionActivity.MODEL_ID, insertModel(4200L, dollarWallet))
+        }
+        val before = countTransactions()
+        ActivityScenario.launch<NewEditTransactionActivity>(intent).use { scenario ->
+            scenario.onActivity { activity ->
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(before + 1, countTransactions())
+        assertEquals(Contract.TransactionType.STANDARD.toLong(), longOf(newestId(), Contract.Transaction.TYPE))
+    }
+
+    // splits, over SplitLedger, whose ids start at 901 and so never meet the rows above
+
+    @Test
+    fun aNewTransactionIsSavedWithItsParts() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val intent = newItemIntent().apply {
+            putExtra(NewEditTransactionActivity.WALLET_ID, SplitLedger.CASH)
+        }
+        ActivityScenario.launch<NewEditTransactionActivity>(intent).use { scenario ->
+            scenario.onActivity { activity ->
+                categoryPicker(activity).setCategory(ledgerCategory(SplitLedger.GROCERIES))
+                moneyPicker(activity).setMoney(9000L)
+                assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.split_edit_text).visibility)
+                addPart(activity, SplitLedger.HOUSEHOLD, 2000L)
+                addPart(activity, SplitLedger.FUEL, 1500L)
+                assertEquals(listOf("Household", "Fuel"), partLabels(activity))
+                assertEquals(remainingHint(activity, "Groceries"), remainingField(activity).floatingLabelText)
+                assertEquals(euro(9000L - 2000L - 1500L), remainingField(activity).getTextAsString())
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        val id = newestId()
+        assertEquals(sortedOf(SplitLedger.HOUSEHOLD.toString() + ":2000:null", SplitLedger.FUEL.toString() + ":1500:null"), storedParts(id))
+    }
+
+    /** The part picker offers the main category's type alone, and the keypad follows the pick. */
+    @Test
+    fun aPartIsPickedAmongCategoriesOfTheMainOnesType() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.PAY_SPLIT)).use { scenario ->
+            scenario.onActivity { activity ->
+                activity.findViewById<View>(R.id.split_edit_text).performClick()
+                val picker = shadowOf(activity).nextStartedActivity
+                assertEquals(CategoryPickerActivity::class.java.name, picker.component?.className)
+                assertEquals(Contract.CategoryType.INCOME, picker.getSerializableExtra(CategoryPickerActivity.ONLY_TYPE))
+                partCategoryPicker(activity).setCategory(ledgerCategory(SplitLedger.BONUS))
+                assertStartedCalculator(activity)
+            }
+        }
+    }
+
+    /** The expense page is the second when every type is shown, so it cannot pass by being first. */
+    @Test
+    fun thePartPickerShowsThePageOfTheMainCategorysType() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val picker = arrayOfNulls<Intent>(1)
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                activity.findViewById<View>(R.id.split_edit_text).performClick()
+                picker[0] = shadowOf(activity).nextStartedActivity
+            }
+        }
+        ActivityScenario.launch<CategoryPickerActivity>(checkNotNull(picker[0])).use { scenario ->
+            scenario.onActivity { activity ->
+                val tabs = activity.findViewById<TabLayout>(R.id.tab_layout)
+                assertEquals(1, tabs.tabCount)
+                assertEquals(activity.getString(R.string.menu_category_tab_expense), tabs.getTabAt(0)?.text?.toString())
+                val names = categoryPickerNames(activity)
+                assertTrue(names.toString(), names.containsAll(listOf("Fuel", "Groceries")))
+                assertFalse(names.toString(), names.contains("Salary") || names.contains("Bonus"))
+            }
+        }
+    }
+
+    @Test
+    fun anEditedPartIsSavedAndTheOthersKept() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                // the part flagged deleted is not listed
+                assertEquals(listOf("Household", "Fuel"), partLabels(activity))
+                choosePartAction(activity, 1, 1)
+                partMoneyPicker(activity).setMoney(4000L)
+                choosePartAction(activity, 0, 2)
+                val note = ShadowDialog.getLatestDialog() as? AlertDialog ?: error("no note dialog")
+                note.findViewById<EditText>(R.id.dialog_input_edit_text)?.setText("soap")
+                note.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+                shadowOf(Looper.getMainLooper()).idle()
+                assertEquals(euro(10000L - 2000L - 4000L), remainingField(activity).getTextAsString())
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(
+            sortedOf(SplitLedger.HOUSEHOLD.toString() + ":2000:soap", SplitLedger.FUEL.toString() + ":4000:null"),
+            storedParts(SplitLedger.RECEIPT)
+        )
+    }
+
+    @Test
+    fun aTotalBelowThePartsIsRefused() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                // the parts are 2000 and 3000
+                moneyPicker(activity).setMoney(2000L + 3000L - 1L)
+                assertRefused(activity, R.string.error_split_total_below_parts)
+                moneyPicker(activity).setMoney(2000L + 3000L)
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(2000L + 3000L, moneyOf(SplitLedger.RECEIPT))
+    }
+
+    /** Added plainly, 2000 raised to the largest amount less 1000, and 3000, wrap below the total. */
+    @Test
+    fun partsAddingUpPastTheLargestAmountAreRefusedBeforeTheDatabase() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val row = rowsOf("transactions", "transaction_id = " + SplitLedger.RECEIPT)
+        val parts = rowsOf("transaction_splits", "_transaction = " + SplitLedger.RECEIPT)
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                choosePartAction(activity, 0, 1)
+                partMoneyPicker(activity).setMoney(Long.MAX_VALUE - 1000L)
+                assertRefused(activity, R.string.error_split_total_below_parts)
+            }
+        }
+        assertEquals(row, rowsOf("transactions", "transaction_id = " + SplitLedger.RECEIPT))
+        assertEquals(parts, rowsOf("transaction_splits", "_transaction = " + SplitLedger.RECEIPT))
+    }
+
+    /** Spare goes from another window, through the app's own delete, after the editor took it for a part. */
+    @Test
+    fun aNewTransactionWhosePartCategoryIsDeletedElsewhereIsRefusedThenSaved() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val intent = newItemIntent().apply {
+            putExtra(NewEditTransactionActivity.WALLET_ID, SplitLedger.CASH)
+        }
+        val before = countTransactions()
+        val partsBefore = countParts("1")
+        val label = ArrayList<String>()
+        ActivityScenario.launch<NewEditTransactionActivity>(intent).use { scenario ->
+            scenario.onActivity { activity ->
+                categoryPicker(activity).setCategory(ledgerCategory(SplitLedger.GROCERIES))
+                moneyPicker(activity).setMoney(9000L)
+                addPart(activity, SplitLedger.SPARE, 2000L)
+                addPart(activity, SplitLedger.FUEL, 1500L)
+                assertEquals(
+                    1,
+                    resolver.delete(
+                        ContentUris.withAppendedId(DataContentProvider.CONTENT_CATEGORIES, SplitLedger.SPARE),
+                        null,
+                        null
+                    )
+                )
+                assertRefused(activity, R.string.error_split_not_saved)
+                label.addAll(partLabels(activity))
+                assertRefused(activity, R.string.error_split_not_saved)
+                choosePartAction(activity, 0, 0)
+                partCategoryPicker(activity).setCategory(ledgerCategory(SplitLedger.HOUSEHOLD))
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(listOf("Spare", "Fuel"), label)
+        assertEquals(before + 1, countTransactions())
+        assertEquals(partsBefore + 2, countParts("1"))
+        assertEquals(
+            sortedOf(SplitLedger.HOUSEHOLD.toString() + ":2000:null", SplitLedger.FUEL.toString() + ":1500:null"),
+            storedParts(newestId())
+        )
+    }
+
+    /** On an edit the row and its parts stay as they were, and removing the new part lets it save. */
+    @Test
+    fun anEditWhoseNewPartCategoryIsDeletedElsewhereIsRefusedThenSaved() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val row = rowsOf("transactions", "transaction_id = " + SplitLedger.RECEIPT)
+        val parts = rowsOf("transaction_splits", "_transaction = " + SplitLedger.RECEIPT)
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                moneyPicker(activity).setMoney(12000L)
+                addPart(activity, SplitLedger.SPARE, 1000L)
+                assertEquals(
+                    1,
+                    resolver.delete(
+                        ContentUris.withAppendedId(DataContentProvider.CONTENT_CATEGORIES, SplitLedger.SPARE),
+                        null,
+                        null
+                    )
+                )
+                assertRefused(activity, R.string.error_split_not_saved)
+                assertEquals(row, rowsOf("transactions", "transaction_id = " + SplitLedger.RECEIPT))
+                assertEquals(parts, rowsOf("transaction_splits", "_transaction = " + SplitLedger.RECEIPT))
+                choosePartAction(activity, 2, -1)
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(12000L, moneyOf(SplitLedger.RECEIPT))
+        assertEquals(
+            sortedOf(SplitLedger.HOUSEHOLD.toString() + ":2000:null", SplitLedger.FUEL.toString() + ":3000:null"),
+            storedParts(SplitLedger.RECEIPT)
+        )
+    }
+
+    @Test
+    fun aPartOfZeroIsRefused() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                choosePartAction(activity, 0, 1)
+                partMoneyPicker(activity).setMoney(0L)
+                assertRefused(activity, R.string.error_split_part_not_positive)
+            }
+        }
+    }
+
+    /** A new main category of the other direction would leave the parts on the wrong side. */
+    @Test
+    fun aDirectionFlipOnASplitRowIsRefused() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                categoryPicker(activity).setCategory(ledgerCategory(SplitLedger.SALARY))
+                assertRefused(activity, R.string.error_split_part_wrong_type)
+            }
+        }
+        assertEquals(SplitLedger.GROCERIES, longOf(SplitLedger.RECEIPT, Contract.Transaction.CATEGORY_ID))
+        assertEquals(Contract.Direction.EXPENSE.toLong(), longOf(SplitLedger.RECEIPT, Contract.Transaction.DIRECTION))
+    }
+
+    /**
+     * CROSSED holds a Salary part on an expense, so it reads as unsplit. It opens on that part,
+     * is refused while the part stays, and removing it saves the row unsplit.
+     */
+    @Test
+    fun aRowWithInvalidPartsOpensOnThemAndIsRefusedUntilRepaired() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.CROSSED)).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(listOf("Salary"), partLabels(activity))
+                assertRefused(activity, R.string.error_split_part_wrong_type)
+                choosePartAction(activity, 0, -1)
+                assertEquals(View.GONE, activity.findViewById<View>(R.id.split_parts_layout).visibility)
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(emptyList<String>(), storedParts(SplitLedger.CROSSED))
+    }
+
+    /** OVER holds parts of 800 and 700 on a total of 1000, and is saved once the total covers them. */
+    @Test
+    fun aRowWhosePartsPassItsTotalIsSavedOnceTheTotalCoversThem() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.OVER)).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(listOf("Household", "Fuel"), partLabels(activity))
+                assertRefused(activity, R.string.error_split_total_below_parts)
+                moneyPicker(activity).setMoney(800L + 700L)
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(
+            sortedOf(SplitLedger.HOUSEHOLD.toString() + ":800:null", SplitLedger.FUEL.toString() + ":700:null"),
+            storedParts(SplitLedger.OVER)
+        )
+    }
+
+    /**
+     * MoneyPicker keeps the minor units of the total when the wallet changes currency, and the
+     * parts keep theirs with it, so 10000 with parts of 2000 and 3000 becomes 10000 yen with parts
+     * of 2000 and 3000 yen.
+     */
+    @Test
+    fun aWalletOfAnotherCurrencyKeepsThePartsInStepWithTheTotal() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                val wallets = activity.supportFragmentManager.findFragmentByTag(WALLET_PICKER) as? WalletPicker
+                    ?: error("no wallet picker")
+                val currency = CurrencyManager.getCurrency("JPY") ?: error("no JPY currency")
+                wallets.onWalletSelected(Wallet(SplitLedger.YEN, "Yen", null, currency, 0L, 0L))
+                assertEquals(10000L, moneyPicker(activity).currentMoney)
+                assertEquals(
+                    MoneyFormatter.getInstance().getNotTintedString(currency, 10000L - 2000L - 3000L),
+                    remainingField(activity).getTextAsString()
+                )
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        assertEquals(SplitLedger.YEN, longOf(SplitLedger.RECEIPT, Contract.Transaction.WALLET_ID))
+        assertEquals(10000L, moneyOf(SplitLedger.RECEIPT))
+        assertEquals(
+            sortedOf(SplitLedger.HOUSEHOLD.toString() + ":2000:null", SplitLedger.FUEL.toString() + ":3000:null"),
+            storedParts(SplitLedger.RECEIPT)
+        )
+    }
+
+    @Test
+    fun aCopyTakesThePartsAsPartsOfItsOwn() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val original = storedParts(SplitLedger.RECEIPT)
+        val intent = newItemIntent().apply {
+            putExtra(NewEditTransactionActivity.DUPLICATE_ID, SplitLedger.RECEIPT)
+        }
+        ActivityScenario.launch<NewEditTransactionActivity>(intent).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(listOf("Household", "Fuel"), partLabels(activity))
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        val copy = newestId()
+        assertFalse(copy == SplitLedger.RECEIPT)
+        assertEquals(sortedOf(SplitLedger.HOUSEHOLD.toString() + ":2000:null", SplitLedger.FUEL.toString() + ":3000:null"), storedParts(copy))
+        assertEquals("the original keeps its own rows", original, storedParts(SplitLedger.RECEIPT))
+        assertEquals(2L, countParts("_transaction = $copy AND split_id NOT IN (930, 931)"))
+    }
+
+    /** A part added, and one waiting for its category, both come back after a recreate. */
+    @Test
+    fun thePartsSurviveARecreate() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val intent = newItemIntent().apply {
+            putExtra(NewEditTransactionActivity.WALLET_ID, SplitLedger.CASH)
+        }
+        ActivityScenario.launch<NewEditTransactionActivity>(intent).use { scenario ->
+            scenario.onActivity { activity ->
+                categoryPicker(activity).setCategory(ledgerCategory(SplitLedger.GROCERIES))
+                moneyPicker(activity).setMoney(9000L)
+                addPart(activity, SplitLedger.HOUSEHOLD, 2000L)
+                activity.findViewById<View>(R.id.split_edit_text).performClick()
+            }
+            scenario.recreate()
+            scenario.onActivity { activity ->
+                assertEquals(listOf("Household"), partLabels(activity))
+                assertEquals(euro(9000L - 2000L), remainingField(activity).getTextAsString())
+                // the category picked for the part that was being added when the screen went
+                partCategoryPicker(activity).setCategory(ledgerCategory(SplitLedger.FUEL))
+                partMoneyPicker(activity).setMoney(1500L)
+            }
+            scenario.recreate()
+            scenario.onActivity { activity ->
+                assertEquals(listOf("Household", "Fuel"), partLabels(activity))
+                save(activity)
+                assertTrue(activity.isFinishing)
+            }
+        }
+        val id = newestId()
+        assertEquals(sortedOf(SplitLedger.HOUSEHOLD.toString() + ":2000:null", SplitLedger.FUEL.toString() + ":1500:null"), storedParts(id))
+    }
+
+    /** Nothing but a plain transaction offers the action, and saving one of the others leaves its parts. */
+    @Test
+    fun onlyAPlainTransactionOffersTheSplit() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val debtParts = storedParts(SplitLedger.DEBT_ROW)
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.DEBT_ROW)).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(View.GONE, activity.findViewById<View>(R.id.split_edit_text).visibility)
+                assertEquals(View.GONE, activity.findViewById<View>(R.id.split_parts_layout).visibility)
+                save(activity)
+            }
+        }
+        assertEquals(debtParts, storedParts(SplitLedger.DEBT_ROW))
+        ActivityScenario.launch<NewEditTransactionActivity>(
+            savingIntent(NewEditTransactionActivity.SAVING_DEPOSIT)
+        ).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(View.GONE, activity.findViewById<View>(R.id.split_edit_text).visibility)
+            }
+        }
+        ActivityScenario.launch<NewEditTransactionActivity>(
+            debtIntent(insertDebt(euroWallet), NewEditTransactionActivity.DEBT_PAY)
+        ).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(View.GONE, activity.findViewById<View>(R.id.split_edit_text).visibility)
+            }
+        }
+        val model = newItemIntent().apply {
+            putExtra(NewEditTransactionActivity.TYPE, NewEditTransactionActivity.TYPE_MODEL)
+            putExtra(NewEditTransactionActivity.MODEL_ID, insertModel(4200L, euroWallet))
+        }
+        ActivityScenario.launch<NewEditTransactionActivity>(model).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.split_edit_text).visibility)
+            }
+        }
+    }
+
+    @Test
+    fun aRowARecurrenceWroteHidesTheSplitAndACopyOfItOffersIt() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        val db = SplitLedger.database(ApplicationProvider.getApplicationContext())
+        db.execSQL(
+            "INSERT INTO recurrent_transactions (recurrent_transaction_id, recurrent_transaction_money, " +
+                "recurrent_transaction_category, recurrent_transaction_direction, " +
+                "recurrent_transaction_wallet, recurrent_transaction_start_date, " +
+                "recurrent_transaction_last_occurrence, recurrent_transaction_rule, uuid, last_edit, " +
+                "deleted) VALUES (960, 10000, ?, ?, ?, '2026-01-15', '2026-01-15', 'FREQ=MONTHLY', " +
+                "'recurrence-960', 0, 0)",
+            arrayOf<Any>(SplitLedger.GROCERIES, Contract.Direction.EXPENSE, SplitLedger.CASH)
+        )
+        db.execSQL("UPDATE transactions SET transaction_recurrence = 960 WHERE transaction_id = " + SplitLedger.RECEIPT)
+        ActivityScenario.launch<NewEditTransactionActivity>(editIntent(SplitLedger.RECEIPT)).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(View.GONE, activity.findViewById<View>(R.id.split_edit_text).visibility)
+                assertEquals(View.GONE, activity.findViewById<View>(R.id.split_parts_layout).visibility)
+            }
+        }
+        val copy = newItemIntent().apply {
+            putExtra(NewEditTransactionActivity.DUPLICATE_ID, SplitLedger.RECEIPT)
+        }
+        ActivityScenario.launch<NewEditTransactionActivity>(copy).use { scenario ->
+            scenario.onActivity { activity ->
+                assertEquals(View.VISIBLE, activity.findViewById<View>(R.id.split_edit_text).visibility)
+                assertEquals(listOf("Household", "Fuel"), partLabels(activity))
+            }
+        }
+    }
+
     // fixtures
 
     private fun insertCategory(): Long {
@@ -968,6 +1416,82 @@ class NewEditTransactionActivityTest {
         return complete
     }
 
+    private fun assertRefused(activity: NewEditTransactionActivity, message: Int) {
+        val before = countTransactions()
+        val parts = countParts("1")
+        save(activity)
+        assertFalse(activity.isFinishing)
+        val dialog = ShadowDialog.getLatestDialog() as? AlertDialog ?: error("no refused dialog")
+        assertTrue(dialog.isShowing)
+        val text = dialog.findViewById<TextView>(android.R.id.message)
+        assertEquals(activity.getString(message), text?.text?.toString())
+        dialog.dismiss()
+        assertEquals(before, countTransactions())
+        assertEquals(parts, countParts("1"))
+    }
+
+    private fun storedParts(transaction: Long): List<String> {
+        val parts = ArrayList<String>()
+        val cursor = SplitLedger.database(ApplicationProvider.getApplicationContext()).rawQuery(
+            "SELECT split_category || ':' || split_money || ':' || IFNULL(split_note, 'null') FROM " +
+                "transaction_splits WHERE deleted = 0 AND _transaction = $transaction",
+            null
+        )
+        cursor.use { c ->
+            while (c.moveToNext()) {
+                parts.add(c.getString(0))
+            }
+        }
+        Collections.sort(parts)
+        return parts
+    }
+
+    private fun rowsOf(table: String, selection: String): List<String> {
+        val rows = ArrayList<String>()
+        val cursor = SplitLedger.database(ApplicationProvider.getApplicationContext()).rawQuery(
+            "SELECT * FROM $table WHERE $selection",
+            null
+        )
+        cursor.use { c ->
+            while (c.moveToNext()) {
+                val columns = ArrayList<String>()
+                for (i in 0 until c.columnCount) {
+                    columns.add(c.getColumnName(i) + "=" + c.getString(i))
+                }
+                rows.add(columns.toString())
+            }
+        }
+        Collections.sort(rows)
+        return rows
+    }
+
+    private fun countParts(selection: String): Long {
+        val cursor = SplitLedger.database(ApplicationProvider.getApplicationContext()).rawQuery(
+            "SELECT COUNT(*) FROM transaction_splits WHERE $selection",
+            null
+        )
+        cursor.use { c ->
+            assertTrue(c.moveToFirst())
+            return c.getLong(0)
+        }
+    }
+
+    private fun longOf(transactionId: Long, column: String): Long {
+        val uri = ContentUris.withAppendedId(DataContentProvider.CONTENT_TRANSACTIONS, transactionId)
+        val cursor = resolver.query(uri, arrayOf(column), null, null, null)
+        cursor?.use { c ->
+            assertTrue(c.moveToFirst())
+            return c.getLong(0)
+        } ?: error("cursor was null")
+    }
+
+    private fun newestId(): Long {
+        val cursor = newestTransaction()
+        cursor.use { c ->
+            return c.getLong(0)
+        }
+    }
+
     private fun savingIntent(action: Int): Intent {
         return newItemIntent().apply {
             putExtra(NewEditTransactionActivity.TYPE, NewEditTransactionActivity.TYPE_SAVING)
@@ -985,6 +1509,9 @@ class NewEditTransactionActivityTest {
         private const val CATEGORY_PICKER = "NewEditTransactionActivity::Tag::CategoryPicker"
         private const val PERSON_PICKER = "NewEditTransactionActivity::Tag::PersonPicker"
         private const val ATTACHMENT_PICKER = "NewEditTransactionActivity::Tag::AttachmentPicker"
+        private const val PART_CATEGORY_PICKER = "NewEditTransactionActivity::Tag::PartCategoryPicker"
+        private const val PART_MONEY_PICKER = "NewEditTransactionActivity::Tag::PartMoneyPicker"
+        private const val WALLET_PICKER = "NewEditTransactionActivity::Tag::WalletPicker"
 
         private fun daysFromNow(days: Int): Date {
             return Date(System.currentTimeMillis() + days * DAY)
@@ -1043,6 +1570,107 @@ class NewEditTransactionActivityTest {
             val toolbar = activity.findViewById<Toolbar>(R.id.primary_toolbar)
             val item = checkNotNull(toolbar.menu.findItem(R.id.action_save_changes))
             activity.onMenuItemClick(item)
+        }
+
+        private fun ledgerCategory(id: Long): Category {
+            val income = id == SplitLedger.SALARY || id == SplitLedger.BONUS
+            return Category(
+                id,
+                SplitLedger.NAMES[id],
+                null,
+                if (income) Contract.CategoryType.INCOME else Contract.CategoryType.EXPENSE
+            )
+        }
+
+        private fun partCategoryPicker(activity: NewEditTransactionActivity): CategoryPicker {
+            return checkNotNull(activity.supportFragmentManager.findFragmentByTag(PART_CATEGORY_PICKER) as? CategoryPicker)
+        }
+
+        private fun partMoneyPicker(activity: NewEditTransactionActivity): MoneyPicker {
+            return checkNotNull(activity.supportFragmentManager.findFragmentByTag(PART_MONEY_PICKER) as? MoneyPicker)
+        }
+
+        private fun addPart(activity: NewEditTransactionActivity, category: Long, money: Long) {
+            activity.findViewById<View>(R.id.split_edit_text).performClick()
+            partCategoryPicker(activity).setCategory(ledgerCategory(category))
+            partMoneyPicker(activity).setMoney(money)
+        }
+
+        private fun choosePartAction(activity: NewEditTransactionActivity, part: Int, action: Int) {
+            val parts = activity.findViewById<ViewGroup>(R.id.split_parts_layout)
+            parts.getChildAt(part).performClick()
+            val dialog = ShadowDialog.getLatestDialog() as? AlertDialog ?: error("no dialog")
+            if (action < 0) {
+                dialog.getButton(AlertDialog.BUTTON_NEUTRAL).performClick()
+            } else {
+                val list = dialog.listView ?: error("no list view in dialog")
+                val itemId = list.adapter?.getItemId(action) ?: 0L
+                list.performItemClick(list, action, itemId)
+            }
+            shadowOf(Looper.getMainLooper()).idle()
+        }
+
+        private fun partLabels(activity: NewEditTransactionActivity): List<String> {
+            val parts = activity.findViewById<ViewGroup>(R.id.split_parts_layout)
+            val labels = ArrayList<String>()
+            for (i in 0 until parts.childCount) {
+                val child = parts.getChildAt(i) as? MaterialEditText
+                labels.add(child?.floatingLabelText.orEmpty())
+            }
+            return labels
+        }
+
+        private fun remainingField(activity: NewEditTransactionActivity): MaterialEditText {
+            return activity.findViewById(R.id.split_remaining_edit_text)
+        }
+
+        private fun remainingHint(activity: NewEditTransactionActivity, category: String): String {
+            return activity.getString(R.string.hint_split_remaining, category)
+        }
+
+        private fun euro(money: Long): String {
+            val currency = CurrencyManager.getCurrency("EUR") ?: error("EUR is null")
+            return MoneyFormatter.getInstance().getNotTintedString(currency, money)
+        }
+
+        private fun sortedOf(vararg rows: String): List<String> {
+            val list = ArrayList(listOf(*rows))
+            Collections.sort(list)
+            return list
+        }
+
+        private fun categoryPickerNames(activity: CategoryPickerActivity): List<String> {
+            val list = activity.findViewById<RecyclerView>(R.id.recycler_view)
+            var i = 0
+            while (i < 200 && (list.adapter == null || (list.adapter?.itemCount ?: 0) == 0)) {
+                shadowOf(Looper.getMainLooper()).idle()
+                try {
+                    Thread.sleep(25)
+                } catch (e: InterruptedException) {
+                    throw AssertionError(e)
+                }
+                i++
+            }
+            shadowOf(Looper.getMainLooper()).idle()
+            assertEquals("the categories never loaded", View.VISIBLE, list.visibility)
+            val decor = activity.window.decorView
+            val metrics = decor.resources.displayMetrics
+            decor.measure(
+                View.MeasureSpec.makeMeasureSpec(metrics.widthPixels, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(metrics.heightPixels, View.MeasureSpec.EXACTLY)
+            )
+            decor.layout(0, 0, decor.measuredWidth, decor.measuredHeight)
+            val names = ArrayList<String>()
+            for (childIdx in 0 until list.childCount) {
+                names.add(list.getChildAt(childIdx).findViewById<TextView>(R.id.name_text_view).text.toString())
+            }
+            return names
+        }
+
+        private fun assertStartedCalculator(activity: NewEditTransactionActivity) {
+            val started = shadowOf(activity).nextStartedActivity
+            assertEquals(CalculatorActivity::class.java.name, started.component?.className)
+            assertNull(shadowOf(activity).nextStartedActivity)
         }
     }
 }

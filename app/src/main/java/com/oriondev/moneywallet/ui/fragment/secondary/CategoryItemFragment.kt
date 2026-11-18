@@ -26,6 +26,7 @@ import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -48,7 +49,11 @@ import com.oriondev.moneywallet.ui.activity.NewEditItemActivity
 import com.oriondev.moneywallet.ui.activity.TransactionListActivity
 import com.oriondev.moneywallet.ui.fragment.base.SecondaryPanelFragment
 import com.oriondev.moneywallet.ui.view.theme.ThemedDialog
+import com.oriondev.moneywallet.utils.CurrencyManager
+import com.oriondev.moneywallet.utils.DateFormatter
+import com.oriondev.moneywallet.utils.DateUtils
 import com.oriondev.moneywallet.utils.IconLoader
+import com.oriondev.moneywallet.utils.MoneyFormatter
 
 /**
  * Created by andrea on 01/04/18.
@@ -124,6 +129,14 @@ class CategoryItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallb
                         navigateBackSafely()
                         showItemId(0L)
                     } catch (e: SQLiteDataException) {
+                        if (e.errorCode == Contract.ErrorCode.CATEGORY_IN_SPLIT) {
+                            ThemedDialog.buildMaterialDialog(act)
+                                .setTitle(R.string.title_error)
+                                .setMessage(describeSplitRefusal(act, e.itemIds))
+                                .setPositiveButton(android.R.string.ok, null)
+                                .show()
+                            return@setPositiveButton
+                        }
                         var contentRes = 0
                         when (e.errorCode) {
                             Contract.ErrorCode.CATEGORY_HAS_CHILDREN -> {
@@ -243,5 +256,57 @@ class CategoryItemFragment : SecondaryPanelFragment(), LoaderManager.LoaderCallb
 
     companion object {
         private const val CATEGORY_LOADER_ID = 246327
+
+        /**
+         * Names the newest of the split transactions holding a part in this category by its date and
+         * its description, or its amount when it has none, and counts the others.
+         */
+        @JvmStatic
+        fun describeSplitRefusal(context: Context, transactionIds: LongArray?): String {
+            var name = "?"
+            var date = "?"
+            if (transactionIds != null && transactionIds.isNotEmpty()) {
+                val uri = ContentUris.withAppendedId(DataContentProvider.CONTENT_TRANSACTIONS, transactionIds[0])
+                val projection = arrayOf(
+                    Contract.Transaction.DATE,
+                    Contract.Transaction.DESCRIPTION,
+                    Contract.Transaction.MONEY,
+                    Contract.Transaction.WALLET_CURRENCY
+                )
+                try {
+                    context.contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
+                        if (cursor.moveToFirst()) {
+                            val description = cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.DESCRIPTION))
+                            if (!TextUtils.isEmpty(description)) {
+                                name = description
+                            } else {
+                                val currency = CurrencyManager.getCurrency(
+                                    cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.WALLET_CURRENCY))
+                                )
+                                name = MoneyFormatter.getInstance().getNotTintedString(
+                                    currency,
+                                    cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Transaction.MONEY))
+                                )
+                            }
+                            val parsed = DateUtils.getDateFromSQLDateTimeString(
+                                cursor.getString(cursor.getColumnIndexOrThrow(Contract.Transaction.DATE))
+                            )
+                            if (parsed != null) {
+                                date = DateFormatter.getFormattedDate(parsed)
+                            }
+                        }
+                    }
+                } catch (ignore: Exception) {
+                }
+            }
+            var message = context.getString(R.string.message_error_delete_category_in_split, name, date)
+            if (transactionIds != null && transactionIds.size > 1) {
+                val more = transactionIds.size - 1
+                message += " " + context.resources.getQuantityString(
+                    R.plurals.message_error_delete_category_in_more_splits, more, more
+                )
+            }
+            return message
+        }
     }
 }
