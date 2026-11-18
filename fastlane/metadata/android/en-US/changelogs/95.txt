@@ -1,0 +1,11 @@
+🚀 Major Release v3.0.0
+✨ 100% Pure Kotlin codebase across all 517 files
+🛡️ Zero !! operator policy for total null safety
+🐘 Modern Gradle Kotlin DSL build system (.gradle.kts)
+☕ OpenJDK 17 LTS toolchain baseline
+📑 Reordered overview tabs to Summary, Incomes, Expenses
+🗂️ Minimalist compact drawer header with total balance
+✍️ Auto-capitalization in user input fields
+🏷️ Modernized system category vector icons
+🎭 Refined default theme and accent colors
+🧪 Complete Kotlin unit & instrumentation test suite

@@ -119,7 +119,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           git fetch --tags --force
-          VERSION_NAME=$(grep "versionName" app/build.gradle | awk '{print $2}' | tr -d '"' | tr -d "'")
+          VERSION_NAME=$(grep "versionName" app/build.gradle.kts | awk -F'=' '{print $2}' | tr -d ' "' | tr -d "'")
           LATEST_TAG="v${VERSION_NAME:-1.0.0}"
 
           VERSION=${LATEST_TAG#v}
