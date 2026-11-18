@@ -19,6 +19,21 @@
   -->
 
 <changelog>
+    <version versionName="3.0.0" versionDate="Nov 18, 2026">
+        <change>🚀 [b]Kotlin Migration[/b]: Converted 100% of the codebase (517 files) to pure, idiomatic Kotlin across all application layers.</change>
+        <change>🛡️ [b]Null Safety[/b]: Enforced zero double-bang (!!) operator policy repo-wide with Detekt 1.23.6.</change>
+        <change>🐘 [b]Build System[/b]: Migrated build configuration from Groovy to Gradle Kotlin DSL (.gradle.kts).</change>
+        <change>☕ [b]Toolchain[/b]: Standardized on OpenJDK 17 LTS for Gradle execution and compilation.</change>
+        <change>📦 [b]CI/CD[/b]: Automated release artifacts, dev pre-releases, and build caching on GitHub Actions.</change>
+        <change>📑 [b]UI/UX[/b]: Reordered overview tabs to Summary, Incomes, and Expenses.</change>
+        <change>🗂️ [b]UI/UX[/b]: Refactored navigation drawer header to a compact view showing total balance.</change>
+        <change>✍️ [b]UI/UX[/b]: Enabled automatic word capitalization across user input fields.</change>
+        <change>🏷️ [b]UI/UX[/b]: Modernized vector icons for default system categories.</change>
+        <change>🎭 [b]Appearance[/b]: Refined default theme and accent color presets.</change>
+        <change>🔒 [b]Fix[/b]: Aligned subclass visibility boundaries and eliminated JVM signature clashes.</change>
+        <change>🧪 [b]Tests[/b]: Fully migrated all 67 unit and instrumentation test suites to Kotlin.</change>
+    </version>
+
     <version versionName="2.1.1" versionDate="Oct 02, 2026">
         <change>🎨 [b]UI/UX[/b]: Merged userinterface changes for a better look and feel.</change>
         <change>🔧 [b]Fix[/b]: Updated to use the fork's own namespace for the default application id.</change>
