@@ -49,6 +49,7 @@ import java.util.concurrent.TimeUnit
  * shadow.
  */
 @RunWith(RobolectricTestRunner::class)
+@Config(sdk = [35])
 class MaterialEditTextTest {
 
     @Before
