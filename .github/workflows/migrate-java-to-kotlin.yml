@@ -1,15 +1,6 @@
 name: Migrate Java to Kotlin
 
 on:
-  push:
-    branches:
-      - kotlin
-    paths-ignore:
-      - '**.md'
-      - '**.mdx'
-      - 'docs/**'
-      - 'pictures/**'
-      - '.gitignore'
   workflow_dispatch: {}
 
 permissions:
@@ -30,10 +21,6 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           powershell -ExecutionPolicy Bypass -File .\scripts\Migrate-JavaToKotlin.ps1 -ApiKey $env:GEMINI_API_KEY
-
-      - name: Update Kotlin Migration Tracker
-        run: |
-          powershell -ExecutionPolicy Bypass -File .\scripts\Update-MigrationTracker.ps1
 
       - name: Commit and Push Changes
         run: |

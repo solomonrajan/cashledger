@@ -34,19 +34,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Verify and Sync Kotlin Migration Tracker
-        if: github.event_name == 'push'
-        run: |
-          pwsh -ExecutionPolicy Bypass -File ./scripts/Update-MigrationTracker.ps1
-          if [ -n "$(git status --porcelain KOTLIN_MIGRATION.mdx)" ]; then
-            echo "KOTLIN_MIGRATION.mdx was out of sync. Committing updated tracker..."
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add KOTLIN_MIGRATION.mdx
-            git commit -m "docs: auto-update KOTLIN_MIGRATION.mdx tracking dashboard [skip ci]" || true
-            git push origin HEAD:${{ github.ref_name }} || true
-          fi
-
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
@@ -60,7 +47,7 @@ jobs:
       # 190 MB, into the Maven local repository and not the Gradle cache, so the
       # step above does not keep it. Which jar that is follows the Robolectric
       # version, now in gradle/libs.versions.toml, and targetSdk, still in
-      # app/build.gradle, so the key follows both files. A cache entry is never
+      # app/build.gradle.kts, so the key follows both files. A cache entry is never
       # rewritten on an exact hit, which is why the key cannot be a constant. A
       # bump would keep restoring the old jar and fetching the new one on every
       # run. No restore-keys on purpose, since a restored entry is saved back as
@@ -69,7 +56,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: ~/.m2/repository/org/robolectric
-          key: robolectric-${{ hashFiles('app/build.gradle', 'gradle/libs.versions.toml') }}
+          key: robolectric-${{ hashFiles('app/build.gradle.kts', 'gradle/libs.versions.toml') }}
 
       - name: Build, Test, and Lint
         run: |
