@@ -31,6 +31,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.InsetDrawable
 import android.graphics.drawable.StateListDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -59,6 +60,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.broadcast.LocalAction
 import com.oriondev.moneywallet.model.ColorIcon
@@ -624,18 +626,22 @@ class MainActivity : BaseActivity(),
 
     private fun applyNavigationDrawerHeaderTheme(theme: ITheme) {
         val headerView = mHeaderView ?: return
-        val backgroundColor = theme.colorPrimary
-        val textColor = theme.getBestTextColor(backgroundColor)
+        val backgroundColor = theme.drawerBackgroundColor
+        val textColorPrimary = theme.drawerTextColor
+        val textColorSecondary = theme.textColorSecondary
         headerView.setBackgroundColor(backgroundColor)
-        mWalletNameView?.setTextColor(textColor)
-        mWalletMoneyView?.setTextColor(textColor)
-        mWalletListArrowView?.setColorFilter(textColor, PorterDuff.Mode.SRC_ATOP)
-        // a thin ring keeps the wallet icon visible when its color is the header's own
+        mWalletNameView?.setTextColor(textColorPrimary)
+        mWalletMoneyView?.setTextColor(textColorSecondary)
+        mWalletListArrowView?.setColorFilter(textColorSecondary, PorterDuff.Mode.SRC_ATOP)
+        // a subtle ring around the wallet icon
         val ring = GradientDrawable().apply {
             shape = GradientDrawable.OVAL
-            setStroke(Math.round(resources.displayMetrics.density), ColorUtils.setAlphaComponent(textColor, 0x66))
+            setStroke(Math.round(resources.displayMetrics.density), ColorUtils.setAlphaComponent(textColorPrimary, 0x24))
         }
         mWalletIconView?.background = ring
+        headerView.findViewById<View>(R.id.header_divider)?.setBackgroundColor(
+            ColorUtils.setAlphaComponent(textColorPrimary, 0x1F)
+        )
     }
 
     private fun applyNavigationDrawerBodyTheme(theme: ITheme) {
@@ -649,12 +655,16 @@ class MainActivity : BaseActivity(),
             navigationView.setBackgroundColor(theme.drawerBackgroundColor)
         }
         navigationView.itemTextColor = checkedStates(theme.drawerSelectedTextColor, theme.drawerTextColor)
-        // the row's own foreground is the theme's ripple, so the background only marks the open entry
-        val checkedBackground = StateListDrawable().apply {
-            addState(intArrayOf(android.R.attr.state_checked), ColorDrawable(theme.drawerSelectedItemColor))
-            addState(intArrayOf(), ColorDrawable(Color.TRANSPARENT))
+        val density = resources.displayMetrics.density
+        val cornerRadius = 28f * density
+        val shapeAppearanceModel = ShapeAppearanceModel.builder()
+            .setAllCornerSizes(cornerRadius)
+            .build()
+        val pillShape = MaterialShapeDrawable(shapeAppearanceModel).apply {
+            fillColor = checkedStates(theme.drawerSelectedItemColor, Color.TRANSPARENT)
         }
-        navigationView.itemBackground = checkedBackground
+        val insetHorizontal = (12 * density).toInt()
+        navigationView.itemBackground = InsetDrawable(pillShape, insetHorizontal, 0, insetHorizontal, 0)
         val menu = navigationView.menu
         for (i in 0 until menu.size()) {
             val item = menu.getItem(i)

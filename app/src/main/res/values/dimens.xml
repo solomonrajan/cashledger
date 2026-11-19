@@ -19,6 +19,17 @@
   -->
 
 <resources>
+    <!-- Material 3 Navigation Drawer dimensions -->
+    <dimen name="m3_navigation_drawer_width">360dp</dimen>
+    <dimen name="m3_navigation_drawer_corner_size">16dp</dimen>
+    <dimen name="m3_navigation_drawer_item_corner_radius">28dp</dimen>
+    <dimen name="m3_navigation_drawer_item_inset_horizontal">12dp</dimen>
+    <dimen name="m3_navigation_drawer_item_padding_horizontal">28dp</dimen>
+    <dimen name="m3_navigation_drawer_item_icon_padding">12dp</dimen>
+    <dimen name="m3_navigation_drawer_item_vertical_padding">4dp</dimen>
+    <dimen name="m3_navigation_drawer_item_icon_size">24dp</dimen>
+    <dimen name="m3_navigation_drawer_divider_inset">28dp</dimen>
+
     <dimen name="fragment_multi_panel_fab_margin">16dp</dimen>
 
     <dimen name="view_header_height">48dp</dimen>

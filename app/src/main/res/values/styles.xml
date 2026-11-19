@@ -30,6 +30,42 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="drawerArrowStyle">@style/MoneyWalletDrawerArrowStyle</item>
+        <item name="navigationViewStyle">@style/Widget.MoneyWallet.NavigationView</item>
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+
+    <!-- Material 3 Navigation Drawer Style following M3 guidelines -->
+    <style name="Widget.MoneyWallet.NavigationView" parent="Widget.MaterialComponents.NavigationView">
+        <item name="android:maxWidth">@dimen/m3_navigation_drawer_width</item>
+        <item name="drawerLayoutCornerSize">@dimen/m3_navigation_drawer_corner_size</item>
+        <item name="itemShapeAppearance">@style/ShapeAppearance.Material3.Corner.Full</item>
+        <item name="itemShapeInsetStart">@dimen/m3_navigation_drawer_item_inset_horizontal</item>
+        <item name="itemShapeInsetEnd">@dimen/m3_navigation_drawer_item_inset_horizontal</item>
+        <item name="itemShapeInsetTop">0dp</item>
+        <item name="itemShapeInsetBottom">0dp</item>
+        <item name="itemHorizontalPadding">@dimen/m3_navigation_drawer_item_padding_horizontal</item>
+        <item name="itemIconPadding">@dimen/m3_navigation_drawer_item_icon_padding</item>
+        <item name="itemVerticalPadding">@dimen/m3_navigation_drawer_item_vertical_padding</item>
+        <item name="itemIconSize">@dimen/m3_navigation_drawer_item_icon_size</item>
+        <item name="itemMaxLines">1</item>
+        <item name="itemTextAppearanceActiveBoldEnabled">true</item>
+        <item name="dividerInsetStart">@dimen/m3_navigation_drawer_divider_inset</item>
+        <item name="dividerInsetEnd">@dimen/m3_navigation_drawer_divider_inset</item>
+        <item name="subheaderInsetStart">@dimen/m3_navigation_drawer_divider_inset</item>
+        <item name="subheaderInsetEnd">@dimen/m3_navigation_drawer_divider_inset</item>
+        <item name="itemTextAppearance">@style/MoneyWallet.TextAppearance.NavigationItem</item>
+        <item name="subheaderTextAppearance">@style/MoneyWallet.TextAppearance.NavigationSubheader</item>
+    </style>
+
+    <style name="MoneyWallet.TextAppearance.NavigationItem" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/google_sans</item>
+        <item name="fontFamily">@font/google_sans</item>
+    </style>
+
+    <style name="MoneyWallet.TextAppearance.NavigationSubheader" parent="TextAppearance.MaterialComponents.Subtitle2">
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/google_sans</item>
         <item name="fontFamily">@font/google_sans</item>
     </style>
