@@ -46,7 +46,6 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
@@ -682,18 +681,15 @@ class MainActivity : BaseActivity(),
     }
 
     /**
-     * An open drawer covers the toolbar, and the menu scrolls under the status bar, so what is up
-     * there is the drawer's own scrim over its background, not anything the rest of the app
-     * painted. The two are composited here instead of guessed, since the drawer background follows
-     * the theme and the scrim does not. The drawer is asked directly, because a drawer restored
-     * already open after a rotation never fires the opened callback.
+     * An open drawer covers the toolbar, and the drawer header extends under the status bar,
+     * so what is behind the status bar is the drawer's own background color. The drawer is asked directly,
+     * because a drawer restored already open after a rotation never fires the opened callback.
      */
     override fun getColorBehindStatusBar(theme: ITheme): Int {
-        if (mDrawerLayout?.isDrawerOpen(GravityCompat.START) != true) {
-            return super.getColorBehindStatusBar(theme)
+        if (mDrawerLayout?.isDrawerOpen(GravityCompat.START) == true) {
+            return theme.drawerBackgroundColor
         }
-        val scrim = ContextCompat.getColor(this, R.color.system_bar_scrim_dark)
-        return ColorUtils.compositeColors(scrim, theme.drawerBackgroundColor)
+        return super.getColorBehindStatusBar(theme)
     }
 
     private val mBroadcastReceiver = object : BroadcastReceiver() {

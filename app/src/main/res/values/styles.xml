@@ -54,6 +54,8 @@
         <item name="dividerInsetEnd">@dimen/m3_navigation_drawer_divider_inset</item>
         <item name="subheaderInsetStart">@dimen/m3_navigation_drawer_divider_inset</item>
         <item name="subheaderInsetEnd">@dimen/m3_navigation_drawer_divider_inset</item>
+        <item name="topInsetScrimEnabled">false</item>
+        <item name="bottomInsetScrimEnabled">false</item>
         <item name="itemTextAppearance">@style/MoneyWallet.TextAppearance.NavigationItem</item>
         <item name="subheaderTextAppearance">@style/MoneyWallet.TextAppearance.NavigationSubheader</item>
     </style>

@@ -46,7 +46,8 @@
         android:layout_gravity="start"
         android:maxWidth="@dimen/m3_navigation_drawer_width"
         app:headerLayout="@layout/layout_navigation_drawer_header"
-        app:insetForeground="@color/system_bar_scrim_dark"
+        app:topInsetScrimEnabled="false"
+        app:bottomInsetScrimEnabled="false"
         app:startInsetScrimEnabled="false"
         app:endInsetScrimEnabled="false" />
 
