@@ -2,7 +2,8 @@ name: build
 
 on:
   push:
-    branches: [master, userinterface, kotlin, v3.0.0, Category_Split]
+    branches:
+      [master, userinterface, kotlin, v3.0.0, Category_Split, navigation_drawer]
     paths-ignore:
       - "**.md"
       - "**.mdx"
