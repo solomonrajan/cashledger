@@ -27,10 +27,8 @@ import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.database.Cursor
 import android.graphics.Color
-import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.InsetDrawable
 import android.graphics.drawable.StateListDrawable
 import android.net.Uri
@@ -39,13 +37,17 @@ import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.Space
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.GravityCompat
@@ -83,6 +85,7 @@ import com.oriondev.moneywallet.ui.fragment.multipanel.SavingMultiPanelViewPager
 import com.oriondev.moneywallet.ui.fragment.multipanel.SettingMultiPanelFragment
 import com.oriondev.moneywallet.ui.fragment.multipanel.TransactionMultiPanelViewPagerFragment
 import com.oriondev.moneywallet.ui.fragment.singlepanel.OverviewSinglePanelFragment
+import com.oriondev.moneywallet.ui.view.drawer.NavigationDrawerHeader
 import com.oriondev.moneywallet.ui.view.theme.ITheme
 import com.oriondev.moneywallet.ui.view.theme.ThemeEngine
 import com.oriondev.moneywallet.ui.view.theme.ThemedRecyclerView
@@ -105,12 +108,19 @@ class MainActivity : BaseActivity(),
     private var mDrawerToggle: ActionBarDrawerToggle? = null
     private var mHeaderView: View? = null
 
-    private var mWalletIconView: ImageView? = null
-    private var mFirstWalletView: ImageView? = null
-    private var mSecondWalletView: ImageView? = null
-    private var mWalletNameView: TextView? = null
-    private var mWalletMoneyView: TextView? = null
-    private var mWalletListArrowView: ImageView? = null
+    private var mHeaderWalletName by mutableStateOf("")
+    private var mHeaderWalletMoney by mutableStateOf("")
+    private var mHeaderExpanded by mutableStateOf(false)
+    private var mHeaderTheme by mutableStateOf(ThemeEngine.getTheme())
+
+    var currentWalletName: String
+        get() = mHeaderWalletName
+        internal set(value) {
+            mHeaderWalletName = value
+        }
+
+    val currentWalletMoney: String
+        get() = mHeaderWalletMoney
 
     private var mCurrentWallet: WalletAccount? = null
     private var mWalletListShown = false
@@ -173,27 +183,23 @@ class MainActivity : BaseActivity(),
         addEntry(menu, GROUP_SECTIONS, ID_SECTION_PEOPLE, R.drawable.ic_people_black_24dp, R.string.menu_people)
         menu.setGroupCheckable(GROUP_SECTIONS, true, false)
         addEntry(menu, GROUP_SETTINGS, ID_SECTION_SETTING, R.drawable.ic_settings_24dp, R.string.menu_setting).isCheckable = true
-        val headerView = navigationView.getHeaderView(0)
-        mHeaderView = headerView
-        // Top only, to match the menu below it. The navigation view pads its own list from the
-        // top and bottom and leaves the sides to its inset scrims, so a header that also took
-        // the sides would sit inset from the rows under it.
-        SystemBars.pad(headerView, true, false, false)
-        headerView.setOnClickListener { showWalletList(!mWalletListShown) }
-        mWalletIconView = headerView.findViewById(R.id.wallet_icon_image_view)
-        mFirstWalletView = headerView.findViewById(R.id.first_wallet_image_view)
-        mSecondWalletView = headerView.findViewById(R.id.second_wallet_image_view)
-        mWalletNameView = headerView.findViewById(R.id.wallet_name_text_view)
-        mWalletMoneyView = headerView.findViewById(R.id.wallet_money_text_view)
-        mWalletListArrowView = headerView.findViewById(R.id.wallet_list_arrow_image_view)
-        val quickSwitch = View.OnClickListener { view ->
-            val wallet = view.getTag(view.id) as? WalletAccount
-            if (wallet != null) {
-                switchWallet(wallet)
+        val composeHeader = ComposeView(this).apply {
+            id = R.id.navigation_drawer_header
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            SystemBars.pad(this, true, false, false)
+            setOnClickListener { showWalletList(!mWalletListShown) }
+            setContent {
+                NavigationDrawerHeader(
+                    walletName = mHeaderWalletName,
+                    walletMoney = mHeaderWalletMoney,
+                    isExpanded = mHeaderExpanded,
+                    theme = mHeaderTheme,
+                    onHeaderClick = { showWalletList(!mWalletListShown) }
+                )
             }
         }
-        mFirstWalletView?.setOnClickListener(quickSwitch)
-        mSecondWalletView?.setOnClickListener(quickSwitch)
+        mHeaderView = composeHeader
+        navigationView.addHeaderView(composeHeader)
     }
 
     /**
@@ -375,6 +381,7 @@ class MainActivity : BaseActivity(),
      */
     private fun showWalletList(show: Boolean) {
         mWalletListShown = show
+        mHeaderExpanded = show
         val navigationView = mNavigationView ?: return
         val menu = navigationView.menu
         menu.setGroupVisible(GROUP_SECTIONS, !show)
@@ -388,7 +395,6 @@ class MainActivity : BaseActivity(),
         } else {
             navigationView.setCheckedItem(mCurrentSelection)
         }
-        mWalletListArrowView?.animate()?.rotation(if (show) 180f else 0f)?.start()
     }
 
     /**
@@ -565,41 +571,16 @@ class MainActivity : BaseActivity(),
     }
 
     /**
-     * Show the current wallet in the header, and the first two other wallets as the one tap
-     * switches at its top end.
+     * Show the current wallet in the drawer header.
      */
     private fun bindHeader() {
         val currentWallet = mCurrentWallet
-        val walletIconView = mWalletIconView
-        val walletNameView = mWalletNameView
-        val walletMoneyView = mWalletMoneyView
         if (currentWallet != null) {
-            if (walletIconView != null) {
-                IconLoader.loadInto(currentWallet.icon, walletIconView)
-                walletIconView.visibility = View.VISIBLE
-            }
-            walletNameView?.text = currentWallet.name
-            walletMoneyView?.text = mMoneyFormatter.getNotTintedString(currentWallet.money)
+            mHeaderWalletName = currentWallet.name
+            mHeaderWalletMoney = mMoneyFormatter.getNotTintedString(currentWallet.money)
         } else {
-            walletIconView?.visibility = View.INVISIBLE
-            walletNameView?.setText(R.string.msg_no_wallet_found)
-            walletMoneyView?.setText(R.string.msg_add_one_wallet)
-        }
-        val others: MutableList<WalletAccount> = ArrayList(mWallets)
-        if (currentWallet != null) {
-            others.remove(currentWallet)
-        }
-        mFirstWalletView?.let { bindQuickSwitch(it, if (others.isNotEmpty()) others[0] else null) }
-        mSecondWalletView?.let { bindQuickSwitch(it, if (others.size > 1) others[1] else null) }
-    }
-
-    private fun bindQuickSwitch(view: ImageView, wallet: WalletAccount?) {
-        // keyed, because Glide keeps its own request in the plain tag of any view it loads into
-        view.setTag(view.id, wallet)
-        view.visibility = if (wallet != null) View.VISIBLE else View.GONE
-        if (wallet != null) {
-            IconLoader.loadInto(wallet.icon, view)
-            view.contentDescription = wallet.name
+            mHeaderWalletName = getString(R.string.msg_no_wallet_found)
+            mHeaderWalletMoney = getString(R.string.msg_add_one_wallet)
         }
     }
 
@@ -624,23 +605,8 @@ class MainActivity : BaseActivity(),
     }
 
     private fun applyNavigationDrawerHeaderTheme(theme: ITheme) {
-        val headerView = mHeaderView ?: return
-        val backgroundColor = theme.drawerBackgroundColor
-        val textColorPrimary = theme.drawerTextColor
-        val textColorSecondary = theme.textColorSecondary
-        headerView.setBackgroundColor(backgroundColor)
-        mWalletNameView?.setTextColor(textColorPrimary)
-        mWalletMoneyView?.setTextColor(textColorSecondary)
-        mWalletListArrowView?.setColorFilter(textColorSecondary, PorterDuff.Mode.SRC_ATOP)
-        // a subtle ring around the wallet icon
-        val ring = GradientDrawable().apply {
-            shape = GradientDrawable.OVAL
-            setStroke(Math.round(resources.displayMetrics.density), ColorUtils.setAlphaComponent(textColorPrimary, 0x24))
-        }
-        mWalletIconView?.background = ring
-        headerView.findViewById<View>(R.id.header_divider)?.setBackgroundColor(
-            ColorUtils.setAlphaComponent(textColorPrimary, 0x1F)
-        )
+        mHeaderTheme = theme
+        mHeaderView?.setBackgroundColor(theme.drawerBackgroundColor)
     }
 
     private fun applyNavigationDrawerBodyTheme(theme: ITheme) {

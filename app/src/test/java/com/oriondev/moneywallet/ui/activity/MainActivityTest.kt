@@ -96,10 +96,6 @@ class MainActivityTest {
             return MainActivity.ID_WALLET_FIRST + walletId.toInt()
         }
 
-        private fun quickWallet(icon: View): WalletAccount {
-            return icon.getTag(icon.id) as WalletAccount
-        }
-
         private fun walletRows(menu: Menu): Int {
             var rows = 0
             for (i in 0 until menu.size()) {
@@ -128,7 +124,7 @@ class MainActivityTest {
         }
 
         private fun headerName(activity: MainActivity): String {
-            return (activity.findViewById<View>(R.id.wallet_name_text_view) as TextView).text.toString()
+            return activity.currentWalletName
         }
 
         private fun runPending(activity: MainActivity) {
@@ -198,8 +194,6 @@ class MainActivityTest {
                 assertNotNull(checkedItem)
                 assertEquals(MainActivity.ID_SECTION_TRANSACTIONS, checkedItem?.itemId)
                 assertTrue(section(activity) is TransactionMultiPanelViewPagerFragment)
-                val icon = activity.findViewById<ImageView>(R.id.wallet_icon_image_view)
-                assertNotNull(icon.drawable)
                 assertNotNull(drawer(activity).itemBackground)
                 assertNull(drawer(activity).itemIconTintList)
                 assertTrue(drawer(activity).clipToOutline)
@@ -256,7 +250,6 @@ class MainActivityTest {
                 val manageWalletItem = menu.findItem(MainActivity.ID_ACTION_MANAGE_WALLET)
                 assertNotNull(manageWalletItem)
                 assertTrue(manageWalletItem?.isVisible == true)
-                assertEquals(View.GONE, activity.findViewById<View>(R.id.first_wallet_image_view).visibility)
             }
         }
     }
@@ -272,7 +265,7 @@ class MainActivityTest {
                 val restored = Intent(LocalAction.ACTION_BACKUP_SERVICE_FINISHED)
                     .putExtra(BackupHandlerIntentService.ACTION, BackupHandlerIntentService.ACTION_RESTORE)
                 LocalBroadcastManager.getInstance(activity).sendBroadcast(restored)
-                (activity.findViewById<View>(R.id.wallet_name_text_view) as TextView).text = ""
+                activity.currentWalletName = ""
                 awaitWallets(activity)
                 assertEquals(3, walletRows(menu))
                 val firstItem = menu.findItem(walletItem(mFirstWallet))
@@ -512,60 +505,7 @@ class MainActivityTest {
                 assertNotNull(actionView)
                 assertEquals(expected, actionView?.text?.toString())
                 totalItem?.let { activity.onNavigationItemSelected(it) }
-                val moneyView = activity.findViewById<TextView>(R.id.wallet_money_text_view)
-                assertEquals(expected, moneyView.text.toString())
-            }
-        }
-    }
-
-    @Test
-    fun theQuickSwitchIconsHoldTheNextTwoWalletsAndSwitchToThem() {
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                awaitWallets(activity)
-                val first = activity.findViewById<View>(R.id.first_wallet_image_view)
-                val second = activity.findViewById<View>(R.id.second_wallet_image_view)
-                assertEquals(mSecondWallet, quickWallet(first).id)
-                assertEquals(PreferenceManager.TOTAL_WALLET_ID, quickWallet(second).id)
-                assertEquals(View.VISIBLE, second.visibility)
-                assertNotNull((first as ImageView).drawable)
-                assertEquals("Bank", first.contentDescription.toString())
-                first.performClick()
-                assertEquals(mSecondWallet, PreferenceManager.getCurrentWallet())
-                assertEquals("Bank", headerName(activity))
-                assertEquals(mFirstWallet, quickWallet(first).id)
-                assertEquals("Cash", first.contentDescription.toString())
-                assertEquals(PreferenceManager.TOTAL_WALLET_ID, quickWallet(second).id)
-                second.performClick()
-                assertEquals(PreferenceManager.TOTAL_WALLET_ID, PreferenceManager.getCurrentWallet())
-                assertEquals(mFirstWallet, quickWallet(first).id)
-                assertEquals(mSecondWallet, quickWallet(second).id)
-            }
-        }
-    }
-
-    @Test
-    fun aQuickSwitchWalletWithAPickerIconLoadsWithoutACrash() {
-        val values = ContentValues()
-        values.put(Contract.Wallet.ICON, VECTOR_ICON)
-        mResolver.update(ContentUris.withAppendedId(DataContentProvider.CONTENT_WALLETS, mSecondWallet), values, null, null)
-        ActivityScenario.launch(MainActivity::class.java).use { scenario ->
-            scenario.onActivity { activity ->
-                awaitWallets(activity)
-                val first = activity.findViewById<ImageView>(R.id.first_wallet_image_view)
-                assertEquals(mSecondWallet, quickWallet(first).id)
-                assertEquals(View.VISIBLE, first.visibility)
-                var i = 0
-                while (i < 80 && first.drawable == null) {
-                    shadowOf(Looper.getMainLooper()).idle()
-                    try {
-                        Thread.sleep(25)
-                    } catch (e: InterruptedException) {
-                        throw AssertionError(e)
-                    }
-                    i++
-                }
-                assertNotNull(first.drawable)
+                assertEquals(expected, activity.currentWalletMoney)
             }
         }
     }
@@ -581,8 +521,6 @@ class MainActivityTest {
             scenario.onActivity { activity ->
                 awaitWallets(activity)
                 assertNull(drawer(activity).menu.findItem(TOTAL_ITEM))
-                assertEquals(mSecondWallet, quickWallet(activity.findViewById(R.id.first_wallet_image_view)).id)
-                assertEquals(View.GONE, activity.findViewById<View>(R.id.second_wallet_image_view).visibility)
             }
         }
     }

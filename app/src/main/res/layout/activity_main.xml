@@ -45,7 +45,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:maxWidth="@dimen/m3_navigation_drawer_width"
-        app:headerLayout="@layout/layout_navigation_drawer_header"
         app:topInsetScrimEnabled="false"
         app:bottomInsetScrimEnabled="false"
         app:startInsetScrimEnabled="false"
