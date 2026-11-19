@@ -431,6 +431,28 @@ class JSONDatabaseExporter @Throws(ExportException::class) constructor(
     }
 
     @Throws(ExportException::class)
+    override fun exportTransactionSplits(cursor: Cursor?) {
+        try {
+            writer.writeName(JSONDatabase.TransactionSplit.ARRAY)
+            writer.beginArray()
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    val transactionSplit = SQLDatabaseExporter.getTransactionSplit(cursor)
+                    if (transactionSplit != null) {
+                        val `object` = factory.getObject(transactionSplit)
+                        writer.writeJSONObject(`object`)
+                    }
+                }
+            }
+            writer.endArray()
+        } catch (e: IOException) {
+            throw ExportException(e.message)
+        } catch (e: JSONException) {
+            throw ExportException(e.message)
+        }
+    }
+
+    @Throws(ExportException::class)
     override fun exportTransactionPeople(cursor: Cursor?) {
         try {
             writer.writeName(JSONDatabase.TransactionPeople.ARRAY)

@@ -77,7 +77,7 @@ open class SQLDatabase(
         private const val TAG = "SQLDatabase"
 
         const val DATABASE_NAME: String = "database.db"
-        private const val DATABASE_VERSION = 7
+        private const val DATABASE_VERSION = 9
 
         /**
          * The currencies whose shipped decimals were taken from the number of digits a country
@@ -204,6 +204,151 @@ open class SQLDatabase(
                     " = " + budgetAlias + "." + Schema.Budget.ID + " AND bc." +
                     Schema.BudgetCategory.DELETED + " = 0)"
         }
+
+        /**
+         * The transactions whose live parts are valid, each with the sum of those parts. Parts are
+         * ignored, and the transaction reads as unsplit under its main category, when they add up to
+         * more than the total, when one is below zero, when one sits in a category of the other
+         * direction or in a system category, or when the transaction is not a standard one. A release
+         * that predates parts can edit the total, the category or the direction without them, and a
+         * restore takes any amount a backup holds, so none of this is guaranteed by the writes.
+         */
+        private val VALID_PARTS = validParts("")
+
+        /**
+         * The same, counting only the live parts that also match the given condition on s.
+         */
+        private fun validParts(partCondition: String): String {
+            return "SELECT s." + Schema.TransactionSplit.TRANSACTION +
+                " AS _parts_transaction, SUM(s." + Schema.TransactionSplit.MONEY + ") AS _parts_money, " +
+                "COUNT(DISTINCT s." + Schema.TransactionSplit.CATEGORY + ") AS _parts_categories, MAX(s." +
+                Schema.TransactionSplit.CATEGORY + " = st." + Schema.Transaction.CATEGORY +
+                ") AS _parts_in_main FROM " +
+                Schema.TransactionSplit.TABLE + " AS s JOIN " + Schema.Transaction.TABLE + " AS st ON s." +
+                Schema.TransactionSplit.TRANSACTION + " = st." + Schema.Transaction.ID + " LEFT JOIN " +
+                Schema.Category.TABLE + " AS sc ON s." + Schema.TransactionSplit.CATEGORY + " = sc." +
+                Schema.Category.ID + " AND sc." + Schema.Category.DELETED + " = 0 WHERE s." +
+                Schema.TransactionSplit.DELETED + " = 0 AND st." + Schema.Transaction.DELETED + " = 0" +
+                partCondition + " GROUP BY s." +
+                Schema.TransactionSplit.TRANSACTION + " HAVING SUM(s." + Schema.TransactionSplit.MONEY +
+                ") <= MAX(st." + Schema.Transaction.MONEY + ") AND MIN(s." + Schema.TransactionSplit.MONEY +
+                ") >= 0 AND MAX(st." + Schema.Transaction.TYPE + ") = " + Contract.TransactionType.STANDARD +
+                " AND MIN(CASE WHEN (st." + Schema.Transaction.DIRECTION + " = " + Schema.Direction.EXPENSE +
+                " AND sc." + Schema.Category.TYPE + " = " + Schema.CategoryType.EXPENSE + ") OR (st." +
+                Schema.Transaction.DIRECTION + " = " + Schema.Direction.INCOME + " AND sc." +
+                Schema.Category.TYPE + " = " + Schema.CategoryType.INCOME + ") THEN 1 ELSE 0 END) = 1"
+        }
+
+        /**
+         * The category lines, one per category a transaction's money falls under. A transaction with
+         * valid parts gives a line per part and a line under its main category for what the parts
+         * leave of the total, only when that is above zero. Every other transaction gives one line,
+         * itself. So the lines of a transaction always add up to its total, and none is negative.
+         *
+         * The key of a line is the part's id, or the transaction's id negated for the line under the
+         * main category. It is unique across both, and the lowest key of a transaction is its main
+         * line when it has one and its first part otherwise.
+         */
+        private val CATEGORY_LINES = "SELECT -t." + Schema.Transaction.ID + " AS _line_id, " +
+                "NULL AS _line_split, t." + Schema.Transaction.ID + " AS _line_transaction, t." +
+                Schema.Transaction.CATEGORY + " AS _line_category, t." + Schema.Transaction.MONEY +
+                " - IFNULL(v._parts_money, 0) AS _line_money FROM " + Schema.Transaction.TABLE +
+                " AS t LEFT JOIN (" + VALID_PARTS + ") AS v ON v._parts_transaction = t." +
+                Schema.Transaction.ID + " WHERE t." + Schema.Transaction.DELETED + " = 0 AND (" +
+                "v._parts_transaction IS NULL OR t." + Schema.Transaction.MONEY + " > v._parts_money) " +
+                "UNION ALL SELECT s." + Schema.TransactionSplit.ID + ", s." + Schema.TransactionSplit.ID +
+                ", s." + Schema.TransactionSplit.TRANSACTION + ", s." + Schema.TransactionSplit.CATEGORY +
+                ", s." + Schema.TransactionSplit.MONEY + " FROM " + Schema.TransactionSplit.TABLE +
+                " AS s JOIN (" + VALID_PARTS + ") AS v ON v._parts_transaction = s." +
+                Schema.TransactionSplit.TRANSACTION + " WHERE s." + Schema.TransactionSplit.DELETED + " = 0"
+
+        private val CATEGORY_LINES_FROM = "($CATEGORY_LINES) AS l JOIN " +
+                Schema.Transaction.TABLE + " AS t ON l._line_transaction = t." + Schema.Transaction.ID
+
+        /**
+         * Every column a transaction row carries, as the expression and the name it goes by.
+         */
+        private fun transactionColumns(money: String, category: String): Array<Array<String>> {
+            return arrayOf(
+                arrayOf("t." + Schema.Transaction.ID, Contract.Transaction.ID),
+                arrayOf(money, Contract.Transaction.MONEY),
+                arrayOf("t." + Schema.Transaction.DATE, Contract.Transaction.DATE),
+                arrayOf("t." + Schema.Transaction.DESCRIPTION, Contract.Transaction.DESCRIPTION),
+                arrayOf(category, Contract.Transaction.CATEGORY_ID),
+                arrayOf("c." + Schema.Category.NAME, Contract.Transaction.CATEGORY_NAME),
+                arrayOf("c." + Schema.Category.ICON, Contract.Transaction.CATEGORY_ICON),
+                arrayOf("c." + Schema.Category.PARENT, Contract.Transaction.CATEGORY_PARENT_ID),
+                arrayOf("c." + Schema.Category.TYPE, Contract.Transaction.CATEGORY_TYPE),
+                arrayOf("c." + Schema.Category.TAG, Contract.Transaction.CATEGORY_TAG),
+                arrayOf("c." + Schema.Category.SHOW_REPORT, Contract.Transaction.CATEGORY_SHOW_REPORT),
+                arrayOf("pc." + Schema.Category.SHOW_REPORT, Contract.Transaction.CATEGORY_PARENT_SHOW_REPORT),
+                arrayOf("t." + Schema.Transaction.DIRECTION, Contract.Transaction.DIRECTION),
+                arrayOf("t." + Schema.Transaction.TYPE, Contract.Transaction.TYPE),
+                arrayOf("t." + Schema.Transaction.WALLET, Contract.Transaction.WALLET_ID),
+                arrayOf("w." + Schema.Wallet.NAME, Contract.Transaction.WALLET_NAME),
+                arrayOf("w." + Schema.Wallet.ICON, Contract.Transaction.WALLET_ICON),
+                arrayOf("w." + Schema.Wallet.CURRENCY, Contract.Transaction.WALLET_CURRENCY),
+                arrayOf("w." + Schema.Wallet.COUNT_IN_TOTAL, Contract.Transaction.WALLET_COUNT_IN_TOTAL),
+                arrayOf("w." + Schema.Wallet.ARCHIVED, Contract.Transaction.WALLET_ARCHIVED),
+                arrayOf("w." + Schema.Wallet.TAG, Contract.Transaction.WALLET_TAG),
+                arrayOf("t." + Schema.Transaction.PLACE, Contract.Transaction.PLACE_ID),
+                arrayOf("p." + Schema.Place.NAME, Contract.Transaction.PLACE_NAME),
+                arrayOf("p." + Schema.Place.ICON, Contract.Transaction.PLACE_ICON),
+                arrayOf("p." + Schema.Place.ADDRESS, Contract.Transaction.PLACE_ADDRESS),
+                arrayOf("p." + Schema.Place.LATITUDE, Contract.Transaction.PLACE_LATITUDE),
+                arrayOf("p." + Schema.Place.LONGITUDE, Contract.Transaction.PLACE_LONGITUDE),
+                arrayOf("p." + Schema.Place.TAG, Contract.Transaction.PLACE_TAG),
+                arrayOf("t." + Schema.Transaction.EVENT, Contract.Transaction.EVENT_ID),
+                arrayOf("e." + Schema.Event.NAME, Contract.Transaction.EVENT_NAME),
+                arrayOf("e." + Schema.Event.ICON, Contract.Transaction.EVENT_ICON),
+                arrayOf("e." + Schema.Event.NOTE, Contract.Transaction.EVENT_NOTE),
+                arrayOf("e." + Schema.Event.START_DATE, Contract.Transaction.EVENT_START_DATE),
+                arrayOf("e." + Schema.Event.END_DATE, Contract.Transaction.EVENT_END_DATE),
+                arrayOf("e." + Schema.Event.TAG, Contract.Transaction.EVENT_TAG),
+                arrayOf("t." + Schema.Transaction.NOTE, Contract.Transaction.NOTE),
+                arrayOf("t." + Schema.Transaction.DEBT, Contract.Transaction.DEBT_ID),
+                arrayOf("t." + Schema.Transaction.SAVING, Contract.Transaction.SAVING_ID),
+                arrayOf("t." + Schema.Transaction.RECURRENCE, Contract.Transaction.RECURRENCE_ID),
+                arrayOf("t." + Schema.Transaction.CONFIRMED, Contract.Transaction.CONFIRMED),
+                arrayOf("t." + Schema.Transaction.COUNT_IN_TOTAL, Contract.Transaction.COUNT_IN_TOTAL),
+                arrayOf("t." + Schema.Transaction.TAG, Contract.Transaction.TAG),
+                arrayOf("GROUP_CONCAT('<' || pe." + Schema.Person.ID + " || '>')", Contract.Transaction.PEOPLE_IDS),
+                arrayOf("IFNULL(vp._parts_categories + CASE WHEN t." + Schema.Transaction.MONEY +
+                        " > vp._parts_money AND vp._parts_in_main = 0 THEN 1 ELSE 0 END, 0)",
+                        Contract.Transaction.SPLIT_CATEGORIES)
+            )
+        }
+
+        /**
+         * The select every transaction view is built on, one row per value of the group key.
+         */
+        private fun transactionRows(money: String, category: String, from: String, groupBy: String, vararg extraColumns: String): String {
+            val columns = StringBuilder()
+            for (column in transactionColumns(money, category)) {
+                if (columns.isNotEmpty()) columns.append(", ")
+                columns.append(column[0]).append(" AS ").append(column[1])
+            }
+            for (column in extraColumns) {
+                columns.append(", ").append(column)
+            }
+            return "SELECT " + columns + " " +
+                    "FROM " + from + " LEFT JOIN (" + VALID_PARTS + ") AS vp ON vp._parts_transaction = t." +
+                    Schema.Transaction.ID + " LEFT JOIN " + Schema.Category.TABLE +
+                    " AS c ON " + category + " = c." + Schema.Category.ID + " AND c." +
+                    Schema.Category.DELETED + " = 0 LEFT JOIN " + Schema.Category.TABLE + " AS pc ON c." +
+                    Schema.Category.PARENT + " = pc." + Schema.Category.ID + " AND pc." +
+                    Schema.Category.DELETED + " = 0 JOIN " + Schema.Wallet.TABLE + " AS w ON t." +
+                    Schema.Transaction.WALLET + " = w." + Schema.Wallet.ID + " AND w." +
+                    Schema.Wallet.DELETED + " = 0 LEFT JOIN " + Schema.TransactionPeople.TABLE + " AS tp ON t." +
+                    Schema.Transaction.ID + " = tp." + Schema.TransactionPeople.TRANSACTION + " AND tp." +
+                    Schema.TransactionPeople.DELETED + " = 0 LEFT JOIN " + Schema.Person.TABLE + " AS pe ON tp." +
+                    Schema.TransactionPeople.PERSON + " = pe." + Schema.Person.ID + " AND pe." +
+                    Schema.Person.DELETED + " = 0 LEFT JOIN " + Schema.Place.TABLE + " AS p ON t." +
+                    Schema.Transaction.PLACE + " = " + Schema.Place.ID + " AND p." + Schema.Place.DELETED +
+                    " = 0 LEFT JOIN " + Schema.Event.TABLE + " AS e ON t." + Schema.Transaction.EVENT +
+                    " = e." + Schema.Event.ID + " AND e." + Schema.Event.DELETED + " = 0 WHERE t." +
+                    Schema.Transaction.DELETED + " = 0 GROUP BY " + groupBy
+        }
     }
 
     /**
@@ -258,6 +403,7 @@ open class SQLDatabase(
         db.execSQL(Schema.CREATE_TABLE_SAVING)
         db.execSQL(Schema.CREATE_TABLE_TRANSACTION)
         db.execSQL(Schema.CREATE_TABLE_TRANSACTION_PEOPLE)
+        db.execSQL(Schema.CREATE_TABLE_TRANSACTION_SPLIT)
         db.execSQL(Schema.CREATE_TABLE_TRANSFER)
         db.execSQL(Schema.CREATE_TABLE_TRANSFER_PEOPLE)
         db.execSQL(Schema.CREATE_TABLE_TRANSACTION_MODEL)
@@ -312,6 +458,12 @@ open class SQLDatabase(
         }
         if (oldVersion < 7) {
             db.execSQL(Schema.CREATE_TABLE_CATEGORY_RULE)
+        }
+        if (oldVersion < 9) {
+            // the parts a transaction is split into. The create is guarded for the same reason the
+            // rules table is, an older release installed over this database and upgraded again
+            // arrives here a second time with the table and its rows still there.
+            db.execSQL(Schema.CREATE_TABLE_TRANSACTION_SPLIT)
         }
     }
 
@@ -647,68 +799,90 @@ open class SQLDatabase(
     }
 
     open fun getTransactions(projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
-        val subQuery = buildString {
-            append("SELECT ")
-            append("t.").append(Schema.Transaction.ID).append(" AS ").append(Contract.Transaction.ID).append(", ")
-            append("t.").append(Schema.Transaction.MONEY).append(" AS ").append(Contract.Transaction.MONEY).append(", ")
-            append("t.").append(Schema.Transaction.DATE).append(" AS ").append(Contract.Transaction.DATE).append(", ")
-            append("t.").append(Schema.Transaction.DESCRIPTION).append(" AS ").append(Contract.Transaction.DESCRIPTION).append(", ")
-            append("t.").append(Schema.Transaction.CATEGORY).append(" AS ").append(Contract.Transaction.CATEGORY_ID).append(", ")
-            append("c.").append(Schema.Category.NAME).append(" AS ").append(Contract.Transaction.CATEGORY_NAME).append(", ")
-            append("c.").append(Schema.Category.ICON).append(" AS ").append(Contract.Transaction.CATEGORY_ICON).append(", ")
-            append("c.").append(Schema.Category.PARENT).append(" AS ").append(Contract.Transaction.CATEGORY_PARENT_ID).append(", ")
-            append("c.").append(Schema.Category.TYPE).append(" AS ").append(Contract.Transaction.CATEGORY_TYPE).append(", ")
-            append("c.").append(Schema.Category.TAG).append(" AS ").append(Contract.Transaction.CATEGORY_TAG).append(", ")
-            append("c.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.Transaction.CATEGORY_SHOW_REPORT).append(", ")
-            append("pc.").append(Schema.Category.SHOW_REPORT).append(" AS ").append(Contract.Transaction.CATEGORY_PARENT_SHOW_REPORT).append(", ")
-            append("t.").append(Schema.Transaction.DIRECTION).append(" AS ").append(Contract.Transaction.DIRECTION).append(", ")
-            append("t.").append(Schema.Transaction.TYPE).append(" AS ").append(Contract.Transaction.TYPE).append(", ")
-            append("t.").append(Schema.Transaction.WALLET).append(" AS ").append(Contract.Transaction.WALLET_ID).append(", ")
-            append("w.").append(Schema.Wallet.NAME).append(" AS ").append(Contract.Transaction.WALLET_NAME).append(", ")
-            append("w.").append(Schema.Wallet.ICON).append(" AS ").append(Contract.Transaction.WALLET_ICON).append(", ")
-            append("w.").append(Schema.Wallet.CURRENCY).append(" AS ").append(Contract.Transaction.WALLET_CURRENCY).append(", ")
-            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transaction.WALLET_COUNT_IN_TOTAL).append(", ")
-            append("w.").append(Schema.Wallet.ARCHIVED).append(" AS ").append(Contract.Transaction.WALLET_ARCHIVED).append(", ")
-            append("w.").append(Schema.Wallet.TAG).append(" AS ").append(Contract.Transaction.WALLET_TAG).append(", ")
-            append("t.").append(Schema.Transaction.PLACE).append(" AS ").append(Contract.Transaction.PLACE_ID).append(", ")
-            append("p.").append(Schema.Place.NAME).append(" AS ").append(Contract.Transaction.PLACE_NAME).append(", ")
-            append("p.").append(Schema.Place.ICON).append(" AS ").append(Contract.Transaction.PLACE_ICON).append(", ")
-            append("p.").append(Schema.Place.ADDRESS).append(" AS ").append(Contract.Transaction.PLACE_ADDRESS).append(", ")
-            append("p.").append(Schema.Place.LATITUDE).append(" AS ").append(Contract.Transaction.PLACE_LATITUDE).append(", ")
-            append("p.").append(Schema.Place.LONGITUDE).append(" AS ").append(Contract.Transaction.PLACE_LONGITUDE).append(", ")
-            append("p.").append(Schema.Place.TAG).append(" AS ").append(Contract.Transaction.PLACE_TAG).append(", ")
-            append("t.").append(Schema.Transaction.EVENT).append(" AS ").append(Contract.Transaction.EVENT_ID).append(", ")
-            append("e.").append(Schema.Event.NAME).append(" AS ").append(Contract.Transaction.EVENT_NAME).append(", ")
-            append("e.").append(Schema.Event.ICON).append(" AS ").append(Contract.Transaction.EVENT_ICON).append(", ")
-            append("e.").append(Schema.Event.NOTE).append(" AS ").append(Contract.Transaction.EVENT_NOTE).append(", ")
-            append("e.").append(Schema.Event.START_DATE).append(" AS ").append(Contract.Transaction.EVENT_START_DATE).append(", ")
-            append("e.").append(Schema.Event.END_DATE).append(" AS ").append(Contract.Transaction.EVENT_END_DATE).append(", ")
-            append("e.").append(Schema.Event.TAG).append(" AS ").append(Contract.Transaction.EVENT_TAG).append(", ")
-            append("t.").append(Schema.Transaction.NOTE).append(" AS ").append(Contract.Transaction.NOTE).append(", ")
-            append("t.").append(Schema.Transaction.DEBT).append(" AS ").append(Contract.Transaction.DEBT_ID).append(", ")
-            append("t.").append(Schema.Transaction.SAVING).append(" AS ").append(Contract.Transaction.SAVING_ID).append(", ")
-            append("t.").append(Schema.Transaction.RECURRENCE).append(" AS ").append(Contract.Transaction.RECURRENCE_ID).append(", ")
-            append("t.").append(Schema.Transaction.CONFIRMED).append(" AS ").append(Contract.Transaction.CONFIRMED).append(", ")
-            append("t.").append(Schema.Transaction.COUNT_IN_TOTAL).append(" AS ").append(Contract.Transaction.COUNT_IN_TOTAL).append(", ")
-            append("t.").append(Schema.Transaction.TAG).append(" AS ").append(Contract.Transaction.TAG).append(", ")
-            append("GROUP_CONCAT('<' || pe.").append(Schema.Person.ID).append(" || '>') AS ").append(Contract.Transaction.PEOPLE_IDS).append(" ")
-            append("FROM ").append(Schema.Transaction.TABLE).append(" AS t LEFT JOIN ").append(Schema.Category.TABLE)
-            append(" AS c ON t.").append(Schema.Transaction.CATEGORY).append(" = c.").append(Schema.Category.ID).append(" AND c.")
-            append(Schema.Category.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Category.TABLE).append(" AS pc ON c.")
-            append(Schema.Category.PARENT).append(" = pc.").append(Schema.Category.ID).append(" AND pc.")
-            append(Schema.Category.DELETED).append(" = 0 JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON t.")
-            append(Schema.Transaction.WALLET).append(" = w.").append(Schema.Wallet.ID).append(" AND w.")
-            append(Schema.Wallet.DELETED).append(" = 0 LEFT JOIN ").append(Schema.TransactionPeople.TABLE).append(" AS tp ON t.")
-            append(Schema.Transaction.ID).append(" = tp.").append(Schema.TransactionPeople.TRANSACTION).append(" AND tp.")
-            append(Schema.TransactionPeople.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Person.TABLE).append(" AS pe ON tp.")
-            append(Schema.TransactionPeople.PERSON).append(" = pe.").append(Schema.Person.ID).append(" AND pe.")
-            append(Schema.Person.DELETED).append(" = 0 LEFT JOIN ").append(Schema.Place.TABLE).append(" AS p ON t.")
-            append(Schema.Transaction.PLACE).append(" = ").append(Schema.Place.ID).append(" AND p.").append(Schema.Place.DELETED)
-            append(" = 0 LEFT JOIN ").append(Schema.Event.TABLE).append(" AS e ON t.").append(Schema.Transaction.EVENT)
-            append(" = e.").append(Schema.Event.ID).append(" AND e.").append(Schema.Event.DELETED).append(" = 0 WHERE t.")
-            append(Schema.Transaction.DELETED).append(" = 0 GROUP BY t.").append(Schema.Transaction.ID)
-        }
+        val subQuery = transactionRows(
+            "t." + Schema.Transaction.MONEY,
+            "t." + Schema.Transaction.CATEGORY,
+            Schema.Transaction.TABLE + " AS t",
+            "t." + Schema.Transaction.ID
+        )
         return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
+    }
+
+    /**
+     * This method is called by the content provider when the user is querying the category lines
+     * of the transactions.
+     *
+     * @param projection column names that are requested to be part of the cursor.
+     * @param selection string that may contains additional filters for the query.
+     * @param selectionArgs string array that may contains the arguments for the selection string.
+     * @param sortOrder string that may contains column name to use to sort the cursor.
+     * @return a cursor with zero or more rows.
+     */
+    open fun getCategoryLines(projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+        val subQuery = transactionRows(
+            "l._line_money", "l._line_category", CATEGORY_LINES_FROM,
+            "l._line_id", "l._line_id AS " + Contract.Transaction.LINE_ID,
+            "l._line_split AS " + Contract.Transaction.SPLIT_ID
+        )
+        return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder)
+    }
+
+    /**
+     * This method is called by the content provider when the user is querying the transactions
+     * that have a category line matching the selection. Each comes once, carrying the money of
+     * its matching lines and the category of the lowest matching line. The selection runs on each
+     * line before they are summed, and sees the full total of the transaction as its money, so a
+     * filter on the amount still matches the receipt and not the share.
+     *
+     * @param projection column names that are requested to be part of the cursor.
+     * @param selection string that may contains additional filters for the query.
+     * @param selectionArgs string array that may contains the arguments for the selection string.
+     * @param sortOrder string that may contains column name to use to sort the cursor.
+     * @return a cursor with zero or more rows.
+     */
+    open fun getCategoryShares(projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+        val lines = transactionRows(
+            "t." + Schema.Transaction.MONEY, "l._line_category",
+            CATEGORY_LINES_FROM, "l._line_id", "l._line_id AS " + Contract.Transaction.LINE_ID,
+            "l._line_split AS " + Contract.Transaction.SPLIT_ID, "l._line_money AS _line_money"
+        )
+        val columns = StringBuilder()
+        for (column in transactionColumns("", "")) {
+            val name = column[1]
+            columns.append(if (Contract.Transaction.MONEY == name) "SUM(_line_money) AS " + name else name).append(", ")
+        }
+        val subQuery = "SELECT " + columns + "MIN(" + Contract.Transaction.LINE_ID + ") AS " +
+                Contract.Transaction.LINE_ID + ", " + Contract.Transaction.SPLIT_ID + " FROM (" + lines +
+                ")" + (if (TextUtils.isEmpty(selection)) "" else " WHERE " + selection) + " GROUP BY " +
+                Contract.Transaction.ID
+        return queryFrom(subQuery, projection, null, selectionArgs, sortOrder)
+    }
+
+    /**
+     * This method is called by the content provider when the user is querying the live parts of
+     * a specific transaction, each with its category, whether they are valid or not.
+     *
+     * @param id of the transaction.
+     * @param projection column names that are requested to be part of the cursor.
+     * @param selection string that may contains additional filters for the query.
+     * @param selectionArgs string array that may contains the arguments for the selection string.
+     * @param sortOrder string that may contains column name to use to sort the cursor.
+     * @return a cursor with zero or more rows.
+     */
+    open fun getTransactionSplits(id: Long, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
+        val subQuery = "SELECT " +
+                "s." + Schema.TransactionSplit.ID + " AS " + Contract.TransactionSplit.ID + ", " +
+                "s." + Schema.TransactionSplit.CATEGORY + " AS " + Contract.TransactionSplit.CATEGORY_ID + ", " +
+                "c." + Schema.Category.NAME + " AS " + Contract.TransactionSplit.CATEGORY_NAME + ", " +
+                "c." + Schema.Category.ICON + " AS " + Contract.TransactionSplit.CATEGORY_ICON + ", " +
+                "c." + Schema.Category.TYPE + " AS " + Contract.TransactionSplit.CATEGORY_TYPE + ", " +
+                "s." + Schema.TransactionSplit.MONEY + " AS " + Contract.TransactionSplit.MONEY + ", " +
+                "s." + Schema.TransactionSplit.NOTE + " AS " + Contract.TransactionSplit.NOTE + " " +
+                "FROM " + Schema.TransactionSplit.TABLE + " AS s LEFT JOIN " + Schema.Category.TABLE +
+                " AS c ON s." + Schema.TransactionSplit.CATEGORY + " = c." + Schema.Category.ID +
+                " AND c." + Schema.Category.DELETED + " = 0 WHERE s." + Schema.TransactionSplit.DELETED +
+                " = 0 AND s." + Schema.TransactionSplit.TRANSACTION + " = " + id
+        return queryFrom(subQuery, projection, selection, selectionArgs, sortOrder ?: Contract.TransactionSplit.ID)
     }
 
     open fun insertTransaction(contentValues: ContentValues): Long {
@@ -780,8 +954,145 @@ open class SQLDatabase(
                     writableDatabase.insert(Schema.TransactionAttachment.TABLE, null, cva)
                 }
             }
+            if (contentValues.containsKey(Contract.Transaction.SPLIT_PARTS)) {
+                writeSplitParts(transactionId, contentValues.getAsString(Contract.Transaction.SPLIT_PARTS))
+            }
         }
         return transactionId
+    }
+
+    /**
+     * Makes the live parts of a transaction exactly the ones given, after checking them against
+     * the row as it is stored, so it runs once the row itself is written. Every write of the
+     * provider runs inside one transaction, so a refusal here takes the row back out with it.
+     */
+    private fun writeSplitParts(transactionId: Long, encodedParts: String?) {
+        val parts = ArrayList<ContentValues>()
+        try {
+            for (part in SplitPartsCodec.decode(encodedParts)) {
+                val cv = ContentValues()
+                cv.put(Schema.TransactionSplit.CATEGORY, part.categoryId)
+                cv.put(Schema.TransactionSplit.MONEY, part.money)
+                cv.put(Schema.TransactionSplit.NOTE, part.note)
+                parts.add(cv)
+            }
+        } catch (e: JSONException) {
+            throw SQLiteDataException(Contract.ErrorCode.SPLIT_NOT_VALID, "The parts cannot be read: " + e.message)
+        }
+        if (parts.isNotEmpty()) {
+            checkSplitParts(transactionId, parts)
+        }
+        writableDatabase.delete(
+            Schema.TransactionSplit.TABLE,
+            Schema.TransactionSplit.TRANSACTION + " = ?",
+            arrayOf(transactionId.toString())
+        )
+        for (cv in parts) {
+            cv.put(Schema.TransactionSplit.TRANSACTION, transactionId)
+            cv.put(Schema.TransactionSplit.UUID, UUID.randomUUID().toString())
+            cv.put(Schema.TransactionSplit.LAST_EDIT, System.currentTimeMillis())
+            cv.put(Schema.TransactionSplit.DELETED, false)
+            writableDatabase.insert(Schema.TransactionSplit.TABLE, null, cv)
+        }
+    }
+
+    /**
+     * A sum past the largest long wraps below zero and would pass the check against the total.
+     */
+    private fun checkSplitParts(transactionId: Long, parts: List<ContentValues>) {
+        val total: Long
+        val direction: Int
+        val type: Int
+        val cursor = readableDatabase.query(
+            Schema.Transaction.TABLE,
+            arrayOf(Schema.Transaction.MONEY, Schema.Transaction.DIRECTION, Schema.Transaction.TYPE),
+            Schema.Transaction.ID + " = ?",
+            arrayOf(transactionId.toString()),
+            null, null, null
+        )
+        if (cursor != null) {
+            try {
+                if (!cursor.moveToFirst()) {
+                    throw SQLiteDataException(
+                        Contract.ErrorCode.SPLIT_NOT_VALID,
+                        String.format(Locale.ENGLISH, "The transaction (id: %d) is not stored", transactionId)
+                    )
+                }
+                total = cursor.getLong(0)
+                direction = cursor.getInt(1)
+                type = cursor.getInt(2)
+            } finally {
+                cursor.close()
+            }
+        } else {
+            throw SQLiteDataException(
+                Contract.ErrorCode.SPLIT_NOT_VALID,
+                String.format(Locale.ENGLISH, "The transaction (id: %d) is not stored", transactionId)
+            )
+        }
+        if (type != Contract.TransactionType.STANDARD) {
+            throw SQLiteDataException(
+                Contract.ErrorCode.SPLIT_NOT_VALID,
+                String.format(Locale.ENGLISH, "The transaction (id: %d) is of type %d and cannot be split", transactionId, type)
+            )
+        }
+        val categoryType = if (direction == Schema.Direction.INCOME) Schema.CategoryType.INCOME else Schema.CategoryType.EXPENSE
+        var sum = 0L
+        for (part in parts) {
+            val money = part.getAsLong(Schema.TransactionSplit.MONEY) ?: 0L
+            val categoryId = part.getAsLong(Schema.TransactionSplit.CATEGORY) ?: 0L
+            if (money <= 0L) {
+                throw SQLiteDataException(
+                    Contract.ErrorCode.SPLIT_NOT_VALID,
+                    String.format(Locale.ENGLISH, "A part (category: %d, money: %d) is of zero or below", categoryId, money)
+                )
+            }
+            val catCursor = readableDatabase.query(
+                Schema.Category.TABLE,
+                arrayOf(Schema.Category.TYPE),
+                Schema.Category.ID + " = ? AND " + Schema.Category.DELETED + " = 0",
+                arrayOf(categoryId.toString()),
+                null, null, null
+            )
+            if (catCursor != null) {
+                try {
+                    if (!catCursor.moveToFirst()) {
+                        throw SQLiteDataException(
+                            Contract.ErrorCode.SPLIT_NOT_VALID,
+                            String.format(Locale.ENGLISH, "A part is in a missing category (id: %d)", categoryId)
+                        )
+                    }
+                    val partType = catCursor.getInt(0)
+                    if (partType != categoryType) {
+                        throw SQLiteDataException(
+                            Contract.ErrorCode.SPLIT_NOT_VALID,
+                            String.format(Locale.ENGLISH, "A part is in a category of the other type (id: %d, type: %d)", categoryId, partType)
+                        )
+                    }
+                } finally {
+                    catCursor.close()
+                }
+            } else {
+                throw SQLiteDataException(
+                    Contract.ErrorCode.SPLIT_NOT_VALID,
+                    String.format(Locale.ENGLISH, "A part is in a missing category (id: %d)", categoryId)
+                )
+            }
+            try {
+                sum = Math.addExact(sum, money)
+            } catch (e: ArithmeticException) {
+                throw SQLiteDataException(
+                    Contract.ErrorCode.SPLIT_NOT_VALID,
+                    String.format(Locale.ENGLISH, "The parts add up to more than the transaction's money (total: %d)", total)
+                )
+            }
+            if (sum > total) {
+                throw SQLiteDataException(
+                    Contract.ErrorCode.SPLIT_NOT_VALID,
+                    String.format(Locale.ENGLISH, "The parts add up to %d, which is more than the transaction's money (total: %d)", sum, total)
+                )
+            }
+        }
     }
 
     open fun getTransactionAttachments(id: Long, projection: Array<String>?, selection: String?, selectionArgs: Array<String>?, sortOrder: String?): Cursor? {
@@ -943,6 +1254,31 @@ open class SQLDatabase(
                     }
                 }
             }
+            if (contentValues.containsKey(Contract.Transaction.SPLIT_PARTS)) {
+                writeSplitParts(transactionId, contentValues.getAsString(Contract.Transaction.SPLIT_PARTS))
+            }
+            if (contentValues.containsKey(Contract.Transaction.FIX_SPLIT_DECIMALS)) {
+                val decimalOffset = contentValues.getAsInteger(Contract.Transaction.FIX_SPLIT_DECIMALS) ?: 0
+                val splitProjection = arrayOf(Schema.TransactionSplit.ID, Schema.TransactionSplit.MONEY)
+                val splitWhere = Schema.TransactionSplit.TRANSACTION + " = ?"
+                val splitWhereArgs = arrayOf(transactionId.toString())
+                val splitCursor = readableDatabase.query(Schema.TransactionSplit.TABLE, splitProjection, splitWhere, splitWhereArgs, null, null, null)
+                if (splitCursor != null) {
+                    try {
+                        while (splitCursor.moveToNext()) {
+                            val splitCv = ContentValues()
+                            splitCv.put(Schema.TransactionSplit.MONEY, MoneyFormatter.normalize(splitCursor.getLong(1), decimalOffset))
+                            splitCv.put(Schema.TransactionSplit.LAST_EDIT, System.currentTimeMillis())
+                            writableDatabase.update(
+                                Schema.TransactionSplit.TABLE, splitCv,
+                                Schema.TransactionSplit.ID + " = ?", arrayOf(splitCursor.getLong(0).toString())
+                            )
+                        }
+                    } finally {
+                        splitCursor.close()
+                    }
+                }
+            }
             val delPeopleWhere = Schema.TransactionPeople.TRANSACTION + " = ? AND " + Schema.TransactionPeople.DELETED + " = 1"
             val delWhereArgs = arrayOf(transactionId.toString())
             writableDatabase.delete(Schema.TransactionPeople.TABLE, delPeopleWhere, delWhereArgs)
@@ -983,6 +1319,8 @@ open class SQLDatabase(
         val where = Schema.TransactionPeople.TRANSACTION + " = ?"
         val whereArgs = arrayOf(transactionId.toString())
         writableDatabase.delete(Schema.TransactionPeople.TABLE, where, whereArgs)
+        val splitWhere = Schema.TransactionSplit.TRANSACTION + " = ?"
+        writableDatabase.delete(Schema.TransactionSplit.TABLE, splitWhere, whereArgs)
         val attWhere = Schema.TransactionAttachment.TRANSACTION + " = ?"
         writableDatabase.delete(Schema.TransactionAttachment.TABLE, attWhere, whereArgs)
         val txnWhere = Schema.Transaction.ID + " = ?"
@@ -1501,7 +1839,7 @@ open class SQLDatabase(
             System.arraycopy(selectionArgs, 0, _selectionArgs, 2, size)
         }
         val nonNullArgs = Array(_selectionArgs.size) { i -> _selectionArgs[i] ?: "" }
-        return getTransactions(projection, _selection, nonNullArgs, sortOrder)
+        return getCategoryShares(projection, _selection, nonNullArgs, sortOrder)
     }
 
     open fun insertCategory(contentValues: ContentValues): Long {
@@ -1549,6 +1887,7 @@ open class SQLDatabase(
     open fun updateCategory(categoryId: Long, contentValues: ContentValues): Int {
         var isSystemCategory = false
         var isChildCategory = false
+        var currentType: Int? = null
         var projection = arrayOf(Schema.Category.TYPE, Schema.Category.PARENT)
         var where = Schema.Category.ID + " = ?"
         var whereArgs = arrayOf(categoryId.toString())
@@ -1556,6 +1895,7 @@ open class SQLDatabase(
         if (cursor != null) {
             try {
                 if (cursor.moveToFirst()) {
+                    currentType = cursor.getInt(cursor.getColumnIndexOrThrow(Schema.Category.TYPE))
                     if (cursor.getInt(cursor.getColumnIndex(Schema.Category.TYPE)) == Contract.CategoryType.SYSTEM.value) {
                         isSystemCategory = true
                     }
@@ -1626,6 +1966,28 @@ open class SQLDatabase(
                     } finally {
                         cursor.close()
                     }
+                }
+            }
+        }
+        // a part has to sit in a category of its transaction's direction, so a type change that
+        // flips the direction of either side is refused while live parts depend on it
+        if (!isSystemCategory && currentType != null && contentValues.containsKey(Contract.Category.TYPE)
+                && contentValues.getAsInteger(Contract.Category.TYPE) != Schema.CategoryType.SYSTEM
+                && contentValues.getAsInteger(Contract.Category.TYPE) != currentType) {
+            cursor = readableDatabase.rawQuery("SELECT s." + Schema.TransactionSplit.ID + " FROM " +
+                    Schema.TransactionSplit.TABLE + " AS s JOIN " + Schema.Transaction.TABLE + " AS t ON s." +
+                    Schema.TransactionSplit.TRANSACTION + " = t." + Schema.Transaction.ID + " WHERE (s." +
+                    Schema.TransactionSplit.CATEGORY + " = ? OR t." + Schema.Transaction.CATEGORY +
+                    " = ?) AND s." + Schema.TransactionSplit.DELETED + " = 0 AND t." +
+                    Schema.Transaction.DELETED + " = 0", arrayOf(categoryId.toString(), categoryId.toString()))
+            if (cursor != null) {
+                try {
+                    if (cursor.moveToFirst()) {
+                        throw SQLiteDataException(Contract.ErrorCode.CATEGORY_IN_USE,
+                                String.format(Locale.ENGLISH, "The type of the category (id: %d) cannot be changed because %d parts of transactions depend on it", categoryId, cursor.count))
+                    }
+                } finally {
+                    cursor.close()
                 }
             }
         }
@@ -1725,6 +2087,38 @@ open class SQLDatabase(
                     throw SQLiteDataException(
                         Contract.ErrorCode.CATEGORY_IN_USE,
                         String.format(Locale.ENGLISH, "The category (id: %d) cannot be deleted because it is in use in %d transactions", categoryId, cursor.count)
+                    )
+                }
+            } finally {
+                cursor.close()
+            }
+        }
+        // check if category is in use in some part of a transaction. The key carries ON DELETE
+        // CASCADE, so a part this check lets through leaves with the category. That is safe only
+        // for a part of a transaction whose parts are invalid now and stay invalid without the
+        // parts in this category, since then its one line reads under the main category before
+        // and after. Removing the one part that keeps the others invalid would move their money
+        // off the main category
+        cursor = readableDatabase.rawQuery("SELECT DISTINCT t." + Schema.Transaction.ID + " FROM " +
+                Schema.TransactionSplit.TABLE + " AS s JOIN " + Schema.Transaction.TABLE + " AS t ON s." +
+                Schema.TransactionSplit.TRANSACTION + " = t." + Schema.Transaction.ID + " WHERE s." +
+                Schema.TransactionSplit.CATEGORY + " = ? AND s." + Schema.TransactionSplit.DELETED +
+                " = 0 AND s." + Schema.TransactionSplit.TRANSACTION + " IN (SELECT _parts_transaction FROM (" +
+                VALID_PARTS + ") UNION SELECT _parts_transaction FROM (" + validParts(" AND s." +
+                Schema.TransactionSplit.CATEGORY + " != ?") + ")) ORDER BY t." + Schema.Transaction.DATE +
+                " DESC, t." + Schema.Transaction.ID + " DESC",
+                arrayOf(categoryId.toString(), categoryId.toString()))
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    val transactionIds = LongArray(cursor.count)
+                    do {
+                        transactionIds[cursor.position] = cursor.getLong(0)
+                    } while (cursor.moveToNext())
+                    throw SQLiteDataException(
+                        Contract.ErrorCode.CATEGORY_IN_SPLIT,
+                        String.format(Locale.ENGLISH, "The category (id: %d) cannot be deleted because it is in use in parts of %d transactions", categoryId, transactionIds.size),
+                        transactionIds
                     )
                 }
             } finally {
@@ -2417,9 +2811,12 @@ open class SQLDatabase(
             append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON bw._wallet = w.").append(Schema.Wallet.ID)
             append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED).append(" = 0 AND b.").append(Schema.Budget.DELETED)
             append(" = 0 AND w.").append(Schema.Wallet.DELETED).append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ")
-            append(Schema.BudgetType.CATEGORY).append(") AS b LEFT JOIN (SELECT tr.*, tc.")
-            append(Schema.Category.PARENT).append(" AS _parent_category FROM ").append(Schema.Transaction.TABLE)
-            append(" AS tr JOIN ").append(Schema.Category.TABLE).append(" AS tc ON tr.").append(Schema.Transaction.CATEGORY)
+            append(Schema.BudgetType.CATEGORY).append(") AS b LEFT JOIN (SELECT tr.").append(Schema.Transaction.WALLET)
+            append(", tr.").append(Schema.Transaction.DATE).append(", tr.").append(Schema.Transaction.DIRECTION)
+            append(", l._line_category AS ").append(Schema.Transaction.CATEGORY).append(", l._line_money AS ")
+            append(Schema.Transaction.MONEY).append(", tc.").append(Schema.Category.PARENT).append(" AS _parent_category FROM (")
+            append(CATEGORY_LINES).append(") AS l JOIN ").append(Schema.Transaction.TABLE).append(" AS tr ON l._line_transaction = tr.")
+            append(Schema.Transaction.ID).append(" JOIN ").append(Schema.Category.TABLE).append(" AS tc ON l._line_category")
             append(" = tc.").append(Schema.Category.ID).append(" WHERE tr.").append(Schema.Transaction.DELETED).append(" = 0 ")
             append(" AND tc.").append(Schema.Category.DELETED).append(" = 0) AS t ON (b._wallet_id = t.")
             append(Schema.Transaction.WALLET).append(" AND DATETIME(t.").append(Schema.Transaction.DATE)
@@ -2489,7 +2886,46 @@ open class SQLDatabase(
         selectionArgs: Array<String>?,
         sortOrder: String?
     ): Cursor? {
-        val categoriesSubquery = budgetCategoriesOf("b")
+        val budget = readableDatabase.query(
+            Schema.Budget.TABLE,
+            arrayOf(Schema.Budget.TYPE, Schema.Budget.START_DATE, Schema.Budget.END_DATE),
+            Schema.Budget.ID + " = ? AND " + Schema.Budget.DELETED + " = 0",
+            arrayOf(budgetId.toString()),
+            null, null, null
+        )
+        if (budget != null) {
+            try {
+                if (budget.moveToFirst() && budget.getInt(0) == Schema.BudgetType.CATEGORY) {
+                    val categories = "(SELECT " + Schema.BudgetCategory.CATEGORY + " FROM " +
+                            Schema.BudgetCategory.TABLE + " WHERE " + Schema.BudgetCategory.BUDGET + " = " +
+                            budgetId + " AND " + Schema.BudgetCategory.DELETED + " = 0)"
+                    var _selection = Contract.Transaction.WALLET_ID + " IN (SELECT " +
+                            Schema.BudgetWallet.WALLET + " FROM " + Schema.BudgetWallet.TABLE + " WHERE " +
+                            Schema.BudgetWallet.BUDGET + " = " + budgetId + " AND " + Schema.BudgetWallet.DELETED +
+                            " = 0) AND (" + Contract.Transaction.CATEGORY_ID + " IN " + categories + " OR " +
+                            Contract.Transaction.CATEGORY_PARENT_ID + " IN " + categories + ") AND " +
+                            Contract.Transaction.CATEGORY_ID + " IN (SELECT " + Schema.Category.ID + " FROM " +
+                            Schema.Category.TABLE + " WHERE " + Schema.Category.DELETED + " = 0) AND DATETIME(" +
+                            Contract.Transaction.DATE + ") <= DATETIME('now', 'localtime') AND DATE(" +
+                            Contract.Transaction.DATE + ") >= DATE(?) AND DATE(" + Contract.Transaction.DATE +
+                            ") <= DATE(?)"
+                    if (!TextUtils.isEmpty(selection)) {
+                        _selection += " AND (" + selection + ")"
+                    }
+                    val size = selectionArgs?.size ?: 0
+                    val _selectionArgs = arrayOfNulls<String>(size + 2)
+                    _selectionArgs[0] = budget.getString(1)
+                    _selectionArgs[1] = budget.getString(2)
+                    if (selectionArgs != null) {
+                        System.arraycopy(selectionArgs, 0, _selectionArgs, 2, size)
+                    }
+                    val nonNullArgs = Array(_selectionArgs.size) { i -> _selectionArgs[i] ?: "" }
+                    return getCategoryShares(projection, _selection, nonNullArgs, sortOrder)
+                }
+            } finally {
+                budget.close()
+            }
+        }
         val subQuery = buildString {
             append("SELECT ")
             append("t.").append(Schema.Transaction.ID).append(" AS ").append(Contract.Transaction.ID).append(", ")
@@ -2593,28 +3029,6 @@ open class SQLDatabase(
             append("AND bw2.").append(Schema.BudgetWallet.DELETED).append(" = 0 ")
             append("AND bw2.").append(Schema.BudgetWallet.WALLET).append(" != b._wallet_id ")
             append(") ")
-            append("UNION ")
-
-            // case budget of type category
-            append("SELECT t.* FROM(SELECT b.*, w.").append(Schema.Wallet.ID).append(" AS _wallet_id, ")
-            append("w.").append(Schema.Wallet.CURRENCY).append(" AS _wallet_currency, ")
-            append("w.").append(Schema.Wallet.COUNT_IN_TOTAL).append(" AS _wallet_total FROM ")
-            append(Schema.BudgetWallet.TABLE).append(" AS bw JOIN ").append(Schema.Budget.TABLE).append(" AS b ON ")
-            append("bw._budget = b.").append(Schema.Budget.ID).append(" JOIN ").append(Schema.Wallet.TABLE).append(" AS w ON ")
-            append("bw._wallet = w.").append(Schema.Wallet.ID).append(" WHERE bw. ").append(Schema.BudgetWallet.DELETED)
-            append(" = 0 AND b.").append(Schema.Budget.DELETED).append(" = 0 AND w.").append(Schema.Wallet.DELETED)
-            append(" = 0 AND b.").append(Schema.Budget.TYPE).append(" = ").append(Schema.BudgetType.CATEGORY)
-            append(") AS b LEFT JOIN ").append(Schema.Transaction.TABLE).append(" AS t ON b._wallet_id = t.")
-            append(Schema.Transaction.WALLET).append(" AND t.").append(Schema.Transaction.DELETED).append(" = 0 JOIN ")
-            append(Schema.Category.TABLE).append(" AS tc ON t.").append(Schema.Transaction.CATEGORY).append(" = tc.")
-            append(Schema.Category.ID).append(" AND tc.").append(Schema.Category.DELETED).append(" = 0 WHERE (")
-            append(Schema.Transaction.CATEGORY).append(" IN ").append(categoriesSubquery).append(" OR tc.")
-            append(Schema.Category.PARENT).append(" IN ").append(categoriesSubquery).append(") ")
-            append("AND DATETIME(t.").append(Schema.Transaction.DATE).append(") <= DATETIME('now', 'localtime') ")
-            append("AND DATE(t.").append(Schema.Transaction.DATE).append(") >= DATE(b.")
-            append(Schema.Budget.START_DATE).append(") AND DATE(t.").append(Schema.Transaction.DATE)
-            append(") <=  DATE(b.").append(Schema.Budget.END_DATE).append(") AND b.").append(Schema.Budget.ID)
-            append(" = ").append(budgetId).append(" ")
             append(") AS t ")
             append("LEFT JOIN ").append(Schema.Category.TABLE).append(" AS c ")
             append("ON t.").append(Schema.Transaction.CATEGORY).append(" = c.").append(Schema.Category.ID).append(" ")
@@ -4456,6 +4870,31 @@ open class SQLDatabase(
                         db.update(Schema.Transaction.TABLE, contentValues, whereClause, whereArgs)
                     }
                     cursor.close()
+                }
+
+                // fix the parts of those transactions. The version 6 step calls this before the
+                // version 9 step creates their table, and with no table there are no parts
+                if (hasColumn(db, Schema.TransactionSplit.TABLE, Schema.TransactionSplit.MONEY)) {
+                    val splitProj = arrayOf(
+                        Schema.TransactionSplit.ID,
+                        Schema.TransactionSplit.MONEY
+                    )
+                    val splitSel = Schema.TransactionSplit.TRANSACTION + " IN (SELECT " +
+                            Schema.Transaction.ID + " FROM " + Schema.Transaction.TABLE + " WHERE " +
+                            Schema.Transaction.WALLET + " = ?)"
+                    val splitCur = db.query(Schema.TransactionSplit.TABLE, splitProj, splitSel, selArgs, null, null, null)
+                    if (splitCur != null) {
+                        while (splitCur.moveToNext()) {
+                            val id = splitCur.getLong(splitCur.getColumnIndexOrThrow(Schema.TransactionSplit.ID))
+                            val money = splitCur.getLong(splitCur.getColumnIndexOrThrow(Schema.TransactionSplit.MONEY))
+                            val contentValues = ContentValues()
+                            contentValues.put(Schema.TransactionSplit.MONEY, MoneyFormatter.normalize(money, decimalOffset))
+                            val whereClause = Schema.TransactionSplit.ID + " = ?"
+                            val whereArgs = arrayOf(id.toString())
+                            db.update(Schema.TransactionSplit.TABLE, contentValues, whereClause, whereArgs)
+                        }
+                        splitCur.close()
+                    }
                 }
 
                 projection = arrayOf(

@@ -19,6 +19,7 @@
 
 package com.oriondev.moneywallet.ui.adapter.recycler
 
+import android.content.Context
 import android.database.Cursor
 import android.database.MatrixCursor
 import android.view.ContextThemeWrapper
@@ -29,11 +30,16 @@ import androidx.test.core.app.ApplicationProvider
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.model.Group
 import com.oriondev.moneywallet.storage.database.Contract
+import com.oriondev.moneywallet.storage.database.DataContentProvider
+import com.oriondev.moneywallet.storage.database.SplitLedger
+import com.oriondev.moneywallet.storage.database.TestDatabases
 import com.oriondev.moneywallet.storage.preference.PreferenceManager
 import com.oriondev.moneywallet.storage.wrapper.TransactionHeaderCursor
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -221,6 +227,80 @@ class TransactionSelectionTest {
         )
         assertEquals(ids(3L), selected(adapter))
         assertEquals(1, listener.selectionCount)
+    }
+
+    /**
+     * The marker over the provider's own rows, from SplitLedger. RECEIPT reads as Groceries,
+     * Household and Fuel, EXACT as Pharmacy and Fuel with nothing left for Groceries, TWICE as
+     * Groceries and Household twice, which is two categories. OVER holds parts past its total and
+     * reads as unsplit, and so does PLAIN_CASH, which has none.
+     */
+    @Test
+    fun theSplitMarkerShowsOnlyOnARowThatReadsAsSplit() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        TestDatabases.useFreshDatabase(context)
+        SplitLedger.build(context)
+        val ids = longArrayOf(SplitLedger.RECEIPT, SplitLedger.EXACT, SplitLedger.OVER, SplitLedger.TWICE, SplitLedger.PLAIN_CASH)
+        val cursor = context.contentResolver.query(
+            DataContentProvider.CONTENT_TRANSACTIONS,
+            null,
+            Contract.Transaction.ID + " IN (" + ids[0] + ", " + ids[1] + ", " + ids[2] + ", " + ids[3] + ", " + ids[4] + ")",
+            null,
+            Contract.Transaction.ID + " ASC"
+        )
+        val adapter = adapter(Records(), cursor ?: error("query returned null"))
+        val list = listWith(adapter)
+        val categories = intArrayOf(3, 2, 0, 2, 0)
+        for (position in ids.indices) {
+            val marker = childAt(list, position).findViewById<View>(R.id.split_image_view)
+            if (categories[position] == 0) {
+                assertEquals("row " + ids[position], View.GONE, marker.visibility)
+            } else {
+                assertEquals("row " + ids[position], View.VISIBLE, marker.visibility)
+                assertEquals(
+                    context.resources.getQuantityString(
+                        R.plurals.description_split_categories,
+                        categories[position],
+                        categories[position]
+                    ),
+                    marker.contentDescription
+                )
+            }
+        }
+        adapter.changeCursor(null)
+    }
+
+    /** A row view reused for a row that reads as unsplit drops the marker of the row before. */
+    @Test
+    fun aReusedRowDropsTheSplitMarker() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        TestDatabases.useFreshDatabase(context)
+        SplitLedger.build(context)
+        val cursor1 = context.contentResolver.query(
+            DataContentProvider.CONTENT_TRANSACTIONS,
+            null,
+            Contract.Transaction.ID + " = " + SplitLedger.RECEIPT,
+            null,
+            null
+        )
+        val adapter = adapter(Records(), cursor1 ?: error("query returned null"))
+        val list = listWith(adapter)
+        val row = childAt(list, 0)
+        assertEquals(View.VISIBLE, row.findViewById<View>(R.id.split_image_view).visibility)
+        val cursor2 = context.contentResolver.query(
+            DataContentProvider.CONTENT_TRANSACTIONS,
+            null,
+            Contract.Transaction.ID + " = " + SplitLedger.PLAIN_CASH,
+            null,
+            null
+        )
+        adapter.changeCursor(cursor2)
+        layOut(list)
+        assertSame("the row view was not reused", row, childAt(list, 0))
+        val marker = row.findViewById<View>(R.id.split_image_view)
+        assertEquals(View.GONE, marker.visibility)
+        assertNull(marker.contentDescription)
+        adapter.changeCursor(null)
     }
 
     private class Records : TransactionCursorAdapter.ActionListener {

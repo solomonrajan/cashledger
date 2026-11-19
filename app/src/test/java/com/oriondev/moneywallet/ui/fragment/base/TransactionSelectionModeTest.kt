@@ -117,8 +117,13 @@ class TransactionSelectionModeTest {
         val cash = insertWallet("Cash", "EUR")
         val id = insertTransaction(cash, insertCategory(Contract.CategoryType.EXPENSE), 1250L)
         val salary = insertCategory(Contract.CategoryType.INCOME)
-        assertEquals(0, TransactionSelectionMode.changeCategory(mResolver, longArrayOf(id),
-                Category(salary, "Salary", null, Contract.CategoryType.INCOME)))
+        val skipped = TransactionSelectionMode.changeCategory(
+            mResolver,
+            longArrayOf(id),
+            Category(salary, "Salary", null, Contract.CategoryType.INCOME)
+        )
+        assertEquals(0, skipped.refused)
+        assertEquals(0, skipped.split)
         assertEquals(salary, longOf(id, Contract.Transaction.CATEGORY_ID))
         assertEquals(Contract.Direction.INCOME.toLong(), longOf(id, Contract.Transaction.DIRECTION))
         assertEquals(1250L, longOf(id, Contract.Transaction.MONEY))
@@ -151,8 +156,13 @@ class TransactionSelectionModeTest {
         val debtCategory = longOf(others[1], Contract.Transaction.CATEGORY_ID)
         val savingCategory = longOf(others[2], Contract.Transaction.CATEGORY_ID)
         val ids = longArrayOf(others[0], others[1], others[2], plain)
-        assertEquals(3, TransactionSelectionMode.changeCategory(mResolver, ids,
-                Category(target, "Groceries", null, Contract.CategoryType.EXPENSE)))
+        val skipped = TransactionSelectionMode.changeCategory(
+            mResolver,
+            ids,
+            Category(target, "Groceries", null, Contract.CategoryType.EXPENSE)
+        )
+        assertEquals(3, skipped.refused)
+        assertEquals(0, skipped.split)
         assertEquals(debtCategory, longOf(others[1], Contract.Transaction.CATEGORY_ID))
         assertEquals(savingCategory, longOf(others[2], Contract.Transaction.CATEGORY_ID))
         assertEquals(target, longOf(plain, Contract.Transaction.CATEGORY_ID))
@@ -216,7 +226,8 @@ class TransactionSelectionModeTest {
         insertTransaction(cash, food, 1250L)
         assertEquals("Change The Category Of 2 Transactions To Salary?",
                 TransactionSelectionMode.buildCategoryMessage(resources, mResolver,
-                        longArrayOf(first, second, already, others[0], others[1], others[2]), salary, "Salary"))
+                        longArrayOf(first, second, already, others[0], others[1], others[2]),
+                        Category(salary, "Salary", null, Contract.CategoryType.INCOME)))
     }
 
     @Test

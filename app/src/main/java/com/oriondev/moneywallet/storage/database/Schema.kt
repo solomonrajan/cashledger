@@ -265,6 +265,18 @@ internal object Schema {
         const val DELETED: String = "deleted"
     }
 
+    object TransactionSplit : BaseTable() {
+        const val TABLE: String = "transaction_splits"
+        const val ID: String = "split_id"
+        const val TRANSACTION: String = "_transaction"
+        const val CATEGORY: String = "split_category"
+        const val MONEY: String = "split_money"
+        const val NOTE: String = "split_note"
+        const val UUID: String = "uuid"
+        const val LAST_EDIT: String = "last_edit"
+        const val DELETED: String = "deleted"
+    }
+
     object Transfer : BaseTable() {
         const val TABLE: String = "transfers"
         const val ID: String = "transfer_id"
@@ -702,6 +714,28 @@ internal object Schema {
         "(" + Transaction.ID + ") ON UPDATE NO ACTION ON DELETE CASCADE, " +
         "FOREIGN KEY (" + TransactionPeople.PERSON + ") REFERENCES " + Person.TABLE +
         "(" + Person.ID + ") ON UPDATE NO ACTION ON DELETE CASCADE " +
+        ")"
+
+    /**
+     * The category key cascades on purpose. A release that predates this table deletes a category
+     * no live transaction names without looking here, and a part that refused the delete would
+     * make that release throw. Losing the part instead puts its money back under the main
+     * category of its transaction.
+     */
+    const val CREATE_TABLE_TRANSACTION_SPLIT: String = "CREATE TABLE IF NOT EXISTS " +
+        TransactionSplit.TABLE + " (" +
+        TransactionSplit.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+        TransactionSplit.TRANSACTION + " INTEGER NOT NULL, " +
+        TransactionSplit.CATEGORY + " INTEGER NOT NULL, " +
+        TransactionSplit.MONEY + " INTEGER NOT NULL, " +
+        TransactionSplit.NOTE + " TEXT, " +
+        TransactionSplit.UUID + " TEXT NOT NULL UNIQUE, " +
+        TransactionSplit.LAST_EDIT + " INTEGER NOT NULL, " +
+        TransactionSplit.DELETED + " INTEGER NOT NULL DEFAULT 0, " +
+        "FOREIGN KEY (" + TransactionSplit.TRANSACTION + ") REFERENCES " + Transaction.TABLE +
+        "(" + Transaction.ID + ") ON UPDATE NO ACTION ON DELETE CASCADE, " +
+        "FOREIGN KEY (" + TransactionSplit.CATEGORY + ") REFERENCES " + Category.TABLE +
+        "(" + Category.ID + ") ON UPDATE NO ACTION ON DELETE CASCADE " +
         ")"
 
     const val CREATE_TABLE_TRANSFER: String = "CREATE TABLE " + Transfer.TABLE + " (" +

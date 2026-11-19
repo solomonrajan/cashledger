@@ -79,6 +79,7 @@ class TransactionCursorAdapter @JvmOverloads constructor(
     private var mIndexTransactionDate: Int = -1
     private var mIndexTransactionMoney: Int = -1
     private var mIndexCurrency: Int = -1
+    private var mIndexSplitCategories: Int = -1
 
     private val mMoneyFormatter: MoneyFormatter = MoneyFormatter.getInstance()
 
@@ -117,6 +118,7 @@ class TransactionCursorAdapter @JvmOverloads constructor(
         mIndexTransactionDate = cursor.getColumnIndex(Contract.Transaction.DATE)
         mIndexTransactionMoney = cursor.getColumnIndex(Contract.Transaction.MONEY)
         mIndexCurrency = cursor.getColumnIndex(Contract.Transaction.WALLET_CURRENCY)
+        mIndexSplitCategories = cursor.getColumnIndex(Contract.Transaction.SPLIT_CATEGORIES)
         rebuildVisibleRows()
         dropSelectedIdsNotOnScreen()
     }
@@ -302,6 +304,16 @@ class TransactionCursorAdapter @JvmOverloads constructor(
         IconLoader.loadInto(icon, holder.mAvatarImageView)
         holder.mPrimaryTextView.text = cursor.getString(mIndexCategoryName)
         holder.mSecondaryTextView.text = cursor.getString(mIndexTransactionDescription)
+        val splitCategories = if (mIndexSplitCategories != -1) cursor.getInt(mIndexSplitCategories) else 0
+        if (splitCategories > 0) {
+            holder.mSplitImageView.visibility = View.VISIBLE
+            holder.mSplitImageView.contentDescription = holder.itemView.resources.getQuantityString(
+                R.plurals.description_split_categories, splitCategories, splitCategories
+            )
+        } else {
+            holder.mSplitImageView.visibility = View.GONE
+            holder.mSplitImageView.contentDescription = null
+        }
         val currency: CurrencyUnit? = CurrencyManager.getCurrency(cursor.getString(mIndexCurrency))
         val money = cursor.getLong(mIndexTransactionMoney)
         if (cursor.getInt(mIndexTransactionDirection) == Contract.Direction.INCOME) {
@@ -413,6 +425,7 @@ class TransactionCursorAdapter @JvmOverloads constructor(
 
         val mAvatarImageView: ImageView = itemView.findViewById(R.id.avatar_image_view)
         val mPrimaryTextView: TextView = itemView.findViewById(R.id.primary_text_view)
+        val mSplitImageView: ImageView = itemView.findViewById(R.id.split_image_view)
         val mMoneyTextView: TextView = itemView.findViewById(R.id.money_text_view)
         val mSecondaryTextView: TextView = itemView.findViewById(R.id.secondary_text_view)
         val mDateTextView: TextView = itemView.findViewById(R.id.date_text_view)

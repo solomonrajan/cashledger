@@ -264,6 +264,9 @@ class NewEditCategoryActivity : NewEditItemActivity(), IconPicker.Controller, Ca
                             Contract.ErrorCode.CATEGORY_NOT_CONSISTENT -> {
                                 contentRes = R.string.message_error_update_category_not_consistent
                             }
+                            Contract.ErrorCode.CATEGORY_IN_USE -> {
+                                contentRes = R.string.message_error_update_category_type_in_split
+                            }
                         }
                         if (contentRes != 0) {
                             ThemedDialog.buildMaterialDialog(this)

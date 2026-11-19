@@ -43,6 +43,7 @@ import com.oriondev.moneywallet.storage.database.model.Transaction
 import com.oriondev.moneywallet.storage.database.model.TransactionAttachment
 import com.oriondev.moneywallet.storage.database.model.TransactionModel
 import com.oriondev.moneywallet.storage.database.model.TransactionPerson
+import com.oriondev.moneywallet.storage.database.model.TransactionSplit
 import com.oriondev.moneywallet.storage.database.model.Transfer
 import com.oriondev.moneywallet.storage.database.model.TransferAttachment
 import com.oriondev.moneywallet.storage.database.model.TransferModel
@@ -380,6 +381,20 @@ object SQLDatabaseExporter {
     }
 
     @JvmStatic
+    fun getTransactionSplit(cursor: Cursor): TransactionSplit {
+        val obj = TransactionSplit()
+        obj.mTransaction = cursor.getLong(cursor.getColumnIndexOrThrow(Schema.TransactionSplit.TRANSACTION))
+        obj.mCategory = cursor.getLong(cursor.getColumnIndexOrThrow(Schema.TransactionSplit.CATEGORY))
+        obj.mMoney = cursor.getLong(cursor.getColumnIndexOrThrow(Schema.TransactionSplit.MONEY))
+        val noteIndex = cursor.getColumnIndexOrThrow(Schema.TransactionSplit.NOTE)
+        obj.mNote = if (cursor.isNull(noteIndex)) null else cursor.getString(noteIndex)
+        obj.mUUID = cursor.getString(cursor.getColumnIndexOrThrow(Schema.TransactionSplit.UUID))
+        obj.mLastEdit = cursor.getLong(cursor.getColumnIndexOrThrow(Schema.TransactionSplit.LAST_EDIT))
+        obj.mDeleted = cursor.getInt(cursor.getColumnIndexOrThrow(Schema.TransactionSplit.DELETED)) == 1
+        return obj
+    }
+
+    @JvmStatic
     fun getTransactionPerson(cursor: Cursor): TransactionPerson {
         val obj = TransactionPerson()
         val transIndex = cursor.getColumnIndex(Schema.TransactionPeople.TRANSACTION)
@@ -642,6 +657,13 @@ object SQLDatabaseExporter {
     fun getAllTransactions(contentResolver: ContentResolver): Cursor? {
         val uri = SyncContentProvider.CONTENT_TRANSACTION
         val selection = "${Schema.Transaction.DELETED} = 0"
+        return contentResolver.query(uri, null, selection, null, null)
+    }
+
+    @JvmStatic
+    fun getAllTransactionSplits(contentResolver: ContentResolver): Cursor? {
+        val uri = SyncContentProvider.CONTENT_TRANSACTION_SPLIT
+        val selection = "${Schema.TransactionSplit.DELETED} = 0"
         return contentResolver.query(uri, null, selection, null, null)
     }
 

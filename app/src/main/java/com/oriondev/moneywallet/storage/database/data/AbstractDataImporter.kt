@@ -33,6 +33,7 @@ import com.oriondev.moneywallet.storage.database.data.csv.CSVDataExporter
 import com.oriondev.moneywallet.utils.DateUtils
 import com.oriondev.moneywallet.utils.IconLoader
 import com.oriondev.moneywallet.utils.Utils
+import java.io.Closeable
 import java.io.File
 import java.io.IOException
 import java.util.Date
@@ -41,7 +42,7 @@ import java.util.Locale
 abstract class AbstractDataImporter @Throws(IOException::class) constructor(
     private val mContext: Context?,
     file: File
-) {
+) : Closeable {
 
     companion object {
         const val NO_CATEGORY: Long = -1L
@@ -94,34 +95,97 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
             return Category(0, null, null, type, tag).direction == direction
         }
 
-        private fun readSavedRows(contentResolver: ContentResolver, walletId: Long): MutableMap<List<Any>, Int> {
-            val saved = HashMap<List<Any>, Int>()
+        private fun readSavedRows(contentResolver: ContentResolver, walletId: Long): SavedRows {
+            val totals = HashMap<Long, List<Any>>()
             val arguments = ArrayList<String>(CSVDataExporter.ROWS_SELECTION_ARGS)
             arguments.add(walletId.toString())
+            val selection = "${CSVDataExporter.ROWS_SELECTION} AND ${Contract.Transaction.WALLET_ID} = ?"
+            val selectionArgs = arguments.toTypedArray()
             val cursor = contentResolver.query(
                 DataContentProvider.CONTENT_TRANSACTIONS,
                 arrayOf(
+                    Contract.Transaction.ID,
                     Contract.Transaction.DATE,
                     Contract.Transaction.DIRECTION,
                     Contract.Transaction.MONEY,
                     Contract.Transaction.DESCRIPTION
                 ),
-                "${CSVDataExporter.ROWS_SELECTION} AND ${Contract.Transaction.WALLET_ID} = ?",
-                arguments.toTypedArray(),
+                selection,
+                selectionArgs,
                 null
             )
             cursor?.use {
                 while (it.moveToNext()) {
-                    val date = it.getString(0) ?: ""
-                    val direction = it.getInt(1)
-                    val money = it.getLong(2)
-                    val description = it.getString(3)
-                    val key = rowKey(date, direction, money, description)
-                    val count = saved[key]
-                    saved[key] = if (count == null) 1 else count + 1
+                    totals[it.getLong(0)] = rowKey(
+                        it.getString(1) ?: "",
+                        it.getInt(2),
+                        it.getLong(3),
+                        it.getString(4)
+                    )
+                }
+            }
+            val lines = HashMap<Long, MutableList<List<Any>>>()
+            val split = HashSet<Long>()
+            val linesCursor = contentResolver.query(
+                DataContentProvider.CONTENT_CATEGORY_LINES,
+                arrayOf(
+                    Contract.Transaction.ID,
+                    Contract.Transaction.SPLIT_ID,
+                    Contract.Transaction.DATE,
+                    Contract.Transaction.DIRECTION,
+                    Contract.Transaction.MONEY,
+                    Contract.Transaction.DESCRIPTION
+                ),
+                selection,
+                selectionArgs,
+                null
+            )
+            linesCursor?.use {
+                while (it.moveToNext()) {
+                    val id = it.getLong(0)
+                    if (!it.isNull(1)) {
+                        split.add(id)
+                    }
+                    val list = lines.getOrPut(id) { ArrayList() }
+                    list.add(
+                        rowKey(
+                            it.getString(2) ?: "",
+                            it.getInt(3),
+                            it.getLong(4),
+                            it.getString(5)
+                        )
+                    )
+                }
+            }
+            val saved = SavedRows()
+            for ((id, total) in totals) {
+                if (split.contains(id)) {
+                    val txnLines = lines[id] ?: listOf(total)
+                    saved.addSplit(total, txnLines)
+                } else {
+                    saved.addUnsplit(total)
                 }
             }
             return saved
+        }
+
+        private fun findWallet(contentResolver: ContentResolver, name: String, currencyUnit: CurrencyUnit): Long? {
+            val uri = DataContentProvider.CONTENT_WALLETS
+            val projection = arrayOf(Contract.Wallet.ID)
+            val trimmedName = "TRIM(" + Contract.Wallet.NAME + ", ' ' || char(9) || char(10) || char(13))"
+            val selection = "$trimmedName = ? AND ${Contract.Wallet.CURRENCY} = ?"
+            val selectionArgs = arrayOf(name, currencyUnit.iso)
+            val sortOrder = "(${Contract.Wallet.NAME} = $trimmedName) DESC, ${Contract.Wallet.ID} DESC"
+            val cursor = contentResolver.query(uri, projection, selection, selectionArgs, sortOrder)
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    val index = it.getColumnIndex(Contract.Wallet.ID)
+                    if (index != -1) {
+                        return it.getLong(index)
+                    }
+                }
+            }
+            return null
         }
 
         private fun rowKey(date: String, direction: Int, money: Long, description: String?): List<Any> {
@@ -139,7 +203,7 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
      * reaches that wallet and so before it wrote anything there. A match is used up when a row is
      * skipped against it, and rows this import writes are never added.
      */
-    private val savedRows: MutableMap<Long, MutableMap<List<Any>, Int>> = HashMap()
+    private val mSavedRows: MutableMap<Long, SavedRows> = HashMap()
 
     var alreadySavedRows: Int = 0
         private set
@@ -188,6 +252,39 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
             place,
             people,
             note
+        )
+    }
+
+    /**
+     * Counts a row of the file against the wallet it names, before any row is saved, so that each
+     * split transaction is settled by the whole file and not by whichever row reaches it first.
+     * Creates nothing, since a wallet that does not exist yet held no rows and so needs no count.
+     */
+    protected open fun countRow(
+        wallet: String,
+        currencyUnit: CurrencyUnit,
+        datetime: Date,
+        money: Long,
+        direction: Int,
+        description: String?
+    ) {
+        val contentResolver = getContext().contentResolver
+        val walletId = findWallet(contentResolver, wallet, currencyUnit)
+        if (walletId != null) {
+            countRow(contentResolver, walletId, datetime, money, direction, description)
+        }
+    }
+
+    private fun countRow(
+        contentResolver: ContentResolver,
+        walletId: Long,
+        datetime: Date,
+        money: Long,
+        direction: Int,
+        description: String?
+    ) {
+        savedRows(contentResolver, walletId).count(
+            rowKey(DateUtils.getSQLDateTimeString(datetime), direction, money, description)
         )
     }
 
@@ -268,36 +365,22 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
         money: Long,
         description: String?
     ): Boolean {
-        var saved = savedRows[walletId]
+        return savedRows(contentResolver, walletId).use(rowKey(date, direction, money, description))
+    }
+
+    private fun savedRows(contentResolver: ContentResolver, walletId: Long): SavedRows {
+        var saved = mSavedRows[walletId]
         if (saved == null) {
             saved = readSavedRows(contentResolver, walletId)
-            savedRows[walletId] = saved
+            mSavedRows[walletId] = saved
         }
-        val key = rowKey(date, direction, money, description)
-        val left = saved[key] ?: return false
-        if (left == 1) {
-            saved.remove(key)
-        } else {
-            saved[key] = left - 1
-        }
-        return true
+        return saved
     }
 
     private fun getOrCreateWallet(contentResolver: ContentResolver, name: String, currencyUnit: CurrencyUnit): Long {
-        val uri = DataContentProvider.CONTENT_WALLETS
-        val projection = arrayOf(Contract.Wallet.ID)
-        val trimmedName = "TRIM(" + Contract.Wallet.NAME + ", ' ' || char(9) || char(10) || char(13))"
-        val selection = "$trimmedName = ? AND ${Contract.Wallet.CURRENCY} = ?"
-        val selectionArgs = arrayOf(name, currencyUnit.iso)
-        val sortOrder = "(${Contract.Wallet.NAME} = $trimmedName) DESC, ${Contract.Wallet.ID} DESC"
-        val cursor = contentResolver.query(uri, projection, selection, selectionArgs, sortOrder)
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val index = it.getColumnIndex(Contract.Wallet.ID)
-                if (index != -1) {
-                    return it.getLong(index)
-                }
-            }
+        val walletId = findWallet(contentResolver, name, currencyUnit)
+        if (walletId != null) {
+            return walletId
         }
         val contentValues = ContentValues().apply {
             put(Contract.Wallet.NAME, name)
@@ -307,7 +390,7 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
             put(Contract.Wallet.START_MONEY, 0L)
             put(Contract.Wallet.ARCHIVED, false)
         }
-        val result = contentResolver.insert(uri, contentValues)
+        val result = contentResolver.insert(DataContentProvider.CONTENT_WALLETS, contentValues)
             ?: throw RuntimeException("Failed to create the new wallet")
         return ContentUris.parseId(result)
     }
@@ -447,6 +530,77 @@ abstract class AbstractDataImporter @Throws(IOException::class) constructor(
         return icon.toString()
     }
 
+    private class SavedSplit(
+        val total: List<Any>,
+        val lines: List<List<Any>>
+    )
+
+    /**
+     * What a wallet held before the import, as how many more rows each key can match. An unsplit
+     * transaction offers its total once. A split one offers its total or its lines, never both,
+     * and which is settled once, from the rows counted before the first row is matched, so the
+     * order of the rows does not decide it.
+     */
+    private class SavedRows {
+        private val mLeft: MutableMap<List<Any>, Int> = HashMap()
+        private var mSplits: MutableList<SavedSplit>? = ArrayList()
+        private var mFileRows: MutableMap<List<Any>, Int>? = HashMap()
+
+        fun count(key: List<Any>) {
+            mFileRows?.computeIfPresent(key) { _, rows -> rows + 1 }
+        }
+
+        fun use(key: List<Any>): Boolean {
+            if (mSplits != null) {
+                settle()
+            }
+            val left = mLeft[key] ?: return false
+            if (left == 1) {
+                mLeft.remove(key)
+            } else {
+                mLeft[key] = left - 1
+            }
+            return true
+        }
+
+        private fun settle() {
+            val splits = mSplits ?: return
+            val fileRows = mFileRows ?: return
+            val unsplit = HashMap(mLeft)
+            for (split in splits) {
+                val needed = HashMap<List<Any>, Int>()
+                for (line in split.lines) {
+                    needed.merge(line, 1) { a, b -> a + b }
+                }
+                var byLines = true
+                for ((lineKey, neededCount) in needed) {
+                    val available = (fileRows[lineKey] ?: 0) - (unsplit[lineKey] ?: 0)
+                    if (available < neededCount) {
+                        byLines = false
+                        break
+                    }
+                }
+                val chosenKeys = if (byLines) split.lines else listOf(split.total)
+                for (key in chosenKeys) {
+                    mLeft.merge(key, 1) { a, b -> a + b }
+                }
+            }
+            mSplits = null
+            mFileRows = null
+        }
+
+        fun addSplit(total: List<Any>, lines: List<List<Any>>) {
+            mSplits?.add(SavedSplit(total, lines))
+            for (line in lines) {
+                mFileRows?.put(line, 0)
+            }
+        }
+
+        fun addUnsplit(total: List<Any>) {
+            mLeft.merge(total, 1) { a, b -> a + b }
+        }
+    }
+
     @Throws(IOException::class)
-    abstract fun close()
+    abstract override fun close()
 }

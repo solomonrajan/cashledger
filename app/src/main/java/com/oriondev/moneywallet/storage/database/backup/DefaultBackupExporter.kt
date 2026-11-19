@@ -69,6 +69,7 @@ class DefaultBackupExporter @Throws(ExportException::class) constructor(
             exporter.exportRecurrentTransactions(SQLDatabaseExporter.getAllRecurrentTransactions(resolver))
             exporter.exportRecurrentTransfers(SQLDatabaseExporter.getAllRecurrentTransfers(resolver))
             exporter.exportTransactions(SQLDatabaseExporter.getAllTransactions(resolver))
+            exporter.exportTransactionSplits(SQLDatabaseExporter.getAllTransactionSplits(resolver))
             exporter.exportTransactionPeople(SQLDatabaseExporter.getAllTransactionPeople(resolver))
             exporter.exportTransactionModels(SQLDatabaseExporter.getAllTransactionModels(resolver))
             exporter.exportTransfers(SQLDatabaseExporter.getAllTransfers(resolver))

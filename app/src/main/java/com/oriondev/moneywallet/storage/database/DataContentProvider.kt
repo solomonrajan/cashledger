@@ -80,6 +80,21 @@ open class DataContentProvider : ContentProvider() {
         val CONTENT_ATTACHMENTS: Uri = Uri.parse("content://$AUTHORITY/attachments")
 
         /**
+         * One row per category a transaction's money falls under, a split transaction giving one per
+         * part and one for what is left under its main category. Same columns as
+         * [CONTENT_TRANSACTIONS] plus [Contract.Transaction.LINE_ID].
+         */
+        @JvmField
+        val CONTENT_CATEGORY_LINES: Uri = Uri.parse("content://$AUTHORITY/category_lines")
+
+        /**
+         * The transactions with a line the selection matches, each once, carrying the money of the
+         * lines it matched. The selection itself sees each line with the full total as its money.
+         */
+        @JvmField
+        val CONTENT_CATEGORY_SHARES: Uri = Uri.parse("content://$AUTHORITY/category_shares")
+
+        /**
          * Every uri above sits under this one. An observer registered here with descendants included
          * is told about every change this provider announces, whichever of those uris the write named,
          * because the framework collects an observer sitting above a uri for a notification on
@@ -144,6 +159,10 @@ open class DataContentProvider : ContentProvider() {
         private const val CATEGORY_RULE_ITEM = 48
         private const val CATEGORY_RULE_MATCH = 49
 
+        private const val CATEGORY_LINE_LIST = 50
+        private const val CATEGORY_SHARE_LIST = 51
+        private const val TRANSACTION_SPLIT_LIST = 52
+
         private val mUriMatcher: UriMatcher = createUriMatcher()
 
         private fun createUriMatcher(): UriMatcher {
@@ -197,6 +216,9 @@ open class DataContentProvider : ContentProvider() {
             matcher.addURI(AUTHORITY, "people/#/transactions", PERSON_TRANSACTION_LIST)
             matcher.addURI(AUTHORITY, "attachments", ATTACHMENT_LIST)
             matcher.addURI(AUTHORITY, "attachments/#", ATTACHMENT_ITEM)
+            matcher.addURI(AUTHORITY, "category_lines", CATEGORY_LINE_LIST)
+            matcher.addURI(AUTHORITY, "category_shares", CATEGORY_SHARE_LIST)
+            matcher.addURI(AUTHORITY, "transactions/#/splits", TRANSACTION_SPLIT_LIST)
             return matcher
         }
 
@@ -445,6 +467,15 @@ open class DataContentProvider : ContentProvider() {
             ATTACHMENT_ITEM -> {
                 cursor = MultiUriCursorWrapper(db().getAttachment(ContentUris.parseId(uri), proj))
             }
+            CATEGORY_LINE_LIST -> {
+                cursor = MultiUriCursorWrapper(db().getCategoryLines(proj, selection, selArgs, sortOrder))
+            }
+            CATEGORY_SHARE_LIST -> {
+                cursor = MultiUriCursorWrapper(db().getCategoryShares(proj, selection, selArgs, sortOrder))
+            }
+            TRANSACTION_SPLIT_LIST -> {
+                cursor = MultiUriCursorWrapper(db().getTransactionSplits(parseIdAtIndex(uri, 1), proj, selection, selArgs, sortOrder))
+            }
         }
         cursor?.let {
             val contentResolver = context?.contentResolver
@@ -505,6 +536,8 @@ open class DataContentProvider : ContentProvider() {
             PERSON_TRANSACTION_LIST -> "vnd.android.cursor.dir/vnd.com.oriondev.moneywallet.storage.transaction"
             ATTACHMENT_LIST -> "vnd.android.cursor.dir/vnd.com.oriondev.moneywallet.storage.attachment"
             ATTACHMENT_ITEM -> "vnd.android.cursor.item/vnd.com.oriondev.moneywallet.storage.attachment"
+            CATEGORY_LINE_LIST, CATEGORY_SHARE_LIST -> "vnd.android.cursor.dir/vnd.com.oriondev.moneywallet.storage.transaction"
+            TRANSACTION_SPLIT_LIST -> "vnd.android.cursor.dir/vnd.com.oriondev.moneywallet.storage.transaction.split"
             else -> null
         }
     }

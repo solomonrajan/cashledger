@@ -7,22 +7,32 @@ import android.content.Context
 import android.os.Looper
 import android.view.View
 import android.widget.CheckBox
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.storage.database.Contract
 import com.oriondev.moneywallet.storage.database.DataContentProvider
+import com.oriondev.moneywallet.storage.database.SplitLedger
 import com.oriondev.moneywallet.storage.database.TestDatabases
 import com.oriondev.moneywallet.ui.activity.BackupListActivity
+import com.oriondev.moneywallet.utils.CurrencyManager
+import com.oriondev.moneywallet.utils.DateFormatter
+import com.oriondev.moneywallet.utils.DateUtils
+import com.oriondev.moneywallet.utils.MoneyFormatter
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNotSame
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.Shadows.shadowOf
+import org.robolectric.shadows.ShadowDialog
 
 /**
  * The reports keep a transaction only when its category and its parent are both included, so a
@@ -35,6 +45,10 @@ class CategoryItemFragmentTest {
     companion object {
         private const val ICON = "{\"type\":\"color\",\"color\":\"#000000\",\"name\":\"T\"}"
         private const val TAG_FRAGMENT = "CategoryItemFragmentTest::Fragment"
+
+        private fun ledgerDate(): String {
+            return DateFormatter.getFormattedDate(DateUtils.getDateFromSQLDateTimeString(SplitLedger.DATE))
+        }
     }
 
     private lateinit var mContext: Context
@@ -147,6 +161,97 @@ class CategoryItemFragmentTest {
         }
         assertEquals("the category never loaded", View.GONE, wheel.visibility)
         return view.findViewById(R.id.show_report_check_box)
+    }
+
+    /** Bonus is used by the one part of PAY_SPLIT and by nothing else. */
+    @Test
+    fun aDeleteRefusedForAPartNamesTheTransaction() {
+        SplitLedger.build(mContext)
+        ActivityScenario.launch(BackupListActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val fragment = showCategoryFragment(activity, SplitLedger.BONUS)
+                assertEquals(
+                    mContext.getString(
+                        R.string.message_error_delete_category_in_split,
+                        SplitLedger.description(SplitLedger.PAY_SPLIT),
+                        ledgerDate()
+                    ),
+                    deleteAndReadRefusal(fragment)
+                )
+            }
+        }
+        assertEquals(1L, count("categories", "category_id = " + SplitLedger.BONUS))
+    }
+
+    /**
+     * Tools holds a part of RECEIPT and one of TWICE, both on the same date, so the higher id
+     * comes first. TWICE has no description and is named by its amount, 7000.
+     */
+    @Test
+    fun aDeleteRefusedForSeveralNamesTheNewestAndCountsTheOthers() {
+        SplitLedger.build(mContext)
+        val db = SplitLedger.database(mContext)
+        db.execSQL(
+            "INSERT INTO categories (category_id, category_name, category_icon, category_type, " +
+                "category_show_report, uuid, last_edit, deleted) VALUES (970, 'Tools', ?, ?, 1, " +
+                "'category-tools', 1, 0)",
+            arrayOf(ICON, Contract.CategoryType.EXPENSE.value)
+        )
+        for (transaction in longArrayOf(SplitLedger.RECEIPT, SplitLedger.TWICE)) {
+            db.execSQL(
+                "INSERT INTO transaction_splits (_transaction, split_category, split_money, uuid, " +
+                    "last_edit, deleted) VALUES (?, 970, 100, ?, 1, 0)",
+                arrayOf<Any>(transaction, "tools-$transaction")
+            )
+        }
+        db.execSQL("UPDATE transactions SET transaction_description = NULL WHERE transaction_id = " + SplitLedger.TWICE)
+        ActivityScenario.launch(BackupListActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val fragment = showCategoryFragment(activity, 970L)
+                val currency = CurrencyManager.getCurrency("EUR") ?: error("currency EUR is null")
+                val amount = MoneyFormatter.getInstance().getNotTintedString(currency, 7000L)
+                assertEquals(
+                    mContext.getString(R.string.message_error_delete_category_in_split, amount, ledgerDate()) +
+                        " " + mContext.resources.getQuantityString(
+                        R.plurals.message_error_delete_category_in_more_splits,
+                        1,
+                        1
+                    ),
+                    deleteAndReadRefusal(fragment)
+                )
+            }
+        }
+        assertEquals(1L, count("categories", "category_id = 970"))
+    }
+
+    private fun deleteAndReadRefusal(fragment: CategoryItemFragment): String {
+        val view = fragment.view ?: error("fragment view is null")
+        val toolbar = view.findViewById<Toolbar>(R.id.secondary_toolbar)
+        val deleteItem = toolbar.menu.findItem(R.id.action_delete_item) ?: error("no delete item")
+        fragment.onMenuItemClick(deleteItem)
+        val confirm = ShadowDialog.getLatestDialog() as? AlertDialog ?: error("no confirm dialog")
+        confirm.getButton(AlertDialog.BUTTON_POSITIVE).performClick()
+        shadowOf(Looper.getMainLooper()).idle()
+        val refusal = ShadowDialog.getLatestDialog() as? AlertDialog ?: error("no refusal dialog")
+        assertNotSame("no refusal was shown", confirm, refusal)
+        val message = refusal.findViewById<TextView>(android.R.id.message) ?: error("no message view")
+        return message.text.toString()
+    }
+
+    private fun count(table: String, selection: String): Long {
+        val cursor = SplitLedger.database(mContext).rawQuery(
+            "SELECT COUNT(*) FROM $table WHERE $selection",
+            null
+        )
+        cursor.use { c ->
+            assertTrue(c.moveToFirst())
+            return c.getLong(0)
+        }
+    }
+
+    private fun showCategoryFragment(activity: FragmentActivity, categoryId: Long): CategoryItemFragment {
+        showCategory(activity, categoryId)
+        return activity.supportFragmentManager.findFragmentByTag(TAG_FRAGMENT) as CategoryItemFragment
     }
 
     private fun insertCategory(name: String, parent: Long?, showReport: Boolean): Long {

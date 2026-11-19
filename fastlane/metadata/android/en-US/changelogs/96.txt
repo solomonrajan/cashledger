@@ -1,0 +1,10 @@
+✨ Release v3.0.1
+🔀 Split Transactions: Split entries into multiple categories
+🎛️ Split Editor: Live category picker & balance tracking
+📑 UI/UX: Split indicators & details breakdown
+🗄️ Database v9: Split storage with cascade integrity
+💾 Backup v5: Full backup & restore for split shares
+📊 Reports: Category overviews & CSV/XLS split exports
+🛡️ Integrity: Deletion protection for active splits
+⚡ CI/CD: Automated builds & SDK pre-warming
+🧪 749 unit tests passing with 0 Detekt code smells

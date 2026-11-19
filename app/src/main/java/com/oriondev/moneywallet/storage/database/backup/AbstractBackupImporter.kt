@@ -74,7 +74,7 @@ abstract class AbstractBackupImporter(
     }
 
     @Throws(ImportException::class)
-    protected abstract fun importDatabase(temporaryFolder: File)
+    internal abstract fun importDatabase(temporaryFolder: File)
 
     @Throws(ImportException::class)
     open fun importAttachments(attachmentFolder: File) {

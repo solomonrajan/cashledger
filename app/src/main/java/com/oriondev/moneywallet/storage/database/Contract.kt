@@ -115,6 +115,42 @@ object Contract {
         const val PEOPLE_IDS: String = "transaction_person_ids"
         const val ATTACHMENT_IDS: String = "transaction_attachment_ids"
         const val TAG: String = Schema.Transaction.TAG
+
+        /**
+         * Read only from [DataContentProvider.CONTENT_CATEGORY_LINES] and
+         * [DataContentProvider.CONTENT_CATEGORY_SHARES]. The line is a key unique to one
+         * line, and the split is the part a line comes from, null on the line of the main category.
+         */
+        const val LINE_ID: String = "transaction_line_id"
+        const val SPLIT_ID: String = Schema.TransactionSplit.ID
+
+        /**
+         * Written with a wallet that moves a transaction across currency decimals, holding the
+         * decimals of the new currency minus those of the old one, so the parts are rescaled in
+         * the same write as the total.
+         */
+        const val FIX_SPLIT_DECIMALS: String = "action_fix_split_decimals"
+        const val SPLIT_PARTS: String = "transaction_split_parts"
+        const val SPLIT_CATEGORIES: String = "transaction_split_categories"
+    }
+
+    /**
+     * Columns of the parts table as [SyncContentProvider.CONTENT_TRANSACTION_SPLIT] reads
+     * it, every part there whether its transaction reads as split or not.
+     */
+    object TransactionSplit {
+        const val TRANSACTION_ID: String = Schema.TransactionSplit.TRANSACTION
+        const val DELETED: String = Schema.TransactionSplit.DELETED
+        const val ID: String = Schema.TransactionSplit.ID
+        const val CATEGORY_ID: String = Schema.TransactionSplit.CATEGORY
+        const val CATEGORY_NAME: String = "split_" + Schema.Category.NAME
+        const val CATEGORY_ICON: String = "split_" + Schema.Category.ICON
+        const val CATEGORY_TYPE: String = "split_" + Schema.Category.TYPE
+        const val MONEY: String = Schema.TransactionSplit.MONEY
+        const val NOTE: String = Schema.TransactionSplit.NOTE
+        const val PART_CATEGORY: String = "category"
+        const val PART_MONEY: String = "money"
+        const val PART_NOTE: String = "note"
     }
 
     object Transfer {
@@ -765,6 +801,8 @@ object Contract {
         const val SYSTEM_CATEGORY_NOT_MODIFIABLE: Int = 4543
         const val TRANSACTION_USED_IN_TRANSFER: Int = 4544
         const val INVALID_RECURRENCE_RULE: Int = 4545
+        const val SPLIT_NOT_VALID: Int = 4546
+        const val CATEGORY_IN_SPLIT: Int = 4547
     }
 
     @JvmStatic

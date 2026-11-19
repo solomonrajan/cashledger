@@ -31,11 +31,11 @@ data class Category(
     override val id: Long,
     val name: String?,
     val icon: Icon?,
-    val type: Contract.CategoryType,
+    val type: Contract.CategoryType? = null,
     val tag: String? = null
 ) : Parcelable, Identifiable {
 
-    constructor(id: Long, name: String?, icon: Icon?, type: Contract.CategoryType) : this(
+    constructor(id: Long, name: String?, icon: Icon?, type: Contract.CategoryType?) : this(
         id,
         name,
         icon,
@@ -47,7 +47,7 @@ data class Category(
         parcel.readLong(),
         parcel.readString(),
         parcel.readParcelable(Icon::class.java.classLoader),
-        (parcel.readSerializable() as? Contract.CategoryType) ?: Contract.CategoryType.EXPENSE,
+        parcel.readSerializable() as? Contract.CategoryType,
         parcel.readString()
     )
 
@@ -68,6 +68,7 @@ data class Category(
                         Contract.CategoryTag.SAVING_WITHDRAW -> return 1
                     }
                 }
+                null -> return 0
             }
             return 0
         }

@@ -2,7 +2,7 @@ name: build
 
 on:
   push:
-    branches: [master, userinterface, kotlin, v3.0.0]
+    branches: [master, userinterface, kotlin, v3.0.0, Category_Split]
     paths-ignore:
       - "**.md"
       - "**.mdx"
@@ -43,20 +43,40 @@ jobs:
         with:
           cache-read-only: false
 
-      # Robolectric fetches the android-all jar for the SDK it runs against, about
-      # 190 MB, into the Maven local repository and not the Gradle cache, so the
-      # step above does not keep it. Which jar that is follows the Robolectric
-      # version, now in gradle/libs.versions.toml, and targetSdk, still in
-      # app/build.gradle.kts, so the key follows both files. A cache entry is never
-      # rewritten on an exact hit, which is why the key cannot be a constant. A
-      # bump would keep restoring the old jar and fetching the new one on every
-      # run. No restore-keys on purpose, since a restored entry is saved back as
-      # a union and nothing prunes a superseded jar, so an entry would grow by a
-      # jar per bump. An unrelated edit to either file costs one fetch instead.
+      # Robolectric fetches the android-all jar for the SDK it runs against into
+      # the Maven local repository (~/.m2/repository). Restore-keys ensures that
+      # branch builds can reuse caches from master or prior runs.
       - uses: actions/cache@v4
         with:
           path: ~/.m2/repository/org/robolectric
-          key: robolectric-${{ hashFiles('app/build.gradle.kts', 'gradle/libs.versions.toml') }}
+          key: robolectric-${{ hashFiles('gradle/libs.versions.toml') }}
+          restore-keys: |
+            robolectric-
+
+      # Pre-warm the Robolectric SDK jars in the local Maven cache with retries
+      # to prevent runtime parallel download failures or rate-limiting on cold cache runs.
+      - name: Pre-fetch Robolectric SDK dependencies
+        run: |
+          ROBO_DIR="$HOME/.m2/repository/org/robolectric/android-all-instrumented"
+          VERSIONS=(
+            "12.1-robolectric-8229987-i7"
+            "13-robolectric-9030017-i7"
+            "15-robolectric-13954326-i7"
+          )
+          BASE_URL="https://repo1.maven.org/maven2/org/robolectric/android-all-instrumented"
+
+          for ver in "${VERSIONS[@]}"; do
+            dir="$ROBO_DIR/$ver"
+            mkdir -p "$dir"
+            for ext in ".pom" ".pom.sha512" ".jar" ".jar.sha512"; do
+              file="android-all-instrumented-$ver$ext"
+              if [ ! -s "$dir/$file" ]; then
+                echo "Pre-fetching $file..."
+                curl -sSL --retry 5 --retry-connrefused -A "Mozilla/5.0" \
+                  "$BASE_URL/$ver/$file" -o "$dir/$file"
+              fi
+            done
+          done
 
       - name: Build, Test, and Lint
         run: |

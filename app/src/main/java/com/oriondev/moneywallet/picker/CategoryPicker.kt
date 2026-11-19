@@ -145,6 +145,19 @@ class CategoryPicker :
         startActivityForResult(intent, REQUEST_CATEGORY_PICKER)
     }
 
+    /**
+     * Offers the categories of one type alone, for a choice that has to follow a direction
+     * already made elsewhere on the screen.
+     */
+    fun showPicker(type: Contract.CategoryType) {
+        val intent = Intent(activity, CategoryPickerActivity::class.java)
+        intent.putExtra(CategoryPickerActivity.SHOW_SUB_CATEGORIES, true)
+        intent.putExtra(CategoryPickerActivity.SHOW_SYSTEM_CATEGORIES, false)
+        intent.putExtra(CategoryPickerActivity.ONLY_TYPE, type)
+        @Suppress("DEPRECATION")
+        startActivityForResult(intent, REQUEST_CATEGORY_PICKER)
+    }
+
     fun showParentPicker(categoryId: Long, type: Contract.CategoryType?) {
         mParentCategoryPickerDialog?.showPicker(
             childFragmentManager,

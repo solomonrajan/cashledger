@@ -29,6 +29,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -107,6 +108,10 @@ class NewEditTransactionActivity : NewEditItemActivity(),
     private var mPlacePicker: PlacePicker? = null
     private var mPersonPicker: PersonPicker? = null
     private var mAttachmentPicker: AttachmentPicker? = null
+    private var mPartCategoryPicker: CategoryPicker? = null
+    private var mPartMoneyPicker: MoneyPicker? = null
+
+    private var mSplitPartsEditor: SplitPartsEditor? = null
 
     private var mRules = TransactionEditorRules()
 
@@ -137,6 +142,16 @@ class NewEditTransactionActivity : NewEditItemActivity(),
         val confirmedCheckBox = view.findViewById<CheckBox>(R.id.confirmed_checkbox)
         val countInTotalCheckBox = view.findViewById<CheckBox>(R.id.count_in_total_checkbox)
         val attachmentView = view.findViewById<AttachmentView>(R.id.attachment_view)
+        val splitPartsLayout = view.findViewById<ViewGroup>(R.id.split_parts_layout)
+        val splitRemainingEditText = view.findViewById<MaterialEditText>(R.id.split_remaining_edit_text)
+        val splitEditText = view.findViewById<MaterialEditText>(R.id.split_edit_text)
+        mSplitPartsEditor = SplitPartsEditor(
+            this,
+            splitPartsLayout,
+            splitRemainingEditText,
+            splitEditText,
+            categoryEditText
+        )
 
         mDescriptionEditText = descriptionEditText
         mCategoryEditText = categoryEditText
@@ -290,6 +305,7 @@ class NewEditTransactionActivity : NewEditItemActivity(),
                     Contract.Transaction.EVENT_END_DATE,
                     Contract.Transaction.SAVING_ID,
                     Contract.Transaction.DEBT_ID,
+                    Contract.Transaction.RECURRENCE_ID,
                     Contract.Transaction.CONFIRMED,
                     Contract.Transaction.COUNT_IN_TOTAL
                 )
@@ -354,10 +370,17 @@ class NewEditTransactionActivity : NewEditItemActivity(),
                         if (!cursor.isNull(cursor.getColumnIndexOrThrow(Contract.Transaction.SAVING_ID))) {
                             mRules.savingId = cursor.getLong(cursor.getColumnIndexOrThrow(Contract.Transaction.SAVING_ID))
                         }
+                        mRules.isRecurrent = !duplicating && !cursor.isNull(
+                            cursor.getColumnIndexOrThrow(Contract.Transaction.RECURRENCE_ID)
+                        )
                         mConfirmedCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transaction.CONFIRMED)) == 1
                         mCountInTotalCheckBox?.isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(Contract.Transaction.COUNT_IN_TOTAL)) == 1
                     }
                     cursor.close()
+                }
+
+                if (mRules.offersSplit()) {
+                    readParts(contentResolver, Uri.withAppendedPath(uri, "splits"))
                 }
 
                 if (mRules.type == TYPE_TRANSFER) {
@@ -779,6 +802,7 @@ class NewEditTransactionActivity : NewEditItemActivity(),
                         }
                         cursor.close()
                     }
+                    mRules.type = TYPE_STANDARD
                 }
                 datetime = Date()
             }
@@ -787,6 +811,7 @@ class NewEditTransactionActivity : NewEditItemActivity(),
             if (restored != null) {
                 mRules = restored
             }
+            mSplitPartsEditor?.restoreState(savedInstanceState)
         }
 
         if (savedInstanceState == null && category != null) {
@@ -809,6 +834,15 @@ class NewEditTransactionActivity : NewEditItemActivity(),
         mPersonPicker = PersonPicker.createPicker(fragmentManager, TAG_PERSON_PICKER, people)
         mPlacePicker = PlacePicker.createPicker(fragmentManager, TAG_PLACE_PICKER, place)
         mAttachmentPicker = AttachmentPicker.createPicker(fragmentManager, TAG_ATTACHMENT_PICKER, attachments)
+        val partCategoryPicker = CategoryPicker.createPicker(fragmentManager, TAG_PART_CATEGORY_PICKER, null as Category?)
+        val partMoneyPicker = MoneyPicker.createPicker(fragmentManager, TAG_PART_MONEY_PICKER, null, 0L)
+        mPartCategoryPicker = partCategoryPicker
+        mPartMoneyPicker = partMoneyPicker
+        val moneyPicker = mMoneyPicker
+        val catPicker = mCategoryPicker
+        if (moneyPicker != null && catPicker != null) {
+            mSplitPartsEditor?.attach(mRules, moneyPicker, catPicker, partCategoryPicker, partMoneyPicker)
+        }
 
         mDescriptionEditText?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
@@ -868,6 +902,41 @@ class NewEditTransactionActivity : NewEditItemActivity(),
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(SS_RULES, mRules)
+        mSplitPartsEditor?.saveState(outState)
+    }
+
+    private fun readParts(contentResolver: ContentResolver, uri: Uri) {
+        val projection = arrayOf(
+            Contract.TransactionSplit.CATEGORY_ID,
+            Contract.TransactionSplit.CATEGORY_NAME,
+            Contract.TransactionSplit.CATEGORY_ICON,
+            Contract.TransactionSplit.CATEGORY_TYPE,
+            Contract.TransactionSplit.MONEY,
+            Contract.TransactionSplit.NOTE
+        )
+        val cursor = contentResolver.query(uri, projection, null, null, null) ?: return
+        cursor.use {
+            val typeIndex = it.getColumnIndexOrThrow(Contract.TransactionSplit.CATEGORY_TYPE)
+            val idIndex = it.getColumnIndexOrThrow(Contract.TransactionSplit.CATEGORY_ID)
+            val nameIndex = it.getColumnIndexOrThrow(Contract.TransactionSplit.CATEGORY_NAME)
+            val iconIndex = it.getColumnIndexOrThrow(Contract.TransactionSplit.CATEGORY_ICON)
+            val moneyIndex = it.getColumnIndexOrThrow(Contract.TransactionSplit.MONEY)
+            val noteIndex = it.getColumnIndexOrThrow(Contract.TransactionSplit.NOTE)
+            while (it.moveToNext()) {
+                val categoryType = if (it.isNull(typeIndex)) null else Contract.CategoryType.fromValue(it.getInt(typeIndex))
+                val category = Category(
+                    it.getLong(idIndex),
+                    it.getString(nameIndex),
+                    IconLoader.parse(it.getString(iconIndex)),
+                    categoryType
+                )
+                mSplitPartsEditor?.addPart(
+                    category,
+                    it.getLong(moneyIndex),
+                    it.getString(noteIndex)
+                )
+            }
+        }
     }
 
     @StringRes
@@ -1032,7 +1101,7 @@ class NewEditTransactionActivity : NewEditItemActivity(),
 
     override fun onSaveChanges(mode: Mode) {
         fillCategoryFromRules()
-        if (validate()) {
+        if (validate() && mSplitPartsEditor?.validate() != false) {
             val category = mCategoryPicker?.currentCategory ?: return
             val wallet = mWalletPicker?.currentWallet ?: return
             val dateTime = mDateTimePicker?.currentDateTime
@@ -1055,6 +1124,12 @@ class NewEditTransactionActivity : NewEditItemActivity(),
                 .peopleIds(Contract.getObjectIds(mPersonPicker?.currentPeople))
                 .attachmentIds(Contract.getObjectIds(mAttachmentPicker?.currentAttachments))
                 .build()
+            if (mRules.offersSplit()) {
+                val encoded = mSplitPartsEditor?.encodeParts()
+                if (encoded != null) {
+                    contentValues.put(Contract.Transaction.SPLIT_PARTS, encoded)
+                }
+            }
             val contentResolver = contentResolver
             try {
                 when (mode) {
@@ -1071,12 +1146,15 @@ class NewEditTransactionActivity : NewEditItemActivity(),
                     }
                 }
             } catch (e: SQLiteDataException) {
-                if (e.errorCode != Contract.ErrorCode.WALLETS_NOT_CONSISTENT) {
-                    throw e
+                val message = when (e.errorCode) {
+                    Contract.ErrorCode.WALLETS_NOT_CONSISTENT -> R.string.error_debt_wallet_currency_not_consistent
+                    Contract.ErrorCode.SPLIT_NOT_VALID -> R.string.error_split_not_saved
+                    else -> throw e
                 }
+                Log.w("NewEditTransactionActivity", "The save was refused", e)
                 ThemedDialog.buildMaterialDialog(this)
                     .setTitle(R.string.title_error)
-                    .setMessage(R.string.error_debt_wallet_currency_not_consistent)
+                    .setMessage(message)
                     .setPositiveButton(android.R.string.ok, null)
                     .show()
                 return
@@ -1096,6 +1174,10 @@ class NewEditTransactionActivity : NewEditItemActivity(),
     }
 
     override fun onMoneyChanged(tag: String?, currency: CurrencyUnit?, money: Long) {
+        if (TAG_PART_MONEY_PICKER == tag) {
+            mSplitPartsEditor?.onPartMoneyChanged(money)
+            return
+        }
         if (currency != null) {
             mCurrencyTextView?.text = currency.symbol
         } else {
@@ -1106,15 +1188,21 @@ class NewEditTransactionActivity : NewEditItemActivity(),
             money,
             MoneyFormatter.CurrencyMode.ALWAYS_HIDDEN
         )
+        mSplitPartsEditor?.showParts()
     }
 
     override fun onCategoryChanged(tag: String?, category: Category?) {
+        if (TAG_PART_CATEGORY_PICKER == tag) {
+            mSplitPartsEditor?.onPartCategoryChanged(category)
+            return
+        }
         mCategoryFilledByRule = false
         if (category != null) {
             mCategoryEditText?.setText(category.name)
         } else {
             mCategoryEditText?.setText(null)
         }
+        mSplitPartsEditor?.showParts()
     }
 
     override fun onDateTimeChanged(tag: String?, date: Date?) {
@@ -1216,6 +1304,8 @@ class NewEditTransactionActivity : NewEditItemActivity(),
         private const val TAG_PLACE_PICKER = "NewEditTransactionActivity::Tag::PlacePicker"
         private const val TAG_PERSON_PICKER = "NewEditTransactionActivity::Tag::PersonPicker"
         private const val TAG_ATTACHMENT_PICKER = "NewEditTransactionActivity::Tag::AttachmentPicker"
+        private const val TAG_PART_CATEGORY_PICKER = "NewEditTransactionActivity::Tag::PartCategoryPicker"
+        private const val TAG_PART_MONEY_PICKER = "NewEditTransactionActivity::Tag::PartMoneyPicker"
 
         private const val SS_RULES = "NewEditTransactionActivity::SavedState::Rules"
 

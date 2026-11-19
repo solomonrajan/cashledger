@@ -26,5 +26,6 @@ import android.database.sqlite.SQLiteException
  */
 class SQLiteDataException @JvmOverloads constructor(
     val errorCode: Int,
-    error: String? = null
+    error: String? = null,
+    val itemIds: LongArray = LongArray(0)
 ) : SQLiteException(error)

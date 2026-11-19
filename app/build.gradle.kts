@@ -57,8 +57,8 @@ android {
         applicationId = appId
         minSdk = 24
         targetSdk = 35
-        versionCode = 95
-        versionName = "3.0.0"
+        versionCode = 96
+        versionName = "3.0.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -152,6 +152,10 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
+            all {
+                it.systemProperty("robolectric.dependency.repo.url", "https://repo1.maven.org/maven2/")
+                it.systemProperty("robolectric.dependency.repo.id", "central")
+            }
         }
     }
 }

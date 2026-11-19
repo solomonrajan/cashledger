@@ -13,17 +13,21 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.storage.database.Contract
 import com.oriondev.moneywallet.storage.database.DataContentProvider
+import com.oriondev.moneywallet.storage.database.SplitLedger
 import com.oriondev.moneywallet.storage.database.TestDatabases
 import com.oriondev.moneywallet.storage.database.TransferContentValuesBuilder
 import com.oriondev.moneywallet.ui.activity.BackupListActivity
 import com.oriondev.moneywallet.ui.activity.NewEditTransactionActivity
 import com.oriondev.moneywallet.ui.fragment.base.SecondaryPanelFragment
+import com.oriondev.moneywallet.utils.CurrencyManager
 import com.oriondev.moneywallet.utils.DateUtils
+import com.oriondev.moneywallet.utils.MoneyFormatter
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -327,6 +331,91 @@ class TransactionItemFragmentTest {
                 )
             }
         }
+    }
+
+    /**
+     * RECEIPT is 10000 under Groceries with parts of 2000 in Household and 3000 in Fuel, and a
+     * part flagged deleted that is not listed.
+     */
+    @Test
+    fun aSplitRowListsItsPartsAndWhatIsLeftUnderTheMainCategory() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        SplitLedger.build(context)
+        SplitLedger.database(context).execSQL("UPDATE transaction_splits SET split_note = 'soap' WHERE split_id = 930")
+        ActivityScenario.launch(BackupListActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val fragment = showTransaction(activity, SplitLedger.RECEIPT)
+                assertEquals(
+                    activity.getString(R.string.split_part_with_note, "Household", euro(2000L), "soap") + "\n" +
+                        activity.getString(R.string.split_part, "Fuel", euro(3000L)) + "\n" +
+                        activity.getString(R.string.split_remainder, "Groceries", euro(10000L - 2000L - 3000L)),
+                    awaitSplitText(fragment)
+                )
+            }
+        }
+    }
+
+    /** CROSSED holds a Salary part on an expense, which no total counts. */
+    @Test
+    fun invalidPartsAreListedWithALineSayingTheyAreNotCounted() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch(BackupListActivity::class.java).use { scenario ->
+            scenario.onActivity { activity ->
+                val fragment = showTransaction(activity, SplitLedger.CROSSED)
+                assertEquals(
+                    activity.getString(R.string.split_part, "Salary", euro(500L)) + "\n" +
+                        activity.getString(R.string.split_not_counted),
+                    awaitSplitText(fragment)
+                )
+            }
+        }
+    }
+
+    /**
+     * Coming back to the foreground, the loader hands the fragment the same parts cursor it
+     * already read to the end, the way it does when the user backs out of the editor.
+     */
+    @Test
+    fun thePartsStayListedWhenTheScreenComesBackToTheForeground() {
+        SplitLedger.build(ApplicationProvider.getApplicationContext())
+        ActivityScenario.launch(BackupListActivity::class.java).use { scenario ->
+            val shown = arrayOfNulls<String>(1)
+            scenario.onActivity { activity -> shown[0] = awaitSplitText(showTransaction(activity, SplitLedger.RECEIPT)) }
+            scenario.moveToState(Lifecycle.State.CREATED)
+            scenario.moveToState(Lifecycle.State.RESUMED)
+            scenario.onActivity { activity ->
+                idleMainLooper()
+                val fragment = activity.supportFragmentManager.findFragmentByTag(TAG_FRAGMENT) as? TransactionItemFragment
+                assertNotNull(fragment)
+                val view = fragment?.view ?: error("fragment view is null")
+                val split = view.findViewById<TextView>(R.id.split_text_view)
+                assertEquals(View.VISIBLE, split.visibility)
+                assertEquals(shown[0], split.text.toString())
+            }
+        }
+    }
+
+    /** The parts and the row come back through two loaders, so this waits for the line to fill. */
+    private fun awaitSplitText(fragment: TransactionItemFragment): String {
+        val view = fragment.view ?: error("fragment view is null")
+        val split = view.findViewById<TextView>(R.id.split_text_view)
+        var i = 0
+        while (i < 200 && split.visibility != View.VISIBLE) {
+            idleMainLooper()
+            try {
+                Thread.sleep(25)
+            } catch (e: InterruptedException) {
+                throw AssertionError(e)
+            }
+            i++
+        }
+        assertEquals("the parts never showed", View.VISIBLE, split.visibility)
+        return split.text.toString()
+    }
+
+    private fun euro(money: Long): String {
+        val currency = CurrencyManager.getCurrency("EUR") ?: error("EUR currency is null")
+        return MoneyFormatter.getInstance().getNotTintedString(currency, money)
     }
 
     private fun parkDeleteWorker(): CountDownLatch {

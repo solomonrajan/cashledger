@@ -92,7 +92,7 @@ class ImportExportIntentService : IntentService("ImportExportIntentService") {
             // initialize the correct data exporter
             val dataExporter = getDataExporter(context, dataFormat, folder)
             val contentResolver = context.contentResolver
-            val uri = DataContentProvider.CONTENT_TRANSACTIONS
+            val uri = DataContentProvider.CONTENT_CATEGORY_LINES
             // initialize the selection builder with common variables
             val selectionBuilder = StringBuilder()
             val selectionArguments = ArrayList<String>()

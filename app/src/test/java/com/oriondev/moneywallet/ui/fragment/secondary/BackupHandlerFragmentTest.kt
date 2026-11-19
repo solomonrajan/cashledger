@@ -47,7 +47,7 @@ class BackupHandlerFragmentTest {
     }
 
     @Test
-    @Config(sdk = [33, 36])
+    @Config(sdk = [33, 35])
     fun theExternalMemoryScreenOpensFromAndroid13WithoutTheStoragePermission() {
         assertCoverVisibility(BackendServiceFactory.SERVICE_ID_EXTERNAL_MEMORY, View.GONE, View.VISIBLE)
     }

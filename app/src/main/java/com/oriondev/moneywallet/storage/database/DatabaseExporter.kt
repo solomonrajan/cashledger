@@ -82,6 +82,9 @@ interface DatabaseExporter {
     fun exportTransactions(cursor: Cursor?)
 
     @Throws(ExportException::class)
+    fun exportTransactionSplits(cursor: Cursor?)
+
+    @Throws(ExportException::class)
     fun exportTransactionPeople(cursor: Cursor?)
 
     @Throws(ExportException::class)

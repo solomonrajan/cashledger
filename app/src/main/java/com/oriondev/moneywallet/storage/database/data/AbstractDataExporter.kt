@@ -27,6 +27,7 @@ import com.oriondev.moneywallet.storage.database.Contract
 import com.oriondev.moneywallet.utils.CurrencyManager
 import com.oriondev.moneywallet.utils.DateUtils
 import com.oriondev.moneywallet.utils.MoneyFormatter
+import java.io.Closeable
 import java.io.File
 import java.io.IOException
 import java.util.Date
@@ -34,7 +35,7 @@ import java.util.Date
 abstract class AbstractDataExporter @Throws(IOException::class) constructor(
     protected val context: Context,
     folder: File
-) {
+) : Closeable {
 
     companion object {
         const val COLUMN_EVENT: String = "column_event"
@@ -216,7 +217,7 @@ abstract class AbstractDataExporter @Throws(IOException::class) constructor(
     abstract fun exportData(cursor: Cursor, columns: Array<String>, vararg wallets: Wallet)
 
     @Throws(IOException::class)
-    abstract fun close()
+    abstract override fun close()
 
     abstract fun getOutputFile(): File
 

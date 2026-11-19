@@ -72,7 +72,7 @@ class LegacyBackupImporter(
     private var databaseImporter: LegacyDatabaseImporter? = null
 
     @Throws(ImportException::class)
-    override fun importDatabase(temporaryFolder: File) {
+    internal override fun importDatabase(temporaryFolder: File) {
         val temporaryDatabase = File(temporaryFolder, TEMPORARY_DATABASE_FILE)
         try {
             val zipFile = ZipFile(backupFile)
@@ -105,6 +105,7 @@ class LegacyBackupImporter(
             importer.importRecurrentTransactions(resolver)
             importer.importRecurrentTransfers(resolver)
             importer.importTransactions(resolver)
+            importer.importTransactionSplits(resolver)
             importer.importTransactionPeople(resolver)
             importer.importTransactionModels(resolver)
             importer.importTransfers(resolver)
