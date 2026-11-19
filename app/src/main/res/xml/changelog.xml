@@ -19,6 +19,18 @@
   -->
 
 <changelog>
+    <version versionName="3.0.1" versionDate="Nov 19, 2026">
+        <change>🔀 [b]Category Split[/b]: Added support for splitting transactions across multiple categories with custom amounts.</change>
+        <change>🎛️ [b]Split Editor[/b]: Introduced interactive split parts editor with dynamic category selection and real-time remaining balance calculations.</change>
+        <change>📑 [b]UI/UX[/b]: Added visual split indicators in transaction lists and full split parts breakdown in transaction details.</change>
+        <change>🗄️ [b]Database Schema v9[/b]: Added transaction_splits table with foreign key cascade deletion and integrity constraints.</change>
+        <change>💾 [b]Backup and Restore[/b]: Upgraded JSON backup to v5 with full backward-compatible serialization for split transactions.</change>
+        <change>📊 [b]Reports and Exports[/b]: Updated overview charts, period summary loaders, and CSV/XLS exports to accurately compute split category shares.</change>
+        <change>🛡️ [b]Data Integrity[/b]: Added protection against accidental deletion or modification of categories in active splits.</change>
+        <change>⚡ [b]CI/CD Reliability[/b]: Implemented Robolectric test dependency pre-fetching and cross-branch cache reuse on GitHub Actions.</change>
+        <change>🧪 [b]Quality and Testing[/b]: Expanded unit test suite to 749 tests with 100% pure Kotlin and zero Detekt code smells.</change>
+    </version>
+
     <version versionName="3.0.0" versionDate="Nov 18, 2026">
         <change>🚀 [b]Kotlin Migration[/b]: Converted 100% of the codebase (517 files) to pure, idiomatic Kotlin across all application layers.</change>
         <change>🛡️ [b]Null Safety[/b]: Enforced zero double-bang (!!) operator policy repo-wide with Detekt 1.23.6.</change>
