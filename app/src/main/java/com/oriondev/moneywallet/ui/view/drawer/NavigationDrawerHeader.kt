@@ -92,7 +92,7 @@ fun NavigationDrawerHeader(
                     fontSize = 18.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = Color(theme.drawerTextColor)
+                    color = Color(theme.drawerHeaderTextColor)
                 )
                 Text(
                     text = walletMoney,
@@ -101,7 +101,7 @@ fun NavigationDrawerHeader(
                     fontSize = 14.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    color = Color(theme.textColorSecondary),
+                    color = Color(theme.drawerSubtitleColor),
                     modifier = Modifier.padding(top = 2.dp)
                 )
             }
@@ -119,7 +119,7 @@ fun NavigationDrawerHeader(
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 28.dp),
             thickness = 1.dp,
-            color = Color(theme.drawerTextColor).copy(alpha = 0.12f)
+            color = Color(theme.drawerDividerColor)
         )
     }
 }

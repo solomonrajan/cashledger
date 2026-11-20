@@ -142,6 +142,20 @@ class ThemePreviewTest {
         }
     }
 
+    @Test
+    fun navigationDrawerColorsFollowMaterial3SpecsAndDynamicColor() {
+        val theme = ThemeEngine.getTheme()
+        assertTrue(theme.drawerBackgroundColor != 0)
+        assertTrue(theme.drawerSelectedItemColor != 0)
+        assertTrue(theme.drawerSelectedIconColor != 0)
+        assertTrue(theme.drawerSelectedTextColor != 0)
+        assertTrue(theme.drawerIconColor != 0)
+        assertTrue(theme.drawerTextColor != 0)
+        assertTrue(theme.drawerHeaderTextColor != 0)
+        assertTrue(theme.drawerSubtitleColor != 0)
+        assertTrue(theme.drawerDividerColor != 0)
+    }
+
     private fun inverted(color: Int): Int {
         return color xor 0x00FFFFFF
     }

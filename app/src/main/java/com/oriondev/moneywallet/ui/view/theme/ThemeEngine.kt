@@ -24,10 +24,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.graphics.Color
+import android.os.Build
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.ColorUtils
+import com.google.android.material.color.DynamicColors
 
 /**
  * This class is responsible to dynamically theme the user interface at runtime.
@@ -135,20 +141,44 @@ class ThemeEngine private constructor(context: Context) : ITheme {
     override val errorColor: Int
         get() = Color.RED
 
+    private var mCachedDynamicScheme: ColorScheme? = null
+    private var mCachedDynamicIsDark: Boolean? = null
+
+    private fun getDynamicColorScheme(): ColorScheme? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || !DynamicColors.isDynamicColorAvailable()) {
+            return null
+        }
+        val dark = isDark
+        val cached = mCachedDynamicScheme
+        if (cached != null && mCachedDynamicIsDark == dark) {
+            return cached
+        }
+        val scheme = runCatching {
+            if (dark) {
+                dynamicDarkColorScheme(mContext)
+            } else {
+                dynamicLightColorScheme(mContext)
+            }
+        }.getOrNull()
+        mCachedDynamicScheme = scheme
+        mCachedDynamicIsDark = dark
+        return scheme
+    }
+
     override val drawerBackgroundColor: Int
-        get() = DRAWER_BACKGROUND_COLOR[getResolvedIndex()]
+        get() = getDynamicColorScheme()?.surfaceContainerLow?.toArgb() ?: DRAWER_BACKGROUND_COLOR[getResolvedIndex()]
 
     override val drawerIconColor: Int
-        get() = DRAWER_ICON_COLOR[getResolvedIndex()]
+        get() = getDynamicColorScheme()?.onSurfaceVariant?.toArgb() ?: DRAWER_ICON_COLOR[getResolvedIndex()]
 
     override val drawerSelectedIconColor: Int
-        get() = drawerSelectedForeground()
+        get() = getDynamicColorScheme()?.onSecondaryContainer?.toArgb() ?: drawerSelectedForeground()
 
     override val drawerTextColor: Int
-        get() = DRAWER_TEXT_COLOR[getResolvedIndex()]
+        get() = getDynamicColorScheme()?.onSurfaceVariant?.toArgb() ?: DRAWER_TEXT_COLOR[getResolvedIndex()]
 
     override val drawerSelectedTextColor: Int
-        get() = drawerSelectedForeground()
+        get() = getDynamicColorScheme()?.onSecondaryContainer?.toArgb() ?: drawerSelectedForeground()
 
     // The opaque black or white, not the surface's own icon or text color: those are what the
     // closed entries are already drawn in.
@@ -158,7 +188,17 @@ class ThemeEngine private constructor(context: Context) : ITheme {
     }
 
     override val drawerSelectedItemColor: Int
-        get() = DRAWER_SELECTED_ITEM_COLOR[getResolvedIndex()]
+        get() = getDynamicColorScheme()?.secondaryContainer?.toArgb() ?: DRAWER_SELECTED_ITEM_COLOR[getResolvedIndex()]
+
+    override val drawerHeaderTextColor: Int
+        get() = getDynamicColorScheme()?.onSurface?.toArgb() ?: DRAWER_TEXT_COLOR[getResolvedIndex()]
+
+    override val drawerSubtitleColor: Int
+        get() = getDynamicColorScheme()?.onSurfaceVariant?.toArgb() ?: textColorSecondary
+
+    override val drawerDividerColor: Int
+        get() = getDynamicColorScheme()?.outlineVariant?.toArgb()
+            ?: ColorUtils.setAlphaComponent(DRAWER_TEXT_COLOR[getResolvedIndex()], 0x1F)
 
     override fun getBestColor(background: Int): Int {
         return if (Util.isColorLight(background)) Color.BLACK else Color.WHITE
@@ -412,6 +452,7 @@ class ThemeEngine private constructor(context: Context) : ITheme {
             val instance = sInstance
             if (instance != null && mode != null) {
                 if (mode != instance.mode) {
+                    instance.mCachedDynamicScheme = null
                     instance.mPreferences.edit().putInt(MODE, mode.index).apply()
                     notifyObservers()
                 }

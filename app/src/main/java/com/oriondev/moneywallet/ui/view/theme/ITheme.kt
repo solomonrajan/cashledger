@@ -20,6 +20,8 @@
 
 package com.oriondev.moneywallet.ui.view.theme
 
+import androidx.core.graphics.ColorUtils
+
 /**
  * This interface implements all the colors of a theme.
  */
@@ -68,6 +70,15 @@ interface ITheme {
     val drawerSelectedTextColor: Int
 
     val drawerSelectedItemColor: Int
+
+    val drawerHeaderTextColor: Int
+        get() = drawerTextColor
+
+    val drawerSubtitleColor: Int
+        get() = textColorSecondary
+
+    val drawerDividerColor: Int
+        get() = ColorUtils.setAlphaComponent(drawerTextColor, 0x1F)
 
     fun getBestColor(background: Int): Int
 
