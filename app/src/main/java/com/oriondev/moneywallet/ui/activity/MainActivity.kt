@@ -555,6 +555,7 @@ class MainActivity : BaseActivity(),
             val moneyView = TextView(this)
             moneyView.text = mMoneyFormatter.getNotTintedString(wallet.money)
             moneyView.setTextColor(if (wallet == mCurrentWallet) theme.drawerSelectedTextColor else theme.drawerTextColor)
+            moneyView.textSize = 14f
             moneyView.gravity = Gravity.CENTER_VERTICAL
             menu.add(GROUP_WALLETS, walletItemId(wallet), Menu.NONE, wallet.name)
                 .setIcon(wallet.icon.getDrawable(this))

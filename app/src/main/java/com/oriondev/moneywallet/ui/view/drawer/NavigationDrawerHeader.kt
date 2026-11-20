@@ -76,7 +76,7 @@ fun NavigationDrawerHeader(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 28.dp, end = 28.dp, top = 24.dp, bottom = 20.dp),
+                .padding(start = 28.dp, end = 28.dp, top = 16.dp, bottom = 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -98,7 +98,7 @@ fun NavigationDrawerHeader(
                     text = walletMoney,
                     fontFamily = GoogleSansFontFamily,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp,
+                    fontSize = 15.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     color = Color(theme.drawerSubtitleColor),

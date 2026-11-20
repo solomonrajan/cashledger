@@ -26,7 +26,7 @@
     <dimen name="m3_navigation_drawer_item_inset_horizontal">12dp</dimen>
     <dimen name="m3_navigation_drawer_item_padding_horizontal">28dp</dimen>
     <dimen name="m3_navigation_drawer_item_icon_padding">12dp</dimen>
-    <dimen name="m3_navigation_drawer_item_vertical_padding">4dp</dimen>
+    <dimen name="m3_navigation_drawer_item_vertical_padding">0dp</dimen>
     <dimen name="m3_navigation_drawer_item_icon_size">24dp</dimen>
     <dimen name="m3_navigation_drawer_divider_inset">28dp</dimen>
 
