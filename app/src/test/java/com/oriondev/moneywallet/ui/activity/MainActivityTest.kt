@@ -477,6 +477,7 @@ class MainActivityTest {
                 awaitWallets(activity)
                 val total = drawer(activity).menu.findItem(TOTAL_ITEM)
                 assertNotNull(total)
+                assertNotNull(total?.icon)
                 assertEquals(activity.getString(R.string.total_wallet_name), total?.title?.toString())
                 total?.let { activity.onNavigationItemSelected(it) }
                 assertEquals(PreferenceManager.TOTAL_WALLET_ID, PreferenceManager.getCurrentWallet())

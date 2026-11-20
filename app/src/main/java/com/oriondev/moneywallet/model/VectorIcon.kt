@@ -29,6 +29,7 @@ import android.os.Parcelable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -43,11 +44,16 @@ class VectorIcon : Icon {
     @Throws(JSONException::class)
     constructor(jsonObject: JSONObject) {
         mResourceName = jsonObject.getString(RESOURCE)
-        mColor = jsonObject.optString(COLOR, null)
+        mColor = if (jsonObject.has(COLOR) && !jsonObject.isNull(COLOR)) jsonObject.getString(COLOR) else null
     }
 
     constructor(original: VectorIcon, color: String?) {
         mResourceName = original.mResourceName
+        mColor = color
+    }
+
+    constructor(resourceName: String, color: String? = null) {
+        mResourceName = resourceName
         mColor = color
     }
 
@@ -71,7 +77,16 @@ class VectorIcon : Icon {
     override fun getDrawable(context: Context): Drawable? {
         val drawableId = getDrawableId(context, mResourceName)
         if (drawableId > 0) {
-            return ContextCompat.getDrawable(context, drawableId)
+            val drawable = ContextCompat.getDrawable(context, drawableId)?.mutate()
+            if (drawable != null && !mColor.isNullOrEmpty()) {
+                try {
+                    val parsedColor = Color.parseColor(mColor)
+                    DrawableCompat.setTint(drawable, parsedColor)
+                } catch (e: IllegalArgumentException) {
+                    // Ignore invalid color
+                }
+            }
+            return drawable
         }
         return null
     }
@@ -119,6 +134,18 @@ class VectorIcon : Icon {
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeString(mResourceName)
         dest.writeString(mColor)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is VectorIcon) return false
+        return mResourceName == other.mResourceName && mColor == other.mColor
+    }
+
+    override fun hashCode(): Int {
+        var result = mResourceName.hashCode()
+        result = 31 * result + (mColor?.hashCode() ?: 0)
+        return result
     }
 
     companion object {

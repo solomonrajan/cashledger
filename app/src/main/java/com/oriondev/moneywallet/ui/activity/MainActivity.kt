@@ -64,8 +64,8 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.oriondev.moneywallet.R
 import com.oriondev.moneywallet.broadcast.LocalAction
-import com.oriondev.moneywallet.model.ColorIcon
 import com.oriondev.moneywallet.model.Money
+import com.oriondev.moneywallet.model.VectorIcon
 import com.oriondev.moneywallet.model.WalletAccount
 import com.oriondev.moneywallet.service.BackupHandlerIntentService
 import com.oriondev.moneywallet.storage.database.Contract
@@ -508,12 +508,11 @@ class MainActivity : BaseActivity(),
         }
         if (mWallets.isNotEmpty() && total.numberOfCurrencies > 0) {
             val name = getString(R.string.total_wallet_name)
-            val initial = if (name.isNotEmpty()) name.substring(0, 1) else ""
             mWallets.add(
                 WalletAccount(
                     PreferenceManager.TOTAL_WALLET_ID,
                     name,
-                    ColorIcon("#000000", initial),
+                    VectorIcon("ic_cash_multiple_24dp"),
                     total
                 )
             )
@@ -557,10 +556,13 @@ class MainActivity : BaseActivity(),
             moneyView.setTextColor(if (wallet == mCurrentWallet) theme.drawerSelectedTextColor else theme.drawerTextColor)
             moneyView.textSize = 14f
             moneyView.gravity = Gravity.CENTER_VERTICAL
-            menu.add(GROUP_WALLETS, walletItemId(wallet), Menu.NONE, wallet.name)
+            val item = menu.add(GROUP_WALLETS, walletItemId(wallet), Menu.NONE, wallet.name)
                 .setIcon(wallet.icon.getDrawable(this))
                 .setActionView(moneyView)
-                .isCheckable = true
+            item.isCheckable = true
+            if (wallet.id == PreferenceManager.TOTAL_WALLET_ID) {
+                tintEntry(item, theme)
+            }
         }
         addEntry(menu, GROUP_WALLETS, ID_ACTION_NEW_WALLET, R.drawable.ic_add_24dp, R.string.action_new_wallet)
         addEntry(menu, GROUP_WALLETS, ID_ACTION_MANAGE_WALLET, R.drawable.ic_settings_24dp, R.string.action_manage_wallets)
